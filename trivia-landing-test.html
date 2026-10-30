@@ -75,8 +75,25 @@
  e.click();return true}
  function setCover(show){cover.hidden=!show;if(show){cover.scrollTop=0;updateScore()}}
  function updateScore(){let d=doc();if(!d)return; const txt=(d.body?.innerText||'').slice(0,9000); let m=txt.match(/([\d,]+)\s*Points?\s*[•·\-|]\s*([\d,]+)\s*Tokens?/i) || txt.match(/([\d,]+)\s*Points?[\s\S]{0,30}?([\d,]+)\s*Tokens?/i);if(m){document.getElementById('labPoints').textContent=m[1]+' Points';document.getElementById('labTokens').textContent=m[2]+' Tokens'}}
- function landingVisible(){return !!(findText('Play Mixed Trivia')&&findText('Choose a Topic')&&findText('Bible Master')&&findText('Scholar Research'))}
- function monitor(){if(actionInFlight)return; updateScore();if(landingVisible()){if(cover.hidden)setCover(true)}else if(ready&&!cover.hidden&&navigatedHome){setCover(false)}}
+ // Read the currently rendered screen, rather than demanding exact matching text nodes.
+ // In the real game, labels can include nested spans, icons, or wrappers, so the old
+ // exact-text selector misses the Trivia landing after the in-game Back button.
+ function landingVisible(){
+  const d=doc(); if(!d || !d.body)return false;
+  const rendered=(d.body.innerText || '').replace(/\s+/g,' ').toLowerCase();
+  const markers=['play mixed trivia','choose a topic','bible master','scholar research'];
+  if(!markers.every(label=>rendered.includes(label)))return false;
+  // Never cover an active question just because the page retains menu strings.
+  if(/question\s+\d+\s+of\s+\d+/i.test(rendered))return false;
+  return true;
+ }
+ function monitor(){
+  if(actionInFlight || !ready)return;
+  updateScore();
+  const atTriviaMenu=landingVisible();
+  if(atTriviaMenu){if(cover.hidden)setCover(true)}
+  else if(!cover.hidden && navigatedHome){setCover(false)}
+ }
  function navigateToTrivia(){if(landingVisible())return true;return clickExisting('Bible Trivia')}
  function sleep(ms){return new Promise(res=>setTimeout(res,ms))}
  async function openActivity(label){
@@ -94,10 +111,14 @@
  document.getElementById('labReward').addEventListener('click',()=>openOriginalAction('rewards'));
  frame.addEventListener('load',()=>{
   ready=true;const d=doc();if(!d){debug('Upload this file to Visual Lab to enable real navigation');return}
-  if(observer)observer.disconnect();observer=new MutationObserver(()=>{clearTimeout(tick);tick=setTimeout(monitor,190)});observer.observe(d.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['style','class','hidden']});
+  if(observer)observer.disconnect();observer=new MutationObserver(()=>{clearTimeout(tick);tick=setTimeout(monitor,90)});observer.observe(d.documentElement,{subtree:true,childList:true,attributes:true,attributeFilter:['style','class','hidden']});
+  // A Back button can swap screens using existing DOM rather than replacing nodes.
+  // Check shortly after clicks and navigation events as a second detection path.
+  d.addEventListener('click',()=>{if(cover.hidden){setTimeout(monitor,90);setTimeout(monitor,300);setTimeout(monitor,700)}},true);
+  try{d.defaultView.addEventListener('popstate',()=>{setTimeout(monitor,90);setTimeout(monitor,350)});d.defaultView.addEventListener('hashchange',()=>{setTimeout(monitor,90);setTimeout(monitor,350)})}catch(e){}
   setTimeout(()=>{updateScore();if(!landingVisible()){navigateToTrivia()}},300);
   setTimeout(monitor,850);
  });
- setInterval(()=>{if(ready)monitor()},1500);
+ setInterval(()=>{if(ready)monitor()},700);
 })();
 </script></body></html>
