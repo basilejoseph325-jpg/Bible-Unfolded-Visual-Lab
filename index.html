@@ -828,6 +828,68 @@ button{transition:border-color .2s ease,box-shadow .22s ease,background-color .2
 @media(max-width:760px){#home .v37-emblem{width:clamp(142px,46vw,215px);height:clamp(133px,44vw,195px);margin:-10px auto -13px}#home .cinematic-heading.v37-heading{padding:0 0 16px}#home .cinematic-heading h1{font-size:clamp(32px,8.2vw,48px)}#home .cinematic-card .cinematic-card-footer{padding:13px 10px 10px 23px;min-height:0;align-items:flex-start;gap:5px;text-align:left}#home .v37-card-desc{font-size:clamp(10px,2.7vw,12px);text-align:left;max-width:none;flex:0 1 auto}#home .v37-card-cta{min-height:34px}#home .cinematic-card{min-height:128px}#home .cinematic-poster{min-height:128px}}
 @keyframes v37float{from{transform:translateY(0)}to{transform:translateY(-5px)}}
 @media(prefers-reduced-motion:reduce){#home .v37-emblem{animation:none}}
+
+/* Visual Lab main-menu experiment v1 — warm storybook home scene */
+#home .cinematic-dashboard{background-image:radial-gradient(circle at 50% -8%,#f7d49342 0%,transparent 34%),linear-gradient(180deg,#0824318c 0%,#08202bc4 32%,#051a23ee 78%,#04161df4 100%),var(--cover-scene);}
+#home #home-hero{position:relative;overflow:hidden}
+#home #home-hero:before{content:"";position:absolute;inset:auto -8% -36px;height:165px;z-index:0;background:radial-gradient(ellipse at 50% 10%,#f2c97d22 0%,#f2c97d10 33%,transparent 68%),linear-gradient(180deg,transparent 0%,#efc56b08 38%,#b78f4922 100%);pointer-events:none}
+#home .cinematic-heading.v37-heading{padding:0 0 12px}
+#home .cinematic-heading h1{text-shadow:0 2px 0 #955b27,0 6px 10px #071821,0 16px 36px #000c,0 0 30px #f0c56f45}
+#home .buvl-storybook-stage{width:min(100%,1180px);margin:2px auto 18px;padding:16px 18px;display:grid;grid-template-columns:minmax(190px,240px) minmax(0,1fr);gap:18px;align-items:center;position:relative;z-index:1;border:1.6px solid #e7c887;border-radius:26px;background:linear-gradient(140deg,#143847ee,#0b2431f2 48%,#102d3bfd 100%);box-shadow:inset 0 1px #fff3ca2d,0 16px 34px #0008,0 0 26px #e7c88718;overflow:hidden}
+#home .buvl-storybook-stage:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 30%,#fff2b518 0%,transparent 24%),radial-gradient(circle at 82% 72%,#ffe09f12 0%,transparent 26%);pointer-events:none}
+#home .buvl-storybook-copy{display:flex;flex-direction:column;gap:6px;min-width:0;text-align:left;color:#f8eed2;position:relative;z-index:1}
+#home .buvl-storybook-kicker{font:800 clamp(10px,1.1vw,12px)/1.2 system-ui;letter-spacing:2px;color:#ffe1a1}
+#home .buvl-storybook-copy strong{font:700 clamp(24px,2.6vw,38px)/1.05 Georgia,serif;color:#fff0c1;text-shadow:0 2px 9px #0007}
+#home .buvl-storybook-copy span{font:500 clamp(12px,1.25vw,15px)/1.45 system-ui;color:#d8ece8;max-width:700px}
+#home .buvl-sparkles{position:absolute;inset:0;pointer-events:none;z-index:0}
+#home .buvl-sparkles i{position:absolute;color:#ffe6a6;font-style:normal;font-size:clamp(14px,1.6vw,20px);text-shadow:0 0 12px #ffdd8e8f;animation:buvlTwinkle 3.4s ease-in-out infinite}
+#home .buvl-sparkles i:nth-child(1){left:25%;top:18%}
+#home .buvl-sparkles i:nth-child(2){right:15%;top:28%;animation-delay:.9s}
+#home .buvl-sparkles i:nth-child(3){right:26%;bottom:16%;animation-delay:1.6s}
+#home .buvl-sparkles i:nth-child(4){left:42%;bottom:14%;animation-delay:2.1s}
+#home .buvl-cat-card{position:relative;height:122px;border-radius:22px;background:linear-gradient(180deg,#1b4655,#123543);border:1px solid #eccd8a;box-shadow:inset 0 1px #fff5cb26,0 10px 20px #0006;overflow:hidden}
+#home .buvl-cat-card:before{content:"";position:absolute;inset:auto 10px 10px;height:22px;border-radius:999px;background:linear-gradient(180deg,#0a2531,#071d28);opacity:.9}
+#home .buvl-cat-wrap{position:absolute;left:10px;right:10px;top:7px;bottom:7px;animation:buvlSway 4.2s ease-in-out infinite}
+#home .buvl-cat-body{position:absolute;left:22px;top:42px;width:78px;height:46px;border-radius:32px;background:linear-gradient(180deg,#e5b980,#c8894b);box-shadow:inset -8px -7px 0 #bb7137,inset 0 5px 0 #efcca1}
+#home .buvl-cat-head{position:absolute;left:88px;top:22px;width:48px;height:44px;border-radius:50%;background:linear-gradient(180deg,#ecc492,#d18c53);box-shadow:inset 0 4px 0 #f6d8b1}
+#home .buvl-cat-head:before,#home .buvl-cat-head:after{content:"";position:absolute;top:-8px;width:16px;height:16px;background:#d18c53;transform:rotate(45deg);border-radius:2px;box-shadow:inset 3px 3px 0 #f3caa6}
+#home .buvl-cat-head:before{left:4px}#home .buvl-cat-head:after{right:4px}
+#home .buvl-cat-face{position:absolute;left:0;right:0;top:13px;height:18px}
+#home .buvl-cat-face:before,#home .buvl-cat-face:after{content:"";position:absolute;top:0;width:5px;height:5px;border-radius:50%;background:#51301d;box-shadow:0 1px 0 #fff6}
+#home .buvl-cat-face:before{left:14px}#home .buvl-cat-face:after{right:14px}
+#home .buvl-cat-nose{position:absolute;left:50%;top:8px;width:9px;height:7px;transform:translateX(-50%);background:#c97161;border-radius:50% 50% 65% 65%}
+#home .buvl-cat-mouth{position:absolute;left:50%;top:15px;width:16px;height:9px;transform:translateX(-50%)}
+#home .buvl-cat-mouth:before,#home .buvl-cat-mouth:after{content:"";position:absolute;top:0;width:8px;height:8px;border-bottom:2px solid #714530;border-radius:0 0 8px 8px}
+#home .buvl-cat-mouth:before{left:0;border-right:1px solid transparent}
+#home .buvl-cat-mouth:after{right:0;border-left:1px solid transparent}
+#home .buvl-cat-tail{position:absolute;left:4px;top:46px;width:34px;height:34px;border:8px solid #d38d4f;border-right:none;border-bottom:none;border-radius:26px 0 0 0;transform:rotate(-22deg)}
+#home .buvl-cat-paw,#home .buvl-cat-paw:before{position:absolute;background:#efc594;border-radius:14px}
+#home .buvl-cat-paw{width:18px;height:11px;top:69px;left:96px;z-index:2}
+#home .buvl-cat-paw:before{content:"";left:-19px;top:1px;width:18px;height:11px}
+#home .buvl-book{position:absolute;left:114px;top:60px;width:72px;height:32px;z-index:1}
+#home .buvl-book:before,#home .buvl-book:after{content:"";position:absolute;top:0;width:34px;height:28px;background:linear-gradient(180deg,#fff6db,#f1d7ab);border:1px solid #c49d63;box-shadow:inset 0 1px 0 #fff;}
+#home .buvl-book:before{left:0;border-radius:12px 4px 10px 14px;transform:skewY(4deg)}
+#home .buvl-book:after{right:0;border-radius:4px 12px 14px 10px;transform:skewY(-4deg)}
+#home .buvl-book i,#home .buvl-book b{position:absolute;top:8px;width:20px;height:1px;background:#d1b07a;z-index:2;box-shadow:0 5px 0 #d1b07a,0 10px 0 #d1b07a}
+#home .buvl-book i{left:8px}#home .buvl-book b{right:8px}
+#home .buvl-book:after,#home .buvl-book:before{background-color:#fff1d1}
+#home .buvl-cushion{position:absolute;left:18px;bottom:15px;width:148px;height:22px;border-radius:999px;background:linear-gradient(180deg,#d9a76d,#a56539);filter:drop-shadow(0 4px 10px #0005)}
+#home .cinematic-card{background:linear-gradient(165deg,#153d4be8,#0a2531fc 68%,#0d2e3bf2);border-color:#efcf90;box-shadow:inset 0 0 0 3px #051b27a1,0 16px 35px #000b,0 0 18px #f0c46c21}
+@media(hover:hover){#home .cinematic-card:hover{transform:translateY(-6px);box-shadow:0 18px 38px #000d,0 0 26px #ffd58f4d}}
+#home .cinematic-card-title{color:#ffebb5}
+#home .cinematic-card-desc{color:#e4f2ef}
+#home .cinematic-card-cta{background:linear-gradient(180deg,#fff2bc 0%,#f4d890 48%,#cb9c55 100%);box-shadow:inset 0 1px #fff9dfc4,0 4px 10px #0005}
+#home #home-story{box-shadow:0 0 0 3px #051b27a1,0 16px 35px #000b,0 0 18px #f0c46c21,0 0 0 1px #f4dbab2e}
+#home #home-story .cinematic-poster{box-shadow:inset 0 -28px 24px #0b2330d0, inset 0 0 0 1px #ffeab31a}
+#home #home-watch .cinematic-poster{box-shadow:inset 0 -28px 24px #0b2330d0, inset 0 0 0 1px #ffeab31a}
+#home #home-cross .cinematic-poster{box-shadow:inset 0 -28px 24px #0b2330d0, inset 0 0 0 1px #ffeab31a}
+#home #home-trivia .cinematic-poster{box-shadow:inset 0 -28px 24px #0b2330d0, inset 0 0 0 1px #ffeab31a}
+@keyframes buvlSway{0%,100%{transform:translateY(0) rotate(-1.2deg)}50%{transform:translateY(-3px) rotate(1.2deg)}}
+@keyframes buvlTwinkle{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.08)}}
+@media(max-width:760px){#home .buvl-storybook-stage{grid-template-columns:1fr;gap:10px;padding:12px 12px 13px;border-radius:18px}#home .buvl-storybook-copy{text-align:center}#home .buvl-storybook-copy strong{font-size:clamp(20px,6vw,28px)}#home .buvl-storybook-copy span{font-size:12px;max-width:none}#home .buvl-storybook-kicker{font-size:9px;letter-spacing:1.6px}#home .buvl-cat-card{width:min(100%,240px);height:118px;margin:0 auto}}
+@media(max-width:350px){#home .buvl-storybook-stage{padding:10px 10px 12px}#home .buvl-cat-card{width:100%;max-width:220px;height:108px}#home .buvl-storybook-copy strong{font-size:19px}}
+@media(prefers-reduced-motion:reduce){#home .buvl-cat-wrap,#home .buvl-sparkles i{animation:none!important}}
+
 .v37-fx-dot{position:fixed;z-index:600;pointer-events:none;border-radius:50%;background:#fff6c7;box-shadow:0 0 11px #ffd672;animation:v37fx .7s ease-out forwards}
 @keyframes v37fx{from{opacity:1;transform:translate(0,0) scale(1)}to{opacity:0;transform:translate(var(--dx),var(--dy)) scale(.2)}}
 .v37-symbol-icon{display:inline-grid;place-items:center;font-size:23px;line-height:1;min-width:30px;min-height:32px;vertical-align:middle}
@@ -1973,7 +2035,7 @@ html.reduce-motion #home .bu3924-glint{display:none!important}
  <span class="v37-top-spacer" aria-hidden="true"></span>
  <button id="home-rewards" class="cin-top-action" aria-label="Open rewards and progress"><span class="cin-top-icon" aria-hidden="true">★</span><span>REWARDS</span></button>
 </header>
-<div class="cinematic-heading v37-heading"><div class="v37-emblem" role="img" aria-label="Navy and gold open Bible emblem with J and W on the covers"></div><h1>BIBLE <span>UNFOLDED</span></h1><div class="cin-gold-rule bu3924-star-rule" aria-hidden="true"><i></i><span class="bu3924-star">✦</span><i></i></div><p class="bu3924-tagline" aria-label="Explore, Discover, Be Inspired"><span class="bu3924-script" aria-hidden="true"></span><span class="bu3924-glint bu3924-glint-a" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-b" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-c" aria-hidden="true">✦</span></p></div>
+<div class="cinematic-heading v37-heading"><div class="v37-emblem" role="img" aria-label="Navy and gold open Bible emblem with J and W on the covers"></div><h1>BIBLE <span>UNFOLDED</span></h1><div class="cin-gold-rule bu3924-star-rule" aria-hidden="true"><i></i><span class="bu3924-star">✦</span><i></i></div><p class="bu3924-tagline" aria-label="Explore, Discover, Be Inspired"><span class="bu3924-script" aria-hidden="true"></span><span class="bu3924-glint bu3924-glint-a" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-b" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-c" aria-hidden="true">✦</span></p></div><div class="buvl-storybook-stage" aria-hidden="true"><div class="buvl-cat-card"><div class="buvl-sparkles"><i>✦</i><i>✧</i><i>✦</i><i>✧</i></div><div class="buvl-cat-wrap"><span class="buvl-cushion"></span><span class="buvl-cat-tail"></span><span class="buvl-cat-body"></span><span class="buvl-cat-head"><span class="buvl-cat-face"><span class="buvl-cat-nose"></span><span class="buvl-cat-mouth"></span></span></span><span class="buvl-cat-paw"></span><span class="buvl-book"><i></i><b></b></span></div></div><div class="buvl-storybook-copy"><div class="buvl-storybook-kicker">WELCOME TO THE HEADQUARTERS</div><strong>Choose your next Bible adventure.</strong><span>A warmer, calmer storybook home screen for the Visual Lab — inviting, polished and fun while keeping Bible Unfolded easy to navigate.</span></div></div>
   <button id="bu375-home-cta" class="bu375-home-banner" type="button" aria-label="Open today's Daily Discovery challenge"><span class="bu375-sun" aria-hidden="true">✦</span><span class="bu375-banner-text"><strong>Daily Discovery</strong><small id="bu375-home-status">Five Bible questions · One new challenge each day</small></span><span class="bu375-banner-arrow" aria-hidden="true">›</span></button>
   <div class="cinematic-cards" aria-label="Choose a game mode">
  <button id="home-story" class="cinematic-card" aria-label="Play Story Adventure"><span class="cinematic-poster art-story"><span class="poster-symbol" aria-hidden="true">▤</span></span><span class="cinematic-card-body"><span class="cinematic-card-title">Story Adventure</span><span class="cinematic-card-desc">Bring Bible accounts to life, one discovery at a time.</span><span class="cinematic-card-cta">CONTINUE JOURNEY <span aria-hidden="true">›</span></span></span></button>
