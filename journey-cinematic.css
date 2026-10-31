@@ -1,0 +1,199 @@
+/* Bible Unfolded — Story Journey cinematic redesign, Visual Lab only.
+   One stylesheet; preserves the existing route controls and story logic. */
+
+#journey .journey-intro {
+  position:relative;
+  min-height:245px;
+  margin:12px 12px 6px;
+  padding:100px 17px 21px;
+  border:1px solid rgba(244,209,140,.65);
+  border-radius:20px;
+  background-image:linear-gradient(180deg,rgba(3,20,26,.05) 5%,rgba(4,20,28,.36) 42%,rgba(2,20,27,.94) 100%),url("journey-art/01_the_beginning.webp")!important;
+  background-position:center,center 48%!important;
+  background-size:cover,cover!important;
+  box-shadow:inset 0 0 35px rgba(4,12,20,.25),0 12px 34px #0006;
+  overflow:hidden;
+}
+#journey .journey-intro .overline {color:#ffe6a4!important;text-shadow:0 2px 6px #000c;}
+#journey .journey-intro h1 {color:#ffdf96!important;font-size:clamp(29px,7.5vw,39px)!important;text-shadow:0 3px 9px #000c;}
+#journey .journey-intro p {color:#fff5dc!important;font-size:13px!important;line-height:1.45!important;text-shadow:0 2px 8px #000d;max-width:390px;}
+#journey .journey-progress {position:relative;z-index:2;margin-top:17px!important;}
+#journey .journey-progress-line {border:1px solid #fff2bc80;background:#0a2a34b0;}
+#journey .journey-progress span {color:#fbe7b8!important;text-shadow:0 2px 5px #000d;}
+
+#journey #route-world {
+  min-height:0!important;
+  margin:12px 12px 18px!important;
+  border:1px solid #e9bd7460;
+  border-radius:23px;
+  background:radial-gradient(ellipse at 50% 0%,#22535cbd,#08212de8 57%,#061922)!important;
+  box-shadow:inset 0 0 42px #010c16a3,0 10px 30px #0008;
+  overflow:hidden;
+  filter:none!important;
+}
+#journey #route-world:before {opacity:.13!important;}
+#journey #route-world .trail-svg {
+  height:100%!important;
+  width:100%!important;
+  opacity:.70;
+}
+#journey #route-world .trail-shadow {stroke:#081b22!important;stroke-width:12!important;opacity:.42!important;}
+#journey #route-world .trail-glow {stroke-width:4!important;opacity:.74!important;stroke-dasharray:7 11!important;}
+#journey #route-world .trail-first {stroke-width:5!important;opacity:.75!important;}
+#journey #journey-stops {
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-rows:repeat(8,minmax(175px,auto))!important;
+  gap:18px!important;
+  padding:20px 8px 23px!important;
+  position:relative;
+  z-index:2;
+}
+#journey #journey-stops .route-stop {
+  box-sizing:border-box!important;
+  position:relative!important;
+  align-self:center!important;
+  justify-self:start!important;
+  display:flex!important;
+  align-items:flex-end!important;
+  width:calc(100% - 25px)!important;
+  max-width:none!important;
+  height:clamp(164px,45vw,207px)!important;
+  min-height:164px!important;
+  padding:0!important;
+  border:1px solid #e7c17a95!important;
+  border-radius:17px!important;
+  overflow:visible;
+  color:#fff9e8!important;
+  text-align:left;
+  background-position:center!important;
+  background-size:cover!important;
+  background-repeat:no-repeat!important;
+  background-color:#113743!important;
+  box-shadow:0 8px 25px #000b,inset 0 0 0 1px #fff1c31c!important;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease!important;
+  -webkit-tap-highlight-color:transparent;
+  cursor:pointer;
+}
+#journey #journey-stops .route-stop:nth-child(even) {justify-self:end!important;}
+#journey #journey-stops .route-stop:nth-child(1) {
+  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("journey-art/01_the_beginning.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(2) {
+  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("journey-art/02_faith_promises.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(3) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/03_deliverance.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(4) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/04_judges_kings.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(5) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/05_exile_return.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(6) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/06_the_messiah.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(7) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/07_good_news_spreads.webp")!important;
+}
+#journey #journey-stops .route-stop:nth-child(8) {
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/08_revelation.webp")!important;
+}
+#journey #journey-stops .route-stop .route-seal {display:none!important;}
+#journey #journey-stops .route-stop .route-info {
+  position:relative;
+  z-index:2;
+  padding:13px 14px 15px!important;
+  width:100%;
+  flex:1;
+  min-width:0;
+  text-shadow:0 2px 5px #000d;
+}
+#journey #journey-stops .route-stop .route-info .route-number {
+  display:block!important;
+  color:#ffe5a8!important;
+  letter-spacing:1.3px!important;
+  font-size:10px!important;
+  font-weight:650!important;
+  margin-bottom:5px;
+}
+#journey #journey-stops .route-stop .route-info strong {
+  font:700 clamp(19px,5vw,25px)/1.12 Georgia,serif!important;
+  color:#ffdfa0!important;
+  text-shadow:0 2px 7px #000f,0 0 12px #000b;
+  margin:0!important;
+}
+#journey #journey-stops .route-stop .route-info small {display:none!important;}
+#journey #journey-stops .route-stop.open {
+  border:1.5px solid #ffdf8d!important;
+  box-shadow:0 0 0 1px #d2a84e55,0 0 16px #f4bc5450,0 10px 23px #000b!important;
+}
+#journey #journey-stops .route-stop:not(.open) {
+  border-color:#acb9b97d!important;
+}
+#journey #journey-stops .route-stop:not(.open) .route-info strong {color:#efe4cd!important;}
+#journey #journey-stops .route-stop:focus-visible {outline:3px solid #fff1a9!important;outline-offset:3px;}
+#journey #journey-stops .route-stop.open:active {transform:scale(.985)!important;}
+#journey #journey-stops .route-stop:before {
+  content:"✦";
+  z-index:4;
+  top:-9px;
+  left:16px;
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  background:#152e37;
+  display:grid;
+  place-items:center;
+  font-size:12px;
+  color:#ffe6a2;
+  border:1px solid #d8be7f8c;
+  box-shadow:0 2px 9px #0008;
+}
+#journey #journey-stops .route-stop:not(.open):before {content:"◇";color:#b0c7c3;}
+#journey .journey-disclaimer {line-height:1.6!important;padding:3px 2px 0;}
+#journey #route-to-levels {min-height:55px!important;border-radius:15px!important;margin-bottom:24px!important;}
+
+#episodes .episodes-cover {
+  position:relative;
+  min-height:245px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  justify-content:flex-end;
+  padding:23px 20px!important;
+  margin:13px 12px 18px!important;
+  border:1px solid #f1d08a9c;
+  border-radius:20px;
+  overflow:hidden;
+  background-image:linear-gradient(180deg,#08181e0a 22%,#031823dc 94%),var(--bu-journey-photo,url("journey-art/01_the_beginning.webp"))!important;
+  background-size:cover!important;
+  background-position:center!important;
+  box-shadow:0 10px 30px #0008;
+}
+#episodes .episodes-cover .overline {color:#ffe5ab!important;text-shadow:0 2px 6px #000d;}
+#episodes .episodes-cover h1 {color:#ffe09c!important;font-size:clamp(27px,7vw,36px)!important;text-shadow:0 3px 8px #000f;}
+#episodes .episodes-cover p {color:#fff3d8!important;text-shadow:0 2px 6px #000d;}
+#episodes .episode-card {border-color:#e9cc8a77!important;transition:border-color .2s ease,transform .2s ease;}
+
+#chapter-guide .chapter-guide-cover {
+  height:clamp(180px,30dvh,260px)!important;
+  background-image:linear-gradient(180deg,#071b230d 45%,#06232bdd 100%),var(--bu-journey-photo,url("journey-art/01_the_beginning.webp"))!important;
+  background-size:cover!important;
+  background-position:center!important;
+}
+#chapter-guide .chapter-guide-box {border-color:#e7bf78!important;}
+#chapter-guide .chapter-guide-content h2 {color:#ffdfa2!important;}
+
+@media (max-width:370px) {
+  #journey #journey-stops {gap:13px!important;padding-inline:7px!important;}
+  #journey #journey-stops .route-stop {height:164px!important;}
+  #journey .journey-intro {min-height:226px;padding-top:80px;}
+}
+@media (max-height:620px) {
+  #chapter-guide .chapter-guide-cover {height:125px!important;}
+}
+@media (prefers-reduced-motion:reduce) {
+  #journey #journey-stops .route-stop {transition:none!important;}
+}
