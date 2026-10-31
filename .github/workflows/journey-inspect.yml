@@ -1,0 +1,28 @@
+name: Story Journey Read-Only Inspection
+on:
+  push:
+    paths:
+      - '.github/workflows/journey-inspect.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect Journey markup without changing game files
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text(encoding='utf-8')
+          print('INDEX_CHARS',len(s),'LINES',s.count('\n')+1)
+          terms=['Follow the Story','The Journey','The Beginning','Faith &amp; Promises','Faith & Promises','Genesis adventures','Journey locked','Judges & Kings','Exile & Return','Browse Bible Books','storyJourney','journeyMap','journeyCard','renderJourney']
+          for term in terms:
+              print('\nTERM',repr(term))
+              occurrences=list(re.finditer(re.escape(term),s,re.I))
+              print('COUNT',len(occurrences))
+              for m in occurrences[:3]:
+                  print('POS',m.start(),'CONTEXT',s[max(0,m.start()-900):min(len(s),m.end()+1300)].replace('\n','\\n'))
+          PY
