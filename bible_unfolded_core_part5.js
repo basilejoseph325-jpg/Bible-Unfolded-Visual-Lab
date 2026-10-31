@@ -379,7 +379,93 @@ const BU386_SECTIONS=[
  {id:'wisdom',name:'Wisdom & Worship',icon:'♫',keys:['psalms','proverbs','jehovah']},
  {id:'future',name:'Prophecy & Kingdom',icon:'✧',keys:['promise','kingdom','prophecy']}
 ];
-const bu386NavigationController=window.BUTriviaNavigationController.create({
+
+/* Native Trivia V2. The original main screen controller is NOT invoked. */
+const buV2ControllerFactory=(function(){function create(ctx){
+ const bu386Trivia=ctx.state, BU386_SECTIONS=ctx.sections;
+ const BU34_KEYS=ctx.keys, BU34_BANK=ctx.bank, BU34_NAMES=ctx.names;
+ const BU37_DIFFICULTIES=ctx.difficulties, BU37_LEVEL_NAMES=ctx.levelNames;
+ const bu37Pref=ctx.preferences, BU374_RECALL_KEY=ctx.recallKey;
+ const bu37Count=()=>ctx.count(), bu37Pool=(...args)=>ctx.pool(...args);
+ const bu37SavePref=()=>ctx.savePreferences(), bu3848SetTopicLength=(...args)=>ctx.setTopicLength(...args);
+ const bu34Start=(...args)=>ctx.start(...args);
+ const bu35Setup=ctx.familySetup, bu35Open=(...args)=>ctx.familyOpen(...args);
+function bu386Esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function bu386TriviaFrame(heading,subtitle,html,back=true){
+ const body=document.getElementById('bu34-body');
+ body.innerHTML=`<div class="bu386-page">${back?'<button type="button" class="bu386-backlink" id="bu386-back">‹ Back</button>':''}<h2 class="bu386-heading">${heading}</h2>${subtitle?`<p class="bu386-note">${subtitle}</p>`:''}${html}</div>`;
+ const b=document.getElementById('bu386-back');if(b)b.onclick=bu386TriviaBack;
+ body.scrollTop=0;
+}
+function bu386OpenSetup(topic=null){
+ bu386Trivia.from=topic?'topics':'main';bu386Trivia.page='setup';bu386Trivia.topic=topic;bu386TriviaRender();
+}
+function bu386Available(topic,level){
+ const current=bu37Pref.difficulty;bu37Pref.difficulty=level;
+ let n=0;try{n=bu37Pool(topic?'topic':'quick',topic||'mixed').length}finally{bu37Pref.difficulty=current}
+ return n;
+}
+function bu386TriviaRender(){
+ const page=bu386Trivia.page,topic=bu386Trivia.topic;
+ if(page==='main'){
+ const landing="<main id=\"triviaLab\" class=\"bu-native-trivia\" aria-label=\"Bible Trivia\">\n <div class=\"labContent\">\n  <section class=\"labTop\" aria-label=\"Bible Trivia\">\n   <header class=\"labHeader\">\n    <button type=\"button\" class=\"labCircle labMenu\" id=\"labMenu\" title=\"Game menu\" aria-label=\"Open menu\">☰</button>\n    <div class=\"labTitleGroup\"><h1 class=\"labTitle\">Bible Trivia</h1><div class=\"labStats\"><span>★</span><span id=\"labPoints\">Points</span><span>•</span><span id=\"labTokens\">Tokens</span></div></div>\n    <button type=\"button\" class=\"labCircle labReward\" id=\"labReward\" title=\"Rewards\" aria-label=\"Open rewards\">♛</button>\n   </header>\n   <div class=\"labTagline\">Test your knowledge&nbsp; • &nbsp;Explore the Bible&nbsp; • &nbsp;Grow your faith</div>\n   <div id=\"labStatus\" role=\"status\" aria-live=\"polite\"></div>\n  </section>\n  <div class=\"labBackRail\"><button type=\"button\" id=\"labBack\">‹ Back to Games</button></div><section class=\"labCardWrap\" aria-label=\"Bible trivia activities\">\n   <button type=\"button\" class=\"labCard\" id=\"bu386-mixed\"><span class=\"cardText\"><span class=\"cardName\">Play Mixed Trivia</span><br><span class=\"cardSub\">Questions from across the Bible</span><br><span class=\"cardPill\">▥ &nbsp;1,122 questions</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n   <button type=\"button\" class=\"labCard\" id=\"bu386-browse\"><span class=\"cardText\"><span class=\"cardName\">Choose a Topic</span><br><span class=\"cardSub\">People, teachings, prophecy and more</span><br><span class=\"cardPill\">▤ &nbsp;40 topics</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n   <button type=\"button\" class=\"labCard\" id=\"bu386-master\"><span class=\"cardText\"><span class=\"cardName\">Bible Master</span><br><span class=\"cardSub\">20 questions · Increasing difficulty</span><br><span class=\"cardPill\">▥ &nbsp;Challenge yourself</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n   <button type=\"button\" class=\"labCard\" id=\"bu3834-entry\"><span class=\"cardText\"><span class=\"cardName\">Scholar Research</span><br><span class=\"cardSub\">Deep prophecy and Jehovah's Witnesses history. Guided hints, source articles, real penalties.</span><br><span class=\"cardPill\">▤ &nbsp;Study and explore</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n  </section>\n  <button class=\"labTogether\" type=\"button\" id=\"bu386-family\"><span aria-hidden=\"true\">♟</span>Play Trivia Together <span aria-hidden=\"true\">›</span></button>\n  <footer class=\"labFooter\">Bible Unfolded • Bible Trivia</footer>\n </div>\n</main>".replace('1,122 questions',Number(bu37Count()).toLocaleString()+' questions').replace('40 topics',BU34_KEYS.length+' topics');
+ bu386TriviaFrame('','',landing,false);
+ document.getElementById('bu386-mixed').onclick=()=>bu386OpenSetup();
+ document.getElementById('bu386-browse').onclick=()=>{bu386Trivia.page='browse';bu386TriviaRender()};
+ document.getElementById('bu386-master').onclick=()=>bu34Start('master');
+ document.getElementById('bu3834-entry').onclick=()=>bu3834Start();
+ document.getElementById('bu386-family').onclick=()=>{bu35Setup.quick='trivia';bu35Open('setup')};
+ document.getElementById('labBack').onclick=()=>document.getElementById('bu34-back')?.click();
+ document.getElementById('labMenu').onclick=()=>document.getElementById('bu34-menu')?.click();
+ document.getElementById('labReward').onclick=()=>document.getElementById('home-rewards')?.click();
+ try{if(typeof economy!=='undefined'&&economy){document.getElementById('labPoints').textContent=Number(economy.points||0).toLocaleString()+' Points';document.getElementById('labTokens').textContent=Number(economy.coins||0).toLocaleString()+' Tokens';}}catch(_){}
+ }else if(page==='browse'){
+  const parts=BU386_SECTIONS.map(g=>{
+   const keys=g.keys.filter(k=>BU34_KEYS.includes(k)),count=keys.reduce((n,k)=>n+BU34_BANK[k].length,0);
+   return `<button class="bu386-picker" data-section="${g.id}"><span class="bu386-glyph">${g.icon}</span><span><strong>${bu386Esc(g.name)}</strong><small>${keys.length} topic${keys.length===1?"":"s"} · ${count} questions</small></span></button>`
+  }).join('');
+  const unused=BU34_KEYS.filter(k=>!BU386_SECTIONS.some(g=>g.keys.includes(k)));
+  const other=unused.length?`<button class="bu386-picker" data-section="other"><span class="bu386-glyph">✧</span><span><strong>More Bible Topics</strong><small>${unused.length} topics</small></span></button>`:'';
+  bu386TriviaFrame('Choose a Topic','Browse by subject, or play a mixed round for variety.',parts+other);
+  document.querySelectorAll('#bu34-body [data-section]').forEach(b=>b.onclick=()=>{bu386Trivia.section=b.dataset.section;bu386Trivia.page='topics';bu386TriviaRender()});
+ }else if(page==='topics'){
+  const section=BU386_SECTIONS.find(s=>s.id===bu386Trivia.section);
+  const keys=(section?section.keys:BU34_KEYS.filter(k=>!BU386_SECTIONS.some(g=>g.keys.includes(k)))).filter(k=>BU34_KEYS.includes(k));
+  bu386TriviaFrame(bu386Esc(section?.name||'More Bible Topics'),`${keys.length} topic${keys.length===1?"":"s"} · Choose one to begin`,
+   `<div class="bu386-grid">${keys.map(k=>`<button class="bu386-picker" data-topic="${k}"><span class="bu386-glyph">${BU34_NAMES[k][1]||'✧'}</span><span><strong>${bu386Esc(BU34_NAMES[k][0])}</strong><small>${BU34_BANK[k].length} questions</small></span></button>`).join('')}</div>`);
+  document.querySelectorAll('#bu34-body [data-topic]').forEach(b=>b.onclick=()=>bu386OpenSetup(b.dataset.topic));
+ }else if(page==='setup'){
+  const selected=topic?BU34_NAMES[topic][0]:'Mixed Trivia';
+  const diffs=BU37_DIFFICULTIES.map(d=>({name:BU37_LEVEL_NAMES[d],value:d,count:bu386Available(topic,d)}));
+  if(!diffs.some(x=>x.value===bu37Pref.difficulty&&x.count>0)){
+   const first=diffs.find(x=>x.count>0);if(first){bu37Pref.difficulty=first.value;bu37SavePref()}
+  }
+  const availableAtLevel=bu386Available(topic,bu37Pref.difficulty);
+  bu386TriviaFrame(bu386Esc(selected),topic?'A focused round on this topic.':'A fresh mix of Bible questions every round.',`
+   <h3 class="bu386-subhead">Difficulty</h3><div class="bu386-grid">${diffs.map(d=>`<button class="bu386-select" data-difficulty="${d.value}" aria-pressed="${bu37Pref.difficulty===d.value}" ${!d.count?'disabled title="No questions at this level yet"':''}>${d.name} · ${d.count}</button>`).join('')}</div>
+   ${!topic?`<h3 class="bu386-subhead">Round Length</h3><div class="bu386-grid"><button class="bu386-select" data-length="quick" aria-pressed="${bu386Trivia.round==='quick'}">5 Questions</button><button class="bu386-select" data-length="challenge" aria-pressed="${bu386Trivia.round==='challenge'}">10 Questions</button></div>`:`<h3 class="bu386-subhead">Round Length</h3><div class="bu386-grid"><button class="bu386-select" data-topic-length="10" aria-pressed="${ctx.getTopicLength()===10}">Up to 10</button><button class="bu386-select" data-topic-length="15" aria-pressed="${ctx.getTopicLength()===15}">Up to 15</button></div><p class="bu386-note">${Math.min(ctx.getTopicLength(),availableAtLevel)} in this round · ${availableAtLevel} available at this difficulty (${BU34_BANK[topic].length} across all levels). ${availableAtLevel<ctx.getTopicLength()?'More questions for this level are being researched.':''}</p>`}
+   <button class="bu386-start" id="bu386-go">▶ Start Trivia</button>
+   <details class="bu386-options"><summary>Optional: Recall First</summary><label><input type="checkbox" id="bu386-recall" ${ctx.getRecallFirst()?'checked':''}><span>Try answering from memory before seeing multiple-choice answers.</span></label></details>`);
+  document.querySelectorAll('#bu34-body [data-difficulty]').forEach(b=>b.onclick=()=>{bu37Pref.difficulty=b.dataset.difficulty;bu37SavePref();bu386TriviaRender()});
+  document.querySelectorAll('#bu34-body [data-length]').forEach(b=>b.onclick=()=>{bu386Trivia.round=b.dataset.length;bu386TriviaRender()});
+  document.querySelectorAll('#bu34-body [data-topic-length]').forEach(b=>b.onclick=()=>{bu3848SetTopicLength(+b.dataset.topicLength);bu386TriviaRender()});
+  const recall=document.getElementById('bu386-recall');if(recall)recall.onchange=()=>{ctx.setRecallFirst(recall.checked);try{localStorage.setItem(BU374_RECALL_KEY,String(bu374RecallFirst))}catch(_){}};
+  document.getElementById('bu386-go').onclick=()=>bu34Start(topic?'topic':bu386Trivia.round,topic||'mixed');
+ }
+}
+function bu386TriviaBack(){
+ const p=bu386Trivia.page;
+ if(p==='topics'){bu386Trivia.page='browse'}
+ else if(p==='setup'){bu386Trivia.page=bu386Trivia.from==='topics'?'topics':'main'}
+ else bu386Trivia.page='main';
+ bu386TriviaRender();
+}
+return Object.freeze({esc:bu386Esc,frame:bu386TriviaFrame,openSetup:bu386OpenSetup,available:bu386Available,render:bu386TriviaRender,back:bu386TriviaBack});
+}
+return Object.freeze({create});})();
+(function(){const sheet=document.createElement('link');sheet.rel='stylesheet';sheet.href='trivia-native-v2.css';sheet.id='bu-native-trivia-stylesheet';document.head.appendChild(sheet)})();
+
+const bu386NavigationController=buV2ControllerFactory.create({
  state:bu386Trivia,sections:BU386_SECTIONS,keys:BU34_KEYS,bank:BU34_BANK,names:BU34_NAMES,
  difficulties:BU37_DIFFICULTIES,levelNames:BU37_LEVEL_NAMES,preferences:bu37Pref,
  recallKey:BU374_RECALL_KEY,
