@@ -1,0 +1,156 @@
+/* Bible Unfolded — Bible Books visual refresh, Visual Lab only.
+   Native 66-book grid and existing click/unlock rules remain untouched.
+   The first 11 books have approved individual art; others await artwork. */
+#levels .book-intro {
+  box-sizing:border-box!important;
+  position:relative;
+  min-height:218px!important;
+  margin:13px 12px 20px!important;
+  padding:98px 18px 23px!important;
+  border:1px solid rgba(248,210,131,.66)!important;
+  border-radius:20px!important;
+  background-image:linear-gradient(180deg,rgba(2,19,26,.03) 12%,rgba(2,21,27,.40) 53%,rgba(2,17,24,.95) 100%),url("bible-book-art/01_genesis.webp")!important;
+  background-position:center,center 44%!important;
+  background-size:cover!important;
+  box-shadow:inset 0 0 22px rgba(0,0,0,.14),0 11px 26px #0008!important;
+  overflow:hidden;
+}
+#levels .book-intro h1 {
+  position:relative;z-index:1;
+  margin:0 0 7px!important;
+  font:700 clamp(29px,7.4vw,38px)/1.08 Georgia,"Times New Roman",serif!important;
+  color:#ffe1a0!important;
+  text-shadow:0 3px 9px #000e!important;
+}
+#levels .book-intro p {
+  position:relative;z-index:1;
+  margin:0!important;
+  font-size:13px!important;
+  line-height:1.45!important;
+  color:#fff4df!important;
+  text-shadow:0 2px 7px #000f!important;
+}
+#levels .testament-label {
+  margin:21px 13px 15px!important;
+  padding:0 1px 11px!important;
+  gap:8px!important;
+  color:#f5db9f!important;
+  font-size:10px!important;
+  letter-spacing:1.15px!important;
+  border-bottom:1px solid #d6ad6f9e!important;
+  text-shadow:0 2px 6px #0009;
+}
+#levels .testament-label span {color:#c5d5d0!important;white-space:nowrap;}
+#levels .new-testament {margin-top:34px!important;}
+#levels .book-grid {
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:12px!important;
+  padding:0 12px!important;
+}
+#levels .book-tile {
+  position:relative!important;
+  box-sizing:border-box!important;
+  width:100%!important;
+  height:clamp(152px,42vw,190px)!important;
+  min-width:0!important;
+  padding:15px 12px 13px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-end!important;
+  align-items:flex-start!important;
+  text-align:left!important;
+  border:1px solid rgba(233,196,128,.64)!important;
+  border-radius:16px!important;
+  overflow:hidden!important;
+  color:#f9f0db!important;
+  background-color:#143946!important;
+  background-image:linear-gradient(180deg,rgba(3,22,27,.04) 3%,rgba(1,15,24,.12) 36%,rgba(1,14,23,.56) 68%,rgba(0,11,18,.96) 100%),var(--bu-book-cover,linear-gradient(135deg,#32545d 0%,#173e4b 54%,#0b2635 100%))!important;
+  background-size:cover!important;
+  background-position:center center!important;
+  box-shadow:inset 0 0 0 1px #f5deab16,0 7px 19px #0008!important;
+  transition:transform .16s ease,border-color .2s ease,box-shadow .2s ease!important;
+  -webkit-tap-highlight-color:transparent;
+}
+#levels .book-tile::before {
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  opacity:1!important;
+  background:radial-gradient(ellipse at 70% 0%,#ffdc8921,transparent 52%)!important;
+  pointer-events:none!important;
+}
+#levels .book-tile .book-num {
+  position:absolute!important;
+  z-index:2!important;
+  top:11px!important;
+  left:12px!important;
+  padding:3px 5px!important;
+  border-radius:5px!important;
+  background:#082b36a6!important;
+  font:700 9px/1.2 system-ui,sans-serif!important;
+  letter-spacing:.8px!important;
+  color:#fff0ce!important;
+  text-shadow:0 1px 4px #000f!important;
+}
+#levels .book-tile .book-abb {display:none!important;}
+#levels .book-tile .book-name {
+  display:block!important;
+  position:relative!important;
+  z-index:2!important;
+  max-height:none!important;
+  max-width:100%!important;
+  margin:0!important;
+  padding:0!important;
+  font:700 clamp(17px,4.7vw,22px)/1.06 Georgia,"Times New Roman",serif!important;
+  overflow:visible!important;
+  overflow-wrap:break-word!important;
+  color:#ffdf9d!important;
+  text-shadow:0 2px 6px #000f,0 0 16px #000b!important;
+}
+#levels .book-tile .book-status {
+  top:10px!important;
+  right:11px!important;
+  z-index:2!important;
+  font-size:16px!important;
+  color:#ead095!important;
+  text-shadow:0 2px 5px #000f!important;
+}
+#levels .book-tile.open {
+  border:1.5px solid #ffe29c!important;
+  box-shadow:0 0 0 1px #f4c46f55,0 0 15px #d5a0484e,0 9px 21px #000a!important;
+}
+#levels .book-tile:focus-visible {outline:3px solid #ffe6a7!important;outline-offset:3px;}
+#levels .book-tile:active {transform:scale(.985)!important;}
+#levels #hebrew-books .book-tile:nth-child(1) {--bu-book-cover:url("bible-book-art/01_genesis.webp");}
+#levels #hebrew-books .book-tile:nth-child(2) {--bu-book-cover:url("bible-book-art/02_exodus.webp");}
+#levels #hebrew-books .book-tile:nth-child(3) {--bu-book-cover:url("bible-book-art/03_leviticus.webp");}
+#levels #hebrew-books .book-tile:nth-child(4) {--bu-book-cover:url("bible-book-art/04_numbers.webp");}
+#levels #hebrew-books .book-tile:nth-child(5) {--bu-book-cover:url("bible-book-art/05_deuteronomy.webp");}
+#levels #hebrew-books .book-tile:nth-child(6) {--bu-book-cover:url("bible-book-art/06_joshua.webp");}
+#levels #hebrew-books .book-tile:nth-child(7) {--bu-book-cover:url("bible-book-art/07_judges.webp");}
+#levels #hebrew-books .book-tile:nth-child(8) {--bu-book-cover:url("bible-book-art/08_ruth.webp");}
+#levels #hebrew-books .book-tile:nth-child(9) {--bu-book-cover:url("bible-book-art/09_1_samuel.webp");}
+#levels #hebrew-books .book-tile:nth-child(10) {--bu-book-cover:url("bible-book-art/10_2_samuel.webp");}
+#levels #hebrew-books .book-tile:nth-child(11) {--bu-book-cover:url("bible-book-art/11_1_kings.webp");}
+#levels .book-grid .book-tile:not(.open) {filter:none!important;}
+#levels .collection-note {
+  margin:21px 17px 27px!important;
+  line-height:1.5!important;
+  font-size:11px!important;
+  color:#c9d5d3!important;
+}
+@media (max-width:340px) {
+  #levels .book-grid {gap:9px!important;padding-inline:9px!important;}
+  #levels .book-tile {height:150px!important;padding:12px 9px!important;}
+  #levels .book-tile .book-name {font-size:16px!important;}
+}
+@media (min-width:720px) {
+  #levels .book-grid {grid-template-columns:repeat(3,minmax(0,1fr))!important;}
+  #levels .book-tile {height:200px!important;}
+  #levels .book-tile .book-name {font-size:22px!important;}
+}
+@media (prefers-reduced-motion:reduce) {
+  #levels .book-tile {transition:none!important;}
+}
