@@ -3,27 +3,28 @@ on:
   push:
     paths:
       - '.github/workflows/journey-inspect.yml'
-permissions:
-  contents: read
+permissions: {contents: read}
 jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Journey runtime markup and selectors
+      - name: Print compact Journey JavaScript and content structures
         shell: bash
         run: |
           python3 - <<'PY'
-          from pathlib import Path
           import re
+          from pathlib import Path
           s=Path('index.html').read_text(encoding='utf-8')
-          terms=['journey-stops','journey-stop','route-stop','stop-card','journey-node','journey-intro','episodes-cover','episode-list','chapter-guide-cover','story-open','route-world','journey-progress-fill','route-to-levels']
-          for term in terms:
-              hits=list(re.finditer(re.escape(term),s,re.I))
-              print('TERM',term,'COUNT',len(hits))
-              for m in hits[:6]:
-                  c=s[max(0,m.start()-450):min(len(s),m.end()+1000)]
-                  if 'base64' in c:
-                      c=c[:400]
-                  print('POS',m.start(),'CONTEXT',c.replace('\n','\\n'))
+          patterns=[r'route-stop',r'routeStops',r'route-stops',r'journey-stops',r'journeyStages',r'journeyChapters',r'episodes-cover',r'chapter-guide-cover',r'chapter-guide-start',r'episode-card',r'function renderJourney',r'function renderRoute']
+          for pat in patterns:
+            found=list(re.finditer(pat,s,re.I))
+            print('PAT',pat,'COUNT',len(found))
+            for m in found:
+              if m.start()<1250000:continue
+              before=s[max(0,m.start()-750):m.start()]
+              after=s[m.start():min(len(s),m.end()+1000)]
+              excerpt=(before+after).replace('\n','\\n')
+              print('POS',m.start(),'EXCERPT',excerpt[:1750])
+              if len(found)>45:break
           PY
