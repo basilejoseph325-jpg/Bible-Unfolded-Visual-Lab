@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bible Unfolded — Scholar Research Visual Lab</title>
+<style>html,body{margin:0;background:#082632;color:#ffe2ac;font:16px Georgia,serif}main{min-height:95vh;display:grid;place-content:center;gap:13px;text-align:center;padding:20px}.spinner{margin:auto;border:3px solid #567585;border-top-color:#eaca88;border-radius:100%;height:38px;width:38px;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}.error{max-width:500px;line-height:1.6}</style>
+</head><body><main id="loading"><div class="spinner" aria-hidden="true"></div><strong>Preparing Scholar Research test...</strong></main>
+<script>
+(async function(){'use strict';
+ try {
+   const responses=await Promise.all(['index.html','scholar-native-fragment.txt','scholar-native.css'].map(p=>fetch(p,{cache:'no-store'})));
+   if(responses.some(r=>!r.ok))throw Error('Test file failed to load');
+   const [src,fragment,css]=await Promise.all(responses.map(r=>r.text()));
+   const startMarker='  const esc=ctx.esc();\n  e.innerHTML=`<div class="bu3835-tracks">';
+   const start=src.indexOf(startMarker);
+   if(start<0)throw Error('Scholar Research source changed. Test has not been applied.');
+   const endToken='e.scrollTop=0;';
+   const end=src.indexOf(endToken,start);
+   if(end<0||end-start>2000)throw Error('Scholar Research source mismatch. Test has not been applied.');
+   const patched=src.slice(0,start)+fragment+src.slice(end+endToken.length);
+   if(!patched.includes('buScholarVisual'))throw Error('Scholar fragment not inserted');
+   const styled=patched.replace('</head>','<style id="bu-scholar-illustrated-native-style">'+css+'</style></head>');
+   if(styled===patched)throw Error('Style insertion failed');
+   document.open();document.write(styled);document.close();
+ } catch(e) {
+   const el=document.getElementById('loading');
+   if(el)el.innerHTML='<h1>Visual Lab preview unavailable</h1><p class="error">'+String(e.message).replace(/[<>&]/g,'')+'</p><p>The normal test game remains unchanged.</p>';
+   console.error('Scholar visual test loader:',e);
+ }
+})();
+</script></body></html>

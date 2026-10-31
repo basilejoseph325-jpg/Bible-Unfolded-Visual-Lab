@@ -1,0 +1,43 @@
+  const esc=ctx.esc();
+  const cardArt={
+    'Joshua & Jericho':['joshua-jericho','History'],
+    'Prophecies Uncovered':['prophecies-uncovered','Prophecy'],
+    'Witness History':['witness-history','History'],
+    'Ultimate Challenge':['ultimate-challenge','Challenge'],
+    'Heroes of Courage':['heroes-of-courage','People'],
+    'Hidden Bible Details':['hidden-bible-details','Details'],
+    'Big Bible Questions':['big-bible-questions','Challenge'],
+    'Courage & Faith':['courage-and-faith','Faith'],
+    'Bible Surprises':['bible-surprises','Mixed'],
+    'Surprise Me!':['surprise-me','Mixed'],
+    'Warm-Up':['warm-up','Basics']
+  };
+  const tracks=Object.entries(ctx.tracks());
+  e.innerHTML=`<div class="bu3835-tracks buScholarVisual">
+    <section class="buScholarHero" aria-label="Scholar Research: explore the Scriptures">
+      <div class="buScholarHeroText"><span class="buScholarKicker">UNLOCK DEEPER DISCOVERIES</span><h2>Scholar Research</h2><p>Explore Bible history, uncover meaningful details, and follow the evidence.</p></div>
+    </section>
+    <div class="buScholarBelowHero">— ${tracks.length} RESEARCH PATHS —</div>
+    <div class="buScholarFilters" aria-label="Filter research topics">
+      ${['All','History','People','Prophecy','Faith','Challenge','Details','Mixed','Basics'].map(group=>`<button type="button" class="buScholarFilter" data-scholar-filter="${group}" aria-pressed="${group==='All'?'true':'false'}">${group}</button>`).join('')}
+    </div>
+    <div class="buScholarCards">
+      ${tracks.map(([id,t])=>{
+         let n=ctx.questions().filter(q=>id==='foundation'?q.tier==='foundation':q.tier==='scholar'&&(id==='gauntlet'?q.gauntlet:(!t.cat||t.cat.includes(q.category)))).length;
+         const art=cardArt[t.name]||['warm-up','Basics'];
+         return `<button type="button" class="bu3835-track buScholarCard" data-track="${esc(id)}" data-scholar-category="${art[1]}">
+            <span class="buScholarThumb"><img src="scholar-research-assets/${art[0]}.webp" alt="" loading="lazy" decoding="async"></span>
+            <span class="buScholarCopy"><strong>${esc(t.name)}</strong><span class="buScholarDescription">${esc(t.desc)}</span><span class="buScholarMeta"><small>${n} questions</small><em>${art[1]}</em></span></span>
+            <span class="buScholarArrow" aria-hidden="true">›</span>
+          </button>`;
+      }).join('')}
+    </div>
+    <button class="bu34-btn bu3834-secondary buScholarBack" id="bu3835-track-back">← Back to Bible Trivia</button>
+  </div>`;
+  e.querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>{ctx.setTrack(b.dataset.track);ctx.pick()});
+  e.querySelectorAll('[data-scholar-filter]').forEach(f=>f.onclick=()=>{
+    const group=f.dataset.scholarFilter;
+    e.querySelectorAll('[data-scholar-filter]').forEach(k=>k.setAttribute('aria-pressed',String(k===f)));
+    e.querySelectorAll('[data-track]').forEach(card=>{card.hidden=group!=='All'&&card.dataset.scholarCategory!==group});
+  });
+  document.getElementById('bu3835-track-back').onclick=()=>ctx.home();e.scrollTop=0;
