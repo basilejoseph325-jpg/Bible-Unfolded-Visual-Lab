@@ -29,6 +29,9 @@ function artFor(value,label,type){
  else if(/noah|flood|jonah|boat|sea/.test(s))key='witness-history';
  return PREFIX+key+'.webp';
 }
+function sceneBackground(value,label,type){
+ return 'linear-gradient(180deg,#02151c14 0%,#01192308 38%,#001922b2 88%,#001922dd 100%),url("'+artFor(value,label,type)+'")';
+}
 function picture(value,label,type,extraClass){
  const span=document.createElement('span');
  span.className='bu-tt-picture'+(extraClass?' '+extraClass:'');
@@ -50,6 +53,8 @@ function choose(select,type,trigger,value){
  if(select.value!==value)return;
  select.dispatchEvent(new Event('change',{bubbles:true}));
  trigger.querySelector('.bu-tt-selected').textContent=selectedText(select);
+ trigger.style.backgroundImage=sceneBackground(value,selectedText(select),type);
+ trigger.setAttribute('aria-label',(type==='topic'?'Choose Bible topic. Current: ':'Choose question level. Current: ')+selectedText(select));
  const old=trigger.querySelector('.bu-tt-picture');
  old.replaceWith(picture(value,selectedText(select),type,type==='level'?'bu-tt-level-picture':''));
  closePicker(true);
@@ -85,6 +90,7 @@ function openPicker(select,type,trigger){
     const h=document.createElement('div');h.className='bu-tt-group';h.textContent=type==='level'?'Select the challenge':entry.group;results.appendChild(h);lastGroup=entry.group;
    }
    const b=document.createElement('button');b.type='button';b.className='bu-tt-choice';
+   b.style.backgroundImage=sceneBackground(entry.value,entry.label,type);
    b.setAttribute('role','option');b.setAttribute('aria-selected',String(entry.value===select.value));
    b.appendChild(picture(entry.value,entry.label,type,'bu-tt-choice-picture'));
    const label=document.createElement('span');label.className='bu-tt-choice-label';label.textContent=entry.label;b.appendChild(label);
@@ -118,6 +124,7 @@ function addButton(select,type){
  select.classList.add('bu-tt-native');select.tabIndex=-1;
  select.setAttribute('aria-hidden','true');
  const button=document.createElement('button');button.type='button';button.className='bu-tt-picker-button';
+ button.style.backgroundImage=sceneBackground(select.value,selectedText(select),type);
  const label=selectedText(select);
  button.appendChild(picture(select.value,label,type,type==='level'?'bu-tt-level-picture':''));
  const text=document.createElement('span');text.className='bu-tt-selected';text.textContent=label;button.appendChild(text);
