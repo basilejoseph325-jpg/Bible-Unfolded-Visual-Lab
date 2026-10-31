@@ -9,7 +9,7 @@
   padding:98px 18px 23px!important;
   border:1px solid rgba(248,210,131,.66)!important;
   border-radius:20px!important;
-  background-image:linear-gradient(180deg,rgba(2,19,26,.03) 12%,rgba(2,21,27,.40) 53%,rgba(2,17,24,.95) 100%),url("bible-book-art/01_genesis.webp")!important;
+  background-image:linear-gradient(180deg,rgba(2,19,26,.03) 12%,rgba(2,21,27,.40) 53%,rgba(2,17,24,.95) 100%),url("bible-book-art/01_genesis.webp?v=eden-restored-20261031")!important;
   background-position:center,center 44%!important;
   background-size:cover!important;
   box-shadow:inset 0 0 22px rgba(0,0,0,.14),0 11px 26px #0008!important;
@@ -123,7 +123,7 @@
 }
 #levels .book-tile:focus-visible {outline:3px solid #ffe6a7!important;outline-offset:3px;}
 #levels .book-tile:active {transform:scale(.985)!important;}
-#levels #hebrew-books .book-tile:nth-child(1) {--bu-book-cover:url("bible-book-art/01_genesis.webp");}
+#levels #hebrew-books .book-tile:nth-child(1) {--bu-book-cover:url("bible-book-art/01_genesis.webp?v=eden-restored-20261031");}
 #levels #hebrew-books .book-tile:nth-child(2) {--bu-book-cover:url("bible-book-art/02_exodus.webp");}
 #levels #hebrew-books .book-tile:nth-child(3) {--bu-book-cover:url("bible-book-art/03_leviticus.webp");}
 #levels #hebrew-books .book-tile:nth-child(4) {--bu-book-cover:url("bible-book-art/04_numbers.webp");}
