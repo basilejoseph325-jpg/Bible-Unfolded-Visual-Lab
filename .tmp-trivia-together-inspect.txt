@@ -1,0 +1,285 @@
+FILE LENGTH 11704059
+
+====== Set Up Players  matches 0 ======
+
+====== QUICK PASS  matches 0 ======
+
+====== Quick Pass  matches 0 ======
+
+====== Trivia Together  matches 1 ======
+
+>>> OFFSET 1886702, neighborhood 1885602:1888502
+tIBTEAEsNCOAdlxi4m0aiQF9DiTwjzFqSU+RE3lcSRZ9hRdwFOzw/kWt422sBOkZywJy9UmZ+ZM3YORGjmlEcPTnrDc7atsajiK2JYRyCv/3xPizTO+6tUB/bQMQklWauD1GeageSz9V5RXJpBhaMSnyrI/Cifq3DZz78v9F3aWuCrFuQhCNE/osr706/fxc6DOnq00q4/b5j8q4of8VcR7UHpEhKKDS0w+AMGh6of4RgREb56xyqbqTWkbjgRgvpmCUbPcwUrpfxXZt0ugq4+fdbn3n67s9ddYU4u1KmC0NG3AVD8HJZVx4ml8+5VdI3KHmET4VsVcMq3ou+8tgW+YUDtnOYB1LZesFfd7/VrRaAfa2TMidr4gJO7NZAPy9JUvWSjyzJ3XenPNDSlTXZXbDKlwexXg7TbjGi1ECW3zipb2DtjHoodGkp9sYalMHtLNk4HBubwdy3J++ZQeK2Z+9hj3HyCEYLnoRwbH3bjalAhDnMi8da0Xed2SpKxZV6ybP9Fn97CNrdP21qTN8ampc+hUa+WWorR47qhF4AkuLc6ZqfOxXyOringwRoVPIAFKZ8Gl3WjMGt4Mk70gQQEAn+8FdpK0oMPEWU44E3dmBHEAwKr8f80AAAA==')\"><span class=\"cardText\"><span class=\"cardName\">Scholar Research</span><br><span class=\"cardSub\">Deep prophecy and Jehovah's Witnesses history. Guided hints, source articles, real penalties.</span><br><span class=\"cardPill\">▤ &nbsp;Study and explore</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n  </section>\n  <button class=\"labTogether\" type=\"button\" id=\"bu386-family\"><span aria-hidden=\"true\">♟</span>Play Trivia Together <span aria-hidden=\"true\">›</span></button>\n  <footer class=\"labFooter\">Bible Unfolded • Bible Trivia</footer>\n </div>\n</main>",false);
+  document.getElementById('bu386-mixed').onclick=()=>bu386OpenSetup();
+  document.getElementById('bu386-browse').onclick=()=>{bu386Trivia.page='browse';bu386TriviaRender()};
+  document.getElementById('bu386-master').onclick=()=>bu34Start('master');
+  document.getElementById('bu386-family').onclick=()=>{bu35Setup.quick='trivia';bu35Open('setup')};
+  /* Reuse the existing Scholar Research engine. Its normal wrapper sees the real entry
+     id here and therefore does NOT prepend a second, duplicate Scholar card. */
+  document.getElementById('bu3834-entry').onclick=()=>{if(typeof bu3834Start==='function')bu3834Start();else throw Error('Scholar Research engine unavailable')};
+  document.getElementById('labBack').onclick=()=>document.getElementById('bu34-back')?.click();
+  document.getElementById('labMenu').onclick=()=>document.getElementById('bu34-menu')?.click();
+  document.getElementById('labReward').onclick=()=>{(document.getElementById('home-shop')||document.getElementById('choose-rewards'))?.click()};
+  try{
+   if(typeof economy!=='undefined'&&economy){
+    const points=Number(economy.points),tokens=Number(economy.coins);
+    if(Number.isFinite(points))document.getElementById('labPoints').textContent=points.toLocaleString()+' Points';
+    if(Number.isFinite(tokens))document.getElementById('labTokens').textContent=tokens.toLocaleString()+' Tokens';
+   }
+  }catch(_){}
+ }else if(page==='browse'){
+  /* Native category-browsing screen; existing topic and quiz controllers remain unchanged. */
+  const browseArt={
+  'hero':'data:image/webp;base64,UklGRoYkBABXRUJQVlA4IHokBACQVgqdASriBL8CPl0ijUUjoiEjstntiHALiWxt4Am62WTvx0oLU
+
+====== BIBLE TOPIC OR COLLECTION  matches 0 ======
+
+====== Bible Topic or Collection  matches 0 ======
+
+====== Question Level  matches 0 ======
+
+====== question level  matches 0 ======
+
+====== Back to Play Together  matches 0 ======
+
+====== Everyone gets a turn  matches 0 ======
+
+====== Start Playing  matches 0 ======
+
+====== together  matches 291 ======
+
+>>> OFFSET 1241034, neighborhood 1239934:1242834
+nset:auto 0 0;height:55px;background:linear-gradient(transparent,rgba(0,19,25,.18));pointer-events:none}
+.labHeader{position:relative;z-index:1;display:flex;justify-content:center;align-items:flex-start}
+.labTitleGroup{text-align:center;max-width:74%;padding-top:3px}
+.labTitle{font-size:clamp(31px,7vw,43px);font-weight:bold;line-height:1;text-shadow:0 2px 3px #182534,0 0 14px rgba(0,0,0,.75);margin:0;color:#fff1bb;letter-spacing:-.4px}
+.labStats{font:600 12px/1.3 Georgia,'Times New Roman',serif;background:#071b2b;color:#ffe4a3;border:1px solid #aa864e;border-radius:18px;padding:4px 10px;box-shadow:0 2px 5px #000b;margin:5px auto 0;white-space:nowrap;display:inline-flex;gap:6px;align-items:center;text-shadow:0 1px 1px #000}
+.labCircle{position:absolute;top:10px;width:47px;height:47px;border:1.6px solid #edcc79;border-radius:100%;background:linear-gradient(150deg,#123a45,#051421);color:#f8df94;font-size:27px;display:grid;place-items:center;text-shadow:0 2px 2px #000;box-shadow:0 3px 5px #0008;cursor:pointer;touch-action:manipulation}
+.labCircle:focus-visible,.labCard:focus-visible,.labTogether:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.labMenu{left:19px}.labReward{right:19px;font-size:26px}
+.labTagline{position:relative;z-index:1;text-align:center;color:#fff3d2;text-shadow:0 1px 3px #001b27,0 2px 5px #000,0 0 9px #000; font:600 11.5px/1.45 Arial,sans-serif;padding-top:7px;letter-spacing:.1px}
+.labCardWrap{padding:0 1px;display:grid;gap:9px}
+.labCard{display:grid;grid-template-columns:33% minmax(0,1fr) 45px;align-items:center;min-height:96px;width:100%;padding:7px 7px 7px 2px;border:1.6px solid #e5b963;border-radius:15px;text-align:left;color:#ffefc4;cursor:pointer;position:relative;isolation:isolate;overflow:hidden;background-color:#061e30;background-position:center;background-size:cover;box-shadow:0 4px 0 #07121b99,0 5px 14px #0015;font-family:Georgia,'Times New Roman',serif;touch-action:manipulation}
+.labCard:before{content:"";z-index:-1;position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(2,18,29,.03) 29%,rgba(1,17,29,.47) 35%,rgba(1,19,29,.62) 100%)}
+.labCard:hover{border-color:#fff3bc;filter:brightness(1.07)}.labCard:active,.labTogether:active{transform:scale(.99)}
+.cardText{min-width:0;grid-column:2;padding:0 0 0 0;align-self:center;text-shadow:0 2px 3px #000,0 0 4px #0007}
+.cardName{font-size:clamp(20px,5.2vw,27px);line-height:1.05;font-weight:bold;white-space:normal;letter-spacing:-.15px}
+.cardSub{font-size:clamp(11px,2.8vw,14px);line-height:1.14;margin-top:4px;letter-spacing:.0px;color:#fff5df}
+.cardPill{display:inline-flex;align-items:center;gap:6px;border:1px solid #d5ae68;border-radius:18px;background:#0a1b25ce;color:#ffebbd;font:500 clamp(11px,2.6vw,13px)/1.2 Georgia,serif;padding:4px 12px;margin-top:6px;white-space:nowrap;max-width:100%}
+.cardChevron{grid-column:3;justify-self:center;border:1.7px
+
+>>> OFFSET 1242144, neighborhood 1241044:1243944
+ocus-visible{outline:3px solid #fff;outline-offset:2px}
+.labMenu{left:19px}.labReward{right:19px;font-size:26px}
+.labTagline{position:relative;z-index:1;text-align:center;color:#fff3d2;text-shadow:0 1px 3px #001b27,0 2px 5px #000,0 0 9px #000; font:600 11.5px/1.45 Arial,sans-serif;padding-top:7px;letter-spacing:.1px}
+.labCardWrap{padding:0 1px;display:grid;gap:9px}
+.labCard{display:grid;grid-template-columns:33% minmax(0,1fr) 45px;align-items:center;min-height:96px;width:100%;padding:7px 7px 7px 2px;border:1.6px solid #e5b963;border-radius:15px;text-align:left;color:#ffefc4;cursor:pointer;position:relative;isolation:isolate;overflow:hidden;background-color:#061e30;background-position:center;background-size:cover;box-shadow:0 4px 0 #07121b99,0 5px 14px #0015;font-family:Georgia,'Times New Roman',serif;touch-action:manipulation}
+.labCard:before{content:"";z-index:-1;position:absolute;inset:0;background:linear-gradient(90deg,transparent 0%,rgba(2,18,29,.03) 29%,rgba(1,17,29,.47) 35%,rgba(1,19,29,.62) 100%)}
+.labCard:hover{border-color:#fff3bc;filter:brightness(1.07)}.labCard:active,.labTogether:active{transform:scale(.99)}
+.cardText{min-width:0;grid-column:2;padding:0 0 0 0;align-self:center;text-shadow:0 2px 3px #000,0 0 4px #0007}
+.cardName{font-size:clamp(20px,5.2vw,27px);line-height:1.05;font-weight:bold;white-space:normal;letter-spacing:-.15px}
+.cardSub{font-size:clamp(11px,2.8vw,14px);line-height:1.14;margin-top:4px;letter-spacing:.0px;color:#fff5df}
+.cardPill{display:inline-flex;align-items:center;gap:6px;border:1px solid #d5ae68;border-radius:18px;background:#0a1b25ce;color:#ffebbd;font:500 clamp(11px,2.6vw,13px)/1.2 Georgia,serif;padding:4px 12px;margin-top:6px;white-space:nowrap;max-width:100%}
+.cardChevron{grid-column:3;justify-self:center;border:1.7px solid #ffde86;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 25%,#174257,#041824);box-shadow:0 2px 6px #0009;color:#f9d17a;font:normal 33px/1 Arial,sans-serif;text-shadow:0 2px #000;padding-bottom:4px}
+.labTogether{display:flex;align-items:center;justify-content:center;gap:11px;margin:18px 24px 10px;width:calc(100% - 48px);min-height:52px;border-radius:13px;border:1.5px solid #dbb674;color:#f7e0aa;background:linear-gradient(180deg,#074354,#052330);font:700 clamp(17px,4.4vw,22px)/1.2 Georgia,serif;box-shadow:0 3px 10px #0008;cursor:pointer;text-shadow:0 1px 2px #000;touch-action:manipulation}
+.labFooter{text-align:center;padding-top:15px;font:11px/1.4 Arial,sans-serif;color:#fff1caad;text-shadow:0 1px 2px #000;}
+#labStatus{position:absolute;left:50%;transform:translateX(-50%);bottom:6px;font:10px Arial,sans-serif;color:#f9e9c1;background:#05212bb8;padding:3px 7px;border-radius:9px;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;display:none}
+@media(min-width:540px){.labTop{min-height:300px}.labCard{min-h
+
+>>> OFFSET 1243108, neighborhood 1242008:1244908
+.03) 29%,rgba(1,17,29,.47) 35%,rgba(1,19,29,.62) 100%)}
+.labCard:hover{border-color:#fff3bc;filter:brightness(1.07)}.labCard:active,.labTogether:active{transform:scale(.99)}
+.cardText{min-width:0;grid-column:2;padding:0 0 0 0;align-self:center;text-shadow:0 2px 3px #000,0 0 4px #0007}
+.cardName{font-size:clamp(20px,5.2vw,27px);line-height:1.05;font-weight:bold;white-space:normal;letter-spacing:-.15px}
+.cardSub{font-size:clamp(11px,2.8vw,14px);line-height:1.14;margin-top:4px;letter-spacing:.0px;color:#fff5df}
+.cardPill{display:inline-flex;align-items:center;gap:6px;border:1px solid #d5ae68;border-radius:18px;background:#0a1b25ce;color:#ffebbd;font:500 clamp(11px,2.6vw,13px)/1.2 Georgia,serif;padding:4px 12px;margin-top:6px;white-space:nowrap;max-width:100%}
+.cardChevron{grid-column:3;justify-self:center;border:1.7px solid #ffde86;width:38px;height:38px;display:grid;place-items:center;border-radius:50%;background:radial-gradient(circle at 35% 25%,#174257,#041824);box-shadow:0 2px 6px #0009;color:#f9d17a;font:normal 33px/1 Arial,sans-serif;text-shadow:0 2px #000;padding-bottom:4px}
+.labTogether{display:flex;align-items:center;justify-content:center;gap:11px;margin:18px 24px 10px;width:calc(100% - 48px);min-height:52px;border-radius:13px;border:1.5px solid #dbb674;color:#f7e0aa;background:linear-gradient(180deg,#074354,#052330);font:700 clamp(17px,4.4vw,22px)/1.2 Georgia,serif;box-shadow:0 3px 10px #0008;cursor:pointer;text-shadow:0 1px 2px #000;touch-action:manipulation}
+.labFooter{text-align:center;padding-top:15px;font:11px/1.4 Arial,sans-serif;color:#fff1caad;text-shadow:0 1px 2px #000;}
+#labStatus{position:absolute;left:50%;transform:translateX(-50%);bottom:6px;font:10px Arial,sans-serif;color:#f9e9c1;background:#05212bb8;padding:3px 7px;border-radius:9px;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;display:none}
+@media(min-width:540px){.labTop{min-height:300px}.labCard{min-height:116px}.labContent{padding-left:18px;padding-right:18px}.labCardWrap{gap:11px}.labTogether{margin-top:22px}.labStats{font-size:14px}}
+@media(max-width:370px){.labTop{min-height:228px}.labCard{min-height:88px;grid-template-columns:30% minmax(0,1fr) 37px}.cardChevron{width:32px;height:32px;font-size:28px}.cardName{font-size:19px}.cardSub{font-size:10.5px}.cardPill{font-size:10px;padding:3px 8px}.labCircle{width:42px;height:42px}.labMenu{left:11px}.labReward{right:11px}}
+@media(prefers-reduced-motion:no-preference){.labCard,.labTogether{transition:filter .15s,transform .15s}}
+
+
+/* V2 ORIGINAL ARTWORK, NATIVE GAME PRESENTATION - no overlaid page */
+#bu34-trivia:has(.bu-native-trivia)>.bu34-top{display:none!important}
+#bu34-trivia:has(.bu-native-trivia)>.bu34-body{display:block!important;min-height:0!important;overflow-y:auto!important;padding:0!important;overscroll-behavior:contain}
+#bu34-body .bu386-page:has(.bu-native-trivia){display:block!importa
+
+>>> OFFSET 1244031, neighborhood 1242931:1245831
+d:radial-gradient(circle at 35% 25%,#174257,#041824);box-shadow:0 2px 6px #0009;color:#f9d17a;font:normal 33px/1 Arial,sans-serif;text-shadow:0 2px #000;padding-bottom:4px}
+.labTogether{display:flex;align-items:center;justify-content:center;gap:11px;margin:18px 24px 10px;width:calc(100% - 48px);min-height:52px;border-radius:13px;border:1.5px solid #dbb674;color:#f7e0aa;background:linear-gradient(180deg,#074354,#052330);font:700 clamp(17px,4.4vw,22px)/1.2 Georgia,serif;box-shadow:0 3px 10px #0008;cursor:pointer;text-shadow:0 1px 2px #000;touch-action:manipulation}
+.labFooter{text-align:center;padding-top:15px;font:11px/1.4 Arial,sans-serif;color:#fff1caad;text-shadow:0 1px 2px #000;}
+#labStatus{position:absolute;left:50%;transform:translateX(-50%);bottom:6px;font:10px Arial,sans-serif;color:#f9e9c1;background:#05212bb8;padding:3px 7px;border-radius:9px;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;display:none}
+@media(min-width:540px){.labTop{min-height:300px}.labCard{min-height:116px}.labContent{padding-left:18px;padding-right:18px}.labCardWrap{gap:11px}.labTogether{margin-top:22px}.labStats{font-size:14px}}
+@media(max-width:370px){.labTop{min-height:228px}.labCard{min-height:88px;grid-template-columns:30% minmax(0,1fr) 37px}.cardChevron{width:32px;height:32px;font-size:28px}.cardName{font-size:19px}.cardSub{font-size:10.5px}.cardPill{font-size:10px;padding:3px 8px}.labCircle{width:42px;height:42px}.labMenu{left:11px}.labReward{right:11px}}
+@media(prefers-reduced-motion:no-preference){.labCard,.labTogether{transition:filter .15s,transform .15s}}
+
+
+/* V2 ORIGINAL ARTWORK, NATIVE GAME PRESENTATION - no overlaid page */
+#bu34-trivia:has(.bu-native-trivia)>.bu34-top{display:none!important}
+#bu34-trivia:has(.bu-native-trivia)>.bu34-body{display:block!important;min-height:0!important;overflow-y:auto!important;padding:0!important;overscroll-behavior:contain}
+#bu34-body .bu386-page:has(.bu-native-trivia){display:block!important;min-height:100%!important;margin:0!important;padding:0!important;max-width:none!important;gap:0!important}
+#bu34-body .bu386-page:has(.bu-native-trivia):before{display:none!important}
+#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-heading,#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-note{display:none!important}
+.bu-native-trivia{position:relative;isolation:isolate;display:block;min-height:100%;overflow:hidden;background:#0b2431;color:#fff5d7;font-family:Georgia,'Times New Roman',serif}
+.bu-native-trivia .labContent{z-index:1;position:relative}
+#bu34-body .bu-native-trivia .labCard{order:0!important;display:grid!important;background-size:cover!important;background-position:center!important}
+#bu34-body .bu-native-trivia .labTogether#bu386-family{order:0!important;display:flex!important;min-height:52px!important;border:1.5px solid #dbb674!important;background:linear-gradient(180deg,#074354,#05233
+
+>>> OFFSET 1244480, neighborhood 1243380:1246280
+22px)/1.2 Georgia,serif;box-shadow:0 3px 10px #0008;cursor:pointer;text-shadow:0 1px 2px #000;touch-action:manipulation}
+.labFooter{text-align:center;padding-top:15px;font:11px/1.4 Arial,sans-serif;color:#fff1caad;text-shadow:0 1px 2px #000;}
+#labStatus{position:absolute;left:50%;transform:translateX(-50%);bottom:6px;font:10px Arial,sans-serif;color:#f9e9c1;background:#05212bb8;padding:3px 7px;border-radius:9px;white-space:nowrap;max-width:94%;overflow:hidden;text-overflow:ellipsis;display:none}
+@media(min-width:540px){.labTop{min-height:300px}.labCard{min-height:116px}.labContent{padding-left:18px;padding-right:18px}.labCardWrap{gap:11px}.labTogether{margin-top:22px}.labStats{font-size:14px}}
+@media(max-width:370px){.labTop{min-height:228px}.labCard{min-height:88px;grid-template-columns:30% minmax(0,1fr) 37px}.cardChevron{width:32px;height:32px;font-size:28px}.cardName{font-size:19px}.cardSub{font-size:10.5px}.cardPill{font-size:10px;padding:3px 8px}.labCircle{width:42px;height:42px}.labMenu{left:11px}.labReward{right:11px}}
+@media(prefers-reduced-motion:no-preference){.labCard,.labTogether{transition:filter .15s,transform .15s}}
+
+
+/* V2 ORIGINAL ARTWORK, NATIVE GAME PRESENTATION - no overlaid page */
+#bu34-trivia:has(.bu-native-trivia)>.bu34-top{display:none!important}
+#bu34-trivia:has(.bu-native-trivia)>.bu34-body{display:block!important;min-height:0!important;overflow-y:auto!important;padding:0!important;overscroll-behavior:contain}
+#bu34-body .bu386-page:has(.bu-native-trivia){display:block!important;min-height:100%!important;margin:0!important;padding:0!important;max-width:none!important;gap:0!important}
+#bu34-body .bu386-page:has(.bu-native-trivia):before{display:none!important}
+#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-heading,#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-note{display:none!important}
+.bu-native-trivia{position:relative;isolation:isolate;display:block;min-height:100%;overflow:hidden;background:#0b2431;color:#fff5d7;font-family:Georgia,'Times New Roman',serif}
+.bu-native-trivia .labContent{z-index:1;position:relative}
+#bu34-body .bu-native-trivia .labCard{order:0!important;display:grid!important;background-size:cover!important;background-position:center!important}
+#bu34-body .bu-native-trivia .labTogether#bu386-family{order:0!important;display:flex!important;min-height:52px!important;border:1.5px solid #dbb674!important;background:linear-gradient(180deg,#074354,#052330)!important;border-radius:13px!important}
+.labBackRail{position:relative;text-align:left;padding:0 14px 7px;margin-top:-3px}
+.labBackRail #labBack{min-height:32px;border:1px solid #bba26b;border-radius:10px;color:#ffe6ac;background:#092c3ac9;padding:4px 14px;font:600 12px system-ui,sans-serif;cursor:pointer}
+.labBackRail #labBack:focus-visible{outline:3px solid white;outline-offset:2px}
+
+</style>
+<style id="bu-mixed-v2-style">
+/* Mixed Trivia V
+
+>>> OFFSET 1245657, neighborhood 1244557:1247457
+TIVE GAME PRESENTATION - no overlaid page */
+#bu34-trivia:has(.bu-native-trivia)>.bu34-top{display:none!important}
+#bu34-trivia:has(.bu-native-trivia)>.bu34-body{display:block!important;min-height:0!important;overflow-y:auto!important;padding:0!important;overscroll-behavior:contain}
+#bu34-body .bu386-page:has(.bu-native-trivia){display:block!important;min-height:100%!important;margin:0!important;padding:0!important;max-width:none!important;gap:0!important}
+#bu34-body .bu386-page:has(.bu-native-trivia):before{display:none!important}
+#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-heading,#bu34-body .bu386-page:has(.bu-native-trivia)>.bu386-note{display:none!important}
+.bu-native-trivia{position:relative;isolation:isolate;display:block;min-height:100%;overflow:hidden;background:#0b2431;color:#fff5d7;font-family:Georgia,'Times New Roman',serif}
+.bu-native-trivia .labContent{z-index:1;position:relative}
+#bu34-body .bu-native-trivia .labCard{order:0!important;display:grid!important;background-size:cover!important;background-position:center!important}
+#bu34-body .bu-native-trivia .labTogether#bu386-family{order:0!important;display:flex!important;min-height:52px!important;border:1.5px solid #dbb674!important;background:linear-gradient(180deg,#074354,#052330)!important;border-radius:13px!important}
+.labBackRail{position:relative;text-align:left;padding:0 14px 7px;margin-top:-3px}
+.labBackRail #labBack{min-height:32px;border:1px solid #bba26b;border-radius:10px;color:#ffe6ac;background:#092c3ac9;padding:4px 14px;font:600 12px system-ui,sans-serif;cursor:pointer}
+.labBackRail #labBack:focus-visible{outline:3px solid white;outline-offset:2px}
+
+</style>
+<style id="bu-mixed-v2-style">
+/* Mixed Trivia V2 — native scoped visual styling; no other game mode affected. */
+#bu34-body .bu386-page.bu-mixed-visual{display:flex;flex-direction:column;gap:12px;max-width:690px;margin:0 auto;padding:5px 0 32px}
+#bu34-body .bu-mixed-visual .bu386-heading,#bu34-body .bu-mixed-visual>.bu386-note,#bu34-body .bu-mixed-visual .bu386-backlink{display:none}
+#bu34-body .bu-mixed-visual .bu386-backlink{align-self:flex-start;position:relative;z-index:2;border:1px solid #f0cb7c80;border-radius:999px;background:#082934e0;color:#ffe4a0;padding:9px 16px;margin-bottom:-4px;min-height:39px}
+#bu34-body .bu-mix-hero{position:relative;min-height:238px;overflow:hidden;border:1px solid #ecc87f9e;border-radius:20px;background-color:#123b48;background-image:linear-gradient(180deg,#09253206 1%,#051d2924 35%,#031924f5 100%),var(--mix-art);background-position:40% 50%;background-size:cover;box-shadow:0 7px 22px #00101b8c;color:#fff6de;display:flex;align-items:flex-end;justify-content:center;text-align:center;padding:82px 17px 20px}
+#bu34-body .bu-mix-hero:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,#ffffff06,transparent 80%)}
+#bu34-bo
+
+>>> OFFSET 1258368, neighborhood 1257268:1260168
+system-ui,sans-serif;color:#e8e2ce;white-space:nowrap}
+#bu34-body .bu386-topic-card:active{transform:scale(.986)}
+#bu34-body .bu386-topic-footer{text-align:center;margin:18px 0 2px}
+#bu34-body .bu386-topic-footer .bu386-backlink{color:#ffdfa4;padding:9px 17px;border:1px solid rgba(229,194,127,.4);border-radius:18px;background:rgba(5,45,57,.65);font-size:13px;cursor:pointer}
+@media (min-width:610px){
+ #bu34-body .bu386-topic-gallery{grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+ #bu34-body .bu386-topic-hero,#bu34-body .bu386-topic-hero-copy{min-height:190px}
+ #bu34-body .bu386-topic-card{min-height:180px}
+ #bu34-body .bu386-topic-card-copy{padding:15px}
+}
+@media (max-width:349px){
+ #bu34-body .bu386-topic-gallery{gap:8px}
+ #bu34-body .bu386-topic-card{min-height:144px}
+ #bu34-body .bu386-topic-card-copy{padding:9px 8px}
+ #bu34-body .bu386-topic-card-copy strong{font-size:13.5px}
+ #bu34-body .bu386-topic-count{font-size:9px;padding:3px 6px}
+}
+@media (prefers-reduced-motion:reduce){#bu34-body .bu386-topic-card img{transition:none}}
+</style>
+<link rel="stylesheet" href="trivia-together-premium.css?v=1">
+</head><body><main id="app" role="main">
+<section id="home" class="screen cinematic-home-screen"><div class="cinematic-dashboard" id="home-hero">
+<div class="cinematic-vignette" aria-hidden="true"></div>
+<header class="cinematic-topbar">
+ <button id="home-menu" class="cin-top-action" aria-label="Open menu"><span class="cin-top-icon" aria-hidden="true">☰</span><span>MENU</span></button>
+ <span class="v37-top-spacer" aria-hidden="true"></span>
+ <button id="home-rewards" class="cin-top-action" aria-label="Open rewards and progress"><span class="cin-top-icon" aria-hidden="true">★</span><span>REWARDS</span></button>
+</header>
+<div class="cinematic-heading v37-heading"><div class="v37-emblem" role="img" aria-label="Navy and gold open Bible emblem with J and W on the covers"></div><h1>BIBLE <span>UNFOLDED</span></h1><div class="cin-gold-rule bu3924-star-rule" aria-hidden="true"><i></i><span class="bu3924-star">✦</span><i></i></div><p class="bu3924-tagline" aria-label="Explore, Discover, Be Inspired"><span class="bu3924-script" aria-hidden="true"></span><span class="bu3924-glint bu3924-glint-a" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-b" aria-hidden="true">✧</span><span class="bu3924-glint bu3924-glint-c" aria-hidden="true">✦</span></p></div>
+  <button id="bu375-home-cta" class="bu375-home-banner" type="button" aria-label="Open today's Daily Discovery challenge"><span class="bu375-sun" aria-hidden="true">✦</span><span class="bu375-banner-text"><strong>Daily Discovery</strong><small id="bu375-home-status">Five Bible questions · One new challenge each day</small></span><span class="bu375-banner-arrow" aria-hidden="true">›</span></button>
+  <div class="cinematic-cards" aria-label="Choose a game mode">
+ <button id="home-story" cla
+
+>>> OFFSET 1289003, neighborhood 1287903:1290803
+v class="btn3926-icons" role="group" aria-label="Discovery tools"><button id="btn3926-bible" title="Bible reference" aria-label="Bible reference">📖</button><button id="btn3926-hint" title="Hints" aria-label="Hints">💡</button><button id="btn3926-info" title="Reveal answer" aria-label="Reveal the answer for 25 Achievement Points">👁</button><button id="btn3926-progress" title="Progress" aria-label="Progress">1/9</button></div>
+  <div id="btn3926-answers" class="btn3926-answers" role="group" aria-label="Answer choices"></div>
+  <div class="btn3926-bottom"><div id="btn3926-feedback" class="btn3926-feedback" role="status" aria-live="polite">Tap an answer to discover its meaning.</div></div>
+ </div>
+</section>
+<div id="btn3926-modal" hidden><section class="btn3926-dialog" role="dialog" aria-modal="true" aria-labelledby="btn3926-modal-title"><button id="btn3926-modal-x" class="btn3926-x" aria-label="Close">×</button><h2 id="btn3926-modal-title"></h2><div id="btn3926-modal-body"></div></section></div>
+
+</main>
+
+<section class="bu35-screen" id="bu35-family" aria-label="Family Worship and Play Together" hidden>
+<header class="bu35-top"><button class="bu35-back" id="bu35-back" aria-label="Back to Bible Unfolded">‹</button><h1 id="bu35-title">Family Worship</h1><button class="bu35-menu" id="bu35-menu" aria-label="Game settings">☰</button></header>
+<div class="bu35-body" id="bu35-body" aria-live="polite"></div>
+</section>
+
+<section class="wb36-screen" id="wb36" hidden aria-label="Word Builder">
+  <header class="wb36-top"><button id="wb36-back" class="wb36-back" aria-label="Back">‹</button><h1 id="wb36-title">Word Builder</h1><button id="wb36-menu" class="wb36-back" aria-label="Open full game menu">☰</button></header>
+  <main id="wb36-main" class="wb36-main"></main>
+</section>
+
+<section class="bu34-screen bu375-screen" id="bu375-daily" hidden aria-label="Daily Discovery">
+<header class="bu34-top"><button class="bu34-icon" id="bu375-back" aria-label="Return home">‹</button><h1 class="bu34-title">Daily Discovery</h1><span class="bu375-top-mark" aria-hidden="true">✦</span></header>
+<div class="bu34-body" id="bu375-body" aria-live="polite"></div></section>
+<section class="bu34-screen" id="bu34-trivia" aria-label="Bible Trivia" hidden><header class="bu34-top"><button class="bu34-icon" id="bu34-back" aria-label="Back">‹</button><h1 class="bu34-title">Bible Trivia</h1><button class="bu34-icon" id="bu34-menu" aria-label="Open menu">☰</button></header><div class="bu34-body" id="bu34-body"></div></section>
+<div id="bu34-onboard" class="bu34-onboard" role="dialog" aria-label="Quick tip" hidden><b id="bu34-onboard-title"></b><p id="bu34-onboard-desc"></p><button id="bu34-onboard-ok">Got it ✓</button></div>
+<div id="bu34-fx" aria-hidden="true" hidden></div>
+<section id="bu28-review" class="bu28-review" role="dialog" aria-modal="true" aria-label="Review and Recall" hidden><div
+
+>>> OFFSET 1322317, neighborhood 1321217:1324117
+released, before the final outcome of verse 10."],"gauntlet":true},{"id":"deep-prophecy-pentecost","tier":"scholar","category":"Deep Prophecy","q":"When did the first members of the secondary part of the woman’s offspring receive their anointing?","options":["When Jesus was baptized in 29 C.E.","When Jesus died at Passover in 33 C.E.","At Pentecost 33 C.E., when holy spirit was poured out on his disciples.","When Satan was cast out of heaven about 1914."],"correct":2,"explain":"At Pentecost 33 C.E., holy spirit was poured out on Jesus’ disciples. The study identifies this as the beginning of the anointing of Christians who form the secondary part of the woman’s offspring. (Acts 2:1-4; Galatians 3:29)","source":"https://www.jw.org/en/library/magazines/watchtower-study-july-2022/An-Ancient-Prophecy-That-Affects-You/","ref":"Acts 2:1-4; Galatians 3:29","clues":["Jesus himself was anointed before his followers were.","Acts chapter 2 describes an event shortly after Jesus’ resurrection and ascension.","The anointing took place during a Jewish festival, when Jesus’ disciples were gathered together."],"gauntlet":true},{"id":"deep-prophecy-enmity","tier":"scholar","category":"Deep Prophecy","q":"Why does the study connect Satan’s intensified attacks on God’s people with the year 1914?","options":["After being cast out of heaven, Satan knew his remaining time was short.","After being cast out of heaven, Satan no longer had any influence on the earth.","That was when the prophecy’s promised destruction of Satan was completed.","That was when Satan first learned the identity of the woman’s offspring."],"correct":0,"explain":"Revelation 12:12 describes the Devil’s anger because he knows his time is short. Verse 17 describes his warfare against those who obey God. The study connects this intensified opposition with his expulsion from heaven about 1914.","source":"https://www.jw.org/en/library/magazines/watchtower-study-july-2022/An-Ancient-Prophecy-That-Affects-You/","ref":"Genesis 3:15; Revelation 12:12, 17; John 17:14","clues":["Read Revelation 12:12 before looking at verse 17; one verse explains the urgency behind the hostility in the other.","The article distinguishes Satan’s expulsion from his later destruction.","Consider what Satan knows about the amount of time left to him after being cast out."]},{"id":"deep-prophecy-interpretation-test","tier":"scholar","category":"Deep Prophecy","q":"Why does the study say we can trust that Satan will eventually be destroyed?","options":["Because every part of Genesis 3:15 was completed when Jesus was resurrected.","Because the earlier parts of the prophecy have been fulfilled, giving us confidence in its final outcome.","Because the prophecy only concerns the people who lived in Eden.","Because Satan’s expulsion from heaven means he no longer opposes God’s people."],"correct":1,"explain":"The article points to fulfi
+
+>>> OFFSET 1342659, neighborhood 1341559:1344459
+one responsible for helping with the ministry.","Think of a local organizing role rather than a new broadcasting arrangement."]},{"id":"deep-history-1919-1922-distinction","tier":"scholar","category":"Witness History","q":"How did the audience respond when the 1919 Cedar Point convention invited volunteers to distribute The Golden Age?","options":["They asked that the magazine be restricted to existing subscribers.","They voted to wait until a later convention before distributing it.","They chose to focus only on giving public lectures.","About 6,000 stood to show they were willing to help distribute it."],"correct":3,"explain":"When Rutherford invited conventioners to take part in distributing the new magazine, about 6,000 stood in response. The account illustrates their willingness to share the Kingdom message.","source":"https://www.jw.org/en/library/books/gods-kingdom/preaching/ministers/","ref":null,"clues":["The response showed readiness to participate, not a decision to delay.","The convention report describes a visible response from many in attendance.","The people responded together by rising to their feet."],"gauntlet":true},{"id":"deep-history-1919-imprisonment","tier":"scholar","category":"Witness History","q":"Why was the Watch Tower Society’s January 1919 election especially tense?","options":["Russell was absent because he had been sent overseas to direct preaching.","A vote was needed to choose the location of the next convention.","Rutherford and several associates were still imprisoned when the meeting took place.","The meeting had to decide whether to merge the Society with another Bible Student group."],"correct":2,"explain":"The election took place while Joseph F. Rutherford and seven associates were in prison. That situation raised questions and uncertainty among some attending the Society’s annual meeting.","source":"https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/You-Are-My-Witnesses-Says-Jehovah/Advertise-the-King-and-the-Kingdom-1919-1941/","ref":null,"clues":["The difficulty involved whether key officers could take part in the meeting.","The circumstances followed the World War I period.","The president and several associates were unable to attend freely."]},{"id":"deep-history-1925-insight","tier":"scholar","category":"Witness History","q":"What did the 1925 Watch Tower article “Birth of the Nation” clarify about Revelation 12?","options":["It connected the Kingdom’s birth with events after the Thousand Year Reign.","It explained that the Messianic Kingdom was established in 1914 and that Satan was later cast out of heaven.","It identified the birth as the start of the Bible Students’ 1919 magazine work.","It said the symbolic birth described the founding of the Watch Tower Society in the 1880s."],"correct":1,"explain":"The March 1, 1925 article explained that the Messianic Kingdom had 
+
+>>> OFFSET 1352253, neighborhood 1351153:1354053
+.","He believed once an explanation appeared in print it should never be reconsidered."],"correct":2,"explain":"Russell acknowledged helpful work done by earlier Bible researchers and expected understanding to grow. The historical account connects that attitude with the idea of increasing light in Proverbs 4:18.","source":"https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/Gaining-Accurate-Knowledge-of-Gods-Word-and-Applying-It/Growing-in-Accurate-Knowledge-of-the-Truth/","ref":"Proverbs 4:18","clues":["He did not claim to possess all the answers.","He recognized that others had discovered useful Bible truths before him.","The approach allowed for growth and correction rather than treating every earlier conclusion as final."]},{"id":"deep-history-pioneer-people","tier":"scholar","category":"Witness History","q":"What issue led Russell to stop supporting Nelson Barbour’s magazine Herald of the Morning?","options":["Barbour challenged the Bible teaching that Jesus’ death provided a ransom for mankind.","Barbour wanted to stop studying Bible chronology altogether.","Barbour argued that the Scriptures should no longer be published for the public.","Barbour refused to use any Bible translations except the King James Version."],"correct":0,"explain":"In 1878 Barbour published an argument belittling the ransom. Russell defended the Scriptural teaching that Jesus’ sacrifice provides the ransom and withdrew his support from the magazine in 1879.","source":"https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/Gaining-Accurate-Knowledge-of-Gods-Word-and-Applying-It/Growing-in-Accurate-Knowledge-of-the-Truth/","ref":null,"clues":["Their disagreement concerned a central teaching about Jesus, not a dispute over printing costs.","Russell defended the teaching using passages about Christ’s death for sinners.","The issue was whether the death of Jesus served as a ransom for humankind."]},{"id":"deep-history-wbbr","tier":"scholar","category":"Witness History","q":"Which sequence correctly describes the Bible Students’ early use of radio?","options":["WBBR began broadcasting in 1922, two years before Rutherford’s first radio address.","Both the first radio address and the launch of WBBR occurred in 1931.","Rutherford first broadcast in 1924, and WBBR began regular service in 1926.","Rutherford gave a radio address in 1922; the Society’s station WBBR began broadcasting in 1924."],"correct":3,"explain":"Rutherford delivered a radio address on February 26, 1922. Two years later, on February 24, 1924, the Watch Tower Society’s station WBBR started broadcasting from Staten Island.","source":"https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/You-Are-My-Witnesses-Says-Jehovah/Advertise-the-King-and-the-Kingdom-1919-1941/","ref":null,"clues":["The first radio address happened befor
+
+>>> OFFSET 1387893, neighborhood 1386793:1389693
+ole in God’s purpose. Ephesians 2:20-22 pictures the congregation as a building involving apostles in its foundation, and Revelation 21:10-14 describes twelve foundation stones bearing the apostles’ names. This helps explain why Jesus wanted them at that particular gathering.","source":"https://www.jw.org/en/library/magazines/watchtower-study-september-2024/questions-from-readers/","ref":"Ephesians 2:20-22; Revelation 21:10-14","clues":["The article points to the apostles’ future responsibilities, not simply their travel plans.","It refers to two passages that picture God’s people using the imagery of a building.","Think about the role of a foundation in a structure."],"tier":"scholar","research_source":"qfr24s","gauntlet":true},{"id":"research36-q11","category":"Questions From Readers","q":"According to Luke’s account, how did the preaching assignments to the Twelve and the 70 differ?","options":["Jesus sent out the Twelve in Galilee first, then appointed 70 others later in Judea.","Jesus sent out the 70 in Galilee first, then chose the Twelve in Judea.","Both groups were appointed together in Jerusalem for the same assignment.","The Twelve were sent out only after the 70 had returned from preaching."],"correct":0,"explain":"The September 2024 article compares Luke 9:1-6, 51 with Luke 10:1. Jesus sent the Twelve to preach while he was in Galilee; later, in Judea, he designated 70 others and sent them out by twos. The two groups therefore had distinct assignments at different times.","source":"https://www.jw.org/en/library/magazines/watchtower-study-september-2024/questions-from-readers/","ref":"Luke 9:1-6, 51; 10:1","clues":["Compare the order of events in Luke chapters 9 and 10.","The article distinguishes two separate commissions rather than one combined preaching campaign.","One group had already been sent before Jesus later designated the other group."],"tier":"scholar","research_source":"qfr24s"},{"id":"research36-h1","category":"Witness History","q":"Why did local Bible Student groups start using the name “Associated Bible Students” in 1914?","options":["To mark the release of a new Bible translation.","To avoid confusion with the legal corporation called International Bible Students Association.","To announce that their congregations had joined a new denomination.","To identify groups that no longer met to study the Bible."],"correct":1,"explain":"The term International Bible Students’ Association had been used for meetings from 1910. In 1914 the local groups adopted Associated Bible Students to avoid confusion with a similarly named legal corporation.","source":"https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/Gaining-Accurate-Knowledge-of-Gods-Word-and-Applying-It/How-We-Came-to-Be-Known-as-Jehovahs-Witnesses/","ref":"Proclaimers chapter 11, “Need for a Distinctive Name”","clues":["The change was about di
+
+>>> OFFSET 1886615, neighborhood 1885515:1888415
+55CcPpkNi7HoZTQmsOxy3vDizOQaz+Pa3REH1zz4cbh5X8V+UftDyij6eVVM8BH5p58xY94/dC410HKpPAjTbRMtIBTEAEsNCOAdlxi4m0aiQF9DiTwjzFqSU+RE3lcSRZ9hRdwFOzw/kWt422sBOkZywJy9UmZ+ZM3YORGjmlEcPTnrDc7atsajiK2JYRyCv/3xPizTO+6tUB/bQMQklWauD1GeageSz9V5RXJpBhaMSnyrI/Cifq3DZz78v9F3aWuCrFuQhCNE/osr706/fxc6DOnq00q4/b5j8q4of8VcR7UHpEhKKDS0w+AMGh6of4RgREb56xyqbqTWkbjgRgvpmCUbPcwUrpfxXZt0ugq4+fdbn3n67s9ddYU4u1KmC0NG3AVD8HJZVx4ml8+5VdI3KHmET4VsVcMq3ou+8tgW+YUDtnOYB1LZesFfd7/VrRaAfa2TMidr4gJO7NZAPy9JUvWSjyzJ3XenPNDSlTXZXbDKlwexXg7TbjGi1ECW3zipb2DtjHoodGkp9sYalMHtLNk4HBubwdy3J++ZQeK2Z+9hj3HyCEYLnoRwbH3bjalAhDnMi8da0Xed2SpKxZV6ybP9Fn97CNrdP21qTN8ampc+hUa+WWorR47qhF4AkuLc6ZqfOxXyOringwRoVPIAFKZ8Gl3WjMGt4Mk70gQQEAn+8FdpK0oMPEWU44E3dmBHEAwKr8f80AAAA==')\"><span class=\"cardText\"><span class=\"cardName\">Scholar Research</span><br><span class=\"cardSub\">Deep prophecy and Jehovah's Witnesses history. Guided hints, source articles, real penalties.</span><br><span class=\"cardPill\">▤ &nbsp;Study and explore</span></span><span class=\"cardChevron\" aria-hidden=\"true\">›</span></button>\n  </section>\n  <button class=\"labTogether\" type=\"button\" id=\"bu386-family\"><span aria-hidden=\"true\">♟</span>Play Trivia Together <span aria-hidden=\"true\">›</span></button>\n  <footer class=\"labFooter\">Bible Unfolded • Bible Trivia</footer>\n </div>\n</main>",false);
+  document.getElementById('bu386-mixed').onclick=()=>bu386OpenSetup();
+  document.getElementById('bu386-browse').onclick=()=>{bu386Trivia.page='browse';bu386TriviaRender()};
+  document.getElementById('bu386-master').onclick=()=>bu34Start('master');
+  document.getElementById('bu386-family').onclick=()=>{bu35Setup.quick='trivia';bu35Open('setup')};
+  /* Reuse the existing Scholar Research engine. Its normal wrapper sees the real entry
+     id here and therefore does NOT prepend a second, duplicate Scholar card. */
+  document.getElementById('bu3834-entry').onclick=()=>{if(typeof bu3834Start==='function')bu3834Start();else throw Error('Scholar Research engine unavailable')};
+  document.getElementById('labBack').onclick=()=>document.getElementById('bu34-back')?.click();
+  document.getElementById('labMenu').onclick=()=>document.getElementById('bu34-menu')?.click();
+  document.getElementById('labReward').onclick=()=>{(document.getElementById('home-shop')||document.getElementById('choose-rewards'))?.click()};
+  try{
+   if(typeof economy!=='undefined'&&economy){
+    const points=Number(economy.points),tokens=Number(economy.coins);
+    if(Number.isFinite(points))document.getElementById('labPoints').textContent=points.toLocaleString()+' Points';
+    if(Number.isFinite(tokens))document.getElementById('labTokens').textContent=tokens.toLocaleString()+' Tokens';
+   }
+  }catch(_){}
+ }else if(page==='browse'){
+  /* Native category-browsing screen; existing topic and quiz controllers remain unchanged. */
+  const browseArt={
+  'hero':'data:image/we
+
+====== passplay  matches 0 ======
+
+====== passPlay  matches 0 ======
+
+====== playerCount  matches 0 ======
