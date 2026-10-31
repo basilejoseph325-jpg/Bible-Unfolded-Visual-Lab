@@ -1,0 +1,34 @@
+name: Inspect Trivia Together integration points
+on:
+  push:
+    paths:
+      - .github/workflows/inspect-trivia-together-once.yml
+permissions:
+  contents: write
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Gather relevant snippets from active test game
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path("index.html").read_text("utf-8")
+          keys=["Set Up Players","QUICK PASS","Quick Pass","Trivia Together","BIBLE TOPIC OR COLLECTION","Bible Topic or Collection","Question Level","question level","Back to Play Together","Everyone gets a turn","Start Playing","together","passplay","passPlay","playerCount"]
+          res=[f"FILE LENGTH {len(s)}"]
+          for key in keys:
+              hits=[m.start() for m in re.finditer(re.escape(key),s,re.I)]
+              res.append("\n====== "+key+"  matches "+str(len(hits))+" ======")
+              for p in hits[:13]:
+                  a=max(0,p-1100);b=min(len(s),p+1800)
+                  res.append(f"\n>>> OFFSET {p}, neighborhood {a}:{b}\n"+s[a:b].replace("\r",""))
+          Path(".tmp-trivia-together-inspect.txt").write_text("\n".join(res),"utf-8")
+          PY
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add .tmp-trivia-together-inspect.txt
+          git commit -m "Temporary Trivia Together source inspection" || exit 0
+          git push
