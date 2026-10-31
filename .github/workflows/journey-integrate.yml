@@ -1,0 +1,51 @@
+name: Apply Cinematic Story Journey to Visual Lab
+on:
+  push:
+    paths:
+      - '.github/workflows/journey-integrate.yml'
+permissions:
+  contents: write
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Guard source and add one CSS and JS import
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check journey-cinematic.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          assert len(s)>10000000, 'Unexpected source size; refusing to edit'
+          assert s.count('</head>')==1, 'Unexpected head boundary'
+          assert s.count('</body>')==1, 'Unexpected body boundary'
+          css='<link rel="stylesheet" href="journey-cinematic.css">'
+          js='<script defer src="journey-cinematic.js"></script>'
+          assert css not in s and js not in s, 'Cinematic Journey already installed'
+          for i,name in enumerate(('01_the_beginning','02_faith_promises','03_deliverance',
+             '04_judges_kings','05_exile_return','06_the_messiah',
+             '07_good_news_spreads','08_revelation'),1):
+            image=Path('journey-art')/(name+'.webp')
+            data=image.read_bytes()
+            assert data[:4]==b'RIFF' and data[8:12]==b'WEBP',f'Image {i} missing'
+            assert name+'.webp' in Path('journey-cinematic.css').read_text()
+          assert 'id="journey-stops"' in s and 'class="episodes-cover"' in s, 'Journey markers missing'
+          assert 'id="chapter-guide-cover"' in s, 'Guide marker missing'
+          s=s.replace('</head>', '  '+css+'\n</head>',1)
+          s=s.replace('</body>', '  '+js+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
+          assert p.read_text(encoding='utf-8').count(css)==1
+          assert p.read_text(encoding='utf-8').count(js)==1
+          print('INTEGRATION PASSED; original game content retained')
+          PY
+          git diff --check
+          git config user.name "bible-unfolded-visual-lab"
+          git config user.email "actions@users.noreply.github.com"
+          git add index.html
+          git commit -m "Visual Lab: activate continuous cinematic Journey in existing game"
+          git push origin HEAD:main
