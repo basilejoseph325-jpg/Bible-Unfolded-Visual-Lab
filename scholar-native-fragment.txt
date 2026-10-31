@@ -27,8 +27,7 @@
          const art=cardArt[t.name]||['warm-up','Basics'];
          return `<button type="button" class="bu3835-track buScholarCard" data-track="${esc(id)}" data-scholar-category="${art[1]}">
             <span class="buScholarThumb"><img src="scholar-research-assets/${art[0]}.webp" alt="" loading="lazy" decoding="async"></span>
-            <span class="buScholarCopy"><strong>${esc(t.name)}</strong><span class="buScholarDescription">${esc(t.desc)}</span><span class="buScholarMeta"><small>${n} questions</small><em>${art[1]}</em></span></span>
-            <span class="buScholarArrow" aria-hidden="true">›</span>
+            <span class="buScholarCopy"><strong>${esc(t.name)}</strong><span class="buScholarMeta"><small>${n} questions</small></span></span>
           </button>`;
       }).join('')}
     </div>
