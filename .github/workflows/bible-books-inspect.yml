@@ -1,0 +1,25 @@
+name: Bible Books Read-Only Design Inspection
+on:
+  push:
+    paths: ['.github/workflows/bible-books-inspect.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect native Bible Books markup, styles and render logic
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path("index.html").read_text(encoding="utf-8")
+          terms=["book-grid","book-tile","book-intro","book-card","book-list","hebrew-books","greek-books","testament-label","collection-note","renderBooks","book-name"]
+          for term in terms:
+            ms=list(re.finditer(re.escape(term),s,re.I))
+            print("TERM",term,"COUNT",len(ms))
+            for m in ms[:10]:
+              c=s[max(0,m.start()-360):m.start()+1100].replace("\n","\\n")
+              print("MATCH",m.start(),c[:1450])
+          PY
