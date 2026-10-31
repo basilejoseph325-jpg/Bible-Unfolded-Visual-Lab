@@ -10,19 +10,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Journey markup without changing game files
+      - name: Inspect Journey runtime markup and selectors
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
           s=Path('index.html').read_text(encoding='utf-8')
-          print('INDEX_CHARS',len(s),'LINES',s.count('\n')+1)
-          terms=['Follow the Story','The Journey','The Beginning','Faith &amp; Promises','Faith & Promises','Genesis adventures','Journey locked','Judges & Kings','Exile & Return','Browse Bible Books','storyJourney','journeyMap','journeyCard','renderJourney']
+          terms=['journey-stops','journey-stop','route-stop','stop-card','journey-node','journey-intro','episodes-cover','episode-list','chapter-guide-cover','story-open','route-world','journey-progress-fill','route-to-levels']
           for term in terms:
-              print('\nTERM',repr(term))
-              occurrences=list(re.finditer(re.escape(term),s,re.I))
-              print('COUNT',len(occurrences))
-              for m in occurrences[:3]:
-                  print('POS',m.start(),'CONTEXT',s[max(0,m.start()-900):min(len(s),m.end()+1300)].replace('\n','\\n'))
+              hits=list(re.finditer(re.escape(term),s,re.I))
+              print('TERM',term,'COUNT',len(hits))
+              for m in hits[:6]:
+                  c=s[max(0,m.start()-450):min(len(s),m.end()+1000)]
+                  if 'base64' in c:
+                      c=c[:400]
+                  print('POS',m.start(),'CONTEXT',c.replace('\n','\\n'))
           PY
