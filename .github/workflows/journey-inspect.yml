@@ -1,30 +1,25 @@
 name: Story Journey Read-Only Inspection
 on:
   push:
-    paths:
-      - '.github/workflows/journey-inspect.yml'
+    paths: ['.github/workflows/journey-inspect.yml']
 permissions: {contents: read}
 jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Print compact Journey JavaScript and content structures
+      - name: Inspect specific runtime selectors and styles
         shell: bash
         run: |
           python3 - <<'PY'
-          import re
           from pathlib import Path
+          import re
           s=Path('index.html').read_text(encoding='utf-8')
-          patterns=[r'route-stop',r'routeStops',r'route-stops',r'journey-stops',r'journeyStages',r'journeyChapters',r'episodes-cover',r'chapter-guide-cover',r'chapter-guide-start',r'episode-card',r'function renderJourney',r'function renderRoute']
-          for pat in patterns:
-            found=list(re.finditer(pat,s,re.I))
-            print('PAT',pat,'COUNT',len(found))
-            for m in found:
-              if m.start()<1250000:continue
-              before=s[max(0,m.start()-750):m.start()]
-              after=s[m.start():min(len(s),m.end()+1000)]
-              excerpt=(before+after).replace('\n','\\n')
-              print('POS',m.start(),'EXCERPT',excerpt[:1750])
-              if len(found)>45:break
+          pats=['route-stop','journey-stops','episodes-cover','episode-card','chapter-guide-cover','chapter-guide','trail-svg','stage','journey-progress-label']
+          for term in pats:
+            matches=[m.start() for m in re.finditer(re.escape(term),s,re.I)]
+            print('TERM',term,'MATCHES',len(matches),'POSITIONS',matches[:45])
+            for pos in matches:
+              if pos<1250000 or pos>11500000:continue
+              print('RUNTIME',term,'POS',pos,s[max(0,pos-550):pos+1000].replace('\n','\\n'))
           PY
