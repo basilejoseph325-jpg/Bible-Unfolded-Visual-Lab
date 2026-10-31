@@ -14,20 +14,20 @@
 #bu34-body .buScholarFilter{flex:none;min-height:34px;padding:7px 13px;border:1px solid #caaf78a0;border-radius:20px;background:#082d3c;color:#f4e3bb;font:600 12px system-ui;cursor:pointer;}
 #bu34-body .buScholarFilter[aria-pressed="true"]{background:linear-gradient(180deg,#ffe0a0,#cf9b4d);color:#203038;border-color:#fbe3aa;}
 #bu34-body .buScholarCards{display:grid;gap:10px;}
-#bu34-body .bu3835-track.buScholarCard{display:grid!important;grid-template-columns:minmax(95px,33%) minmax(0,1fr) 23px;align-items:center;min-height:112px;width:100%;gap:10px;padding:0 9px 0 0!important;overflow:hidden;border:1px solid #b99b69bd;border-radius:16px;background:linear-gradient(125deg,#153f51,#0c2b3b)!important;box-shadow:0 6px 15px #001c25aa;box-sizing:border-box;text-align:left;cursor:pointer;transition:transform .13s,border-color .13s;}
+
+/* Full-bleed cinematic Scholar cards. The art is the card; labels stay minimal. */
+#bu34-body .bu3835-track.buScholarCard{display:block!important;position:relative;isolation:isolate;width:100%;min-height:165px;height:clamp(165px,48vw,205px);padding:0!important;overflow:hidden;border:1px solid #c4a46e;border-radius:17px;background:#0b3444!important;box-shadow:0 7px 18px #001922a8;box-sizing:border-box;text-align:left;cursor:pointer;transition:transform .13s,border-color .13s;}
 #bu34-body .bu3835-track.buScholarCard[hidden]{display:none!important;}
 #bu34-body .bu3835-track.buScholarCard:focus-visible{outline:2px solid #ffe3a4;outline-offset:3px;}
 #bu34-body .bu3835-track.buScholarCard:active{transform:scale(.989);}
-#bu34-body .buScholarThumb{display:block;width:100%;height:112px;overflow:hidden;background:#133342;}
+#bu34-body .buScholarThumb{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:0;overflow:hidden;background:#133342;pointer-events:none;}
 #bu34-body .buScholarThumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
-#bu34-body .buScholarCopy{display:flex;min-width:0;flex-direction:column;justify-content:center;gap:5px;padding:8px 0;}
-#bu34-body .buScholarCopy strong{display:block;color:#ffe2ac;font:700 clamp(15px,4.1vw,19px)/1.12 Georgia,serif;}
-#bu34-body .buScholarCopy .buScholarDescription{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;color:#e0e9e6;font:400 clamp(11px,2.95vw,13px)/1.33 system-ui;}
-#bu34-body .buScholarMeta{display:flex;flex-wrap:wrap;gap:5px;align-items:center;}
-#bu34-body .buScholarMeta small,#bu34-body .buScholarMeta em{display:inline-flex;align-items:center;min-height:20px;border:1px solid #c8af75a6;border-radius:14px;padding:3px 8px;color:#f9e6bd;font:600 10px system-ui;font-style:normal;background:#062837d9;}
-#bu34-body .buScholarMeta em{background:#2b4c54;color:#f9dba9;}
-#bu34-body .buScholarArrow{display:flex!important;align-items:center;justify-content:center;width:21px;height:30px;color:#f2d292;font:700 28px Georgia,serif;}
+#bu34-body .buScholarThumb:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#001c2622 68%,#00141bc7 100%);}
+#bu34-body .buScholarCopy{display:flex;position:absolute;z-index:1;left:0;right:0;bottom:0;min-width:0;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:5px;padding:23px 16px 14px;pointer-events:none;}
+#bu34-body .buScholarCopy strong{display:block;color:#ffe1a0;font:700 clamp(19px,5.1vw,25px)/1.12 Georgia,serif;text-shadow:0 2px 8px #00131cee;}
+#bu34-body .buScholarMeta{display:flex;align-items:center;gap:5px;}
+#bu34-body .buScholarMeta small{display:inline-block;color:#fff0ce;font:600 11px/1.3 system-ui;text-shadow:0 1px 6px #00131cee;}
 #bu34-body .buScholarBack{display:block;min-height:48px;margin:22px 4px 8px!important;border-radius:15px!important;width:calc(100% - 8px);}
-@media(max-width:350px){#bu34-body .bu3835-track.buScholarCard{grid-template-columns:87px minmax(0,1fr) 18px;gap:7px;min-height:105px}#bu34-body .buScholarThumb{height:105px}#bu34-body .buScholarCopy strong{font-size:15px}#bu34-body .buScholarMeta em{display:none}}
-@media(min-width:620px){#bu34-body .buScholarHero{min-height:280px}#bu34-body .buScholarCards{grid-template-columns:1fr 1fr}#bu34-body .bu3835-track.buScholarCard{grid-template-columns:112px minmax(0,1fr) 18px;min-height:120px}#bu34-body .buScholarThumb{height:120px}}
+@media(max-width:350px){#bu34-body .bu3835-track.buScholarCard{min-height:155px;height:47vw}#bu34-body .buScholarCopy{padding:20px 12px 12px}#bu34-body .buScholarCopy strong{font-size:18px}}
+@media(min-width:620px){#bu34-body .buScholarHero{min-height:280px}#bu34-body .buScholarCards{grid-template-columns:1fr 1fr}#bu34-body .bu3835-track.buScholarCard{min-height:170px;height:clamp(170px,26vw,225px)}#bu34-body .buScholarCopy strong{font-size:clamp(19px,2.8vw,24px)}}
 @media(prefers-reduced-motion:reduce){#bu34-body .bu3835-track.buScholarCard{transition:none}}
