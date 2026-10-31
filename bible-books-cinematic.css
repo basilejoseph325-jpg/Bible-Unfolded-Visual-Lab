@@ -1,6 +1,6 @@
 /* Bible Unfolded — Bible Books visual refresh, Visual Lab only.
    Native 66-book grid and existing click/unlock rules remain untouched.
-   The first 11 books have approved individual art; others await artwork. */
+   The first 21 books have approved individual art; others await artwork. */
 #levels .book-intro {
   box-sizing:border-box!important;
   position:relative;
@@ -134,6 +134,16 @@
 #levels #hebrew-books .book-tile:nth-child(9) {--bu-book-cover:url("bible-book-art/09_1_samuel.webp");}
 #levels #hebrew-books .book-tile:nth-child(10) {--bu-book-cover:url("bible-book-art/10_2_samuel.webp");}
 #levels #hebrew-books .book-tile:nth-child(11) {--bu-book-cover:url("bible-book-art/11_1_kings.webp");}
+#levels #hebrew-books .book-tile:nth-child(12) {--bu-book-cover:url("bible-book-art/12_2_kings.webp");}
+#levels #hebrew-books .book-tile:nth-child(13) {--bu-book-cover:url("bible-book-art/13_1_chronicles.webp");}
+#levels #hebrew-books .book-tile:nth-child(14) {--bu-book-cover:url("bible-book-art/14_2_chronicles.webp");}
+#levels #hebrew-books .book-tile:nth-child(15) {--bu-book-cover:url("bible-book-art/15_ezra.webp");}
+#levels #hebrew-books .book-tile:nth-child(16) {--bu-book-cover:url("bible-book-art/16_nehemiah.webp");}
+#levels #hebrew-books .book-tile:nth-child(17) {--bu-book-cover:url("bible-book-art/17_esther.webp");}
+#levels #hebrew-books .book-tile:nth-child(18) {--bu-book-cover:url("bible-book-art/18_job.webp");}
+#levels #hebrew-books .book-tile:nth-child(19) {--bu-book-cover:url("bible-book-art/19_psalms.webp");}
+#levels #hebrew-books .book-tile:nth-child(20) {--bu-book-cover:url("bible-book-art/20_proverbs.webp");}
+#levels #hebrew-books .book-tile:nth-child(21) {--bu-book-cover:url("bible-book-art/21_ecclesiastes.webp");}
 #levels .book-grid .book-tile:not(.open) {filter:none!important;}
 #levels .collection-note {
   margin:21px 17px 27px!important;
