@@ -153,39 +153,50 @@ bu35Render=function(){
  return out;
 };
 })();
-/* Behind the Name cinematic photo assignment — Visual Lab only.
-   This only decorates newly rendered native buttons; chapter paging, saved
-   mastery, answer handling and rewards remain owned by the original game.
-   Temporary illustrations from existing Bible Books until new custom artwork is approved. */
+/* Behind the Name artwork + compact labels — Visual Lab only.
+   Keep native controls and native mastery calculations. No progress/state changes. */
 (function(){
 'use strict';
-if(window.BU_BTN_NAME_ART_V1)return;
-window.BU_BTN_NAME_ART_V1=true;
-const scenes={
-  'People & Their Names':['17_esther.webp',40],
-  'Places & Their Stories':['16_nehemiah.webp',55],
-  'Changed Names & Connections':['27_daniel.webp',52],
-  'First Families':['01_genesis.webp',50],
-  'Tribes & Family Links':['05_deuteronomy.webp',35],
-  'Faith & Decisions':['08_ruth.webp',40],
-  'Prophets & Kings':['23_isaiah.webp',48],
-  'Disciples & Messengers':['44_acts.webp',55],
-  'Lands & Landmarks':['06_joshua.webp',50]
+if(window.BU_BTN_NAME_ART_V2)return;
+window.BU_BTN_NAME_ART_V2=true;
+const cards={
+ 'People & Their Names':{title:'People & Names',scene:'17_esther.webp',x:47,y:38,detail:'Meet Bible characters in a new way.'},
+ 'Places & Their Stories':{title:'Bible Places',scene:'16_nehemiah.webp',x:49,y:45,detail:'Uncover what ancient locations reveal.'},
+ 'Changed Names & Connections':{title:'Names & Connections',scene:'27_daniel.webp',x:48,y:53,detail:'Explore why names mattered.'},
+ 'First Families':{title:'First Families',scene:'01_genesis.webp',x:48,y:48,detail:'Why the earliest names were chosen.'},
+ 'Tribes & Family Links':{title:'Family Links',scene:'05_deuteronomy.webp',x:30,y:45,detail:'Births, bonds, and name origins.'},
+ 'Faith & Decisions':{title:'Faith & Choices',scene:'08_ruth.webp',x:38,y:43,detail:'Names connected with remarkable lives.'},
+ 'Prophets & Kings':{title:'Prophets & Kings',scene:'23_isaiah.webp',x:49,y:42,detail:'Meaningful names from Israel’s history.'},
+ 'Disciples & Messengers':{title:'Disciples',scene:'44_acts.webp',x:52,y:44,detail:'Names in the Christian Greek Scriptures.'},
+ 'Lands & Landmarks':{title:'Bible Landmarks',scene:'06_joshua.webp',x:45,y:47,detail:'The stories in geographical names.'}
 };
-function setup(){
+function init(){
  const grid=document.getElementById('btn3926-packs');
  if(!grid)return;
- const apply=()=>{
+ const update=()=>{
   for(const button of grid.querySelectorAll('.btn3926-pack')){
-    const title=button.querySelector('span:nth-child(2)>b')?.textContent?.trim();
-    const scene=scenes[title];if(!scene)continue;
-    button.style.setProperty('--btn3926-scene','url("bible-book-art/'+scene[0]+'")');
-    button.style.setProperty('--btn3926-x',scene[1]+'%');
+   const titleNode=button.querySelector('span:nth-child(2)>b');
+   const progressNode=button.querySelector('span:nth-child(2)>small');
+   if(!titleNode||!progressNode)continue;
+   const name=button.dataset.buOriginalName||titleNode.textContent.trim();
+   const card=cards[name];if(!card)continue;
+   button.dataset.buOriginalName=name;
+   const progress=progressNode.textContent.match(/(\d+)\s*\/\s*(\d+)\s*mastered/i);
+   if(progress){
+    const compact=progress[1]+'/'+progress[2]+' mastered';
+    if(progressNode.textContent!==compact)progressNode.textContent=compact;
+    const accessible=name+'. '+card.detail+' '+progress[1]+' of '+progress[2]+' mastered';
+    if(button.getAttribute('aria-label')!==accessible)button.setAttribute('aria-label',accessible);
+   }
+   if(titleNode.textContent!==card.title)titleNode.textContent=card.title;
+   button.style.setProperty('--btn3926-scene','url("bible-book-art/'+card.scene+'")');
+   button.style.setProperty('--btn3926-x',card.x+'%');
+   button.style.setProperty('--btn3926-y',card.y+'%');
   }
  };
- new MutationObserver(apply).observe(grid,{childList:true});
- apply();
+ new MutationObserver(update).observe(grid,{childList:true});
+ update();
 }
-if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
-else setup();
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
+else init();
 })();
