@@ -633,3 +633,157 @@
 
 /* 44+ CSS px tap targets on mobile. Do not hide game navigation, saved
    session metadata, or text labels for the two distinct Guided Study options. */
+
+/* Play Together final alignment v5 — Visual Lab only, no DOM or logic edits.
+   Keep saved-session data, natural button accessibility, and all tap targets. */
+
+/* Move the real saved-session details immediately above the Continue title.
+   On very narrow screens allow the session description to wrap if needed. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#bu35-resume) p{
+ bottom:60px!important;
+ left:15px!important;
+ right:14px!important;
+ max-width:calc(100% - 29px)!important;
+ margin:0!important;
+ font-size:clamp(10px,2.85vw,13px)!important;
+ line-height:1.18!important;
+}
+
+/* Quick Play: restore most of the faces, with a short title bottom-left.
+   All four 49px icon buttons stay in their existing bottom-right row.
+   Preserve the original full heading in the document for screen readers. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]){
+ min-height:clamp(162px,22dvh,201px)!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) h3{
+ display:block!important;
+ position:absolute!important;
+ z-index:3!important;
+ left:15px!important;
+ bottom:18px!important;
+ top:auto!important;
+ right:auto!important;
+ width:calc(100% - 251px)!important;
+ max-width:calc(100% - 251px)!important;
+ min-width:69px!important;
+ margin:0!important;
+ padding:0!important;
+ font-size:0!important;
+ line-height:0!important;
+ text-align:left!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) h3::before{
+ content:"Quick Play";
+ display:block!important;
+ color:#ffe3a4!important;
+ font:700 clamp(20px,5.5vw,27px)/1.07 Georgia,'Times New Roman',serif!important;
+ letter-spacing:-.25px!important;
+ white-space:normal!important;
+ overflow-wrap:normal!important;
+ text-shadow:0 2px 9px #000f,0 0 13px #000d!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row{
+ bottom:13px!important;
+ right:13px!important;
+}
+
+/* Guided and Solo: the original card title was hidden when the descriptions
+   were removed. Bring back a short gold title and give the native buttons
+   petite illustrated controls instead of two full-width black bars. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided){
+ display:block!important;
+ position:relative!important;
+ min-height:clamp(151px,20dvh,185px)!important;
+ padding:13px 14px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) h3{
+ display:block!important;
+ position:absolute!important;
+ z-index:2!important;
+ left:15px!important;
+ bottom:22px!important;
+ top:auto!important;
+ width:calc(100% - 171px)!important;
+ max-width:calc(100% - 171px)!important;
+ margin:0!important;
+ padding:0!important;
+ color:transparent!important;
+ font-size:0!important;
+ line-height:0!important;
+ text-align:left!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) h3::before{
+ content:"Study Options";
+ display:block!important;
+ color:#ffe3a4!important;
+ font:700 clamp(20px,5.5vw,27px)/1.05 Georgia,serif!important;
+ text-shadow:0 2px 8px #000f,0 0 13px #000c!important;
+ white-space:normal!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) .bu35-button-row{
+ display:block!important;
+ position:static!important;
+ margin:0!important;
+ padding:0!important;
+ width:auto!important;
+ height:auto!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(#fw4-open-guided,#fw4-open-solo){
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ gap:3px!important;
+ position:absolute!important;
+ z-index:3!important;
+ top:auto!important;
+ bottom:13px!important;
+ left:auto!important;
+ width:68px!important;
+ min-width:68px!important;
+ max-width:68px!important;
+ height:62px!important;
+ min-height:62px!important;
+ max-height:62px!important;
+ margin:0!important;
+ padding:5px 3px!important;
+ border:1px solid #f4dba7cb!important;
+ border-radius:12px!important;
+ background:rgba(5,34,43,.88)!important;
+ box-shadow:0 3px 10px #0008!important;
+ color:transparent!important;
+ font-size:0!important;
+ line-height:0!important;
+ text-align:center!important;
+ overflow:hidden!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) #fw4-open-guided{right:89px!important}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) #fw4-open-solo{right:13px!important}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(#fw4-open-guided,#fw4-open-solo)::before{
+ content:"◈"!important;
+ display:block!important;
+ color:#ffe3a6!important;
+ font:700 22px/1 Georgia,serif!important;
+ text-shadow:0 1px 6px #000c!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) #fw4-open-solo::before{
+ content:"⌕"!important;
+ font-size:25px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(#fw4-open-guided,#fw4-open-solo)::after{
+ content:"Guided"!important;
+ display:block!important;
+ color:#ffe8bb!important;
+ font:700 10px/1.1 system-ui,sans-serif!important;
+ letter-spacing:0!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) #fw4-open-solo::after{content:"Solo"!important}
+@media(max-width:355px){
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) h3{
+  width:calc(100% - 228px)!important;
+  max-width:calc(100% - 228px)!important;
+  left:12px!important;
+ }
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) h3::before{font-size:20px!important}
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) h3::before{font-size:20px!important}
+}
