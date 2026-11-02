@@ -229,3 +229,37 @@
 #levels .book-grid:not(#hebrew-books) .book-tile:nth-child(25) {--bu-book-cover:url("bible-book-art/64_3_john.webp");--bu-book-x:54%;--bu-book-y:50%;}
 #levels .book-grid:not(#hebrew-books) .book-tile:nth-child(26) {--bu-book-cover:url("bible-book-art/65_jude.webp");--bu-book-x:34%;--bu-book-y:50%;}
 #levels .book-grid:not(#hebrew-books) .book-tile:nth-child(27) {--bu-book-cover:url("bible-book-art/66_revelation.webp");--bu-book-x:40%;--bu-book-y:50%;}
+
+/* Compact book numbering — only the numeral, tucked into each artwork's top-right.
+   CSS counters preserve the existing game-generated labels/accessibility data and
+   the original click/unlock/save logic. First grid is 1–39; second starts at 40. */
+#levels #hebrew-books.book-grid {counter-reset:bu-book-number 0;}
+#levels .book-grid:not(#hebrew-books) {counter-reset:bu-book-number 39;}
+#levels .book-grid > .book-tile {counter-increment:bu-book-number;}
+#levels .book-grid .book-tile .book-num {
+  top:10px!important;
+  right:10px!important;
+  left:auto!important;
+  min-width:22px!important;
+  height:20px!important;
+  box-sizing:border-box!important;
+  padding:3px 5px!important;
+  display:inline-flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:rgba(5,29,36,.58)!important;
+  border:1px solid rgba(255,227,163,.36)!important;
+  box-shadow:0 1px 4px #0005!important;
+  font-size:0!important;
+  line-height:0!important;
+  letter-spacing:0!important;
+  color:transparent!important;
+  pointer-events:none!important;
+}
+#levels .book-grid .book-tile .book-num::after {
+  content:counter(bu-book-number);
+  font:600 10px/1 system-ui,sans-serif!important;
+  letter-spacing:0!important;
+  color:#ffeac0!important;
+  text-shadow:0 1px 2px #000b!important;
+}
