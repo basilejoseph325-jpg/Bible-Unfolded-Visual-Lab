@@ -1,6 +1,6 @@
 /* Bible Unfolded — Bible Books visual refresh, Visual Lab only.
    Native 66-book grid and existing click/unlock rules remain untouched.
-   The first 31 books have approved individual art; others await artwork. */
+   The first 39 books have approved individual art; others await artwork. */
 #levels .book-intro {
   box-sizing:border-box!important;
   position:relative;
@@ -154,6 +154,14 @@
 #levels #hebrew-books .book-tile:nth-child(29) {--bu-book-cover:url("bible-book-art/29_joel.webp");}
 #levels #hebrew-books .book-tile:nth-child(30) {--bu-book-cover:url("bible-book-art/30_amos.webp");}
 #levels #hebrew-books .book-tile:nth-child(31) {--bu-book-cover:url("bible-book-art/31_obadiah.webp");}
+#levels #hebrew-books .book-tile:nth-child(32) {--bu-book-cover:url("bible-book-art/32_jonah.webp");}
+#levels #hebrew-books .book-tile:nth-child(33) {--bu-book-cover:url("bible-book-art/33_micah.webp");}
+#levels #hebrew-books .book-tile:nth-child(34) {--bu-book-cover:url("bible-book-art/34_nahum.webp");}
+#levels #hebrew-books .book-tile:nth-child(35) {--bu-book-cover:url("bible-book-art/35_habakkuk.webp");}
+#levels #hebrew-books .book-tile:nth-child(36) {--bu-book-cover:url("bible-book-art/36_zephaniah.webp");}
+#levels #hebrew-books .book-tile:nth-child(37) {--bu-book-cover:url("bible-book-art/37_haggai.webp");}
+#levels #hebrew-books .book-tile:nth-child(38) {--bu-book-cover:url("bible-book-art/38_zechariah.webp");}
+#levels #hebrew-books .book-tile:nth-child(39) {--bu-book-cover:url("bible-book-art/39_malachi.webp");}
 #levels .book-grid .book-tile:not(.open) {filter:none!important;}
 #levels .collection-note {
   margin:21px 17px 27px!important;
