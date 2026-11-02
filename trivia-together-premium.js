@@ -153,3 +153,39 @@ bu35Render=function(){
  return out;
 };
 })();
+/* Behind the Name cinematic photo assignment — Visual Lab only.
+   This only decorates newly rendered native buttons; chapter paging, saved
+   mastery, answer handling and rewards remain owned by the original game.
+   Temporary illustrations from existing Bible Books until new custom artwork is approved. */
+(function(){
+'use strict';
+if(window.BU_BTN_NAME_ART_V1)return;
+window.BU_BTN_NAME_ART_V1=true;
+const scenes={
+  'People & Their Names':['17_esther.webp',40],
+  'Places & Their Stories':['16_nehemiah.webp',55],
+  'Changed Names & Connections':['27_daniel.webp',52],
+  'First Families':['01_genesis.webp',50],
+  'Tribes & Family Links':['05_deuteronomy.webp',35],
+  'Faith & Decisions':['08_ruth.webp',40],
+  'Prophets & Kings':['23_isaiah.webp',48],
+  'Disciples & Messengers':['44_acts.webp',55],
+  'Lands & Landmarks':['06_joshua.webp',50]
+};
+function setup(){
+ const grid=document.getElementById('btn3926-packs');
+ if(!grid)return;
+ const apply=()=>{
+  for(const button of grid.querySelectorAll('.btn3926-pack')){
+    const title=button.querySelector('span:nth-child(2)>b')?.textContent?.trim();
+    const scene=scenes[title];if(!scene)continue;
+    button.style.setProperty('--btn3926-scene','url("bible-book-art/'+scene[0]+'")');
+    button.style.setProperty('--btn3926-x',scene[1]+'%');
+  }
+ };
+ new MutationObserver(apply).observe(grid,{childList:true});
+ apply();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
+else setup();
+})();
