@@ -1,0 +1,63 @@
+name: Import approved Bible Books 40-66 art (Visual Lab only)
+
+on:
+  push:
+    paths:
+      - bible_unfolded_nt_40_to_66.zip
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  import-artwork:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Verify and extract the 27 image package
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          import hashlib
+          package = Path("bible_unfolded_nt_40_to_66.zip")
+          if not package.exists():
+              raise SystemExit("Upload bible_unfolded_nt_40_to_66.zip to repository root first")
+          digest = hashlib.sha256(package.read_bytes()).hexdigest()
+          expected_digest = "56264ce002f8b78b1b4c82b91b56422a14a22ac209492f905003c28acb807f67"
+          if digest != expected_digest:
+              raise SystemExit("Package checksum mismatch — no files changed")
+          slugs = [
+              "matthew","mark","luke","john","acts","romans","1_corinthians",
+              "2_corinthians","galatians","ephesians","philippians","colossians",
+              "1_thessalonians","2_thessalonians","1_timothy","2_timothy",
+              "titus","philemon","hebrews","james","1_peter","2_peter",
+              "1_john","2_john","3_john","jude","revelation"
+          ]
+          expected = {f"bible-book-art/{number}_{slug}.webp"
+                      for number, slug in zip(range(40, 67), slugs)}
+          with ZipFile(package) as archive:
+              members = {info.filename for info in archive.infolist()}
+              if members != expected or len(members) != 27:
+                  raise SystemExit("Unexpected paths or file count — refusing extraction")
+              for info in archive.infolist():
+                  if not 0 < info.file_size < 2_000_000:
+                      raise SystemExit(f"Invalid image size: {info.filename}")
+                  target = Path(info.filename)
+                  target.parent.mkdir(exist_ok=True)
+                  target.write_bytes(archive.read(info))
+          package.unlink()
+          print("Verified and installed 27 individual WebP illustrations.")
+          PY
+
+      - name: Commit only test artwork, remove transfer archive
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add bible-book-art
+          git add -u bible_unfolded_nt_40_to_66.zip
+          git commit -m "Visual Lab: install Books 40-66 and clean import archive"
+          git push
