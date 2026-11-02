@@ -180,12 +180,12 @@
  color:#ffe09b!important;
  text-shadow:0 2px 7px #000e!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack="0"]{--wt-scene:url('bible-book-art/66_revelation.webp');--wt-x:43%;--wt-y:42%}
+#cross-pick #cross-pack-list button.cross-pack-card[data-pack="0"]{--wt-scene:url('bible-book-art/66_revelation.webp');--wt-x:43%;--wt-y:0%}
 #cross-pick #cross-pack-list button.cross-pack-card[data-pack="1"]{--wt-scene:url('bible-book-art/16_nehemiah.webp');--wt-x:50%;--wt-y:41%}
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack="2"]{--wt-scene:url('bible-book-art/23_isaiah.webp');--wt-x:45%;--wt-y:41%}
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack="3"]{--wt-scene:url('bible-book-art/08_ruth.webp');--wt-x:50%;--wt-y:40%}
+#cross-pick #cross-pack-list button.cross-pack-card[data-pack="2"]{--wt-scene:url('bible-book-art/23_isaiah.webp');--wt-x:45%;--wt-y:0%}
+#cross-pick #cross-pack-list button.cross-pack-card[data-pack="3"]{--wt-scene:url('bible-book-art/08_ruth.webp');--wt-x:50%;--wt-y:0%}
 #cross-pick #cross-pack-list button.cross-pack-card[data-pack="4"]{--wt-scene:url('bible-book-art/44_acts.webp');--wt-x:47%;--wt-y:39%}
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack="5"]{--wt-scene:url('bible-book-art/07_judges.webp');--wt-x:50%;--wt-y:42%}
+#cross-pick #cross-pack-list button.cross-pack-card[data-pack="5"]{--wt-scene:url('bible-book-art/07_judges.webp');--wt-x:50%;--wt-y:0%}
 #cross-pick #cross-pack-list button.cross-pack-card[data-pack="6"]{--wt-scene:url('bible-book-art/46_1_corinthians.webp');--wt-x:52%;--wt-y:41%}
 
 /* Section title and classic board toggle stay real, functional controls. */
