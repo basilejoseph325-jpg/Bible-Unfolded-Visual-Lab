@@ -1,0 +1,241 @@
+/* Bible Unfolded — Play Together cinematic selector (Visual Lab only).
+   Only the Family Worship HUB is styled, identified by the native #bu35-new button.
+   No JavaScript changes. All native controls, relay, resume/discard, guided study,
+   rewards, family activities, saved sessions and game screens remain intact.
+   Existing standalone Bible images are layout placeholders pending custom artwork. */
+
+/* Ensure hub is allowed to scroll on phones. Actual gameplay is untouched. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new){
+ box-sizing:border-box!important;
+ width:100%!important;
+ max-width:590px!important;
+ min-height:0!important;
+ padding:11px 12px max(34px,env(safe-area-inset-bottom))!important;
+ margin:0 auto!important;
+ overflow-y:auto!important;
+ overflow-x:hidden!important;
+ -webkit-overflow-scrolling:touch!important;
+ background:transparent!important;
+}
+
+/* Shared premium photo-card system. 16:9 imagery is framed for wide phone cards. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card){
+ box-sizing:border-box!important;
+ position:relative!important;
+ isolation:isolate!important;
+ width:100%!important;
+ min-width:0!important;
+ margin:0 0 11px!important;
+ padding:15px 15px 14px!important;
+ overflow:hidden!important;
+ border:1.4px solid rgba(249,215,155,.81)!important;
+ border-radius:18px!important;
+ color:#fff0d3!important;
+ background-color:#154351!important;
+ background-image:
+  linear-gradient(180deg,rgba(0,15,22,.02) 0%,rgba(0,14,19,.13) 38%,rgba(1,13,21,.71) 72%,rgba(1,12,19,.93) 100%),
+  var(--pt-photo,linear-gradient(125deg,#27616a,#103645))!important;
+ background-size:cover!important;
+ background-position:center,var(--pt-x,50%) var(--pt-y,47%)!important;
+ box-shadow:inset 0 0 0 1px #ffffff18,0 8px 20px #0008!important;
+ text-align:left!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:stretch!important;
+ justify-content:flex-end!important;
+ gap:0!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) :is(h2,h3,p,span,button){
+ position:relative!important;
+ z-index:1!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) h2,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) h3{
+ display:block!important;
+ width:100%!important;
+ max-width:100%!important;
+ padding:0!important;
+ margin:0 0 5px!important;
+ color:#ffe3a4!important;
+ font:700 clamp(23px,6.5vw,31px)/1.07 Georgia,'Times New Roman',serif!important;
+ letter-spacing:-.25px!important;
+ text-align:left!important;
+ text-shadow:0 2px 8px #000f,0 0 13px #000c!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) p{
+ margin:0 0 8px!important;
+ color:#fff0da!important;
+ font:500 clamp(11px,2.95vw,13px)/1.32 system-ui,sans-serif!important;
+ text-align:left!important;
+ text-shadow:0 1px 5px #000f,0 0 10px #0009!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) button{
+ cursor:pointer!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) button:focus-visible{
+ outline:3px solid #ffeba9!important;
+ outline-offset:2px!important;
+}
+
+/* Golden flagship hero: Family Worship. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero{
+ --pt-photo:url('bible-book-art/46_1_corinthians.webp');
+ --pt-x:50%;--pt-y:42%;
+ min-height:clamp(200px,27dvh,250px)!important;
+ padding:20px 17px 16px!important;
+ border-color:#f8dfaaa3!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero .bu35-kicker{
+ display:none!important; /* Hide obsolete NEW v3.5 marker. */
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero h2{
+ font-size:clamp(29px,8vw,38px)!important;
+ margin-bottom:8px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero p{
+ max-width:98%!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero #bu35-new{
+ box-sizing:border-box!important;
+ width:100%!important;
+ min-height:42px!important;
+ margin:3px 0 0!important;
+ padding:9px 12px!important;
+ border-radius:11px!important;
+ border:1px solid #ffe4a8!important;
+ background:linear-gradient(180deg,#ffe4a4,#d4ad60)!important;
+ box-shadow:0 4px 11px #0006!important;
+ color:#112f38!important;
+ font:800 13px/1.2 system-ui,sans-serif!important;
+}
+
+/* Existing resumable family session — keep visible and impossible to confuse with a new game. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#bu35-resume){
+ --pt-photo:url('bible-book-art/57_philemon.webp');
+ --pt-x:51%;--pt-y:44%;
+ min-height:146px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#bu35-resume) h3{
+ font-size:clamp(21px,5.8vw,26px)!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu35-resume{
+ box-sizing:border-box!important;
+ min-height:39px!important;
+ margin:1px 0 0!important;
+ padding:7px 12px!important;
+ border-radius:11px!important;
+ background:linear-gradient(180deg,#ffe0a0,#cba55f)!important;
+ color:#17323b!important;
+ font:800 12px system-ui,sans-serif!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu35-discard{
+ width:max-content!important;
+ max-width:100%!important;
+ min-height:26px!important;
+ padding:5px 5px!important;
+ margin:3px auto 0!important;
+ background:transparent!important;
+ border:0!important;
+ color:#f5e6cd!important;
+ font-size:11px!important;
+ text-shadow:0 1px 4px #000!important;
+}
+
+/* Four quick games, now an inviting full-photo menu with a reliable 2×2 button grid. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]){
+ --pt-photo:url('bible-book-art/44_acts.webp');
+ --pt-x:50%;--pt-y:44%;
+ min-height:211px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row{
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:7px!important;
+ width:100%!important;
+ margin-top:4px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) [data-quick]{
+ box-sizing:border-box!important;
+ flex:initial!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:41px!important;
+ padding:8px 5px!important;
+ border:1px solid #f0cd8cba!important;
+ border-radius:11px!important;
+ background:rgba(8,43,51,.82)!important;
+ color:#ffe5b6!important;
+ text-align:center!important;
+ font:700 clamp(11px,3vw,13px)/1.2 system-ui,sans-serif!important;
+ backdrop-filter:blur(3px);
+}
+
+/* Native auxiliary cards — each has its own intentional biblical scene. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#wb36-family-open){
+ --pt-photo:url('scholar-research-assets/bible-surprises.webp');
+ --pt-x:52%;--pt-y:48%;
+ min-height:159px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#bu3834-family-entry){
+ --pt-photo:url('scholar-research-assets/hero.webp');
+ --pt-x:52%;--pt-y:44%;
+ min-height:159px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu3844-card:has(#bu3844-fam-ideas){
+ --pt-photo:url('bible-book-art/62_1_john.webp');
+ --pt-x:50%;--pt-y:43%;
+ min-height:168px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided){
+ --pt-photo:url('bible-book-art/54_1_timothy.webp');
+ --pt-x:52%;--pt-y:43%;
+ min-height:181px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-card,.bu3844-card):is(:has(#wb36-family-open),:has(#bu3834-family-entry),:has(#bu3844-fam-ideas),:has(#fw4-open-guided)) h3{
+ font-size:clamp(22px,5.8vw,27px)!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-card,.bu3844-card) :is(#wb36-family-open,#bu3834-family-entry,#bu3844-fam-ideas,#fw4-open-guided,#fw4-open-solo){
+ box-sizing:border-box!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:38px!important;
+ padding:9px 10px!important;
+ margin:2px 0 0!important;
+ border:1px solid #f2d595b5!important;
+ border-radius:10px!important;
+ background:rgba(7,41,49,.80)!important;
+ color:#ffe3a9!important;
+ font:800 clamp(11px,3vw,13px)/1.15 system-ui,sans-serif!important;
+ box-shadow:0 2px 8px #0005!important;
+ text-align:center!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu3844-card:has(#bu3844-fam-ideas) #bu3844-fam-ideas,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu3834-family-entry{
+ background:linear-gradient(180deg,#ffe0a0,#cfa55d)!important;
+ color:#13313a!important;
+ border-color:#ffe8b5!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) .bu35-button-row{
+ width:100%!important;
+ display:grid!important;
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ gap:8px!important;
+ margin-top:3px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)> .bu35-note{
+ font-size:11px!important;
+ line-height:1.35!important;
+ color:#c5dedb!important;
+ text-align:center!important;
+ margin:0 3px 13px!important;
+}
+@media(max-width:370px){
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new){padding:8px 10px 25px!important}
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card){padding:13px 12px!important}
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>:is(.bu35-hero,.bu35-card,.bu3844-card) h3{font-size:22px!important}
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) [data-quick]{font-size:11px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #bu35-family #bu35-body:has(> .bu35-hero #bu35-new) button{transition:none!important}
+}
