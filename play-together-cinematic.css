@@ -787,3 +787,36 @@
  #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) h3::before{font-size:20px!important}
  #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) h3::before{font-size:20px!important}
 }
+
+/* Play Together gold primary action polish v6 — Visual Lab only.
+   Primary start/launch actions match the successful golden Family Activity
+   Deck and Continue icon buttons. Quick Play, study choices, and trash stay
+   dark for clear visual hierarchy. All native click handlers remain intact. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero #bu35-new,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #wb36-family-open,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu3834-family-entry{
+ background:#e0bb71!important;
+ background-color:#e0bb71!important;
+ background-image:linear-gradient(165deg,#ffe6a6 0%,#f1ce82 42%,#cba055 100%)!important;
+ border:1.5px solid #ffe9b8!important;
+ border-radius:13px!important;
+ box-shadow:inset 0 0 0 1px #fff5,0 3px 12px #0009!important;
+ opacity:1!important;
+ filter:none!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero #bu35-new::before,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #wb36-family-open::before,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu3834-family-entry::before{
+ background-color:#12343d!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero #bu35-new:active,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #wb36-family-open:active,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #bu3834-family-entry:active{
+ filter:brightness(.91)!important;
+}
+/* Explicit fallback for any old mode-specific transparent button backgrounds. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-hero button#bu35-new,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card button#wb36-family-open,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card button#bu3834-family-entry{
+ background:linear-gradient(165deg,#ffe6a6,#cba055)!important;
+}
