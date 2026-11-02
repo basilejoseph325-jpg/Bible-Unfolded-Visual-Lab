@@ -196,3 +196,36 @@
 @media (prefers-reduced-motion:reduce) {
   #levels .book-tile {transition:none!important;}
 }
+/* Book 40-66 original illustrations, staged only on Visual Lab.
+   Focal coordinates fine-tuned for the two-column portrait-ish cards.
+   Original 16:9 art remains unmodified; background-position handles display crop.
+   40-66 files become visible once uploaded to bible-book-art/.
+   Hebrew Bible CSS, game logic and saved progress stay unchanged. */
+#levels .book-tile {background-position:center center,var(--bu-book-x,50%) var(--bu-book-y,50%)!important;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(1) {--bu-book-cover:url("bible-book-art/40_matthew.webp");--bu-book-x:50%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(2) {--bu-book-cover:url("bible-book-art/41_mark.webp");--bu-book-x:20%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(3) {--bu-book-cover:url("bible-book-art/42_luke.webp");--bu-book-x:42%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(4) {--bu-book-cover:url("bible-book-art/43_john.webp");--bu-book-x:60%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(5) {--bu-book-cover:url("bible-book-art/44_acts.webp");--bu-book-x:48%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(6) {--bu-book-cover:url("bible-book-art/45_romans.webp");--bu-book-x:43%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(7) {--bu-book-cover:url("bible-book-art/46_1_corinthians.webp");--bu-book-x:42%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(8) {--bu-book-cover:url("bible-book-art/47_2_corinthians.webp");--bu-book-x:25%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(9) {--bu-book-cover:url("bible-book-art/48_galatians.webp");--bu-book-x:50%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(10) {--bu-book-cover:url("bible-book-art/49_ephesians.webp");--bu-book-x:20%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(11) {--bu-book-cover:url("bible-book-art/50_philippians.webp");--bu-book-x:42%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(12) {--bu-book-cover:url("bible-book-art/51_colossians.webp");--bu-book-x:28%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(13) {--bu-book-cover:url("bible-book-art/52_1_thessalonians.webp");--bu-book-x:55%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(14) {--bu-book-cover:url("bible-book-art/53_2_thessalonians.webp");--bu-book-x:30%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(15) {--bu-book-cover:url("bible-book-art/54_1_timothy.webp");--bu-book-x:55%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(16) {--bu-book-cover:url("bible-book-art/55_2_timothy.webp");--bu-book-x:45%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(17) {--bu-book-cover:url("bible-book-art/56_titus.webp");--bu-book-x:54%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(18) {--bu-book-cover:url("bible-book-art/57_philemon.webp");--bu-book-x:48%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(19) {--bu-book-cover:url("bible-book-art/58_hebrews.webp");--bu-book-x:42%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(20) {--bu-book-cover:url("bible-book-art/59_james.webp");--bu-book-x:14%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(21) {--bu-book-cover:url("bible-book-art/60_1_peter.webp");--bu-book-x:35%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(22) {--bu-book-cover:url("bible-book-art/61_2_peter.webp");--bu-book-x:52%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(23) {--bu-book-cover:url("bible-book-art/62_1_john.webp");--bu-book-x:55%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(24) {--bu-book-cover:url("bible-book-art/63_2_john.webp");--bu-book-x:50%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(25) {--bu-book-cover:url("bible-book-art/64_3_john.webp");--bu-book-x:54%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(26) {--bu-book-cover:url("bible-book-art/65_jude.webp");--bu-book-x:34%;--bu-book-y:50%;}
+#levels .book-grid:not(#hebrew-books) .book-tile:nth-child(27) {--bu-book-cover:url("bible-book-art/66_revelation.webp");--bu-book-x:40%;--bu-book-y:50%;}
