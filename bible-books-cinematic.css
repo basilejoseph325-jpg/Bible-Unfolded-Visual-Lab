@@ -109,13 +109,10 @@
   color:#ffdf9d!important;
   text-shadow:0 2px 6px #000f,0 0 16px #000b!important;
 }
+/* The original book-status UI produced stray diamonds/XP glyphs on artwork.
+   Hide only its card overlay; underlying completion and unlock logic remain unchanged. */
 #levels .book-tile .book-status {
-  top:10px!important;
-  right:11px!important;
-  z-index:2!important;
-  font-size:16px!important;
-  color:#ead095!important;
-  text-shadow:0 2px 5px #000f!important;
+  display:none!important;
 }
 #levels .book-tile.open {
   border:1.5px solid #ffe29c!important;
