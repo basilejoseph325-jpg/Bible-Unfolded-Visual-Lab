@@ -200,3 +200,62 @@ function init(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});
 else init();
 })();
+
+/* Play Together icon text cleanup v7 — Visual Lab only.
+   Word Builder and Scholar Research launch buttons are dynamically assembled
+   by original game code with old icon glyphs embedded in their text. Those
+   glyphs were leaking through underneath the CSS illustration icons.
+   Keep the native BUTTON NODES, handlers and accessible action descriptions;
+   strip only their stale visual text and force the compact golden button fill.
+*/
+(function(){
+'use strict';
+if(window.BU_PT_ICON_CLEANUP_V7)return;
+window.BU_PT_ICON_CLEANUP_V7=true;
+function apply(){
+ const hub=document.getElementById('bu35-body');
+ if(!hub||!hub.querySelector('.bu35-hero #bu35-new'))return;
+ for(const [id,label] of [
+  ['wb36-family-open','Open Word Builder'],
+  ['bu3834-family-entry','Launch Scholar Research']
+ ]){
+  const button=hub.querySelector('#'+id);
+  if(!button||button.dataset.buCleanIconV7==='yes')continue;
+  // Preserve the existing node and onclick listener; only clear stale glyphs.
+  button.dataset.buCleanIconV7='yes';
+  button.setAttribute('aria-label',label);
+  button.setAttribute('title',label);
+  button.textContent='';
+  const s=button.style;
+  s.setProperty('position','absolute','important');
+  s.setProperty('right','14px','important');
+  s.setProperty('bottom','13px','important');
+  s.setProperty('left','auto','important');
+  s.setProperty('width','48px','important');
+  s.setProperty('min-width','48px','important');
+  s.setProperty('max-width','48px','important');
+  s.setProperty('height','48px','important');
+  s.setProperty('min-height','48px','important');
+  s.setProperty('max-height','48px','important');
+  s.setProperty('padding','0','important');
+  s.setProperty('margin','0','important');
+  s.setProperty('background','linear-gradient(165deg,#ffe6a6,#cba055)','important');
+  s.setProperty('border','1.5px solid #ffe9b8','important');
+  s.setProperty('border-radius','13px','important');
+  s.setProperty('box-shadow','inset 0 0 0 1px #fff5,0 3px 12px #0009','important');
+  s.setProperty('font-size','0','important');
+  s.setProperty('color','transparent','important');
+  s.setProperty('text-shadow','none','important');
+  s.setProperty('overflow','hidden','important');
+  // The sole icon is now the ::before illustration from Play Together CSS.
+ }
+}
+function setup(){
+ const hub=document.getElementById('bu35-body');
+ if(!hub)return;
+ new MutationObserver(apply).observe(hub,{childList:true,subtree:true});
+ apply();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',setup,{once:true});
+else setup();
+})();
