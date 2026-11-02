@@ -67,7 +67,7 @@
   background-color:#143946!important;
   background-image:linear-gradient(180deg,rgba(3,22,27,.04) 3%,rgba(1,15,24,.12) 36%,rgba(1,14,23,.56) 68%,rgba(0,11,18,.96) 100%),var(--bu-book-cover,linear-gradient(135deg,#32545d 0%,#173e4b 54%,#0b2635 100%))!important;
   background-size:cover!important;
-  background-position:center center!important;
+  background-position:center center,var(--bu-book-x,50%) center!important;
   box-shadow:inset 0 0 0 1px #f5deab16,0 7px 19px #0008!important;
   transition:transform .16s ease,border-color .2s ease,box-shadow .2s ease!important;
   -webkit-tap-highlight-color:transparent;
@@ -162,6 +162,11 @@
 #levels #hebrew-books .book-tile:nth-child(37) {--bu-book-cover:url("bible-book-art/37_haggai.webp");}
 #levels #hebrew-books .book-tile:nth-child(38) {--bu-book-cover:url("bible-book-art/38_zechariah.webp");}
 #levels #hebrew-books .book-tile:nth-child(39) {--bu-book-cover:url("bible-book-art/39_malachi.webp");}
+/* Focus-only mobile crop adjustments: preserve the original illustrated art. */
+#levels #hebrew-books .book-tile:nth-child(26) {--bu-book-x:17%;}
+#levels #hebrew-books .book-tile:nth-child(29) {--bu-book-x:20%;}
+#levels #hebrew-books .book-tile:nth-child(31) {--bu-book-x:22%;}
+#levels #hebrew-books .book-tile:nth-child(34) {--bu-book-x:33%;}
 #levels .book-grid .book-tile:not(.open) {filter:none!important;}
 #levels .collection-note {
   margin:21px 17px 27px!important;
