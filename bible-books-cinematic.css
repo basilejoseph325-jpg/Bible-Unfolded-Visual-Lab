@@ -160,6 +160,18 @@
 #levels #hebrew-books .book-tile:nth-child(38) {--bu-book-cover:url("bible-book-art/38_zechariah.webp");}
 #levels #hebrew-books .book-tile:nth-child(39) {--bu-book-cover:url("bible-book-art/39_malachi.webp");}
 /* Focus-only mobile crop adjustments: preserve the original illustrated art. */
+/* Book 4 — Numbers: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(4) {--bu-book-x:25%;}
+/* Book 5 — Deuteronomy: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(5) {--bu-book-x:12%;}
+/* Book 11 — 1 Kings: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(11) {--bu-book-x:8%;}
+/* Book 13 — 1 Chronicles: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(13) {--bu-book-x:25%;}
+/* Book 19 — Psalms: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(19) {--bu-book-x:0%;}
+/* Book 25 — Lamentations: bias the card toward the main biblical subject. */
+#levels #hebrew-books .book-tile:nth-child(25) {--bu-book-x:15%;}
 #levels #hebrew-books .book-tile:nth-child(26) {--bu-book-x:17%;}
 #levels #hebrew-books .book-tile:nth-child(29) {--bu-book-x:20%;}
 #levels #hebrew-books .book-tile:nth-child(31) {--bu-book-x:22%;}
