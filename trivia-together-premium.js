@@ -162,7 +162,7 @@ window.BU_BTN_NAME_ART_V2=true;
 const cards={
  'People & Their Names':{title:'People & Names',scene:'17_esther.webp',x:47,y:38,detail:'Meet Bible characters in a new way.'},
  'Places & Their Stories':{title:'Bible Places',scene:'16_nehemiah.webp',x:49,y:45,detail:'Uncover what ancient locations reveal.'},
- 'Changed Names & Connections':{title:'Names & Connections',scene:'27_daniel.webp',x:48,y:53,detail:'Explore why names mattered.'},
+ 'Changed Names & Connections':{title:'Names & Connections',scene:'27_daniel.webp',x:48,y:0,detail:'Explore why names mattered.'},
  'First Families':{title:'First Families',scene:'01_genesis.webp',x:48,y:48,detail:'Why the earliest names were chosen.'},
  'Tribes & Family Links':{title:'Family Links',scene:'05_deuteronomy.webp',x:30,y:45,detail:'Births, bonds, and name origins.'},
  'Faith & Decisions':{title:'Faith & Choices',scene:'08_ruth.webp',x:38,y:43,detail:'Names connected with remarkable lives.'},
