@@ -72,7 +72,7 @@
 }
 
 /* Seven distinct, wide scenic cards. The native buttons remain intact. */
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]){
  box-sizing:border-box!important;
  isolation:isolate!important;
  position:relative!important;
@@ -100,12 +100,12 @@
  filter:none!important;
  transition:transform .16s ease,border-color .16s ease!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]:focus-visible{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]):focus-visible{
  outline:3px solid #ffe9ab!important;
  outline-offset:2px!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]:active{transform:scale(.989)!important}
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]>.mode-icon{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]):active{transform:scale(.989)!important}
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"])>.mode-icon{
  position:absolute!important;
  z-index:1!important;
  top:10px!important;
@@ -126,7 +126,7 @@
  font:700 12px/1 system-ui,sans-serif!important;
  box-shadow:0 2px 8px #0007!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]>span:nth-child(2){
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"])>span:nth-child(2){
  position:relative!important;
  z-index:1!important;
  width:calc(100% - 20px)!important;
@@ -134,7 +134,7 @@
  min-width:0!important;
  display:block!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack] strong{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) strong{
  display:block!important;
  color:#ffe3a0!important;
  font:700 clamp(22px,5.65vw,29px)/1.06 Georgia,'Times New Roman',serif!important;
@@ -143,17 +143,17 @@
  letter-spacing:-.3px!important;
  text-shadow:0 2px 7px #000f,0 0 13px #000c!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack] .trail-new-tag{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) .trail-new-tag{
  display:none!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack] small{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) small{
  display:block!important;
  max-width:100%!important;
  color:#fff0d7!important;
  font:600 clamp(11px,2.75vw,13px)/1.25 system-ui,sans-serif!important;
  text-shadow:0 1px 5px #000e!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack] .cross-pack-progress{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) .cross-pack-progress{
  position:relative!important;
  z-index:2!important;
  display:block!important;
@@ -165,11 +165,11 @@
  overflow:hidden!important;
  box-shadow:0 0 0 1px #0004!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack] .cross-pack-progress i{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) .cross-pack-progress i{
  background:linear-gradient(90deg,#83d6b9,#f8d990)!important;
  border-radius:inherit!important;
 }
-#cross-pick #cross-pack-list button.cross-pack-card[data-pack]>b:last-child{
+#cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"])>b:last-child{
  position:absolute!important;
  z-index:2!important;
  right:12px!important;
@@ -212,10 +212,10 @@
 }
 @media(max-width:360px){
  #cross-pick>.mode-scroll{padding-inline:10px!important}
- #cross-pick #cross-pack-list button.cross-pack-card[data-pack]{min-height:126px!important;padding:12px 12px 11px!important}
- #cross-pick #cross-pack-list button.cross-pack-card[data-pack] strong{font-size:20px!important}
- #cross-pick #cross-pack-list button.cross-pack-card[data-pack] small{font-size:10px!important}
+ #cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]){min-height:126px!important;padding:12px 12px 11px!important}
+ #cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) strong{font-size:20px!important}
+ #cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]) small{font-size:10px!important}
 }
 @media(prefers-reduced-motion:reduce){
- #cross-pick #cross-pack-list button.cross-pack-card[data-pack]{transition:none!important}
+ #cross-pick #cross-pack-list button.cross-pack-card:is([data-pack="0"],[data-pack="1"],[data-pack="2"],[data-pack="3"],[data-pack="4"],[data-pack="5"],[data-pack="6"]){transition:none!important}
 }
