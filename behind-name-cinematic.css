@@ -20,3 +20,28 @@
 #btn3926-home .btn3934-page-label{font-size:clamp(10px,2.8vw,12px)!important}
 @media(max-height:700px){#btn3926-home .btn3926-body{padding:6px 9px max(6px,env(safe-area-inset-bottom))!important;gap:6px!important}#btn3926-home .btn3926-headline{min-height:102px!important;padding:10px 12px!important}#btn3926-home .btn3926-packs{gap:7px!important}#btn3926-home .btn3926-packs .btn3926-pack{padding:9px 12px!important;border-radius:14px!important}#btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>b{font-size:clamp(17px,5vw,22px)!important}#btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>small{font-size:10px!important}}
 @media(prefers-reduced-motion:reduce){#btn3926-home .btn3926-packs .btn3926-pack{transition:none!important}}
+
+/* Focus corrections for 16:9 photos in short mobile category cards.
+   Only the current 3 cards change presentation, never the source images. */
+#btn3926-home .btn3926-packs .btn3926-pack{
+ background-image:linear-gradient(180deg,#00101700 0%,#00101705 45%,#000c137d 76%,#000a10e8 100%),var(--btn3926-scene,url('bible-book-art/17_esther.webp'))!important;
+ background-position:center,var(--btn3926-x,50%) var(--btn3926-y,50%)!important;
+}
+#btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>b{
+ font-size:clamp(19px,5.15vw,25px)!important;
+ line-height:1.04!important;
+ letter-spacing:-.2px!important;
+ margin-bottom:4px!important;
+}
+#btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>small{
+ color:#fceace!important;
+ font-size:clamp(10px,2.75vw,12px)!important;
+ line-height:1.16!important;
+ font-weight:600!important;
+ white-space:nowrap!important;
+ opacity:.96!important;
+}
+@media(max-height:700px){
+ #btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>b{font-size:clamp(17px,4.8vw,22px)!important}
+ #btn3926-home .btn3926-packs .btn3926-pack>span:nth-child(2)>small{font-size:10px!important}
+}
