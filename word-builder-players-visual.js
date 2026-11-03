@@ -16,8 +16,8 @@ const style=document.createElement('style');style.textContent=`
 @media(max-width:430px){.bu-players-hero{min-height:145px!important}.bu-players-panel{padding-bottom:12px!important}}
 
 /* Approved individual art assets: images appear after asset upload. */
-.bu-players-hero{background-image:linear-gradient(180deg,rgba(2,25,34,.35),rgba(2,25,34,.1)),url('word-builder-players-assets/hero.jpg')!important;background-size:cover!important;background-position:center!important;min-height:clamp(195px,43vw,300px)!important}
-.bu-players-panel{background-image:linear-gradient(120deg,rgba(3,38,45,.86),rgba(5,44,49,.8)),url('word-builder-players-assets/panel.jpg')!important;background-size:cover!important;background-position:center!important}
+.bu-players-hero{background-image:linear-gradient(180deg,rgba(2,25,34,.35),rgba(2,25,34,.1)),url('hero.jpg')!important;background-size:cover!important;background-position:center!important;min-height:clamp(195px,43vw,300px)!important}
+.bu-players-panel{background-image:linear-gradient(120deg,rgba(3,38,45,.86),rgba(5,44,49,.8)),url('panel.jpg')!important;background-size:cover!important;background-position:center!important}
 .bu-players-hero .bu-players-intro-hidden{display:none!important}
 .bu-players-panel .bu-players-help-hidden{display:none!important}
 .bu-players-panel .bu-players-help-button{display:block;margin:8px 0 8px auto;width:32px;height:32px;border:1px solid #d9b36e;border-radius:50%;background:#06313c;color:#ffdfa0;font:700 21px Georgia,serif;cursor:pointer}
@@ -26,8 +26,8 @@ const style=document.createElement('style');style.textContent=`
 .bu-players-help-card{position:relative;max-height:70dvh;overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;width:min(100%,460px);padding:26px 20px 18px;border:1px solid #d9b36e;border-radius:20px;background:#092e38;color:#f5e8d3;box-shadow:0 20px 50px #000b}
 .bu-players-help-close{position:absolute;right:12px;top:8px;border:0;background:transparent;color:#ffe0a2;font-size:28px}
 .bu-players-panel .bu-player-dropdown-trigger{padding-left:56px!important;position:relative}
-.bu-players-panel .bu-player-dropdown:nth-of-type(1) .bu-player-dropdown-trigger::before{content:'';position:absolute;left:8px;top:7px;bottom:7px;width:39px;background:url('word-builder-players-assets/scrolls.jpg') center/cover;border-radius:6px}
-.bu-players-panel .bu-player-dropdown:nth-of-type(2) .bu-player-dropdown-trigger::before{content:'';position:absolute;left:8px;top:7px;bottom:7px;width:39px;background:url('word-builder-players-assets/tiles.jpg') center/cover;border-radius:6px}
+.bu-players-panel .bu-player-dropdown:nth-of-type(1) .bu-player-dropdown-trigger::before{content:'';position:absolute;left:8px;top:7px;bottom:7px;width:39px;background:url('scrolls.jpg') center/cover;border-radius:6px}
+.bu-players-panel .bu-player-dropdown:nth-of-type(2) .bu-player-dropdown-trigger::before{content:'';position:absolute;left:8px;top:7px;bottom:7px;width:39px;background:url('tiles.jpg') center/cover;border-radius:6px}
 .bu-players-panel{padding-bottom:max(20px,env(safe-area-inset-bottom))!important;overflow:visible!important}
 .bu-players-panel button{flex-shrink:0}
 `;document.head.appendChild(style);
