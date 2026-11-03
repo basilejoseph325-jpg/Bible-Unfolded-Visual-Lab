@@ -15,8 +15,8 @@
   display:none!important;
 }
 #wb36 .wb-cinema-hub .wb-cinema-hero::after {
-  content:""!important;
-  display:block!important;
+  content:none!important;
+  display:none!important;
   position:absolute!important;
   inset:-18px!important;
   width:auto!important;
@@ -24,7 +24,7 @@
   border:0!important;
   border-radius:0!important;
   box-shadow:none!important;
-  background:transparent url("wb-hero-olive-corners.svg?v=1") center / 100% 100% no-repeat!important;
+  background:none!important;
   opacity:1!important;
   filter:none!important;
   pointer-events:none!important;
