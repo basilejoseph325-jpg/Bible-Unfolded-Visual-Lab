@@ -27,6 +27,7 @@ jobs:
             await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?v=diagnose-pt-20261102',{waitUntil:'networkidle2',timeout:90000});
             await page.evaluate(()=>{if(typeof bu35Open==='function')bu35Open('hub');else if(typeof bu35RenderHub==='function')bu35RenderHub(document.getElementById('bu35-body'));});
             await new Promise(r=>setTimeout(r,850));
+            await page.evaluate(()=>{const m=document.getElementById('daily-modal');if(m)m.style.display='none'; const s=document.createElement('style');s.textContent='.daily-mask{display:none!important}';document.head.appendChild(s);});
             const ids=['wb36-family-open','bu3834-family-entry','bu3844-fam-ideas'];
             for(const id of ids){
               const node=await page.$('#'+id);
