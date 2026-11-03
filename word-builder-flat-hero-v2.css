@@ -40,29 +40,60 @@
 }
 
 
-/* Explicit submenu-only hero allowlist. Never target home or regular option cards.
-   These are verified named hero containers from their dedicated cinematic stylesheets. */
-:is(
-  #levels .book-intro,
-  #journey .journey-intro,
-  #btn3926-home .btn3926-headline,
-  #bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero
-) {
+/* Submenu hero overlays only. Original Word Builder approved styling above is untouched.
+   The left-top quadrant is a separately scaled copy; the other three corners
+   remain pixel-identical to the approved PNG. Never target regular cards. */
+:is(#btn3926-home .btn3926-headline,#levels .book-intro,#journey .journey-intro) {
+  position:relative!important;
   isolation:isolate!important;
   overflow:visible!important;
 }
-:is(
-  #levels .book-intro,
-  #journey .journey-intro,
-  #btn3926-home .btn3926-headline,
-  #bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero
-)::after {
+:is(#btn3926-home .btn3926-headline,#levels .book-intro,#journey .journey-intro)::after,
+:is(#btn3926-home .btn3926-headline,#levels .book-intro,#journey .journey-intro)::before {
   content:""!important;
   display:block!important;
   position:absolute!important;
   inset:-18px!important;
   width:auto!important;
   height:auto!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent url("word-builder-olive-overlay.png?v=1") center / 100% 100% no-repeat!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  z-index:3!important;
+}
+:is(#btn3926-home .btn3926-headline,#levels .book-intro,#journey .journey-intro)::after {
+  clip-path:polygon(43% 0,100% 0,100% 100%,0 100%,0 43%,43% 43%)!important;
+}
+:is(#btn3926-home .btn3926-headline,#levels .book-intro,#journey .journey-intro)::before {
+  clip-path:polygon(0 0,43% 0,43% 43%,0 43%)!important;
+  transform:scale(.78)!important;
+  transform-origin:top left!important;
+}
+/* Behind the Name: slightly less foliage at upper left. */
+#btn3926-home .btn3926-headline::before {transform:scale(.82)!important;}
+/* Bible Books: protect the original tree in the hero image. */
+#levels .book-intro::before {transform:scale(.64)!important;}
+/* Daily Discovery: explicit containing block fixes the giant page-height
+   overlay; its decoration must never reach the challenge cards. */
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero {
+  position:relative!important;
+  isolation:isolate!important;
+  overflow:visible!important;
+}
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero::after {
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:-8px!important;
+  width:auto!important;
+  height:auto!important;
+  margin:0!important;
+  padding:0!important;
   border:0!important;
   box-shadow:none!important;
   border-radius:0!important;
