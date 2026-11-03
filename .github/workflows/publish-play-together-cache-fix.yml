@@ -1,0 +1,68 @@
+name: Finalize Play Together icon cache fix (one-time)
+on:
+  push:
+    paths:
+      - .github/workflows/publish-play-together-cache-fix.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Atomically cache-bust approved Play Together resources
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          html=Path('index.html')
+          css=Path('trivia-together-premium.css')
+          page=html.read_text(encoding='utf-8')
+          styles=css.read_text(encoding='utf-8')
+          swaps=[
+            ('<script src="trivia-together-premium.js?v=2"></script>',
+             '<script src="trivia-together-premium.js?v=play-together-clean-icons-v8"></script>'),
+            ('<link rel="stylesheet" href="trivia-together-premium.css?v=2">',
+             '<link rel="stylesheet" href="trivia-together-premium.css?v=play-together-clean-icons-v8">'),
+          ]
+          for old,new in swaps:
+              if page.count(old)!=1:raise SystemExit('HTML asset ref differs, abort: '+old)
+              page=page.replace(old,new)
+          old='@import url("./play-together-cinematic.css?v=play-together-lab-20261102");'
+          new='@import url("./play-together-cinematic.css?v=play-together-clean-icons-v8");'
+          if styles.count(old)!=1:raise SystemExit('Imported CSS asset ref differs, abort')
+          styles=styles.replace(old,new)
+          assert page.count('play-together-clean-icons-v8')==2
+          assert styles.count('play-together-clean-icons-v8')==1
+          html.write_text(page,encoding='utf-8')
+          css.write_text(styles,encoding='utf-8')
+          print('Verified only 3 resource URL updates; app code untouched')
+          PY
+          git rm -f .github/workflows/inspect-play-together-buttons.yml
+          git rm -f .github/workflows/publish-play-together-cache-fix.yml
+          git add -- index.html trivia-together-premium.css
+          python3 - <<'PY'
+          import subprocess
+          changed=set(subprocess.check_output(['git','diff','--cached','--name-only'],text=True).splitlines())
+          expected={
+            'index.html',
+            'trivia-together-premium.css',
+            '.github/workflows/inspect-play-together-buttons.yml',
+            '.github/workflows/publish-play-together-cache-fix.yml'
+          }
+          if changed!=expected:raise SystemExit('Unexpected staged files: '+str(changed))
+          print('Staged only index/CSS URL updates and cleanup of temporary diagnostics')
+          PY
+      - name: Publish and clean up temporary workflows
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Visual Lab: invalidate cached button resources; remove temporary diagnostics"
+          git push origin HEAD:main
