@@ -15,6 +15,8 @@ jobs:
         id: chrome
       - name: Install Puppeteer
         run: npm install --no-save puppeteer-core
+      - name: Start local app server
+        run: python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/pt-http.log 2>&1 &
       - name: Inspect DOM, CSS, and rendered button screenshots
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
@@ -24,19 +26,20 @@ jobs:
           (async()=>{
             const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
             const page=await browser.newPage({viewport:{width:390,height:844,deviceScaleFactor:1},isMobile:false,hasTouch:false});
-            await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?v=diagnose-pt-20261102',{waitUntil:'networkidle2',timeout:90000});
+            await page.goto('http://127.0.0.1:8765/?v=diagnose-pt-mask-root-fix',{waitUntil:'networkidle2',timeout:90000});
             await page.evaluate(()=>{if(typeof bu35Open==='function')bu35Open('hub');else if(typeof bu35RenderHub==='function')bu35RenderHub(document.getElementById('bu35-body'));});
             await new Promise(r=>setTimeout(r,850));
             await page.evaluate(()=>{const m=document.getElementById('daily-modal');if(m)m.style.display='none'; const s=document.createElement('style');s.textContent='.daily-mask{display:none!important}';document.head.appendChild(s);});
             const ids=['wb36-family-open','bu3834-family-entry','bu3844-fam-ideas'];
             for(const id of ids){
               const node=await page.$('#'+id);
-              if(!node){console.log('NOT_FOUND',id);continue;}
+              if(!node){console.log('NOT_FOUND',id);process.exitCode=1;continue;}
               const info=await page.evaluate(id=>{
                 const b=document.getElementById(id),s=getComputedStyle(b),before=getComputedStyle(b,'::before'),after=getComputedStyle(b,'::after'),box=b.getBoundingClientRect(),styles=[...document.styleSheets].map(x=>x.href).filter(Boolean),anc=[b.parentElement,b.parentElement?.parentElement].map(x=>({tag:x?.tagName,outer:x?.outerHTML.slice(0,200)}));
-                return {id,outer:b.outerHTML,styles,rect:{x:box.x,y:box.y,width:box.width,height:box.height},css:{background:s.background,backgroundImage:s.backgroundImage,display:s.display,position:s.position,visibility:s.visibility,opacity:s.opacity,filter:s.filter,color:s.color,fontSize:s.fontSize,textIndent:s.textIndent,zIndex:s.zIndex,transform:s.transform,overflow:s.overflow,atCenter:document.elementFromPoint(box.x+box.width/2,box.y+box.height/2)?.outerHTML.slice(0,300),pageScrollX:window.scrollX,innerWidth:window.innerWidth,documentWidth:document.documentElement.scrollWidth},before:{content:before.content,bg:before.background,display:before.display,mask:before.maskImage,width:before.width,height:before.height,transform:before.transform},after:{content:after.content,display:after.display},flags:{v7:window.BU_PT_ICON_CLEANUP_V7},anc};
+                return {id,outer:b.outerHTML,styles,rect:{x:box.x,y:box.y,width:box.width,height:box.height},css:{background:s.background,backgroundImage:s.backgroundImage,display:s.display,position:s.position,visibility:s.visibility,opacity:s.opacity,filter:s.filter,color:s.color,fontSize:s.fontSize,textIndent:s.textIndent,zIndex:s.zIndex,transform:s.transform,overflow:s.overflow,maskImage:s.maskImage,webkitMaskImage:s.webkitMaskImage,atCenter:document.elementFromPoint(box.x+box.width/2,box.y+box.height/2)?.outerHTML.slice(0,300),pageScrollX:window.scrollX,innerWidth:window.innerWidth,documentWidth:document.documentElement.scrollWidth},before:{content:before.content,bg:before.background,display:before.display,mask:before.maskImage,width:before.width,height:before.height,transform:before.transform},after:{content:after.content,display:after.display},flags:{v7:window.BU_PT_ICON_CLEANUP_V7},anc};
               },id);
               console.log('BUTTON_INSPECT',JSON.stringify(info));
+              if(id!=='bu3844-fam-ideas' && info.css.webkitMaskImage!=='none'){throw new Error('Button still masked: '+id+': '+info.css.webkitMaskImage)}
               await node.evaluate(b=>b.scrollIntoView({block:'center'}));
               const png=await node.screenshot({type:'png',omitBackground:false});
               console.log('BUTTON_PNG',id,png.toString('base64'));
