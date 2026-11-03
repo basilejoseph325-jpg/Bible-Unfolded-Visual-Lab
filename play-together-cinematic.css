@@ -820,3 +820,87 @@
 #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card button#bu3834-family-entry{
  background:linear-gradient(165deg,#ffe6a6,#cba055)!important;
 }
+
+/* Play Together icon color and study size v8 — Visual Lab only.
+   Consistent gold-background/dark-icon actions. Native buttons and text
+   remain in the DOM, preserving all tap behavior and accessible labels. */
+
+/* Four compact Quick Play choices: gold background, dark teal pictogram. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]{
+  background:linear-gradient(165deg,#ffe6a6 0%,#f2d185 45%,#caa258 100%)!important;
+  border:1.5px solid #ffe8b2!important;
+  box-shadow:inset 0 0 0 1px #ffffff50,0 3px 10px #0008!important;
+  opacity:1!important;
+  filter:none!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]::before{
+  background:#153944!important;
+  background-color:#153944!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]:active{
+  filter:brightness(.93)!important;
+}
+
+/* Study Options: switch 68×62 outlined boxes to 50×50 gold icon squares.
+   Underlying Guided/Solo labels stay in DOM for accessibility; remove only
+   the duplicated visible pseudo-element labels. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(button#fw4-open-guided,button#fw4-open-solo){
+  width:50px!important;
+  min-width:50px!important;
+  max-width:50px!important;
+  height:50px!important;
+  min-height:50px!important;
+  max-height:50px!important;
+  padding:0!important;
+  margin:0!important;
+  bottom:13px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  flex-direction:row!important;
+  gap:0!important;
+  border-radius:12px!important;
+  border:1.5px solid #ffe6b0!important;
+  background:linear-gradient(165deg,#ffe6a6,#caa258)!important;
+  box-shadow:inset 0 0 0 1px #ffffff50,0 3px 10px #0008!important;
+  font-size:0!important;
+  line-height:0!important;
+  color:transparent!important;
+  white-space:nowrap!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) button#fw4-open-guided{
+  right:72px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) button#fw4-open-solo{
+  right:13px!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(button#fw4-open-guided,button#fw4-open-solo)::after{
+  content:none!important;
+  display:none!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(button#fw4-open-guided,button#fw4-open-solo)::before{
+  content:""!important;
+  display:block!important;
+  flex:none!important;
+  width:25px!important;
+  height:25px!important;
+  background:#153944!important;
+  font-size:0!important;
+  line-height:0!important;
+  text-shadow:none!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) button#fw4-open-guided::before{
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205.5C7%204.5%2010%205.3%2012%207c2-1.7%205-2.5%209-1.5v13C17%2017.5%2014%2018.3%2012%2020c-2-1.7-5-2.5-9-1.5z%22%2F%3E%3Cpath%20d%3D%22M12%207v13%22%2F%3E%3Cpath%20d%3D%22M6.5%209.5h2M15.5%209.5h2%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%205.5C7%204.5%2010%205.3%2012%207c2-1.7%205-2.5%209-1.5v13C17%2017.5%2014%2018.3%2012%2020c-2-1.7-5-2.5-9-1.5z%22%2F%3E%3Cpath%20d%3D%22M12%207v13%22%2F%3E%3Cpath%20d%3D%22M6.5%209.5h2M15.5%209.5h2%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) button#fw4-open-solo::before{
+  -webkit-mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%227%22%20r%3D%223.2%22%2F%3E%3Cpath%20d%3D%22M5%2020v-2.4c0-4%203.1-6.4%207-6.4s7%202.4%207%206.4V20z%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;
+  mask:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%227%22%20r%3D%223.2%22%2F%3E%3Cpath%20d%3D%22M5%2020v-2.4c0-4%203.1-6.4%207-6.4s7%202.4%207%206.4V20z%22%2F%3E%3C%2Fsvg%3E") center/contain no-repeat!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) h3{
+  width:calc(100% - 145px)!important;
+  max-width:calc(100% - 145px)!important;
+}
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(button#fw4-open-guided,button#fw4-open-solo):active{
+  filter:brightness(.93)!important;
+}
