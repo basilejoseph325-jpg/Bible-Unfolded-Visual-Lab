@@ -19,6 +19,26 @@ const css=document.createElement('style');css.textContent=`
 .bu-wb-art-guide .bu-wb-flash-ring{position:absolute!important;inset:-5px!important;border:1px solid rgba(255,224,145,.75)!important;border-radius:50%!important;pointer-events:none!important;box-shadow:0 0 6px 2px rgba(255,209,112,.3),0 0 15px 5px rgba(255,191,80,.18)!important;animation:bu-wb-flash-ring 3.8s ease-in-out infinite!important}
 @keyframes bu-wb-flash-ring{0%,100%{opacity:.35;transform:scale(1)}45%{opacity:.95;transform:scale(1.09)}70%{opacity:.55;transform:scale(1.035)}}}
 @media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-flash-ring{animation:none!important;opacity:1!important}}
+
+/* Hand-pressed burgundy sealing wax texture and embossed lettering. */
+.bu-wb-art-guide .bu-wb-guide-action{
+background:
+ radial-gradient(ellipse at 24% 23%,rgba(255,185,126,.34) 0%,transparent 37%),
+ radial-gradient(ellipse at 73% 79%,rgba(44,0,7,.65) 0%,transparent 53%),
+ repeating-radial-gradient(ellipse at 37% 39%,rgba(255,207,145,.055) 0px,rgba(255,207,145,.055) 1px,rgba(65,0,10,.07) 2px,transparent 4px),
+ radial-gradient(ellipse at 40% 32%,#ad3940 0%,#8d1f2a 34%,#68101a 74%,#3d0710 100%)!important;
+border:2px solid rgba(94,20,19,.95)!important;
+border-radius:48% 53% 49% 52% / 53% 47% 54% 48%!important;
+text-shadow:0 1px 1px #3a050a,0 -1px 0 rgba(255,234,172,.75),0 0 4px rgba(255,202,116,.35)!important;
+box-shadow:inset 1px 2px 3px rgba(255,223,169,.65),inset -3px -4px 6px rgba(38,0,9,.75),0 2px 4px rgba(27,0,5,.5)!important;
+}
+.bu-wb-art-guide .bu-wb-guide-action::before{
+content:""!important;position:absolute!important;inset:3px!important;
+border:1px solid rgba(255,183,115,.28)!important;
+border-radius:52% 47% 53% 48% / 48% 54% 47% 52%!important;
+box-shadow:inset 0 1px 2px rgba(255,226,166,.25),0 1px 1px rgba(48,0,9,.35)!important;
+pointer-events:none!important;
+}
 `;document.head.appendChild(css);
 let pending=false;
 function scan(){pending=false;const buttons=[...document.querySelectorAll('button,[role="button"],input[type="button"]')];for(const b of buttons){if(!/got\s*it/i.test(b.textContent||b.value||''))continue;if(!b.getClientRects().length)continue;let found=null,el=b.parentElement;for(let i=0;i<9&&el&&el!==document.body;i++,el=el.parentElement){const t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').toLowerCase();if(t.length>140&&t.length<5000&&(t.includes('rack tile')||t.includes('board square'))&&(t.includes('center')||t.includes('word must'))){found=el;break}}if(!found||found.classList.contains('bu-wb-art-guide'))continue;
