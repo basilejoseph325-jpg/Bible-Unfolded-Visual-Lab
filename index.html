@@ -2123,6 +2123,12 @@ html.reduce-motion #home .bu3924-glint{display:none!important}
 #wb36 .wb-premium-hub .wb36-card h3,#wb36 .wb-premium-hub .bu3844-card h3{color:#ffe1a0;text-shadow:0 2px 8px #0009;font-family:Georgia,serif}
 #wb36 .wb-premium-hub .wb36-btn,#wb36 .wb-premium-hub .bu3844-action{border-color:#f0d294;box-shadow:0 3px 14px #0005}
 #wb36 .wb-premium-hub .wb-premium-rules{background:transparent;color:#f7dca4;border:1px solid #b79a65}
+</style><style>
+.wb-premium-hub .wb-premium-rules-row{margin:18px 0 10px;text-align:center;padding:0 12px}
+.wb-premium-hub .wb-premium-rules-row button{display:block;width:100%;min-height:54px;border:1px solid #d5ae66;border-radius:15px;background:linear-gradient(140deg,#153f49,#082b37);color:#ffe4a0;font:700 19px Georgia,serif;box-shadow:0 5px 20px #0004}
+.wb-premium-hub .wb-premium-rules-row button::before{content:'▤  ';}
+.wb-premium-hub .wb-premium-challenges p{display:none}
+.wb-premium-hub .wb-premium-challenges button{width:100%;max-width:none}
 </style></head><body><main id="app" role="main">
 <section id="home" class="screen cinematic-home-screen"><div class="cinematic-dashboard" id="home-hero">
 <div class="cinematic-vignette" aria-hidden="true"></div>
@@ -3307,12 +3313,17 @@ wb36HubUI=function(b){
      else el.remove();
    });
  }
- // Keep the existing Rules & Tips control; explanatory text on the hub belongs there.
- if(hubButtons.some(el=>/rules\s*(?:&|and)\s*tips/.test(label(el)))){
-   [...b.querySelectorAll('.wb36-card')].forEach(card=>{
-     const heading=card.querySelector('h2,h3,h4');
-     if(heading && /how it works/i.test(heading.textContent||'') && !card.querySelector('button'))card.remove();
-   });
+ // Move the Rules & Tips button out of the instructional card and remove the redundant text.
+ const rulesButton=hubButtons.find(el=>/rules\s*(?:&|and)\s*tips/.test(label(el)));
+ if(rulesButton){
+   const rulesCard=rulesButton.closest('.wb36-card');
+   if(rulesCard){
+     const compact=document.createElement('div');
+     compact.className='wb-premium-rules-row';
+     rulesButton.remove();
+     compact.appendChild(rulesButton);
+     rulesCard.replaceWith(compact);
+   }
  }
  b.classList.add('wb-premium-hub');
  [...b.querySelectorAll('button')].forEach(btn=>{
@@ -7540,4 +7551,37 @@ function bu39226SourceLink(q){
 </script>
 <script src="trivia-together-premium.js?v=play-together-clean-icons-v8"></script>
   <script defer src="journey-cinematic.js"></script>
+<style id="wb-cinematic-final-style">
+.wb-cinema-hub{padding:0 12px 25px!important;display:flex!important;flex-direction:column!important;gap:14px!important;background:transparent!important}
+.wb-cinema-hero{display:block;width:100%;aspect-ratio:2.56;background:center/cover no-repeat url('wb-cinematic-hero.webp');border-radius:16px;border:1px solid #b58b4d;box-shadow:0 6px 22px #0006}
+.wb-cinema-card{display:block!important;width:100%!important;min-height:0!important;aspect-ratio:3.55!important;border:2px solid #d7a94f!important;border-radius:18px!important;background-position:center!important;background-size:cover!important;box-shadow:0 5px 18px #0008!important;padding:0!important;margin:0!important;overflow:hidden!important;cursor:pointer!important;position:relative!important}
+.wb-cinema-card:focus-visible{outline:3px solid #fff!important;outline-offset:3px}
+.wb-cinema-rules{display:flex!important;align-items:center!important;justify-content:center!important;width:85%!important;margin:10px auto!important;min-height:57px!important;border-radius:35px!important;border:2px solid #d5a64f!important;background:linear-gradient(145deg,#154752,#092731)!important;color:#ffe0a0!important;font:bold 22px Georgia,serif!important;box-shadow:0 3px 12px #0005!important}
+.wb-cinema-rules:before{content:'♧';margin-right:12px;font-size:25px}
+</style>
+<script id="wb-cinematic-final-script">
+(function(){
+ function install(){
+  if(typeof wb36HubUI!=='function'||window.__wbCinematicInstalled)return;
+  window.__wbCinematicInstalled=true;
+  const original=wb36HubUI;
+  wb36HubUI=function(body){
+   original(body);
+   const buttons=[...body.querySelectorAll('button')];
+   const find=re=>buttons.find(b=>re.test((b.textContent||'').replace(/\s+/g,' ').trim()));
+   const newBtn=find(/new game/i),resumeBtn=find(/resume game|continue your game/i),challengeBtn=find(/play bible challenges/i),rulesBtn=find(/rules\s*(?:&|and)\s*tips/i);
+   if(!newBtn||!challengeBtn||!rulesBtn)return;
+   // Preserve original click handlers by moving the actual button elements, not cloning them.
+   const hero=document.createElement('div');hero.className='wb-cinema-hero';hero.setAttribute('aria-label','Word Builder cinematic artwork');
+   const items=[['new',newBtn,'New Game'],['continue',resumeBtn,'Continue Your Game'],['challenges',challengeBtn,'Bible Word Challenges']];
+   const fragment=document.createDocumentFragment();fragment.appendChild(hero);
+   for(const [kind,btn,label] of items){if(!btn)continue;btn.className='wb-cinema-card';btn.style.backgroundImage="url('wb-cinematic-"+kind+".webp')";btn.textContent='';btn.setAttribute('aria-label',label);btn.setAttribute('title',label);fragment.appendChild(btn)}
+   rulesBtn.className='wb-cinema-rules';rulesBtn.textContent='Rules & Tips';fragment.appendChild(rulesBtn);
+   body.replaceChildren(fragment);body.classList.add('wb-cinema-hub');
+  };
+ }
+ install();
+ document.addEventListener('DOMContentLoaded',install,{once:true});
+})();
+</script>
 </body></html>
