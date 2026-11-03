@@ -1,0 +1,45 @@
+name: Diagnose actual Play Together icon pixels (temporary)
+on:
+  push:
+    paths:
+      - .github/workflows/diagnose-pt-buttons.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: browser-actions/setup-chrome@v1
+        id: chrome
+      - name: Install Puppeteer
+        run: npm install --no-save puppeteer-core
+      - name: Inspect DOM, CSS, and rendered button screenshots
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+        run: |
+          node <<'JS'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const page=await browser.newPage({viewport:{width:390,height:844,deviceScaleFactor:1},isMobile:true,hasTouch:true});
+            await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?v=diagnose-pt-20261102',{waitUntil:'networkidle2',timeout:90000});
+            await page.evaluate(()=>{if(typeof bu35Open==='function')bu35Open('hub');else if(typeof bu35RenderHub==='function')bu35RenderHub(document.getElementById('bu35-body'));});
+            await new Promise(r=>setTimeout(r,850));
+            const ids=['wb36-family-open','bu3834-family-entry','bu3844-fam-ideas'];
+            for(const id of ids){
+              const node=await page.$('#'+id);
+              if(!node){console.log('NOT_FOUND',id);continue;}
+              const info=await page.evaluate(id=>{
+                const b=document.getElementById(id),s=getComputedStyle(b),before=getComputedStyle(b,'::before'),after=getComputedStyle(b,'::after'),box=b.getBoundingClientRect(),styles=[...document.styleSheets].map(x=>x.href).filter(Boolean),anc=[b.parentElement,b.parentElement?.parentElement].map(x=>({tag:x?.tagName,outer:x?.outerHTML.slice(0,200)}));
+                return {id,outer:b.outerHTML,styles,rect:{x:box.x,y:box.y,width:box.width,height:box.height},css:{background:s.background,backgroundImage:s.backgroundImage,display:s.display,position:s.position,visibility:s.visibility,opacity:s.opacity,filter:s.filter,color:s.color,fontSize:s.fontSize,textIndent:s.textIndent,zIndex:s.zIndex,transform:s.transform,overflow:s.overflow},before:{content:before.content,bg:before.background,display:before.display,mask:before.maskImage,width:before.width,height:before.height,transform:before.transform},after:{content:after.content,display:after.display},flags:{v7:window.BU_PT_ICON_CLEANUP_V7},anc};
+              },id);
+              console.log('BUTTON_INSPECT',JSON.stringify(info));
+              await node.evaluate(b=>b.scrollIntoView({block:'center'}));
+              const png=await node.screenshot({type:'png',omitBackground:false});
+              console.log('BUTTON_PNG',id,png.toString('base64'));
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
