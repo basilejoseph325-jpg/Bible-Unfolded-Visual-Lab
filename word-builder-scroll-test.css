@@ -1,0 +1,7 @@
+/* Word Builder scroll guide — isolated Visual Lab experiment */
+.wb-scroll-parchment{position:relative;background:linear-gradient(110deg,#b98950,#f2deb2 12%,#f5e3ba 84%,#b98950);color:#49311e;border:2px solid #986a38;border-radius:14px;box-shadow:0 12px 32px #0008,inset 0 0 24px #80502844;padding:30px 22px;transform-origin:top center;animation:wb-scroll-unfurl .75s cubic-bezier(.2,.8,.2,1) both}
+.wb-scroll-parchment:before,.wb-scroll-parchment:after{content:"";position:absolute;left:-8px;right:-8px;height:20px;border-radius:12px;background:linear-gradient(#57331b,#bc8748 45%,#56351e);box-shadow:0 2px 8px #0006}
+.wb-scroll-parchment:before{top:-11px}.wb-scroll-parchment:after{bottom:-11px}
+.wb-scroll-parchment :is(h1,h2,h3,p,li){color:#49311e;text-shadow:none}
+@keyframes wb-scroll-unfurl{from{transform:scaleY(.07);opacity:.25}to{transform:scaleY(1);opacity:1}}
+@media(prefers-reduced-motion:reduce){.wb-scroll-parchment{animation:none}}
