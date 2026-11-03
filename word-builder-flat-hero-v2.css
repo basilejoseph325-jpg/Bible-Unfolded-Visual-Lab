@@ -10,9 +10,23 @@
   overflow:visible!important;
   isolation:isolate!important;
 }
+/* Independent lower-right sprig: same approved photo-real PNG, angled gently downward.
+   Cropped to its own quadrant so other corners remain exactly as approved. */
 #wb36 .wb-cinema-hub .wb-cinema-hero::before {
-  content:none!important;
-  display:none!important;
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:-18px!important;
+  width:auto!important;
+  height:auto!important;
+  background:transparent url("word-builder-olive-overlay.png?v=1") center / 100% 100% no-repeat!important;
+  clip-path:polygon(69% 64%,100% 64%,100% 100%,69% 100%)!important;
+  transform:rotate(-8deg) scale(1.025)!important;
+  transform-origin:92% 91%!important;
+  border:0!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+  z-index:2!important;
 }
 #wb36 .wb-cinema-hub .wb-cinema-hero::after {
   content:""!important;
@@ -25,6 +39,7 @@
   border-radius:0!important;
   box-shadow:none!important;
   background:transparent url("word-builder-olive-overlay.png?v=1") center / 100% 100% no-repeat!important;
+  clip-path:polygon(0 0,100% 0,100% 64%,69% 64%,69% 100%,0 100%)!important;
   opacity:1!important;
   filter:none!important;
   pointer-events:none!important;
