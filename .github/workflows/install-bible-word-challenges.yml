@@ -17,10 +17,14 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script defer src="bible-word-challenges-visual.js?v=1"></script>'
-          if 'bible-word-challenges-visual.js' not in s:
+          tag='<script defer src="bible-word-challenges-visual.js?v=2"></script>'
+          import re
+          if 'bible-word-challenges-visual.js' in s:
+              s=re.sub(r'bible-word-challenges-visual\.js\?v=\d+', 'bible-word-challenges-visual.js?v=2', s)
+          else:
               if '</body>' not in s: raise SystemExit('No closing body tag')
-              p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
+              s=s.replace('</body>',tag+'\n</body>',1)
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Commit change
         run: |
