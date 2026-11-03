@@ -1,1 +1,40 @@
-#wb36 .wb-premium-hub .wb36-hero{position:relative!important;width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important;border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;overflow:hidden!important}#wb36 .wb-premium-hub .wb36-hero::after{content:none!important;display:none!important;background:none!important}#wb36 .wb-premium-hub .wb36-hero img{border:0!important;border-radius:0!important;box-shadow:none!important;filter:none!important;opacity:1!important}
+/* Bible Unfolded / Visual Lab — Word Builder hero, isolated decorative inset.
+   Actual landing DOM: #wb36 .wb-cinema-hub .wb-cinema-hero.
+   Original hero art remains unchanged; cards and controls are not selected. */
+#wb36 .wb-cinema-hub .wb-cinema-hero {
+  position:relative!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  overflow:visible!important;
+  isolation:isolate!important;
+}
+#wb36 .wb-cinema-hub .wb-cinema-hero::before {
+  content:none!important;
+  display:none!important;
+}
+#wb36 .wb-cinema-hub .wb-cinema-hero::after {
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:-18px!important;
+  width:auto!important;
+  height:auto!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  background:transparent url("wb-hero-olive-corners.svg?v=1") center / 100% 100% no-repeat!important;
+  opacity:1!important;
+  filter:none!important;
+  pointer-events:none!important;
+  z-index:2!important;
+}
+/* The artwork retains its source colors: no tint, dark gradient or filter. */
+#wb36 .wb-cinema-hub .wb-cinema-hero img {
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  opacity:1!important;
+}
