@@ -19,7 +19,21 @@ let pending=false;
 function scan(){pending=false;const buttons=[...document.querySelectorAll('button,[role="button"],input[type="button"]')];for(const b of buttons){if(!/got\s*it/i.test(b.textContent||b.value||''))continue;if(!b.getClientRects().length)continue;let found=null,el=b.parentElement;for(let i=0;i<9&&el&&el!==document.body;i++,el=el.parentElement){const t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').toLowerCase();if(t.length>140&&t.length<5000&&(t.includes('rack tile')||t.includes('board square'))&&(t.includes('center')||t.includes('word must'))){found=el;break}}if(!found||found.classList.contains('bu-wb-art-guide'))continue;
 const content=document.createElement('div');content.className='bu-wb-guide-original';const children=[...found.childNodes];for(const node of children){if(node===b||node.contains?.(b))continue;content.appendChild(node)}found.insertBefore(content,found.firstChild);
 const img=document.createElement('img');img.className='bu-wb-guide-picture';img.src='word-builder-rules-art.jpg';img.alt='Word Builder rules on an ancient scroll: place tiles to form connected valid words; first word crosses center; score multipliers, Bible clues, seven tiles per turn, exchanges, and multiplayer turns. Solo Challenge, Pass and Play, and Pause and Resume.';img.loading='eager';found.insertBefore(img,content);
-b.classList.add('bu-wb-guide-action');found.appendChild(b);found.classList.add('bu-wb-art-guide');const h=[...document.querySelectorAll('h1,h2,h3,h4')].find(x=>/learn\s+word\s+builder/i.test(x.textContent||''));if(h){h.classList.add('bu-wb-guide-heading');const p=h.parentElement;if(p&&p.textContent.trim().length<110)p.classList.add('bu-wb-guide-heading')}
+b.classList.add('bu-wb-guide-action');found.appendChild(b);found.classList.add('bu-wb-art-guide');
+if(!b.dataset.buGlowActive){b.dataset.buGlowActive='1';
+ b.style.setProperty('animation','none','important');
+ if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof b.animate==='function'){
+  b.animate([
+   {filter:'brightness(1)',boxShadow:'0 0 3px 1px rgba(255,211,104,.35)',offset:0},
+   {filter:'brightness(1.75)',boxShadow:'0 0 18px 7px rgba(255,227,124,.95)',offset:.18},
+   {filter:'brightness(1)',boxShadow:'0 0 3px 1px rgba(255,211,104,.35)',offset:.36},
+   {filter:'brightness(1.55)',boxShadow:'0 0 13px 5px rgba(255,227,124,.85)',offset:.49},
+   {filter:'brightness(1)',boxShadow:'0 0 3px 1px rgba(255,211,104,.35)',offset:.65},
+   {filter:'brightness(1)',boxShadow:'0 0 3px 1px rgba(255,211,104,.35)',offset:1}
+  ],{duration:3000,iterations:Infinity,easing:'ease-in-out'});
+ }
+}
+const h=[...document.querySelectorAll('h1,h2,h3,h4')].find(x=>/learn\s+word\s+builder/i.test(x.textContent||''));if(h){h.classList.add('bu-wb-guide-heading');const p=h.parentElement;if(p&&p.textContent.trim().length<110)p.classList.add('bu-wb-guide-heading')}
 }}
 function schedule(){if(!pending){pending=true;requestAnimationFrame(scan)}}new MutationObserver(schedule).observe(document.body,{childList:true,subtree:true});document.addEventListener('DOMContentLoaded',schedule);schedule();
 })();
