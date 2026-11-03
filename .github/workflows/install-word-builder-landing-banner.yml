@@ -1,0 +1,33 @@
+name: Install Word Builder landing banner experiment
+on:
+  push:
+    paths:
+      - '.github/workflows/install-word-builder-landing-banner.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add reversible Word Builder banner styling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script defer src="word-builder-landing-banner.js?v=1"></script>'
+          if 'word-builder-landing-banner.js' not in s:
+              if '</body>' not in s: raise SystemExit('Missing body close')
+              p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
+          PY
+      - name: Commit loader
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Load Word Builder landing banner Visual Lab experiment"
+            git push
+          fi
