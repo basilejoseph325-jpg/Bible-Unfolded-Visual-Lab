@@ -1,0 +1,1 @@
+Visual Lab connector write diagnostic, 2026-11-02. No game code changed.
