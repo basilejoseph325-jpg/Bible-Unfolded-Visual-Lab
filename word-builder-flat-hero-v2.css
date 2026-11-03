@@ -158,3 +158,39 @@
   position:relative!important;
   z-index:1!important;
 }
+
+/* Screenshot correction 13:04: center titles in the clear opening between
+   bottom-left and bottom-right olive clusters. Do not move the foliage. */
+#btn3926-home .btn3926-headline {
+  align-items:center!important;
+  justify-content:flex-end!important;
+  padding:12px 16px 9px!important;
+  text-align:center!important;
+}
+#btn3926-home .btn3926-headline .btn3926-overline {
+  box-sizing:border-box!important;
+  display:block!important;
+  align-self:center!important;
+  width:auto!important;
+  max-width:calc(100% - 94px)!important;
+  margin:0 auto!important;
+  padding:0!important;
+  font-size:clamp(17px,4.15vw,24px)!important;
+  line-height:1.1!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero {
+  box-sizing:border-box!important;
+  align-items:flex-end!important;
+  justify-content:center!important;
+  padding:12px 64px 8px!important;
+  font-size:clamp(17px,4.1vw,24px)!important;
+  line-height:1.08!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+}
+@media(max-width:390px) {
+  #btn3926-home .btn3926-headline .btn3926-overline {font-size:clamp(15px,4vw,19px)!important;}
+  #bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero {font-size:clamp(15px,4vw,19px)!important;padding-left:54px!important;padding-right:54px!important;}
+}
