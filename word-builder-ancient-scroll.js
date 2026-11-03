@@ -15,9 +15,9 @@ const css=document.createElement('style');css.textContent=`
 @keyframes bu-wb-seal-glow{0%,65%,100%{box-shadow:0 2px 8px #21040088,inset 0 0 6px #d65b4988!important}34%{box-shadow:0 0 13px 3px #ffdb7888,inset 0 0 8px #ffd27a66!important}}
 @media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-guide-action,.bu-wb-art-guide .bu-wb-guide-action::after{animation:none!important}}
 
-.bu-wb-art-guide .bu-wb-guide-action{overflow:visible!important}
-.bu-wb-art-guide .bu-wb-flash-ring{position:absolute!important;inset:-7px!important;border:3px solid #ffe78b!important;border-radius:50%!important;pointer-events:none!important;box-shadow:0 0 12px 5px #ffd34d!important;animation:bu-wb-flash-ring 1.6s steps(1,end) infinite!important}
-@keyframes bu-wb-flash-ring{0%,49%{opacity:1;transform:scale(1.08)}50%,100%{opacity:0;transform:scale(1)}}
+.bu-wb-art-guide .bu-wb-guide-action{overflow:visible!important;animation:none!important}
+.bu-wb-art-guide .bu-wb-flash-ring{position:absolute!important;inset:-5px!important;border:1px solid rgba(255,224,145,.75)!important;border-radius:50%!important;pointer-events:none!important;box-shadow:0 0 6px 2px rgba(255,209,112,.3),0 0 15px 5px rgba(255,191,80,.18)!important;animation:bu-wb-flash-ring 3.8s ease-in-out infinite!important}
+@keyframes bu-wb-flash-ring{0%,100%{opacity:.35;transform:scale(1)}45%{opacity:.95;transform:scale(1.09)}70%{opacity:.55;transform:scale(1.035)}}}
 @media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-flash-ring{animation:none!important;opacity:1!important}}
 `;document.head.appendChild(css);
 let pending=false;
