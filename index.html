@@ -2116,7 +2116,14 @@ html.reduce-motion #home .bu3924-glint{display:none!important}
 <link rel="stylesheet" href="trivia-together-premium.css?v=pt-quick-icons-contrast-v11">
   <link rel="stylesheet" href="journey-cinematic.css">
   <link rel="stylesheet" href="bible-books-cinematic.css">
-</head><body><main id="app" role="main">
+<style id="wb-premium-hub-polish">
+/* Word Builder hub only: no gameplay board, save logic or puzzle state changes. */
+#wb36 .wb-premium-hub .wb36-hero{background:linear-gradient(150deg,#2b493f,#102c32 62%,#09202b);border-color:#d7b77d;box-shadow:inset 0 0 35px #c39a4120,0 12px 35px #0006}
+#wb36 .wb-premium-hub .wb36-card,#wb36 .wb-premium-hub .bu3844-card{border:1px solid #c5a368;border-radius:19px;background:linear-gradient(135deg,#3a4337,#16353a 55%,#10232d);box-shadow:0 12px 28px #0007;overflow:hidden}
+#wb36 .wb-premium-hub .wb36-card h3,#wb36 .wb-premium-hub .bu3844-card h3{color:#ffe1a0;text-shadow:0 2px 8px #0009;font-family:Georgia,serif}
+#wb36 .wb-premium-hub .wb36-btn,#wb36 .wb-premium-hub .bu3844-action{border-color:#f0d294;box-shadow:0 3px 14px #0005}
+#wb36 .wb-premium-hub .wb-premium-rules{background:transparent;color:#f7dca4;border:1px solid #b79a65}
+</style></head><body><main id="app" role="main">
 <section id="home" class="screen cinematic-home-screen"><div class="cinematic-dashboard" id="home-hero">
 <div class="cinematic-vignette" aria-hidden="true"></div>
 <header class="cinematic-topbar">
@@ -3288,6 +3295,34 @@ wb36HubUI=function(b){
  const extra=document.createElement('div');extra.className='bu3844-card';
  extra.innerHTML='<h3>✦ Bible Word Challenges</h3><p>'+WB_ROUNDS.length+' clue-based Bible word puzzles across '+WB_PACKS.length+' collections. Your existing Word Builder match stays saved.</p><button class="bu3844-action primary" id="bu3844-word-open">Play Bible Challenges ↗</button>';
  b.appendChild(extra);extra.querySelector('button').onclick=()=>{wb36View='biblepacks';wb36Render()};
+ // Word Builder hub cleanup: preserve the original New Game, Continue, Rules and Bible Challenges handlers.
+ // Only remove duplicate navigation and redundant instructional copy on the HUB.
+ const hubButtons=[...b.querySelectorAll('button')];
+ const label=el=>(el.textContent||'').replace(/\s+/g,' ').trim().toLowerCase();
+ const hasNew=hubButtons.some(el=>/new game/.test(label(el)));
+ if(hasNew){
+   hubButtons.filter(el=>/solo challenge/.test(label(el))).forEach(el=>{
+     const parent=el.closest('.wb36-card');
+     if(parent && parent.querySelectorAll('button').length===1)parent.remove();
+     else el.remove();
+   });
+ }
+ // Keep the existing Rules & Tips control; explanatory text on the hub belongs there.
+ if(hubButtons.some(el=>/rules\s*(?:&|and)\s*tips/.test(label(el)))){
+   [...b.querySelectorAll('.wb36-card')].forEach(card=>{
+     const heading=card.querySelector('h2,h3,h4');
+     if(heading && /how it works/i.test(heading.textContent||'') && !card.querySelector('button'))card.remove();
+   });
+ }
+ b.classList.add('wb-premium-hub');
+ [...b.querySelectorAll('button')].forEach(btn=>{
+   const name=label(btn);
+   if(/new game/.test(name))btn.classList.add('wb-premium-new');
+   if(/continue/.test(name))btn.classList.add('wb-premium-continue');
+   if(/rules\s*(?:&|and)\s*tips/.test(name))btn.classList.add('wb-premium-rules');
+ });
+ extra.classList.add('wb-premium-challenges');
+
 };
 const oldWbRender=wb36Render;
 wb36Render=function(){
