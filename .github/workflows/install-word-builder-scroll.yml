@@ -1,0 +1,36 @@
+name: Install Word Builder Ancient Scroll (Visual Lab)
+on:
+  push:
+    paths:
+      - '.github/workflows/install-word-builder-scroll.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Add external scroll script to existing game without replacing it
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          tag='<script defer src="word-builder-ancient-scroll.js"></script>'
+          if tag not in s:
+              assert '</body>' in s, 'Missing body close; refusing unsafe modification'
+              s=s.replace('</body>',tag+'\n</body>',1)
+              p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit only when changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if ! git diff --cached --quiet; then
+            git commit -m "Load Ancient Scroll guide enhancement in Visual Lab"
+            git push
+          fi
