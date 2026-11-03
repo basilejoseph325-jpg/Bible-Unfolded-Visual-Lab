@@ -32,8 +32,10 @@ jobs:
             await new Promise(r=>setTimeout(r,2000));
             const out=await page.evaluate(()=>{
               let errors=[];
-              try{if(typeof bu35Hub==='function')bu35Hub();else errors.push('no bu35Hub')}catch(e){errors.push('hub '+e.message)}
               const root=document.getElementById('bu35-body');
+              try{if(typeof bu35Open==='function')bu35Open('hub');else errors.push('no bu35Open')}catch(e){errors.push('open '+e.message)}
+              try{if(!root?.children.length && typeof bu35RenderHub==='function')bu35RenderHub(root)}catch(e){errors.push('renderHub '+e.message)}
+              try{if(!root?.children.length && typeof bu35Hub==='function')bu35Hub()}catch(e){errors.push('hub '+e.message)}
               const ids=['wb36-family-open','bu3834-family-entry','bu3844-fam-ideas'];
               let list=ids.map(id=>{
                 const b=document.getElementById(id);
