@@ -39,6 +39,9 @@ border-radius:52% 47% 53% 48% / 48% 54% 47% 52%!important;
 box-shadow:inset 0 1px 2px rgba(255,226,166,.25),0 1px 1px rgba(48,0,9,.35)!important;
 pointer-events:none!important;
 }
+
+/* Retire the old sweeping pseudo-element; it escaped the seal as a diagonal streak. */
+.bu-wb-art-guide .bu-wb-guide-action::after{content:none!important;display:none!important;animation:none!important}
 `;document.head.appendChild(css);
 let pending=false;
 function scan(){pending=false;const buttons=[...document.querySelectorAll('button,[role="button"],input[type="button"]')];for(const b of buttons){if(!/got\s*it/i.test(b.textContent||b.value||''))continue;if(!b.getClientRects().length)continue;let found=null,el=b.parentElement;for(let i=0;i<9&&el&&el!==document.body;i++,el=el.parentElement){const t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').toLowerCase();if(t.length>140&&t.length<5000&&(t.includes('rack tile')||t.includes('board square'))&&(t.includes('center')||t.includes('word must'))){found=el;break}}if(!found||found.classList.contains('bu-wb-art-guide'))continue;
