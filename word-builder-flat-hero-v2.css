@@ -128,3 +128,33 @@
   pointer-events:none!important;
   z-index:3!important;
 }
+
+/* Text-only adjustments approved from 12:58 screenshots.
+   Botanical assets, image position, and option cards remain untouched. */
+#btn3926-home .btn3926-headline .btn3926-subtitle {
+  display:none!important;
+}
+#btn3926-home .btn3926-headline {
+  justify-content:flex-end!important;
+  padding-bottom:12px!important;
+}
+#btn3926-home .btn3926-headline .btn3926-overline {
+  position:relative!important;
+  z-index:5!important;
+  font-family:Georgia,serif!important;
+  font-size:clamp(19px,4.5vw,27px)!important;
+  line-height:1.08!important;
+  margin:0 0 0 20px!important;
+  max-width:calc(100% - 40px)!important;
+  white-space:nowrap!important;
+}
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero {
+  font-size:clamp(21px,4.75vw,31px)!important;
+  line-height:1.06!important;
+  padding-left:36px!important;
+  padding-right:36px!important;
+  justify-content:center!important;
+  text-align:center!important;
+  position:relative!important;
+  z-index:1!important;
+}
