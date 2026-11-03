@@ -18,10 +18,10 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
-          tag='<script defer src="bible-word-challenges-visual.js?v=3"></script>'
+          tag='<script defer src="bible-word-challenges-visual.js?v=4"></script>'
           import re
           if 'bible-word-challenges-visual.js' in s:
-              s=re.sub(r'bible-word-challenges-visual\.js\?v=\d+', 'bible-word-challenges-visual.js?v=3', s)
+              s=re.sub(r'bible-word-challenges-visual\.js\?v=\d+', 'bible-word-challenges-visual.js?v=4', s)
           else:
               if '</body>' not in s: raise SystemExit('No closing body tag')
               s=s.replace('</body>',tag+'\n</body>',1)
