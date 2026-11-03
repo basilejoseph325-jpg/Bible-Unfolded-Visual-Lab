@@ -38,3 +38,36 @@
   filter:none!important;
   opacity:1!important;
 }
+
+
+/* Explicit submenu-only hero allowlist. Never target home or regular option cards.
+   These are verified named hero containers from their dedicated cinematic stylesheets. */
+:is(
+  #levels .book-intro,
+  #journey .journey-intro,
+  #btn3926-home .btn3926-headline,
+  #bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero
+) {
+  isolation:isolate!important;
+  overflow:visible!important;
+}
+:is(
+  #levels .book-intro,
+  #journey .journey-intro,
+  #btn3926-home .btn3926-headline,
+  #bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero
+)::after {
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:-18px!important;
+  width:auto!important;
+  height:auto!important;
+  border:0!important;
+  box-shadow:none!important;
+  border-radius:0!important;
+  background:transparent url("word-builder-olive-overlay.png?v=1") center / 100% 100% no-repeat!important;
+  opacity:1!important;
+  pointer-events:none!important;
+  z-index:3!important;
+}
