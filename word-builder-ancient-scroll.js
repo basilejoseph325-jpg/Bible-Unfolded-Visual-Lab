@@ -10,8 +10,8 @@ const css=document.createElement('style');css.textContent=`
 
 /* Gentle recurring glint over the wax-seal Got It button. */
 .bu-wb-art-guide .bu-wb-guide-action{overflow:hidden!important;isolation:isolate!important;animation:bu-wb-seal-glow 3.6s ease-in-out infinite!important}
-.bu-wb-art-guide .bu-wb-guide-action::after{content:""!important;position:absolute!important;inset:-35% auto -35% -60%!important;width:30%!important;background:linear-gradient(90deg,transparent,rgba(255,239,170,.1) 20%,rgba(255,248,210,.7) 50%,rgba(255,239,170,.1) 80%,transparent)!important;transform:skewX(-24deg)!important;pointer-events:none!important;animation:bu-wb-seal-shimmer 3.6s ease-in-out infinite!important}
-@keyframes bu-wb-seal-shimmer{0%,18%{left:-65%;opacity:0}25%{opacity:1}48%{left:140%;opacity:.75}55%,100%{left:140%;opacity:0}}
+.bu-wb-art-guide .bu-wb-guide-action::after{content:""!important;position:absolute!important;top:-35%!important;bottom:-35%!important;left:-65%!important;width:38%!important;background:linear-gradient(90deg,transparent,rgba(255,239,170,.1) 20%,rgba(255,248,210,.7) 50%,rgba(255,239,170,.1) 80%,transparent)!important;transform:translateX(0) skewX(-24deg)!important;pointer-events:none!important;animation:bu-wb-seal-shimmer 3.6s ease-in-out infinite!important}
+@keyframes bu-wb-seal-shimmer{0%,12%{transform:translateX(0) skewX(-24deg);opacity:0}18%{opacity:1}42%{transform:translateX(560%) skewX(-24deg);opacity:1}50%,100%{transform:translateX(560%) skewX(-24deg);opacity:0}}
 @keyframes bu-wb-seal-glow{0%,65%,100%{box-shadow:0 2px 8px #21040088,inset 0 0 6px #d65b4988!important}34%{box-shadow:0 0 13px 3px #ffdb7888,inset 0 0 8px #ffd27a66!important}}
 @media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-guide-action,.bu-wb-art-guide .bu-wb-guide-action::after{animation:none!important}}
 `;document.head.appendChild(css);
