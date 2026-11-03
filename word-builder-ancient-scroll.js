@@ -14,12 +14,21 @@ const css=document.createElement('style');css.textContent=`
 @keyframes bu-wb-seal-shimmer{0%,12%{transform:translateX(0) skewX(-24deg);opacity:0}18%{opacity:1}42%{transform:translateX(560%) skewX(-24deg);opacity:1}50%,100%{transform:translateX(560%) skewX(-24deg);opacity:0}}
 @keyframes bu-wb-seal-glow{0%,65%,100%{box-shadow:0 2px 8px #21040088,inset 0 0 6px #d65b4988!important}34%{box-shadow:0 0 13px 3px #ffdb7888,inset 0 0 8px #ffd27a66!important}}
 @media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-guide-action,.bu-wb-art-guide .bu-wb-guide-action::after{animation:none!important}}
+
+.bu-wb-art-guide .bu-wb-guide-action{overflow:visible!important}
+.bu-wb-art-guide .bu-wb-flash-ring{position:absolute!important;inset:-7px!important;border:3px solid #ffe78b!important;border-radius:50%!important;pointer-events:none!important;box-shadow:0 0 12px 5px #ffd34d!important;animation:bu-wb-flash-ring 1.6s steps(1,end) infinite!important}
+@keyframes bu-wb-flash-ring{0%,49%{opacity:1;transform:scale(1.08)}50%,100%{opacity:0;transform:scale(1)}}
+@media(prefers-reduced-motion:reduce){.bu-wb-art-guide .bu-wb-flash-ring{animation:none!important;opacity:1!important}}
 `;document.head.appendChild(css);
 let pending=false;
 function scan(){pending=false;const buttons=[...document.querySelectorAll('button,[role="button"],input[type="button"]')];for(const b of buttons){if(!/got\s*it/i.test(b.textContent||b.value||''))continue;if(!b.getClientRects().length)continue;let found=null,el=b.parentElement;for(let i=0;i<9&&el&&el!==document.body;i++,el=el.parentElement){const t=(el.innerText||el.textContent||'').replace(/\s+/g,' ').toLowerCase();if(t.length>140&&t.length<5000&&(t.includes('rack tile')||t.includes('board square'))&&(t.includes('center')||t.includes('word must'))){found=el;break}}if(!found||found.classList.contains('bu-wb-art-guide'))continue;
 const content=document.createElement('div');content.className='bu-wb-guide-original';const children=[...found.childNodes];for(const node of children){if(node===b||node.contains?.(b))continue;content.appendChild(node)}found.insertBefore(content,found.firstChild);
 const img=document.createElement('img');img.className='bu-wb-guide-picture';img.src='word-builder-rules-art.jpg';img.alt='Word Builder rules on an ancient scroll: place tiles to form connected valid words; first word crosses center; score multipliers, Bible clues, seven tiles per turn, exchanges, and multiplayer turns. Solo Challenge, Pass and Play, and Pause and Resume.';img.loading='eager';found.insertBefore(img,content);
 b.classList.add('bu-wb-guide-action');found.appendChild(b);found.classList.add('bu-wb-art-guide');
+if(!b.querySelector('.bu-wb-flash-ring')){
+ const ring=document.createElement('span');ring.className='bu-wb-flash-ring';ring.setAttribute('aria-hidden','true');b.appendChild(ring);
+}
+
 if(!b.dataset.buGlowActive){b.dataset.buGlowActive='1';
  b.style.setProperty('animation','none','important');
  if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches && typeof b.animate==='function'){
