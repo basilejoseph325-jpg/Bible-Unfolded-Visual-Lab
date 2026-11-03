@@ -52,3 +52,5 @@ const help=[...panel.querySelectorAll('p,div,span')].find(e=>e.children.length==
 }
 document.addEventListener('click',e=>{if(open&&!e.target.closest('.bu-player-dropdown'))close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});let pending=false;new MutationObserver(()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;scan()})}}).observe(document.documentElement,{childList:true,subtree:true});scan();
 })();
+/* WB landing hero flat CSS v2 */
+(()=>{const s=document.createElement('style');s.textContent='#wb36 .wb-premium-hub .wb36-hero{border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;overflow:hidden!important;position:relative!important}#wb36 .wb-premium-hub .wb36-hero::after{content:""!important;position:absolute!important;inset:auto 0 0!important;height:30%!important;background:linear-gradient(transparent,#061e2a)!important;pointer-events:none!important}#wb36 .wb-premium-hub .wb36-hero img{border:0!important;border-radius:0!important;box-shadow:none!important}';document.head.appendChild(s)})();
