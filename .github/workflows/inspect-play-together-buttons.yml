@@ -17,6 +17,19 @@ jobs:
       - name: Install browser controller
         shell: bash
         run: npm install --no-save puppeteer-core
+      - name: Inspect HTML asset references
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          data=Path('index.html').read_text(encoding='utf-8')
+          for asset in ('trivia-together-premium.js','trivia-together-premium.css','play-together-cinematic.css'):
+              found=list(re.finditer(re.escape(asset),data))
+              print('ASSET_MATCH',asset,'COUNT',len(found))
+              for m in found[:7]:
+                  print('ASSET_CONTEXT',repr(data[max(0,m.start()-130):m.end()+155]))
+          PY
       - name: Inspect rendered hub
         shell: bash
         env:
