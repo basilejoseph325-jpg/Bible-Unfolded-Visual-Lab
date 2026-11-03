@@ -52,5 +52,37 @@ const help=[...panel.querySelectorAll('p,div,span')].find(e=>e.children.length==
 }
 document.addEventListener('click',e=>{if(open&&!e.target.closest('.bu-player-dropdown'))close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});let pending=false;new MutationObserver(()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;scan()})}}).observe(document.documentElement,{childList:true,subtree:true});scan();
 })();
-/* WB landing hero flat CSS v2 */
-(()=>{const s=document.createElement('style');s.textContent='#wb36 .wb-premium-hub .wb36-hero{border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;overflow:hidden!important;position:relative!important}#wb36 .wb-premium-hub .wb36-hero::after{content:""!important;position:absolute!important;inset:auto 0 0!important;height:30%!important;background:linear-gradient(transparent,#061e2a)!important;pointer-events:none!important}#wb36 .wb-premium-hub .wb36-hero img{border:0!important;border-radius:0!important;box-shadow:none!important}';document.head.appendChild(s)})();
+/* Word Builder landing hero: full-bleed original-color presentation, TEST only.
+   Preserve card styling, navigation and controls. */
+(()=>{'use strict';
+const style=document.createElement('style');
+style.id='bu-wb-hero-full-bleed-v3';
+style.textContent=`
+#wb36 .wb-premium-hub .wb36-hero{
+  position:relative!important;
+  width:100vw!important;
+  max-width:none!important;
+  margin-left:calc(50% - 50vw)!important;
+  margin-right:calc(50% - 50vw)!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+}
+#wb36 .wb-premium-hub .wb36-hero::after{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+}
+#wb36 .wb-premium-hub .wb36-hero img{
+  display:block!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  filter:none!important;
+  opacity:1!important;
+}
+`;
+document.head.appendChild(style);
+})();
