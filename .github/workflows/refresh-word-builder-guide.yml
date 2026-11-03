@@ -1,0 +1,35 @@
+name: Refresh Word Builder guide script cache
+on:
+  push:
+    paths:
+      - '.github/workflows/refresh-word-builder-guide.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Force fresh Word Builder guide JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path("index.html")
+          s=p.read_text(encoding="utf-8")
+          updated,n=re.subn(r'(<script\s+defer\s+src=["\x27]word-builder-ancient-scroll\.js)(?:\?[^"\x27]*)?(["\x27]\s*>\s*</script>)',r'\g<1>?v=waxseal-20261102-5\2',s)
+          if n!=1:
+              raise SystemExit(f"Expected exactly one Word Builder script tag, found {n}")
+          if updated!=s:
+              p.write_text(updated,encoding="utf-8")
+          PY
+      - name: Commit cache refresh
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Cache-bust Word Builder guide JS for wax seal styling"
+            git push
+          fi
