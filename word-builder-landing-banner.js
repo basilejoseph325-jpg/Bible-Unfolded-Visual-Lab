@@ -1,19 +1,26 @@
-/* Visual Lab only: Word Builder landing hero is scenery, not a button. */
+/* Visual Lab: flatten Word Builder landing artwork only. */
 (()=>{'use strict';
-const css=document.createElement('style');css.textContent=`
-.bu-wb-landing-banner{border:0!important;border-radius:0!important;box-shadow:none!important;outline:0!important;overflow:hidden!important;position:relative!important;isolation:isolate!important;pointer-events:none!important}
-.bu-wb-landing-banner::after{content:""!important;position:absolute!important;inset:55% 0 0!important;background:linear-gradient(to bottom,transparent,#061e2a 100%)!important;pointer-events:none!important;z-index:5!important}
-.bu-wb-landing-banner img{border:0!important;border-radius:0!important;box-shadow:none!important;display:block!important;width:100%!important}
-`;document.head.appendChild(css);
+const style=document.createElement('style');style.textContent=`
+.bu-wb-landing-banner{border:0!important;border-radius:0!important;box-shadow:none!important;outline:none!important;overflow:hidden!important;position:relative!important;isolation:isolate!important}
+.bu-wb-landing-banner::after{content:""!important;position:absolute!important;left:0!important;right:0!important;top:65%!important;bottom:0!important;background:linear-gradient(transparent,#061e2a)!important;pointer-events:none!important;z-index:5!important}
+.bu-wb-landing-banner img{border:0!important;border-radius:0!important;box-shadow:none!important;width:100%!important;display:block!important}
+`;document.head.appendChild(style);
 function scan(){
- const cards=[...document.querySelectorAll('button,a,[role="button"]')];
- const newGame=cards.find(el=>/^new game$/i.test((el.innerText||'').trim()));
- if(!newGame)return;
- const page=newGame.closest('main,section,[class*="page"],[class*="screen"]')||document;
- const imgs=[...page.querySelectorAll('img')].filter(el=>/wb-cinematic-hero|word-builder-top-clean/i.test(el.currentSrc||el.src||''));
- for(const img of imgs){let box=img.parentElement;for(let n=0;n<3&&box?.parentElement;n++){if(box.matches('button,a,[role="button"]'))break;if(box.querySelector('button,a,[role="button"]'))break;if(box.offsetWidth>=img.offsetWidth)break;box=box.parentElement}if(box&&!box.matches('button,a,[role="button"]'))box.classList.add('bu-wb-landing-banner')}
- const bg=[...page.querySelectorAll('div,header,section')].filter(el=>/wb-cinematic-hero\.webp/i.test(getComputedStyle(el).backgroundImage));
- for(const el of bg){if(!el.closest('button,a,[role="button"]')&&!el.querySelector('button,a,[role="button"]'))el.classList.add('bu-wb-landing-banner')}
+ const heading=[...document.querySelectorAll('h1,h2,h3,header')].find(el=>el.textContent.trim()==='Word Builder');
+ if(!heading)return;
+ const all=[...document.querySelectorAll('button,a,[role="button"],div,section')];
+ const hasNew=all.some(el=>el.children.length<4&&/^New Game$/i.test((el.innerText||'').trim()));
+ const hasChallenges=all.some(el=>el.children.length<4&&/Bible Word Challenges/i.test((el.innerText||'').trim()));
+ if(!hasNew||!hasChallenges)return;
+ const img=[...document.querySelectorAll('img')].find(el=>/wb-cinematic-hero|word-builder-top-clean/i.test(el.currentSrc||el.src||''));
+ if(img){let el=img.parentElement;for(let i=0;i<3&&el;i++,el=el.parentElement){if(el.matches('button,a,[role="button"]'))break;if(el.querySelector('button,a,[role="button"]'))break;el.classList.add('bu-wb-landing-banner');if(el.offsetWidth>=window.innerWidth*.8)break}}
+ // Some builds use CSS backgrounds instead of img tags.
+ for(const el of document.querySelectorAll('div,section,figure')){
+  if(el.matches('button,a,[role="button"]')||el.closest('button,a,[role="button"]'))continue;
+  if(el.querySelector('button,a,[role="button"]'))continue;
+  const bg=getComputedStyle(el).backgroundImage;
+  if(/wb-cinematic-hero|word-builder-top-clean/i.test(bg))el.classList.add('bu-wb-landing-banner');
+ }
 }
-let queued=false;new MutationObserver(()=>{if(!queued){queued=true;requestAnimationFrame(()=>{queued=false;scan()})}}).observe(document.documentElement,{subtree:true,childList:true});scan();
+let pending=false;new MutationObserver(()=>{if(!pending){pending=true;requestAnimationFrame(()=>{pending=false;scan()})}}).observe(document.documentElement,{childList:true,subtree:true});scan();document.addEventListener('click',()=>requestAnimationFrame(scan));
 })();
