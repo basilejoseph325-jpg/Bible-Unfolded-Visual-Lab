@@ -18,9 +18,11 @@ jobs:
           p=Path('index.html')
           s=p.read_text(encoding='utf-8')
           tag='<script defer src="word-builder-landing-banner.js?v=1"></script>'
+          s=s.replace('word-builder-landing-banner.js?v=1','word-builder-landing-banner.js?v=2')
           if 'word-builder-landing-banner.js' not in s:
               if '</body>' not in s: raise SystemExit('Missing body close')
               p.write_text(s.replace('</body>',tag+'\n</body>',1),encoding='utf-8')
+          p.write_text(s,encoding='utf-8')
           PY
       - name: Commit loader
         run: |
