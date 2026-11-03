@@ -17,8 +17,11 @@ jobs:
           from pathlib import Path
           p=Path('index.html')
           s=p.read_text()
-          tag='<link rel="stylesheet" href="word-builder-flat-hero-v2.css?v=2">'
-          if tag not in s:
+          tag='<link rel="stylesheet" href="word-builder-flat-hero-v2.css?v=3">'
+          old='<link rel="stylesheet" href="word-builder-flat-hero-v2.css?v=2">'
+          if old in s:
+              s=s.replace(old,tag,1)
+          elif tag not in s:
               assert '</head>' in s
               s=s.replace('</head>',tag+'\n</head>',1)
               p.write_text(s)
