@@ -904,3 +904,15 @@
 #bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has(#fw4-open-guided) :is(button#fw4-open-guided,button#fw4-open-solo):active{
   filter:brightness(.93)!important;
 }
+
+/* Quick Play mask specificity correction v11 — Visual Lab only.
+   Earlier nth-of-type(2–4) ::before rules specify pale-gold backgrounds
+   with higher specificity than the generic v8 rule. Explicitly override
+   those exact pseudo-elements, leaving icon masks and click targets intact. */
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]:nth-of-type(1)::before,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]:nth-of-type(2)::before,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]:nth-of-type(3)::before,
+#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card:has([data-quick]) .bu35-button-row button[data-quick]:nth-of-type(4)::before{
+ background:#153944!important;
+ background-color:#153944!important;
+}
