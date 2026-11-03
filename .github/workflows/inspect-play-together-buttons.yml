@@ -4,30 +4,54 @@ on:
     paths:
       - .github/workflows/inspect-play-together-buttons.yml
   workflow_dispatch:
-
 permissions:
   contents: read
-
 jobs:
   inspect:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Show source markup for two launch controls
+      - name: Install headless Chrome
+        id: chrome
+        uses: browser-actions/setup-chrome@v1
+      - name: Install browser controller
         shell: bash
+        run: npm install --no-save puppeteer-core
+      - name: Inspect rendered hub
+        shell: bash
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
         run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          names=['wb36-family-open','bu3834-family-entry','Play Word Builder','Launch Scholar Challenge','Scholar Research','Word Builder']
-          for file in [Path('index.html'),*Path('.').glob('bible_unfolded_core_part*.js')]:
-              data=file.read_text(encoding='utf-8',errors='ignore')
-              print('SOURCE',file,'LEN',len(data))
-              for term in names:
-                  match=list(re.finditer(re.escape(term),data,re.I))
-                  print('\nFIND',repr(term),'COUNT',len(match))
-                  for m in match[:3]:
-                      lo=max(0,m.start()-900)
-                      hi=min(len(data),m.end()+1200)
-                      print('OFFSET',m.start(),'CONTEXT',repr(data[lo:hi]))
-          PY
+          node <<'JS'
+          const puppeteer=require('puppeteer-core');
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:process.env.CHROME_PATH,headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
+            const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:1});
+            page.on('console',msg=>{if(msg.type()==='error')console.log('CONSOLE ERROR',msg.text().slice(0,300))});
+            await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?v=inspect-20261102',{waitUntil:'domcontentloaded',timeout:70000});
+            await new Promise(r=>setTimeout(r,2000));
+            const out=await page.evaluate(()=>{
+              let errors=[];
+              try{if(typeof bu35Hub==='function')bu35Hub();else errors.push('no bu35Hub')}catch(e){errors.push('hub '+e.message)}
+              const root=document.getElementById('bu35-body');
+              const ids=['wb36-family-open','bu3834-family-entry','bu3844-fam-ideas'];
+              let list=ids.map(id=>{
+                const b=document.getElementById(id);
+                if(!b)return {id,notFound:true};
+                const s=getComputedStyle(b),s1=getComputedStyle(b,'::before');
+                return {id,outerHTML:b.outerHTML.slice(0,750),parent:b.parentElement?.outerHTML.slice(0,250),style:b.getAttribute('style'),
+                computed:{bg:s.background,bgColor:s.backgroundColor,width:s.width,height:s.height,display:s.display,position:s.position,color:s.color,fontSize:s.fontSize,padding:s.padding,opacity:s.opacity},
+                before:{content:s1.content,bg:s1.backgroundColor,mask:s1.maskImage,webkitMask:s1.webkitMaskImage,width:s1.width,display:s1.display},
+                clean:b.dataset.buCleanIconV7||null,
+                matches:{
+                 v4:b.matches('#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card #'+id),
+                 v6:b.matches('#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>.bu35-card button#'+id),
+                 simple:b.matches('#bu35-body .bu35-card #'+id)
+                }
+              }});
+              return {error:errors,flags:{v7:window.BU_PT_ICON_CLEANUP_V7||false},hub:root?.innerHTML.slice(0,450),buttons:list,scriptTags:[...document.scripts].filter(s=>/trivia-together|core_part/.test(s.src)).map(s=>s.src.slice(-110))};
+            });
+            console.log('DIAGNOSTIC_JSON',JSON.stringify(out));
+            await browser.close();
+          })().catch(err=>{console.error(err);process.exit(1)});
+          JS
