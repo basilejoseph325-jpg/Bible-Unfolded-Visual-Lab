@@ -1,8 +1,8 @@
 /* Visual Lab: flatten Word Builder landing artwork only. */
 (()=>{'use strict';
 const style=document.createElement('style');style.textContent=`
-.bu-wb-landing-banner{border:0!important;border-radius:0!important;box-shadow:none!important;outline:none!important;overflow:hidden!important;position:relative!important;isolation:isolate!important}
-.bu-wb-landing-banner::after{content:""!important;position:absolute!important;left:0!important;right:0!important;top:65%!important;bottom:0!important;background:linear-gradient(transparent,#061e2a)!important;pointer-events:none!important;z-index:5!important}
+.bu-wb-landing-banner{border:0!important;border-radius:0!important;box-shadow:none!important;outline:none!important;overflow:hidden!important;position:relative!important;isolation:isolate!important;width:100vw!important;max-width:none!important;margin-left:calc(50% - 50vw)!important;margin-right:calc(50% - 50vw)!important}
+.bu-wb-landing-banner::after{content:none!important;display:none!important;background:none!important}
 .bu-wb-landing-banner img{border:0!important;border-radius:0!important;box-shadow:none!important;width:100%!important;display:block!important}
 `;document.head.appendChild(style);
 function scan(){
