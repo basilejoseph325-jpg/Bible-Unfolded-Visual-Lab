@@ -1,0 +1,35 @@
+name: Install flat Word Builder hero CSS
+on:
+  push:
+    paths:
+      - '.github/workflows/install-word-builder-flat-hero-v2.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject CSS stylesheet into Visual Lab
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          tag='<link rel="stylesheet" href="word-builder-flat-hero-v2.css?v=2">'
+          if tag not in s:
+              assert '</head>' in s
+              s=s.replace('</head>',tag+'\n</head>',1)
+              p.write_text(s)
+          assert tag in p.read_text()
+          PY
+      - name: Commit verified stylesheet reference
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Load Word Builder flat hero CSS"
+            git push
+          fi
