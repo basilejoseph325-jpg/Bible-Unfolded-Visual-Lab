@@ -1,0 +1,17 @@
+/* Bible Word Challenges: isolated, reversible Visual Lab layout enhancement. */
+(()=>{'use strict';
+const names=['In the Beginning','Noah and the Ark','Escape From Egypt','Courage and Kindness','Journeys and Turning Points','Inside the Tabernacle','People Who Made a Difference','Prophets and Surprises','The High Priest’s Gems','What Jesus Taught','The First-Century Journey','Ancient Messages','Abraham: Promises and Places','Jacob’s Family and Turning Points','Joseph: Names and Decisions'];
+const key=s=>(s||'').toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9]+/g,' ').trim();
+const targets=new Set(names.map(key));
+const style=document.createElement('style');style.textContent=`
+.bu-word-challenge-card{position:relative!important;min-height:112px!important;overflow:hidden!important;isolation:isolate!important;border:1px solid #d6b16a!important;border-radius:17px!important;display:flex!important;flex-direction:column!important;justify-content:flex-end!important;padding:15px 12px!important;background-color:#193d42!important;background-image:linear-gradient(0deg,rgba(2,16,25,.88),rgba(2,16,25,.08) 85%)!important;background-size:cover!important;background-position:center!important;box-shadow:0 4px 14px #0004!important;transition:transform .18s ease,box-shadow .18s ease!important}
+.bu-word-challenge-card:active{transform:scale(.975)!important}
+.bu-word-challenge-card *{position:relative!important;z-index:1!important;text-shadow:0 2px 4px #000,0 1px 8px #000!important}
+.bu-word-challenge-card{color:#f7d68d!important}
+.bu-word-challenge-card [class*=title],.bu-word-challenge-card strong{font-family:Georgia,serif!important;font-size:clamp(15px,3.7vw,21px)!important;color:#ffdb91!important}
+.bu-word-challenge-card [class*=meta],.bu-word-challenge-card small{color:#fff1cf!important}
+@media(max-width:380px){.bu-word-challenge-card{min-height:104px!important;padding:11px 9px!important}}
+`;document.head.appendChild(style);
+function scan(){let changed=0;for(const el of document.querySelectorAll('button,a,[role="button"]')){if(el.classList.contains('bu-word-challenge-card'))continue;const text=key(el.innerText||el.textContent);if(!text||text.length>130)continue;for(const target of targets){if(text.startsWith(target)&&text.length<target.length+45){el.classList.add('bu-word-challenge-card');el.dataset.buChallenge=target;changed++;break}}}return changed}
+let scheduled=false;new MutationObserver(()=>{if(!scheduled){scheduled=true;requestAnimationFrame(()=>{scheduled=false;scan()})}}).observe(document.documentElement,{childList:true,subtree:true});scan();
+})();
