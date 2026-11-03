@@ -215,3 +215,13 @@
     font-size:clamp(23px,6.4vw,29px)!important;
   }
 }
+
+/* Daily Discovery only: replace the hard, disconnected center-top cut with
+   a soft botanical fade. The separately scaled upper-left corner remains rooted
+   at the left edge; right and both lower corners retain their existing artwork.
+   No photo, title, or card is modified. */
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero::after {
+  clip-path:none!important;
+  -webkit-mask-image:radial-gradient(ellipse 27% 30% at 49% 8%,transparent 0%,transparent 35%,rgba(0,0,0,.18) 63%,#000 100%)!important;
+  mask-image:radial-gradient(ellipse 27% 30% at 49% 8%,transparent 0%,transparent 35%,rgba(0,0,0,.18) 63%,#000 100%)!important;
+}
