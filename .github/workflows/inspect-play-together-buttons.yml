@@ -1,0 +1,33 @@
+name: Inspect Play Together button markup (temporary)
+on:
+  push:
+    paths:
+      - .github/workflows/inspect-play-together-buttons.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show source markup for two launch controls
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          names=['wb36-family-open','bu3834-family-entry','Play Word Builder','Launch Scholar Challenge','Scholar Research','Word Builder']
+          for file in [Path('index.html'),*Path('.').glob('bible_unfolded_core_part*.js')]:
+              data=file.read_text(encoding='utf-8',errors='ignore')
+              print('SOURCE',file,'LEN',len(data))
+              for term in names:
+                  match=list(re.finditer(re.escape(term),data,re.I))
+                  print('\nFIND',repr(term),'COUNT',len(match))
+                  for m in match[:3]:
+                      lo=max(0,m.start()-900)
+                      hi=min(len(data),m.end()+1200)
+                      print('OFFSET',m.start(),'CONTEXT',repr(data[lo:hi]))
+          PY
