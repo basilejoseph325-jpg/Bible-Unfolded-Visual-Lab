@@ -1,23 +1,17 @@
-/* Journey caption: keep existing saved-progress calculation, shorten only its presentation. */
+/* Preserve the existing Journey layout and dynamic progress. Change caption words only. */
 (()=>{'use strict';
-const id='journey-progress-label';
-const pattern=/(\\d+)\\s+of\\s+(\\d+)/i;
-let busy=false;
+const re=/(\d+)\s+of\s+(\d+)/i;
+let writing=false;
 function update(){
- if(busy)return;
- const el=document.getElementById(id);if(!el)return;
- const original=el.textContent||'';
- const match=original.match(pattern);
+ if(writing)return;
+ const el=document.getElementById('journey-progress-label');
+ if(!el)return;
+ const match=(el.textContent||'').match(re);
  if(!match)return;
- const next=match[1]+' of '+match[2]+' Episodes Complete';
- if(original.trim()===next)return;
- busy=true;el.textContent=next;busy=false;
+ const text=match[1]+' of '+match[2]+' Episodes Complete';
+ if(el.textContent===text)return;
+ writing=true;el.textContent=text;writing=false;
 }
-function boot(){
- const host=document.getElementById('journey');if(!host)return;
- const observer=new MutationObserver(update);
- observer.observe(host,{subtree:true,childList:true,characterData:true});
- update();
-}
+function boot(){const el=document.getElementById('journey-progress-label');if(!el)return;new MutationObserver(update).observe(el,{childList:true,characterData:true,subtree:true});update();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
