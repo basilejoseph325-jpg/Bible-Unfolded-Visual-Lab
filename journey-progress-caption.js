@@ -16,5 +16,5 @@ function boot(){const el=document.getElementById('journey-progress-label');if(!e
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 
-/* Load approved Visual Lab audio experiment; delete this block to roll back. */
-(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-parchment-letter-tap-v1';document.head.appendChild(s)})();
+/* Shared, versioned audio loader — identical in TEST and LIVE. */
+(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-unified-audio-v1';document.head.appendChild(s)})();
