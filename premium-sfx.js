@@ -46,7 +46,7 @@ function softContact(kind){
   }
   const src=softCtx.createBufferSource(),filter=softCtx.createBiquadFilter(),gain=softCtx.createGain();
   filter.type='bandpass';filter.frequency.value=950;filter.Q.value=.38;
-  gain.gain.value=v*(kind==='letter'?.10:.16);
+  gain.gain.value=v*(kind==='letter'?.32:.42);
   src.buffer=softBuffer;src.connect(filter);filter.connect(gain);gain.connect(softCtx.destination);
   src.onended=()=>{try{src.disconnect();filter.disconnect();gain.disconnect()}catch(_){}};
   src.start();return true;
@@ -91,6 +91,28 @@ function rememberTouch(ev){
 window.addEventListener('pointerdown',rememberTouch,true);
 window.addEventListener('click',rememberTouch,true);
 
+
+/* Journey chapter-card entry: one audible soft tap. Only listen on Journey
+ * cards (not episode tiles already owned by the Story V5 engine).
+ * Ignore scrolling gestures to avoid sounds while browsing the chapter list. */
+const journeyCardSelector='#journey-stops .route-stop,#journey-stops [data-chapter],#journey-stops [data-episode],#journey-stops .chapter-card,#journey-stops .journey-card,.journey-chapter-card,.journey-book-card,.journey-episode-card';
+let journeyPress=null;
+window.addEventListener('pointerdown',e=>{
+ const el=e.target?.closest?.(journeyCardSelector);
+ journeyPress=el?{id:e.pointerId,x:e.clientX,y:e.clientY,el}:null;
+},true);
+window.addEventListener('pointerup',e=>{
+ const p=journeyPress;if(!p||p.id!==e.pointerId)return;
+ journeyPress=null;
+ if(Math.hypot(e.clientX-p.x,e.clientY-p.y)>12)return;
+ if(!p.el.isConnected)return;
+ softContact('level');
+},true);
+window.addEventListener('pointercancel',e=>{if(journeyPress?.id===e.pointerId)journeyPress=null},true);
+window.addEventListener('click',e=>{
+ if(e.detail!==0)return;
+ if(e.target?.closest?.(journeyCardSelector))softContact('level');
+},true);
 
 /* Shared premium adapter, without overlapping Story audio guards. */
 HTMLMediaElement.prototype.play=function(){
@@ -137,5 +159,5 @@ for(const name of ['pointerup','pointercancel']){
 }
 
 /* Only exported soft-contact cue; source engine owns Story events. */
-window.BUPremiumSFX=Object.freeze({play,softTap:softContact,version:'2026-11-04-story-source-audio-v5'});
+window.BUPremiumSFX=Object.freeze({play,softTap:softContact,version:'2026-11-04-story-audible-soft-tap-v6'});
 })();
