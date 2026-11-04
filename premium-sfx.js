@@ -57,7 +57,7 @@ const pools={},slot={},recent={};let token=0,lastClick=null;
 function level(){try{return (typeof sfxOn==='undefined'||sfxOn)&&!document.hidden ? (typeof sfxVolume==='undefined'?.65:Math.max(0,Math.min(1,Number(sfxVolume)/100||0))):0}catch(e){return 0}}
 function play(type,relative){
  const conf=cues[type];if(!conf||!level())return false;
- const now=Date.now(),threshold=type==='swish'?110:type==='tap'?22:36;
+ const now=Date.now(),threshold=type==='swish'?35:type==='tap'?22:36;
  if(now-(recent[type]||0)<threshold)return false;recent[type]=now;
  if(!pools[type])pools[type]=Array.from({length:3},()=>{const a=new Audio('https://sfxmint.com/dl/'+conf[0]);a.preload='auto';a.playsInline=true;return a});
  const a=pools[type][(slot[type]||0)%3];slot[type]=(slot[type]||0)+1;
