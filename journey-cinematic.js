@@ -6,14 +6,14 @@
   window.__buJourneyCinematicInstalled = true;
 
   var scenes = [
-    "01_the_beginning.webp",
-    "02_faith_promises.webp",
-    "03_deliverance.webp",
-    "04_judges_kings.webp",
-    "05_exile_return.webp",
-    "06_the_messiah.webp",
-    "07_good_news_spreads.webp",
-    "08_revelation.webp"
+    "01_the_beginning_v2.webp",
+    "02_faith_promises_v2.webp",
+    "03_deliverance_v2.webp",
+    "04_judges_kings_v2.webp",
+    "05_exile_return_v2.webp",
+    "06_the_messiah_v2.webp",
+    "07_good_news_spreads_v2.webp",
+    "08_revelation_v2.webp"
   ];
 
   function chooseScene(index) {
@@ -21,7 +21,7 @@
     var root = document.documentElement;
     root.dataset.buJourneyEra = String(index + 1);
     root.style.setProperty("--bu-journey-photo",
-      'url("journey-art/' + scenes[index] + '")');
+      'url("' + scenes[index] + '")');
   }
 
   function init() {
