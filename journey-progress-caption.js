@@ -17,7 +17,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 /* Shared, versioned audio loader — identical in TEST and LIVE. */
-(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-story-source-v5';document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-audible-journey-tap-v6';document.head.appendChild(s)})();
 
 /* TEST-ONLY Daily Discovery question styling; does not affect answer/explanation modal. */
 (()=>{if(document.getElementById('bu-daily-question-visual'))return;const l=document.createElement('link');l.id='bu-daily-question-visual';l.rel='stylesheet';l.href='daily-discovery-question-premium.css?v=20261104-weathered-sandstone-v3';document.head.appendChild(l)})();
