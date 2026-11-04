@@ -1,4 +1,4 @@
-/* BIBLE UNFOLDED — VISUAL LAB audio choices, Nov 4 2026.
+/* BIBLE UNFOLDED — shared audio palette (TEST and LIVE), Nov 4 2026.
    CC0 samples: https://sfxmint.com/license
    Reversible adapter. Does not touch scores, saves, music, voice, or art. */
 (()=>{'use strict';
@@ -221,5 +221,5 @@ for(const [f,type] of [['tick','tap'],['swish','swish']]){
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-parchment-tap-test-v1'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-unified-audio-v1'});
 })();
