@@ -1,0 +1,47 @@
+name: Mirror live Bible Unfolded music into Visual Lab
+on:
+  push:
+    paths:
+      - '.github/workflows/mirror-live-music.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: mirror-live-music
+  cancel-in-progress: false
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy unchanged live MP3 assets into test game
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            bible-behind-the-name-theme.mp3
+            bible-daily-discovery-theme.mp3
+            bible-family-theme.mp3
+            bible-menu-theme.mp3
+            bible-original-theme.mp3
+            bible-story-theme.mp3
+            bible-word-builder-theme.mp3
+            bible-wordtrails-theme.mp3
+          )
+          for name in "${files[@]}"; do
+            echo "Mirroring $name from the live game..."
+            curl --fail --location --silent --show-error --retry 4 --connect-timeout 15 \
+              --max-time 150 "https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/main/$name" \
+              --output "$name.download"
+            test "$(wc -c < "$name.download")" -gt 100000
+            mv "$name.download" "$name"
+          done
+          git add -- "${files[@]}"
+          if git diff --cached --quiet; then
+            echo "All 8 audio assets already match LIVE."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -m "Mirror eight live music tracks for consistent Visual Lab testing"
+            git push
+          fi
