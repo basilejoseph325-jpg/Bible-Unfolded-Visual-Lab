@@ -1,0 +1,25 @@
+name: Repair Story Adventure letter-by-letter swipe cue (Visual Lab only)
+on:
+  push:
+    paths:
+      - '.github/workflows/repair-story-drag-letters-v6.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch original Story gesture code and syntax-check
+        run: |
+          python3 .github/scripts/repair_story_drag_letters_v6.py
+      - name: Commit updated engine and remove one-time repair tooling
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git rm -f .github/workflows/repair-story-drag-letters-v6.yml .github/scripts/repair_story_drag_letters_v6.py
+          git add bible_unfolded_core_part5.js premium-sfx.js
+          git diff --cached --stat
+          git commit -m "Visual Lab: Story swipe swish follows every crossed letter V6"
+          git push origin HEAD:main
