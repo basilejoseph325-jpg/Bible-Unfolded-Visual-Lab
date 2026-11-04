@@ -1,0 +1,25 @@
+name: Inspect exact Classic wheel fix anchors
+on:
+  push:
+    paths: ['.github/workflows/inspect-classic-wheel-anchors.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          for i in range(1,6):
+            s=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'(__BU_STAGE41_CORE_PARTS__\[\d\] = )(".*")(;)',s)
+            if not m:continue
+            raw=json.loads(m.group(2))
+            for pattern in ["function openRewards(","function setWheelTheme(","if(economy.purchases.includes('goldwheel')","const BU_WHEEL_IDS","const products=","data-buy"]:
+              j=raw.find(pattern)
+              if j>=0:
+                print('\nPART',i,'PATTERN',pattern,'OFFSET',j,'COUNT',raw.count(pattern))
+                print(raw[max(0,j-450):j+5500][:5600])
+          PY
