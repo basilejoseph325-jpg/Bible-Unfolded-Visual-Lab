@@ -1,0 +1,33 @@
+name: Inspect Rewards wheel selector exact source
+on:
+  push:
+    paths: ['.github/workflows/inspect-wheel-selection-20261104.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          t=Path('index.html').read_text()
+          pieces=[t]
+          raw=''
+          for i in range(1,6):
+            s=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            z=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d\] = (".*");',s)
+            assert z, f'part{i}'
+            raw+=json.loads(z.group(1))
+          pieces.append(raw)
+          patterns=[r'gold-wheel',r'moon-wheel',r'ocean-wheel',r'wheelStyle',r'wheelTheme',r'wheelSkin',r'equip.*wheel',r'wheel.*equip',r'wheel.*reward',r'reward.*wheel',r'Rewards']
+          for which,s in zip(['index','decoded-core'],pieces):
+            print('SOURCE',which,'LENGTH',len(s))
+            for pat in patterns:
+              matches=list(re.finditer(pat,s,re.I))
+              print('PATTERN',pat,'COUNT',len(matches))
+              for m in matches[:12]:
+                print('AT',m.start(), 'EXCERPT',repr(s[max(0,m.start()-250):m.end()+330])[:760])
+          PY
