@@ -24,3 +24,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Visual Lab ONLY: home screen TEST label; no layout or input interception. */
 (()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=20261104-test-ribbon-v1';document.head.appendChild(s)})();
+
+/* TEST ONLY: isolate Story Adventure legacy knock during chapter entry and word-wheel swipe. */
+(()=>{if(document.getElementById('bu-story-gesture-audio-guard'))return;const s=document.createElement('script');s.id='bu-story-gesture-audio-guard';s.src='story-gesture-audio-guard.js?v=20261104-story-gesture-v1';document.head.appendChild(s)})();
