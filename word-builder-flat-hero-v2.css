@@ -225,3 +225,14 @@
   -webkit-mask-image:radial-gradient(ellipse 27% 30% at 49% 8%,transparent 0%,transparent 35%,rgba(0,0,0,.18) 63%,#000 100%)!important;
   mask-image:radial-gradient(ellipse 27% 30% at 49% 8%,transparent 0%,transparent 35%,rgba(0,0,0,.18) 63%,#000 100%)!important;
 }
+
+/* Daily Discovery ONLY: remove the entire upper-left foliage quadrant.
+   The original hero artwork is untouched. Other corners retain their
+   existing overlay and fading treatment. No shared PNG is modified. */
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero::before {
+  content:none!important;
+  display:none!important;
+}
+#bu375-daily #bu375-body:has(.bu375-mode-list) .bu375-hero::after {
+  clip-path:polygon(43% 0,100% 0,100% 100%,0 100%,0 43%,43% 43%)!important;
+}
