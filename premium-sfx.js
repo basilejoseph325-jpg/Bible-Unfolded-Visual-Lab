@@ -303,5 +303,52 @@ window.addEventListener('click',installStoryEngineTapGuard,true);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installStoryEngineTapGuard,{once:true});
 const storyFxPoll=setInterval(()=>{installStoryEngineTapGuard();if(wrappedEngineFx)clearInterval(storyFxPoll)},80);
 setTimeout(()=>clearInterval(storyFxPoll),8000);
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-story-engine-tap-guard-v3'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-native-tap-guard-v4'});
+
+/* V4 NATIVE PCM TAP FILTER — Visual Lab only.
+ * Verified in the Stage41 engine: tick() -> playFx('tap', .15).
+ * The legacy 'tap' is an embedded mono 22050 Hz PCM buffer of exactly
+ * 1940 frames. It fires for every selected letter, even during swipes.
+ * Unlike window.playFx replacement, this catches audio created by a
+ * function closed over inside a bundled engine. The approved swish is
+ * 3308 frames at 22050 Hz, and is NOT affected. */
+(()=>{
+ const proto=window.AudioBufferSourceNode?.prototype;
+ if(!proto||proto.__buStoryNativeTapV4||typeof proto.start!=='function')return;
+ const originalStart=proto.start;
+ const stats={wheelKnocksFiltered:0,episodeKnocksFiltered:0};
+ let episodeUntil=0,entrySoundAt=0;
+ function onEpisodeInput(ev){
+  const el=ev.target?.nodeType===1?ev.target:ev.target?.parentElement;
+  if(el?.closest?.('#episode-list [data-episode],#episodes .episode-card')){
+   episodeUntil=Date.now()+1100;
+  }
+ }
+ window.addEventListener('pointerdown',onEpisodeInput,true);
+ window.addEventListener('click',onEpisodeInput,true);
+ proto.start=function(...args){
+  const b=this.buffer;
+  if(b&&b.sampleRate===22050&&b.length===1940&&b.numberOfChannels===1){
+   const inWheel=!!isPlayingStory();
+   const entering=!inWheel&&Date.now()<episodeUntil;
+   if(inWheel||entering){
+    /* Disconnect only the obsolete tap sample. Still start so onended
+     * cleans up the original sound node as usual. */
+    try{this.disconnect()}catch(_){}
+    if(inWheel)stats.wheelKnocksFiltered++;
+    else{
+     stats.episodeKnocksFiltered++;
+     if(Date.now()-entrySoundAt>180){
+      entrySoundAt=Date.now();
+      gentleStoryEntry();
+     }
+    }
+   }
+  }
+  return originalStart.apply(this,args);
+ };
+ try{Object.defineProperty(proto,'__buStoryNativeTapV4',{value:true})}catch(_){}
+ window.BUStoryNativeTapStats=stats;
+})();
+
 })();
