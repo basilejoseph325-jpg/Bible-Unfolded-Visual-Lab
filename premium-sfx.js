@@ -84,21 +84,68 @@ function rememberTouch(ev){
  const action=el.closest('button,a,[role="button"],input,select,summary');
  const words=action?((action.id||'')+' '+(action.getAttribute('aria-label')||'')+' '+(action.textContent||'').slice(0,70)).toLowerCase():'';
  const answer=!!el.closest('.bu375-answer,.bu34-answer,.bu3868-answer,[data-answer],[data-bu375-answer],#btn3926-answers > *,#bu375-daily .bu375-answers > *,#bu3857-screen .bu3868-choices > *');
- const storyLevel=!!el.closest('#journey-stops .route-stop,#episodes .episode-card,.level-card');
+ const storyLevel=!!el.closest('#journey-stops .route-stop,#episodes .episode-card,.level-card,#episodes [data-episode],#episodes .episode-row,#episodes .episode-tile') ||
+   (!!el.closest('#episodes')&&!!action&&!el.closest('#episodes .bu34-top,#episodes .back,#episodes .menu'));
  lastClick={at:Date.now(),undo:/undo|reverse/.test(words),answer,storyLevel};
 }
 window.addEventListener('pointerdown',rememberTouch,true);
 window.addEventListener('click',rememberTouch,true);
+
+/* STORY GESTURE AUDIO GUARD V2 — Visual Lab only.
+ * Track only intentional letter-wheel gestures; never block success sounds.
+ * The existing gentle swish and the correct-word chime remain untouched. */
+let storyWheelGesture=null,lastLevelSoft=0;
+function isPlayingStory(){
+ const root=document.getElementById('play');
+ return root&&!root.hidden&&root.getClientRects().length&&!root.closest('[hidden]')?root:null;
+}
+function currentWheelGesture(){
+ return !!(storyWheelGesture&&Date.now()<storyWheelGesture.until&&isPlayingStory());
+}
+window.addEventListener('pointerdown',e=>{
+ const hit=letterTapTarget(e.target);
+ const root=isPlayingStory();
+ storyWheelGesture=(root&&hit?.root===root)
+   ?{id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,until:Date.now()+1400}
+   :null;
+},true);
+window.addEventListener('pointermove',e=>{
+ const g=storyWheelGesture;
+ if(!g||e.pointerId!==g.id)return;
+ if(Math.hypot(e.clientX-g.x,e.clientY-g.y)>10)g.moved=true;
+ g.until=Date.now()+500;
+},true);
+for(const kind of ['pointerup','pointercancel']){
+ window.addEventListener(kind,e=>{
+  const g=storyWheelGesture;
+  if(g?.id!==e.pointerId)return;
+  g.until=Date.now()+200;
+ },true);
+}
+function gentleStoryEntry(){
+ if(Date.now()-lastLevelSoft<130)return;
+ lastLevelSoft=Date.now();
+ softContact('level');
+}
 HTMLMediaElement.prototype.play=function(){
  const u=this.src||'';
  if(!u.startsWith('data:audio/wav;base64,'))return nativePlay.apply(this,arguments);
  let type=id[u.length+'|'+u.slice(56,95)];
+ // An episode opening should never emit a hard legacy WAV, even if its
+ // encoded signature was not in the original mapping.
+ if(lastClick?.storyLevel&&Date.now()-lastClick.at<300 &&
+    type!=='storyCorrect'&&type!=='back'&&type!=='namePositive'&&type!=='nameWrong'){
+  gentleStoryEntry();return Promise.resolve();
+ }
+ // Story wheel drag/tap: retire legacy UI knocks, but preserve the dedicated
+ // correct-word sound and the separately approved swish.
+ if(currentWheelGesture()&&['select','navigate','toggle','tap','info'].includes(type)){
+  return Promise.resolve();
+ }
  if(!type)return nativePlay.apply(this,arguments);
  if(lastClick&&Date.now()-lastClick.at<250){
   // Quiz answers already have their own correct/retry feedback. Never pile a hard click on top.
   if(lastClick.answer&&['select','navigate','toggle'].includes(type))return Promise.resolve();
-  // Opening a Story level gets only a small papery touch, not a wooden knock.
-  if(lastClick.storyLevel&&['select','navigate'].includes(type)){softContact('level');return Promise.resolve();}
  }
  if(['navigate','back','select','info','toggle'].includes(type)&&lastClick&&Date.now()-lastClick.at<180){
   if(lastClick.answer)return Promise.resolve();
@@ -221,5 +268,5 @@ for(const [f,type] of [['tick','tap'],['swish','swish']]){
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-unified-audio-v1'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-story-gesture-guard-v2'});
 })();
