@@ -69,10 +69,19 @@ function play(type,relative){
   return true;
  }catch(e){return false}
 }
-window.addEventListener('click',ev=>{const c=ev.target?.closest?.('button,a,[role="button"],input,select,summary');const words=c?((c.id||'')+' '+(c.getAttribute('aria-label')||'')+' '+(c.textContent||'').slice(0,70)).toLowerCase():'';
- const answer=!!c?.matches?.('.bu375-answer,.bu34-answer,.bu3868-answer,[data-answer],[data-bu375-answer]')||!!c?.closest?.('#btn3926-answers,#bu375-daily .bu375-answers,#bu3857-screen .bu3868-choices');
- const storyLevel=!!c?.matches?.('#journey-stops .route-stop,#episodes .episode-card,.level-card')||!!c?.closest?.('#journey-stops .route-stop,#episodes .episode-card');
- lastClick={at:Date.now(),undo:/undo|reverse/.test(words),answer,storyLevel};},true);
+/* Capture the ACTUAL tapped element: Daily answer tiles can be divs, not buttons.
+ * pointerdown also covers games that trigger SFX before their click handler runs. */
+function rememberTouch(ev){
+ const el=ev.target?.nodeType===1?ev.target:ev.target?.parentElement;
+ if(!el?.closest)return;
+ const action=el.closest('button,a,[role="button"],input,select,summary');
+ const words=action?((action.id||'')+' '+(action.getAttribute('aria-label')||'')+' '+(action.textContent||'').slice(0,70)).toLowerCase():'';
+ const answer=!!el.closest('.bu375-answer,.bu34-answer,.bu3868-answer,[data-answer],[data-bu375-answer],#btn3926-answers > *,#bu375-daily .bu375-answers > *,#bu3857-screen .bu3868-choices > *');
+ const storyLevel=!!el.closest('#journey-stops .route-stop,#episodes .episode-card,.level-card');
+ lastClick={at:Date.now(),undo:/undo|reverse/.test(words),answer,storyLevel};
+}
+window.addEventListener('pointerdown',rememberTouch,true);
+window.addEventListener('click',rememberTouch,true);
 HTMLMediaElement.prototype.play=function(){
  const u=this.src||'';
  if(!u.startsWith('data:audio/wav;base64,'))return nativePlay.apply(this,arguments);
@@ -93,9 +102,11 @@ HTMLMediaElement.prototype.play=function(){
 for(const [f,type] of [['tick','tap'],['swish','swish']]){
  if(typeof window[f]==='function'){const old=window[f];window[f]=function(){if(window.BUPremiumSFX){
   // Story's own letter buttons make a faint felt/paper brush; swipes keep the approved shortened swoosh.
-  if(f==='tick'&&document.getElementById('play')&&!document.getElementById('play').hidden){softContact('letter');return;}
+  if(f==='tick'&&lastClick?.answer&&Date.now()-lastClick.at<250){softContact('answer');return;}
+  const storyPlay=document.getElementById('play');
+  if(f==='tick'&&storyPlay&&!storyPlay.hidden&&storyPlay.getClientRects().length){softContact('letter');return;}
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-quiet-repeated-taps'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-quiet-taps-detection-v2'});
 })();
