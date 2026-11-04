@@ -17,4 +17,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 })();
 
 /* Load approved Visual Lab audio experiment; delete this block to roll back. */
-(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-soft-back-v1';document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261104-word-trails-quiet-swipe';document.head.appendChild(s)})();
