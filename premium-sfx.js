@@ -3,7 +3,7 @@
    Reversible adapter. Does not touch scores, saves, music, voice, or art. */
 (()=>{'use strict';
 const cues={
- navigate:['ui-menu-12.mp3',.80],back:['ui-swipe-41.mp3',.75],
+ navigate:['ui-menu-12.mp3',.80],back:['ui-swipe-41.mp3',.36],
  select:['ui-click-56.mp3',.87],info:['ui-pop-57.mp3',.88],
  toggle:['ui-toggle-54.mp3',.78],undo:['ui-undo-09.mp3',.85],
  tap:['ui-hover-15.mp3',.43],swish:['ui-swipe-50.mp3',.62],
@@ -63,9 +63,16 @@ function play(type,relative){
  const a=pools[type][(slot[type]||0)%3];slot[type]=(slot[type]||0)+1;
  const t=++token,vol=Math.max(0,Math.min(1,(typeof relative==='number'?relative:level())*conf[1]));
  a.__buToken=t;
- try{a.pause();a.currentTime=0;a.volume=vol;a.playbackRate=1;
+ try{a.pause();a.currentTime=0;a.volume=vol;a.playbackRate=type==='back'?.88:1;
+  if(type==='back'){if('preservesPitch' in a)a.preservesPitch=false;if('webkitPreservesPitch' in a)a.webkitPreservesPitch=false;}
   const p=nativePlay.call(a);if(p&&p.catch)p.catch(()=>{});
-  if(type==='swish'){const fade=()=>{if(a.__buToken!==t||a.paused)return;const x=a.currentTime;if(x>=.37){a.pause();return}if(x>=.24)a.volume=vol*Math.max(0,(.37-x)/.13);requestAnimationFrame(fade)};requestAnimationFrame(fade)}
+  if(type==='swish'||type==='back'){
+   const fadeStart=type==='back'?.11:.24,fadeEnd=type==='back'?.23:.37;
+   const fade=()=>{if(a.__buToken!==t||a.paused)return;const x=a.currentTime;
+    if(x>=fadeEnd){a.pause();return}
+    if(x>=fadeStart)a.volume=vol*Math.max(0,(fadeEnd-x)/(fadeEnd-fadeStart));
+    requestAnimationFrame(fade)};requestAnimationFrame(fade);
+  }
   return true;
  }catch(e){return false}
 }
@@ -108,5 +115,5 @@ for(const [f,type] of [['tick','tap'],['swish','swish']]){
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-quiet-taps-detection-v2'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-soft-back-v1'});
 })();
