@@ -96,8 +96,11 @@ window.addEventListener('click',rememberTouch,true);
  * The existing gentle swish and the correct-word chime remain untouched. */
 let storyWheelGesture=null,lastLevelSoft=0;
 function isPlayingStory(){
- const root=document.getElementById('play');
- return root&&!root.hidden&&root.getClientRects().length&&!root.closest('[hidden]')?root:null;
+ for(const id of ['play','bu3857-screen']){
+  const root=document.getElementById(id);
+  if(root&&!root.hidden&&root.getClientRects().length&&!root.closest('[hidden]'))return root;
+ }
+ return null;
 }
 function currentWheelGesture(){
  return !!(storyWheelGesture&&Date.now()<storyWheelGesture.until&&isPlayingStory());
@@ -105,7 +108,7 @@ function currentWheelGesture(){
 window.addEventListener('pointerdown',e=>{
  const hit=letterTapTarget(e.target);
  const root=isPlayingStory();
- storyWheelGesture=(root&&hit?.root===root)
+ storyWheelGesture=(root&&hit?.letter&&root.contains(hit.letter))
    ?{id:e.pointerId,x:e.clientX,y:e.clientY,moved:false,until:Date.now()+1400}
    :null;
 },true);
@@ -139,7 +142,9 @@ HTMLMediaElement.prototype.play=function(){
  }
  // Story wheel drag/tap: retire legacy UI knocks, but preserve the dedicated
  // correct-word sound and the separately approved swish.
- if(currentWheelGesture()&&['select','navigate','toggle','tap','info'].includes(type)){
+ if(currentWheelGesture()&&type!=='storyCorrect'&&type!=='namePositive'&&type!=='nameWrong'){
+  // All unknown legacy click WAVs are muted during the wheel gesture, too.
+  // The correct-word signal is preserved explicitly.
   return Promise.resolve();
  }
  if(!type)return nativePlay.apply(this,arguments);
@@ -191,9 +196,10 @@ function letterTapTarget(raw){
  const el=raw?.nodeType===1?raw:raw?.parentElement;
  if(!el?.closest)return null;
  const crossword=el.closest('#xword-wheel');
+ const advancedWheel=el.closest('#buhq-wheel');
  const play=document.getElementById('play');
  const story=play&&!play.hidden&&play.getClientRects().length&&play.contains(el);
- const root=crossword||(story?play:null);
+ const root=crossword||advancedWheel||(story?play:null);
  if(!root||!root.getClientRects().length||root.closest('[hidden]'))return null;
  let node=el;
  while(node&&node!==root){
@@ -263,10 +269,39 @@ for(const [f,type] of [['tick','tap'],['swish','swish']]){
   // Story's own letter buttons make a faint felt/paper brush; swipes keep the approved shortened swoosh.
   if(f==='tick'&&wordTrailsWheel())return; // No knock as the trail passes each letter.
   if(f==='tick'&&lastClick?.answer&&Date.now()-lastClick.at<250){softContact('answer');return;}
-  const storyPlay=document.getElementById('play');
-  if(f==='tick'&&storyPlay&&!storyPlay.hidden&&storyPlay.getClientRects().length){return;} // No per-letter ticks during drags; pointerup handles deliberate taps.
+  const storyPlay=isPlayingStory();
+  if(f==='tick'&&storyPlay){return;} // Both Story wheel engines: no knock during drags; pointerup handles deliberate taps.
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-story-gesture-guard-v2'});
+/* STORY ENGINE TAP GUARD V3 — Visual Lab only.
+ * The original engine's playFx('tap') is an AudioBufferSourceNode; overriding
+ * HTMLMediaElement.play cannot silence it. Preserve every non-tap cue.
+ * Story Episode 7+ uses #bu3857-screen / #buhq-wheel rather than #play. */
+let wrappedEngineFx=null;
+function installStoryEngineTapGuard(){
+ const original=window.playFx;
+ if(typeof original!=='function'||original===wrappedEngineFx||original.__buStoryTapGuardV3)return;
+ const guarded=function(name){
+  const isEpisode=!!(lastClick?.storyLevel&&Date.now()-lastClick.at<650);
+  const storyScreen=isPlayingStory();
+  const episodeScreen=document.getElementById('episodes');
+  const inEpisodes=!!(episodeScreen&&!episodeScreen.hidden&&episodeScreen.getClientRects().length);
+  if(name==='tap'&&(storyScreen||isEpisode||inEpisodes)){
+   if(isEpisode)gentleStoryEntry();
+   return;
+  }
+  return original.apply(this,arguments);
+ };
+ guarded.__buStoryTapGuardV3=true;
+ window.playFx=guarded;
+ wrappedEngineFx=guarded;
+}
+installStoryEngineTapGuard();
+window.addEventListener('pointerdown',installStoryEngineTapGuard,true);
+window.addEventListener('click',installStoryEngineTapGuard,true);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',installStoryEngineTapGuard,{once:true});
+const storyFxPoll=setInterval(()=>{installStoryEngineTapGuard();if(wrappedEngineFx)clearInterval(storyFxPoll)},80);
+setTimeout(()=>clearInterval(storyFxPoll),8000);
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-story-engine-tap-guard-v3'});
 })();
