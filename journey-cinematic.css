@@ -8,7 +8,7 @@
   padding:100px 17px 21px;
   border:1px solid rgba(244,209,140,.65);
   border-radius:20px;
-  background-image:linear-gradient(180deg,rgba(3,20,26,.05) 5%,rgba(4,20,28,.36) 42%,rgba(2,20,27,.94) 100%),url("journey-art/01_the_beginning.webp")!important;
+  background-image:linear-gradient(180deg,rgba(3,20,26,.05) 5%,rgba(4,20,28,.36) 42%,rgba(2,20,27,.94) 100%),url("01_the_beginning_v2.webp")!important;
   background-position:center,center 48%!important;
   background-size:cover,cover!important;
   box-shadow:inset 0 0 35px rgba(4,12,20,.25),0 12px 34px #0006;
@@ -77,28 +77,28 @@
 }
 #journey #journey-stops .route-stop:nth-child(even) {justify-self:end!important;}
 #journey #journey-stops .route-stop:nth-child(1) {
-  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("journey-art/01_the_beginning.webp")!important;
+  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("01_the_beginning_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(2) {
-  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("journey-art/02_faith_promises.webp")!important;
+  background-image:linear-gradient(180deg,#0518240a 25%,#03151ce8 100%),url("02_faith_promises_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(3) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/03_deliverance.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("03_deliverance_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(4) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/04_judges_kings.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("04_judges_kings_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(5) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/05_exile_return.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("05_exile_return_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(6) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/06_the_messiah.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("06_the_messiah_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(7) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/07_good_news_spreads.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("07_good_news_spreads_v2.webp")!important;
 }
 #journey #journey-stops .route-stop:nth-child(8) {
-  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("journey-art/08_revelation.webp")!important;
+  background-image:linear-gradient(180deg,#05182416 25%,#03151ce8 100%),url("08_revelation_v2.webp")!important;
 }
 #journey #journey-stops .route-stop .route-seal {display:none!important;}
 #journey #journey-stops .route-stop .route-info {
@@ -167,7 +167,7 @@
   border:1px solid #f1d08a9c;
   border-radius:20px;
   overflow:hidden;
-  background-image:linear-gradient(180deg,#08181e0a 22%,#031823dc 94%),var(--bu-journey-photo,url("journey-art/01_the_beginning.webp"))!important;
+  background-image:linear-gradient(180deg,#08181e0a 22%,#031823dc 94%),var(--bu-journey-photo,url("01_the_beginning_v2.webp"))!important;
   background-size:cover!important;
   background-position:center!important;
   box-shadow:0 10px 30px #0008;
@@ -179,7 +179,7 @@
 
 #chapter-guide .chapter-guide-cover {
   height:clamp(180px,30dvh,260px)!important;
-  background-image:linear-gradient(180deg,#071b230d 45%,#06232bdd 100%),var(--bu-journey-photo,url("journey-art/01_the_beginning.webp"))!important;
+  background-image:linear-gradient(180deg,#071b230d 45%,#06232bdd 100%),var(--bu-journey-photo,url("01_the_beginning_v2.webp"))!important;
   background-size:cover!important;
   background-position:center!important;
 }
