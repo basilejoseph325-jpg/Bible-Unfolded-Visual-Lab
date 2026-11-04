@@ -106,14 +106,44 @@ HTMLMediaElement.prototype.play=function(){
  }
  play(type,Number(this.volume));return Promise.resolve();
 };
+/* WORD TRAILS: one gentle swish per drag, never a knock per letter.
+ * Word Trails calls the global tick() for EACH selected wheel letter.
+ * Keep its gameplay handler untouched, but discard that sound only here.
+ * The other crossword and Story Adventure wheels retain their own cues. */
+function wordTrailsWheel(){
+ const w=document.querySelector('#crossword-screen:not([hidden]) #xword-wheel.trail-wheel');
+ return w&&w.getClientRects().length?w:null;
+}
+let wordTrailsSwipe=null;
+window.addEventListener('pointerdown',e=>{
+ const w=wordTrailsWheel(),letter=e.target?.closest?.('[data-trail-letter]');
+ if(w&&letter&&w.contains(letter)){
+  wordTrailsSwipe={id:e.pointerId,x:e.clientX,y:e.clientY,played:false};
+ }
+},true);
+window.addEventListener('pointermove',e=>{
+ const g=wordTrailsSwipe;
+ if(!g||e.pointerId!==g.id)return;
+ if(!wordTrailsWheel()){wordTrailsSwipe=null;return;}
+ if(!g.played&&Math.hypot(e.clientX-g.x,e.clientY-g.y)>12){
+  g.played=true;
+  play('swish',level()*.27); // Already shortened to 0.37s; quiet and once only.
+ }
+},true);
+for(const name of ['pointerup','pointercancel']){
+ window.addEventListener(name,e=>{
+  if(wordTrailsSwipe?.id===e.pointerId)wordTrailsSwipe=null;
+ },true);
+}
 for(const [f,type] of [['tick','tap'],['swish','swish']]){
  if(typeof window[f]==='function'){const old=window[f];window[f]=function(){if(window.BUPremiumSFX){
   // Story's own letter buttons make a faint felt/paper brush; swipes keep the approved shortened swoosh.
+  if(f==='tick'&&wordTrailsWheel())return; // No knock as the trail passes each letter.
   if(f==='tick'&&lastClick?.answer&&Date.now()-lastClick.at<250){softContact('answer');return;}
   const storyPlay=document.getElementById('play');
   if(f==='tick'&&storyPlay&&!storyPlay.hidden&&storyPlay.getClientRects().length){softContact('letter');return;}
   play(type);return;
  }return old.apply(this,arguments)}}
 }
-window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-soft-back-v1'});
+window.BUPremiumSFX=Object.freeze({play,version:'2026-11-04-word-trails-quiet-swipe-v1'});
 })();
