@@ -2131,7 +2131,42 @@ html.reduce-motion #home .bu3924-glint{display:none!important}
 .wb-premium-hub .wb-premium-challenges button{width:100%;max-width:none}
 </style><link rel="stylesheet" href="word-builder-flat-hero-v2.css?v=2">
 <link rel="stylesheet" href="journey-progress-caption.css?v=1">
-</head><body><main id="app" role="main">
+<style id="bu-scholar-illustrated-native-style">
+
+/* Native Scholar Research track selection only; no global trivia changes. */
+#bu34-trivia:has(.bu3835-tracks.buScholarVisual) .bu34-body{padding:10px 12px 24px!important;display:block!important;overflow-y:auto!important;}
+#bu34-body .bu3835-tracks.buScholarVisual{display:block!important;padding:2px 0 25px!important;max-width:710px;margin:auto;color:#fff0ca;}
+#bu34-body .buScholarHero{position:relative;overflow:hidden;isolation:isolate;border-radius:22px;border:1px solid #d0ae6f;min-height:220px;display:flex;align-items:flex-end;background:#113848 url('scholar-research-assets/hero.webp') center 52%/cover no-repeat;box-shadow:0 14px 26px #00141b66;}
+#bu34-body .buScholarHero:before{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#04192315 0%,#03232e40 34%,#021923d9 100%);}
+#bu34-body .buScholarHeroText{text-align:center;width:100%;padding:18px 18px 25px;text-shadow:0 2px 8px #031b22cc;}
+#bu34-body .buScholarHeroText .buScholarKicker{display:block;color:#ffe0a2;font:700 10px system-ui;letter-spacing:.22em;text-transform:uppercase;margin-bottom:8px;}
+#bu34-body .buScholarHeroText h2{font:700 clamp(27px,7vw,37px)/1.1 Georgia,serif!important;margin:0 0 8px!important;color:#ffe6b2!important;}
+#bu34-body .buScholarHeroText p{color:#fff0d5;font:400 clamp(12px,3.1vw,14px)/1.5 Georgia,serif;margin:0!important;}
+#bu34-body .buScholarBelowHero{text-align:center;color:#dec18e;font:800 11px system-ui;letter-spacing:.14em;text-transform:uppercase;margin:18px 0 12px;}
+#bu34-body .buScholarFilters{display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding:2px 2px 13px;white-space:nowrap;}
+#bu34-body .buScholarFilters::-webkit-scrollbar{display:none;}
+#bu34-body .buScholarFilter{flex:none;min-height:34px;padding:7px 13px;border:1px solid #caaf78a0;border-radius:20px;background:#082d3c;color:#f4e3bb;font:600 12px system-ui;cursor:pointer;}
+#bu34-body .buScholarFilter[aria-pressed="true"]{background:linear-gradient(180deg,#ffe0a0,#cf9b4d);color:#203038;border-color:#fbe3aa;}
+#bu34-body .buScholarCards{display:grid;gap:10px;}
+
+/* Full-bleed cinematic Scholar cards. The art is the card; labels stay minimal. */
+#bu34-body .bu3835-track.buScholarCard{display:block!important;position:relative;isolation:isolate;width:100%;min-height:165px;height:clamp(165px,48vw,205px);padding:0!important;overflow:hidden;border:1px solid #c4a46e;border-radius:17px;background:#0b3444!important;box-shadow:0 7px 18px #001922a8;box-sizing:border-box;text-align:left;cursor:pointer;transition:transform .13s,border-color .13s;}
+#bu34-body .bu3835-track.buScholarCard[hidden]{display:none!important;}
+#bu34-body .bu3835-track.buScholarCard:focus-visible{outline:2px solid #ffe3a4;outline-offset:3px;}
+#bu34-body .bu3835-track.buScholarCard:active{transform:scale(.989);}
+#bu34-body .buScholarThumb{display:block;position:absolute;inset:0;width:100%;height:100%;z-index:0;overflow:hidden;background:#133342;pointer-events:none;}
+#bu34-body .buScholarThumb img{display:block;width:100%;height:100%;object-fit:cover;object-position:center;}
+#bu34-body .buScholarThumb:after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,#001c2622 68%,#00141bc7 100%);}
+#bu34-body .buScholarCopy{display:flex;position:absolute;z-index:1;left:0;right:0;bottom:0;min-width:0;flex-direction:column;align-items:flex-start;justify-content:flex-end;gap:5px;padding:23px 16px 14px;pointer-events:none;}
+#bu34-body .buScholarCopy strong{display:block;color:#ffe1a0;font:700 clamp(19px,5.1vw,25px)/1.12 Georgia,serif;text-shadow:0 2px 8px #00131cee;}
+#bu34-body .buScholarMeta{display:flex;align-items:center;gap:5px;}
+#bu34-body .buScholarMeta small{display:inline-block;color:#fff0ce;font:600 11px/1.3 system-ui;text-shadow:0 1px 6px #00131cee;}
+#bu34-body .buScholarBack{display:block;min-height:48px;margin:22px 4px 8px!important;border-radius:15px!important;width:calc(100% - 8px);}
+@media(max-width:350px){#bu34-body .bu3835-track.buScholarCard{min-height:155px;height:47vw}#bu34-body .buScholarCopy{padding:20px 12px 12px}#bu34-body .buScholarCopy strong{font-size:18px}}
+@media(min-width:620px){#bu34-body .buScholarHero{min-height:280px}#bu34-body .buScholarCards{grid-template-columns:1fr 1fr}#bu34-body .bu3835-track.buScholarCard{min-height:170px;height:clamp(170px,26vw,225px)}#bu34-body .buScholarCopy strong{font-size:clamp(19px,2.8vw,24px)}}
+@media(prefers-reduced-motion:reduce){#bu34-body .bu3835-track.buScholarCard{transition:none}}
+
+</style></head><body><main id="app" role="main">
 <section id="home" class="screen cinematic-home-screen"><div class="cinematic-dashboard" id="home-hero">
 <div class="cinematic-vignette" aria-hidden="true"></div>
 <header class="cinematic-topbar">
@@ -2908,11 +2943,46 @@ Object.defineProperty(window,'BUDailySeededRandom',{value:Object.freeze({hash:bu
    document.getElementById('bu3835-track-back').onclick=()=>ctx.home();return;
   }
   const esc=ctx.esc();
-  e.innerHTML=`<div class="bu3835-tracks"><div class="bu34-count">BIBLE UNFOLDED · BIBLE CHALLENGES</div>
- <h2>Pick a Topic</h2>
- ${Object.entries(ctx.tracks()).map(([id,t])=>{let n=ctx.questions().filter(q=>id==='foundation'?q.tier==='foundation':q.tier==='scholar'&&(id==='gauntlet'?q.gauntlet:(!t.cat||t.cat.includes(q.category)))).length;return `<button class="bu3835-track" data-track="${id}"><strong>${esc(t.name)}</strong><span>${esc(t.desc)}</span><small>${n} questions</small></button>`}).join('')}
- <button class="bu34-btn bu3834-secondary" id="bu3835-track-back">← Back to Bible Trivia</button></div>`;
+  const cardArt={
+    'Joshua & Jericho':['joshua-jericho','History'],
+    'Prophecies Uncovered':['prophecies-uncovered','Prophecy'],
+    'Witness History':['witness-history','History'],
+    'Ultimate Challenge':['ultimate-challenge','Challenge'],
+    'Heroes of Courage':['heroes-of-courage','People'],
+    'Hidden Bible Details':['hidden-bible-details','Details'],
+    'Big Bible Questions':['big-bible-questions','Challenge'],
+    'Courage & Faith':['courage-and-faith','Faith'],
+    'Bible Surprises':['bible-surprises','Mixed'],
+    'Surprise Me!':['surprise-me','Mixed'],
+    'Warm-Up':['warm-up','Basics']
+  };
+  const tracks=Object.entries(ctx.tracks());
+  e.innerHTML=`<div class="bu3835-tracks buScholarVisual">
+    <section class="buScholarHero" aria-label="Scholar Research: explore the Scriptures">
+      <div class="buScholarHeroText"><span class="buScholarKicker">UNLOCK DEEPER DISCOVERIES</span><h2>Scholar Research</h2><p>Explore Bible history, uncover meaningful details, and follow the evidence.</p></div>
+    </section>
+    <div class="buScholarBelowHero">— ${tracks.length} RESEARCH PATHS —</div>
+    <div class="buScholarFilters" aria-label="Filter research topics">
+      ${['All','History','People','Prophecy','Faith','Challenge','Details','Mixed','Basics'].map(group=>`<button type="button" class="buScholarFilter" data-scholar-filter="${group}" aria-pressed="${group==='All'?'true':'false'}">${group}</button>`).join('')}
+    </div>
+    <div class="buScholarCards">
+      ${tracks.map(([id,t])=>{
+         let n=ctx.questions().filter(q=>id==='foundation'?q.tier==='foundation':q.tier==='scholar'&&(id==='gauntlet'?q.gauntlet:(!t.cat||t.cat.includes(q.category)))).length;
+         const art=cardArt[t.name]||['warm-up','Basics'];
+         return `<button type="button" class="bu3835-track buScholarCard" data-track="${esc(id)}" data-scholar-category="${art[1]}">
+            <span class="buScholarThumb"><img src="scholar-research-assets/${art[0]}.webp" alt="" loading="lazy" decoding="async"></span>
+            <span class="buScholarCopy"><strong>${esc(t.name)}</strong><span class="buScholarMeta"><small>${n} questions</small></span></span>
+          </button>`;
+      }).join('')}
+    </div>
+    <button class="bu34-btn bu3834-secondary buScholarBack" id="bu3835-track-back">← Back to Bible Trivia</button>
+  </div>`;
   e.querySelectorAll('[data-track]').forEach(b=>b.onclick=()=>{ctx.setTrack(b.dataset.track);ctx.pick()});
+  e.querySelectorAll('[data-scholar-filter]').forEach(f=>f.onclick=()=>{
+    const group=f.dataset.scholarFilter;
+    e.querySelectorAll('[data-scholar-filter]').forEach(k=>k.setAttribute('aria-pressed',String(k===f)));
+    e.querySelectorAll('[data-track]').forEach(card=>{card.hidden=group!=='All'&&card.dataset.scholarCategory!==group});
+  });
   document.getElementById('bu3835-track-back').onclick=()=>ctx.home();e.scrollTop=0;
  }
  Object.defineProperty(window,'BUScholarTrackNavigation',{value:Object.freeze({pool,show}),writable:false,configurable:false,enumerable:false});
