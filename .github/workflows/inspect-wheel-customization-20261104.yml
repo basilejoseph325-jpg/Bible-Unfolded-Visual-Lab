@@ -1,0 +1,32 @@
+name: Inspect wheel customization source in Visual Lab
+on:
+  push:
+    paths: ['.github/workflows/inspect-wheel-customization-20261104.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print targeted rewards and wheel code excerpts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=['index.html','bible_unfolded_core_part1.js','bible_unfolded_core_part2.js','bible_unfolded_core_part3.js','bible_unfolded_core_part4.js','bible_unfolded_core_part5.js']
+          for name in files:
+            t=Path(name).read_text()
+            print('\nFILE',name,'bytes',len(t))
+            lines=t.splitlines()
+            matches=[]
+            for i,line in enumerate(lines):
+              if re.search(r'wheel.*(skin|theme|reward|custom|equip|style)|(skin|theme|reward|custom|equip|style).*wheel|wheelSkins|wheelTheme|wheelSkin',line,re.I):
+                matches.append(i)
+            print('MATCH COUNT',len(matches))
+            for i in matches[:80]:
+              print('---',i+1)
+              for j in range(max(0,i-2),min(len(lines),i+3)):
+                print(str(j+1)+':'+lines[j][:600])
+          PY
