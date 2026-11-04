@@ -1,0 +1,58 @@
+name: Restore approved Scholar Research design in Visual Lab
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/restore-scholar-native-20261104.yml'
+permissions:
+  contents: write
+jobs:
+  restore-scholar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Install approved design into native game without touching gameplay
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          src=Path("index.html")
+          html=src.read_text(encoding="utf-8")
+          fragment=Path("scholar-native-fragment.txt").read_text(encoding="utf-8")
+          css=Path("scholar-native.css").read_text(encoding="utf-8")
+          start_marker='  const esc=ctx.esc();\n  e.innerHTML=`<div class="bu3835-tracks">'
+          end_marker='e.scrollTop=0;'
+          if 'id="bu-scholar-illustrated-native-style"' in html or 'bu3835-tracks buScholarVisual' in html:
+              print("Scholar design already installed; leaving existing source untouched")
+              raise SystemExit(0)
+          assert html.count(start_marker)==1, "Expected exactly one old native Scholar track renderer"
+          start=html.index(start_marker)
+          end=html.index(end_marker,start)+len(end_marker)
+          assert end-start<2500, "Unexpected native Scholar renderer size; refusing change"
+          assert fragment.count('buScholarVisual')==1 and fragment.count("ctx.pick()")==1, "Unrecognized approved design fragment"
+          assert 'buScholarHero' in css and 'buScholarCard' in css
+          assert html.count('</head>')==1
+          replaced=html[:start]+fragment+html[end:]
+          replaced=replaced.replace('</head>','<style id="bu-scholar-illustrated-native-style">\n'+css+'\n</style></head>',1)
+          assert replaced.count('bu3835-tracks buScholarVisual')==1
+          assert replaced.count('id="bu-scholar-illustrated-native-style"')==1
+          assert len(replaced)>11000000
+          src.write_text(replaced,encoding="utf-8")
+          print('Installed approved Scholar Research native cards and CSS, kept all other source bytes.')
+          PY
+      - name: Commit only main game page if changed
+        shell: bash
+        run: |
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "No changes necessary"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git diff --cached --stat
+            git commit -m "Visual Lab: activate approved Scholar Research cinematic design in native game"
+            git push origin HEAD:main
+          fi
