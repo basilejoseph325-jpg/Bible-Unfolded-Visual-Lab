@@ -1,0 +1,42 @@
+name: Install Journey caption improvement (Visual Lab only)
+on:
+  push:
+    paths:
+      - '.github/workflows/install-journey-caption.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source and load scoped caption assets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          sfile=Path('index.html')
+          s=sfile.read_text(encoding='utf-8')
+          assert 'id="journey-progress-label"' in s, 'Journey label missing'
+          assert Path('journey-progress-caption.js').is_file()
+          assert Path('journey-progress-caption.css').is_file()
+          css='<link rel="stylesheet" href="journey-progress-caption.css?v=1">'
+          js='<script defer src="journey-progress-caption.js?v=1"></script>'
+          if css not in s:
+              assert s.count('</head>')==1
+              s=s.replace('</head>',css+'\n</head>',1)
+          if js not in s:
+              assert s.count('</body>')==1
+              s=s.replace('</body>',js+'\n</body>',1)
+          sfile.write_text(s,encoding='utf-8')
+          PY
+          node --check journey-progress-caption.js
+      - name: Commit scoped loader only
+        run: |
+          if ! git diff --quiet -- index.html; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Load centered Journey progress caption in Visual Lab"
+            git push
+          fi
