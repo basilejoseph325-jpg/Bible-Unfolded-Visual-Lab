@@ -1,0 +1,26 @@
+name: Inspect modern Next event selector and Story finale background CSS
+on:
+ push:
+  paths: ['.github/workflows/inspect-story-next-tap-and-layout-v9.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       from pathlib import Path
+       import re,json
+       s=Path('bible_unfolded_core_part5.js').read_text()
+       s=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S).group(1))
+       i=s.index('function tick(){playFx')
+       print('STORY INPUT BLOCK',repr(s[i:i+3400]))
+       print('CORE SHA',__import__('subprocess').check_output(['git','hash-object','bible_unfolded_core_part5.js'],text=True).strip())
+       c=Path('story-chapter-complete-v2-test.css').read_text()
+       for key in ['#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-atmosphere','V8 — unify original','V7B TEST']:
+        i=c.rfind(key);print('CSS',key,repr(c[i:i+1700])[:1850])
+       h=Path('index.html').read_text()
+       for key in ['.bu3857-progress-rail{','.bu3857-shell{','.bu3857-scroll{']:
+        i=h.index(key);print('HTML CSS',repr(h[i:i+650]))
+       PY
