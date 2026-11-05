@@ -1,0 +1,45 @@
+name: TEST fix newer Story Adventure soundtrack selection
+on:
+  push:
+    paths: ['.github/workflows/fix-story-music-engine-selection.yml']
+permissions: {contents: write}
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch exactly the music-mode condition in the packed core
+        run: |
+          set -eu
+          test "$(git hash-object bible_unfolded_core_part5.js)" = "1eb58df76a40044bdf061ba59464a734f75a205b"
+          python3 - <<'PY'
+          import re,json
+          from pathlib import Path
+          p=Path("bible_unfolded_core_part5.js")
+          raw=p.read_text()
+          old="if(!$('play').hidden)return 'story';"
+          new="if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';"
+          assert raw.count(old)==1,raw.count(old)
+          assert raw.count(new)==0
+          changed=raw.replace(old,new,1)
+          assert changed.replace(new,old,1)==raw
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',changed,re.S)
+          assert m
+          src=json.loads(m.group(1))
+          target=src[src.index('function bu25Target(){'):src.index('function bu25UpdateStatus(){')]
+          assert new in target
+          assert "if(!$('bu375-daily').hidden)return 'daily';" in target
+          assert "if(!$('crossword-screen').hidden)return 'trails';" in target
+          assert 'const duckGoal=1;' in src
+          assert 'const goal=1;' in src
+          p.write_text(changed)
+          print('PASS: one-only condition; old and new Story engines select the same Story Adventure soundtrack')
+          PY
+      - name: Commit ONLY verified soundtrack selector
+        run: |
+          git add bible_unfolded_core_part5.js
+          git diff --cached --check
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST: keep Story Adventure soundtrack active in later Genesis and Exodus engine"
+          git push origin HEAD:main
