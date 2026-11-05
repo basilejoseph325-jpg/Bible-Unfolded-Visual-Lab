@@ -1,0 +1,45 @@
+name: Verify plaque-free Story finale V7 (TEST ONLY)
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-open-title-v7.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify CSS, renderer safety, soundtrack and scene motion
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          core=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+          marker='V7 TEST — open cinematic title'
+          assert marker in css
+          v7=css.split(marker,1)[1]
+          assert 'background:none!important' in v7 and 'background-image:none!important' in v7
+          assert 'overflow:visible!important' in v7
+          assert 'text-wrap:balance!important' in v7
+          assert 'bu-story-finale-title-text' in v7
+          assert 'bu-story-finale-cinema-zoom-v7 7.2s linear infinite alternate' in v7
+          assert '@keyframes bu-story-finale-cinema-zoom-v7' in v7
+          assert 'transform:scale(1.15) translateX(-1.2%)' in v7
+          assert 'prefers-reduced-motion:reduce' in v7
+          assert 'story-chapter-complete-v2-test.css?v=20261105-open-title-v7' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert "title.replaceChildren(span)" in js
+          assert "span.textContent=wording" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert "new MutationObserver(scan)" in js
+          assert '.onclick=' not in js and 'playChime()' not in js
+          assert "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in core
+          assert "const duckGoal=1;" in core
+          print('PASS: both Story completion headings unboxed, text dynamic and wrap-safe, cinematic motion immediate, existing navigation and sound preserved')
+          PY
