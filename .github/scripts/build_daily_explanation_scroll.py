@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Construct a reusable clean, photo-based parchment from existing Word Builder roller art.
+"""Build clean V2 scroll without the Word Builder header, using existing realistic roller art.
 No baked explanation text or controls; keep the original assets unchanged."""
 from PIL import Image,ImageDraw,ImageFilter,ImageEnhance
 import random, math
@@ -45,10 +45,18 @@ bg.alpha_composite(paper)
 # Actual engraved roller art previously used in Word Builder.
 for source,y,height in [("word-builder-scroll-top.webp",14,146),("word-builder-scroll-bottom.webp",884,139)]:
  im=Image.open(source).convert("RGBA")
+ if source=="word-builder-scroll-top.webp":
+  # The source's lower strip contains baked-in "GAME GUIDE" lettering.
+  # Crop that strip OFF the source image before applying it. Never mask text
+  # with another CSS panel; the exported artwork itself must contain no title.
+  clean_height=int(im.height*.70)
+  assert 90<=clean_height<im.height
+  im=im.crop((0,0,im.width,clean_height))
+  height=132
  im=im.resize((W,height),Image.Resampling.LANCZOS)
  bg.alpha_composite(im,(0,y))
 # Output as single photographic background for a dynamic text overlay.
-out=Path("assets/ui/daily-discovery-explanation-scroll-v1.webp")
+out=Path("assets/ui/daily-discovery-explanation-scroll-v2.webp")
 out.parent.mkdir(parents=True,exist_ok=True)
 bg.convert("RGB").save(out,"WEBP",quality=83,method=6)
 print("PASS image",out,out.stat().st_size,"bytes",W,H)
