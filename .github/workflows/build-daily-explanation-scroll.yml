@@ -1,0 +1,46 @@
+name: Build and verify Daily Discovery photographic scroll (TEST only)
+on:
+  push:
+    paths: ['.github/workflows/build-daily-explanation-scroll.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install image support
+        run: python3 -m pip install --user pillow
+      - name: Build reusable blank scroll from existing photographed roll assets
+        run: python3 .github/scripts/build_daily_explanation_scroll.py
+      - name: Verify isolation, script, image, and controls
+        run: |
+          node --check daily-discovery-explanation-scroll.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          im=Image.open('assets/ui/daily-discovery-explanation-scroll-v1.webp')
+          assert im.size==(720,1040)
+          js=Path('daily-discovery-explanation-scroll.js').read_text()
+          css=Path('daily-discovery-explanation-scroll.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert "document.getElementById('bu375-daily')" in js
+          assert "'bu-daily-explanation-scroll'" in js
+          assert 'Next Question|Finish Discovery' in js
+          assert 'Correct!|^Answer:' in js
+          assert 'card.querySelector' in js
+          assert 'bu65-info-body' in css and 'overflow-y:auto' in css
+          assert 'daily-discovery-explanation-scroll-v1.webp' in css
+          assert 'daily-discovery-explanation-scroll.js?v=20261104-test-scroll-v1' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          print('PASS: reusable real scroll art; Daily-only explanation; preserved buttons and internal scrolling')
+          PY
+      - name: Commit only generated scroll art
+        run: |
+          git add assets/ui/daily-discovery-explanation-scroll-v1.webp
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Visual Lab: add reusable photographic Daily Discovery explanation scroll artwork"
+          git push origin HEAD:main
