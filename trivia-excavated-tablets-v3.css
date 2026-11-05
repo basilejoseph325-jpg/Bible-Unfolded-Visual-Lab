@@ -2,10 +2,10 @@
  all four loaded the SAME ancient stone pattern (two mirrored copies).
  Use four independently drawn mineral textures, consistent materials,
  more pronounced high bevel + lower cast shadow. No handlers changed. */
-#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="0"]{--tablet-art:url("assets/ui/trivia-tablet-a-relief-v3.svg?v=3");--stone-lit:#edd5a3;--stone-mid:#cfad7b;--stone-dark:#916742}
-#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]{--tablet-art:url("assets/ui/trivia-tablet-b-relief-v3.svg?v=3");--stone-lit:#e9d0a2;--stone-mid:#cda779;--stone-dark:#8c6441}
-#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]{--tablet-art:url("assets/ui/trivia-tablet-c-relief-v3.svg?v=3");--stone-lit:#ead1a0;--stone-mid:#cba477;--stone-dark:#92653d}
-#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{--tablet-art:url("assets/ui/trivia-tablet-d-relief-v3.svg?v=3");--stone-lit:#e8d0a4;--stone-mid:#d0ad7d;--stone-dark:#936a45}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="0"]{--tablet-art:url("assets/ui/trivia-tablet-a-relief-v3.svg?v=4");--stone-lit:#edd5a3;--stone-mid:#cfad7b;--stone-dark:#916742}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]{--tablet-art:url("assets/ui/trivia-tablet-b-relief-v3.svg?v=4");--stone-lit:#e9d0a2;--stone-mid:#cda779;--stone-dark:#8c6441}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]{--tablet-art:url("assets/ui/trivia-tablet-c-relief-v3.svg?v=4");--stone-lit:#ead1a0;--stone-mid:#cba477;--stone-dark:#92653d}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{--tablet-art:url("assets/ui/trivia-tablet-d-relief-v3.svg?v=4");--stone-lit:#e8d0a4;--stone-mid:#d0ad7d;--stone-dark:#936a45}
 #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
  box-sizing:border-box!important;position:relative!important;isolation:isolate!important;
  overflow:hidden!important;

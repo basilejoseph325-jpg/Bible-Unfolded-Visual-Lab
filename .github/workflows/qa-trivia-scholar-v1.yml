@@ -65,6 +65,13 @@ jobs:
           assert 'pointer-events:none!important' in v3
           textures=[Path(f'assets/ui/trivia-tablet-{k}-relief-v3.svg').read_bytes() for k in 'abcd']
           assert len(set(hashlib.sha256(item).hexdigest() for item in textures))==4
+          from xml.etree import ElementTree as ET
+          for raw in textures:
+            root=ET.fromstring(raw)
+            sizes=[float(node.get('rx','0')) for node in root.iter() if node.tag.endswith('ellipse')]
+            assert not any(rx >= 25 for rx in sizes), 'cartoon oval patches still present'
+          assert 'trivia-tablet-a-relief-v3.svg?v=4' in v3
+          assert 'trivia-excavated-tablets-v3.css?v=20261105-four-unique-reliefs-v3-noblobs' in l
           assert all(x.startswith(b'<svg') and x.endswith(b'</svg>') for x in textures)
           print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY
