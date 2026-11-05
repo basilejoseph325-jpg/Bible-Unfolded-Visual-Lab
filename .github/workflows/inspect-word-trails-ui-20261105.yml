@@ -1,4 +1,4 @@
-name: Inspect Trivia native question and round-ending renderer (read only)
+name: Inspect Trivia question and score DOM (read only, bounded)
 on:
   push:
     paths:
@@ -9,39 +9,32 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
+    timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect actual Trivia selectors, answer states and result controls
+      - name: Inspect bounded actual Trivia markup and styling
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          paths=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),Path('trivia-native-v2.css')]
-          needles=['Which statement about God appears','Keep exploring!','Score 60%','First try +20','New answer Points','Beginner challenge','Play Again','First-completion reward','bu-native-trivia','triviaLab','bu34-trivia','bu34-body','trivia finish','trivia-results','bu386-page']
-          def clean(s):
-            s=re.sub(r'data:image/[^;]*;base64,[A-Za-z0-9+/=]{140,}', '[EMBEDDED_IMAGE]', s)
-            return s.replace('\n',' ')[:2800]
+          targets=['Keep exploring!','Score 60%','First try +20','New answer Points','Beginner challenge','bu34-trivia','bu34-body','triviaLab','Trivia complete','First-completion','Play Again','Which statement about God appears']
+          paths=[Path('index.html'),Path('bible_unfolded_core_part5.js')]
           for f in paths:
-            if not f.exists():continue
             s=f.read_text(encoding='utf8')
-            print('FILE',f,'LEN',len(s))
-            for needle in needles:
-              hits=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
-              if not hits:continue
-              print('MATCH',repr(needle),'COUNT',len(hits))
-              for idx in hits[:2]+hits[-1:]:
-                print('CTX',repr(needle),idx,repr(clean(s[max(0,idx-1050):idx+1650])))
-            if f.name=='index.html':
-              for name in ['bu-native-trivia','bu34-body','bu34-trivia','triviaLab','bu38','bu39']:
-                pats=[m for m in re.finditer(r'[^{}<>]{0,210}\{[^{}]{0,1900}\}',s) if name in m.group(0)[:210]]
-                print('CSS_RULE_COUNT',name,len(pats))
-                for m in pats[-24:]:
-                  print('RULE',name,repr(clean(m.group(0)[:1600])))
-            if f.name=='trivia-native-v2.css':
-              rules=[m.group(0) for m in re.finditer(r'[^{}]{0,280}\{[^{}]{0,2300}\}',s) if 'base64' not in m.group(0)]
-              print('TRIVIA_CSS_RULES',len(rules))
-              for rule in rules[-135:]:
-                print('RULE',repr(clean(rule[:1100])))
-            print('END FILE')
+            print('FILE',f,'LEN',len(s),flush=True)
+            for key in targets:
+              pos=0;indices=[]
+              while True:
+                i=s.lower().find(key.lower(),pos)
+                if i<0:break
+                indices.append(i);pos=i+len(key)
+                if len(indices)>=12:break
+              if not indices:continue
+              print('TERM',repr(key),'N',len(indices),flush=True)
+              for idx in indices[-3:]:
+                chunk=s[max(0,idx-950):min(len(s),idx+2350)]
+                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[IMAGE]',chunk)
+                print('CTX',repr(key),'AT',idx,repr(chunk)[:3300],flush=True)
+          print('END',flush=True)
           PY
