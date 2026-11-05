@@ -98,3 +98,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    actual Story Adventure-inspired 18-particle light field + gold SVG. */
 (()=>{if(document.getElementById('wt-star-v3-css'))return;const l=document.createElement('link');l.id='wt-star-v3-css';l.rel='stylesheet';l.href='word-trails-starfield-v3-test.css?v=20261105-authentic-story-spark-v3';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('wt-star-v3-js'))return;const s=document.createElement('script');s.id='wt-star-v3-js';s.src='word-trails-starfield-v3-test.js?v=20261105-authentic-story-spark-v3';s.defer=true;document.head.appendChild(s)})();
+
+
+/* VISUAL LAB ONLY — Mixed Trivia first renovation: established decorative
+   olive leaves on hero + informational topics as text, not fake buttons. */
+(()=>{if(document.getElementById('bu-mixed-nonbutton-v1'))return;const l=document.createElement('link');l.id='bu-mixed-nonbutton-v1';l.rel='stylesheet';l.href='mixed-trivia-noninteractive-visual-v1.css?v=20261105-foliage-labels-v1';document.head.appendChild(l)})();

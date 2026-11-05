@@ -1,0 +1,115 @@
+/* Bible Unfolded / VISUAL LAB ONLY.
+   Mixed Trivia 2026-11-05: correct misleading interactive affordances.
+   The hero and six example themes are native noninteractive sections/spans.
+   Real difficulty, length, recall, and start buttons are untouched. */
+
+/* Reuse the approved olive-corner overlay already on other hero artwork.
+   Remove the gold bordered/shadowed card appearance so the illustration
+   reads as a decorative scene rather than a giant tappable button. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-hero{
+ position:relative!important;
+ isolation:isolate!important;
+ overflow:visible!important;
+ border:0!important;
+ outline:0!important;
+ border-radius:13px!important;
+ box-shadow:none!important;
+ cursor:default!important;
+ background-clip:padding-box!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-hero::after{
+ content:""!important;
+ position:absolute!important;
+ display:block!important;
+ inset:-16px!important;
+ z-index:2!important;
+ border:0!important;
+ border-radius:0!important;
+ outline:0!important;
+ box-shadow:none!important;
+ background:transparent url("word-builder-olive-overlay.png?v=1") center / 100% 100% no-repeat!important;
+ opacity:1!important;
+ pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-hero-inner{
+ position:relative!important;
+ z-index:3!important;
+ pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-hero::before{
+ pointer-events:none!important;
+ border-radius:inherit!important;
+}
+
+/* Six informational themes are not buttons.
+   Replace raised navy capsules with an open, two-row editorial label list. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes{
+ box-sizing:border-box!important;
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ align-items:center!important;
+ justify-items:stretch!important;
+ width:min(100%,490px)!important;
+ margin:clamp(10px,2.8vw,16px) auto 2px!important;
+ padding:0!important;
+ gap:8px 0!important;
+ border:0!important;
+ border-radius:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ cursor:default!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span{
+ box-sizing:border-box!important;
+ position:relative!important;
+ display:block!important;
+ width:auto!important;
+ min-width:0!important;
+ min-height:0!important;
+ height:auto!important;
+ margin:0!important;
+ padding:3px 2px!important;
+ border:0!important;
+ outline:0!important;
+ border-radius:0!important;
+ background:transparent!important;
+ background-image:none!important;
+ color:#42504a!important;
+ box-shadow:none!important;
+ filter:none!important;
+ transform:none!important;
+ text-align:center!important;
+ font:600 clamp(13px,3.35vw,16px)/1.3 Georgia,"Times New Roman",serif!important;
+ letter-spacing:.015em!important;
+ text-transform:none!important;
+ text-shadow:none!important;
+ white-space:nowrap!important;
+ cursor:default!important;
+ pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span::before,
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span::after{
+ content:none!important;
+ display:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span:nth-child(3n+1)::after,
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span:nth-child(3n+2)::after{
+ content:"·"!important;
+ display:block!important;
+ position:absolute!important;
+ right:-.18em!important;
+ top:50%!important;
+ transform:translateY(-50%)!important;
+ color:#94794e!important;
+ font:600 clamp(16px,4vw,20px)/1 Georgia,serif!important;
+ opacity:.85!important;
+ pointer-events:none!important;
+}
+@media(max-width:350px){
+ #bu34-body .bu386-page.bu-mixed-visual .bu-mix-themes > span{
+  font-size:12px!important;letter-spacing:0!important;
+ }
+ #bu34-body .bu386-page.bu-mixed-visual .bu-mix-hero::after{
+  inset:-11px!important;
+ }
+}
