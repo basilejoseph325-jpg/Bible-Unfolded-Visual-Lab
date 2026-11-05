@@ -39,5 +39,5 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Visual Lab ONLY: metallic-gold Story Adventure icon trial.
    Do not alter wheel geometry, audio, scoring, story layout or live repository. */
-(()=>{if(document.getElementById('bu-story-metal-icons-css'))return;const l=document.createElement('link');l.id='bu-story-metal-icons-css';l.rel='stylesheet';l.href='story-adventure-metallic-icons-test.css?v=20261104-story-gold-multi-engine-v2';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-story-metal-icons-js'))return;const s=document.createElement('script');s.id='bu-story-metal-icons-js';s.src='story-adventure-metallic-icons-test.js?v=20261104-story-gold-multi-engine-v2';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-story-metal-icons-css'))return;const l=document.createElement('link');l.id='bu-story-metal-icons-css';l.rel='stylesheet';l.href='story-adventure-metallic-icons-test.css?v=20261104-story-roots-v3';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-story-metal-icons-js'))return;const s=document.createElement('script');s.id='bu-story-metal-icons-js';s.src='story-adventure-metallic-icons-test.js?v=20261104-story-roots-v3';s.defer=true;document.head.appendChild(s)})();
