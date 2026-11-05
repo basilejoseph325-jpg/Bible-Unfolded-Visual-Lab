@@ -16,6 +16,12 @@
    // Other overlays may share the underlying bu65 classes; do not skin them.
    if(!/^(?:Next Question|Finish Discovery)/i.test((next.textContent||'').trim()))return;
    if(!/Correct!|^Answer:/i.test((heading.textContent||'').trim()))return;
+   // The embossed gold arrow is built into the illustrated wax artwork.
+   // Keep native button and click handler; remove only its duplicate text arrow.
+   if(!next.dataset.buWaxV2){
+    next.dataset.buWaxV2='1';
+    next.textContent=(next.textContent||'').replace(/\\s*[→›➜]\\s*$/u,'').trim();
+   }
    overlay.classList.add('bu-daily-explanation-scroll');
   });
  }
