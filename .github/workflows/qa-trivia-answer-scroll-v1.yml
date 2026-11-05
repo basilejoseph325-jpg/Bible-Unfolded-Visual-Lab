@@ -1,0 +1,88 @@
+name: QA Trivia approved parchment explanation scroll (Visual Lab only)
+on:
+  push:
+    paths:
+      - 'trivia-answer-scroll-v1.css'
+      - 'trivia-answer-scroll-v1.js'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/qa-trivia-answer-scroll-v1.yml'
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check selector scope, approved asset hashes, JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check trivia-answer-scroll-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          css=Path('trivia-answer-scroll-v1.css').read_text()
+          js=Path('trivia-answer-scroll-v1.js').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert css.count('{')==css.count('}'), 'unbalanced CSS'
+          assert '.bu65-info-overlay.bu-trivia-answer-scroll' in css
+          assert 'bu-daily-explanation-scroll >' not in css
+          assert "bu34-body.bu65-playing" in js and "getClientRects().length" in js
+          assert "Next Question|Finish Round" in js
+          assert ".bu65-info-body" in js
+          assert "button.bu65-confirm" in js
+          assert "new MutationObserver(upgrade).observe(document.body,{childList:true,subtree:false})" in js
+          assert "trivia-answer-scroll-v1.css?v=" in loader and "trivia-answer-scroll-v1.js?v=" in loader
+          assert "trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance" in loader
+          assets={
+            'assets/ui/daily-discovery-explanation-scroll-v3.webp':'4e25223d5666397a3a9dc9b446e4262d12fc41a2',
+            'assets/ui/daily-explanation-wax-next-v2.svg':'103af90347ddb90bcd23cbe0013563373dbc4fde'
+          }
+          for path,expected in assets.items():
+            actual=subprocess.check_output(['git','hash-object',path],text=True).strip()
+            assert actual==expected, f'approved master asset changed: {path}'
+          print('PASS: scope, dynamic native DOM, exact approved art, preserved V4 stone')
+          PY
+      - name: Mock actual modal behavior, exclusion of hints and preservation of handlers
+        shell: bash
+        run: |
+          node <<'JS'
+          const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+          function mock(title,label,active=true){
+            const classSet=new Set();
+            const button={textContent:label,dataset:{},onclick:()=>42};
+            const heading={textContent:title},body={textContent:'The original explanation remains'};
+            const card={querySelector:s=>s.includes('h2')?heading:s.includes('.bu65-info-body')?body:s.includes('bu65-confirm')?button:null};
+            const layer={querySelector:s=>s.includes('bu65-info-card')?card:null,classList:{
+              add:(x)=>classSet.add(x),toggle:(x,b)=>{if(b)classSet.add(x);else classSet.delete(x)}
+            }};
+            const screen={getClientRects:()=>active?[{}]:[],querySelector:s=>s==='#bu34-body.bu65-playing'?{}:null};
+            const doc={
+              readyState:'complete',
+              getElementById:k=>k==='bu34-trivia'?screen:null,
+              querySelectorAll:()=>[layer],
+              body:{}
+            };
+            const context={document:doc,window:{},MutationObserver:class{
+              observe(){}},console};
+            vm.runInNewContext(fs.readFileSync('trivia-answer-scroll-v1.js','utf8'),context);
+            return {classSet,button,heading,body};
+          }
+          const accepted=mock('Correct answer: Many were taken or killed','Next Question →');
+          assert(accepted.classSet.has('bu-trivia-answer-scroll'));
+          assert(accepted.classSet.has('bu-trivia-answer-revealed'));
+          assert.equal(accepted.button.textContent,'Next Question');
+          assert.equal(accepted.button.onclick(),42);
+          assert.equal(accepted.body.textContent,'The original explanation remains');
+          const correct=mock('✓ Correct!  +20 Points','Finish Round →');
+          assert(correct.classSet.has('bu-trivia-answer-scroll'));
+          assert(!correct.classSet.has('bu-trivia-answer-revealed'));
+          assert.equal(correct.button.textContent,'Finish Round');
+          const hint=mock('Helpful hints','Back to question');
+          assert(!hint.classSet.has('bu-trivia-answer-scroll'));
+          const source=mock('Read Bible passage','Next Question →');
+          assert(!source.classSet.has('bu-trivia-answer-scroll'));
+          const inactive=mock('Correct answer: Y','Next Question →',false);
+          assert(!inactive.classSet.has('bu-trivia-answer-scroll'));
+          console.log('PASS: modal cases, hint exclusion, preserved text/button/handler');
+          JS

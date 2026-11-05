@@ -1,0 +1,196 @@
+/* BIBLE UNFOLDED — VISUAL LAB ONLY
+   Bible Trivia answer explanation: photorealistic approved scroll V1.
+   Uses the EXACT Daily Discovery approved V3 parchment raster and V2 wax
+   button (no copied/reconstructed artwork). A restricted enhancer adds
+   .bu-trivia-answer-scroll ONLY to the active Trivia answer-result modal.
+   No change to hint, scripture, reveal, full-question, Daily Discovery,
+   Behind the Name, trivia questions, score, sounds, or advance handlers. */
+
+.bu65-info-overlay.bu-trivia-answer-scroll{
+  box-sizing:border-box!important;
+  background:rgba(0,18,25,.79)!important;
+  backdrop-filter:blur(6px)!important;
+  -webkit-backdrop-filter:blur(6px)!important;
+  padding:8px 4px max(8px,env(safe-area-inset-bottom))!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll > .bu65-info-card{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  width:min(99vw,480px)!important;
+  max-width:min(99vw,480px)!important;
+  height:min(85vh,690px)!important;
+  height:min(85dvh,690px)!important;
+  max-height:min(85dvh,690px)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:clamp(125px,18dvh,153px) clamp(36px,9.6vw,64px)
+          clamp(108px,14dvh,132px)!important;
+  border:0!important;
+  border-radius:0!important;
+  background-color:#d8ae71!important;
+  background-image:url("assets/ui/daily-discovery-explanation-scroll-v3.webp")!important;
+  background-size:100% 100%!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  box-shadow:0 13px 35px rgba(0,0,0,.43)!important;
+  color:#422816!important;
+  overflow:hidden!important;
+  animation:bu-trivia-scroll-appear .22s ease-out both!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > h2{
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  position:relative!important;
+  z-index:1!important;
+  width:100%!important;
+  max-height:clamp(67px,12dvh,118px)!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overflow-wrap:anywhere!important;
+  scrollbar-width:thin!important;
+  margin:0 auto 9px!important;
+  padding:0 12px!important;
+  border:0!important;
+  background:transparent!important;
+  color:#31572c!important;
+  text-align:center!important;
+  font:italic 700 clamp(19px,5.5vw,29px)/1.12 "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  letter-spacing:.005em!important;
+  text-shadow:0 1px #fff1c1,0 2px 2px rgba(68,39,14,.18)!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll.bu-trivia-answer-revealed .bu65-info-card > h2{
+  color:#714328!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-info-body{
+  box-sizing:border-box!important;
+  position:relative!important;
+  z-index:1!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:#9d703b transparent!important;
+  padding:0 3px!important;
+  margin:0!important;
+  border:0!important;
+  background:transparent!important;
+  white-space:pre-wrap!important;
+  overflow-wrap:break-word!important;
+  color:#422816!important;
+  font:italic 500 clamp(14px,3.85vw,17px)/1.48 "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  letter-spacing:.008em!important;
+  text-shadow:0 1px rgba(255,245,212,.23)!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-info-body::first-letter{
+  color:#6a3b1c!important;
+  font-size:1.12em!important;
+  font-weight:700!important;
+}
+/* Native Close button above the top roller. Never replace its handler. */
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-close{
+  box-sizing:border-box!important;
+  display:grid!important;
+  place-items:center!important;
+  position:absolute!important;
+  z-index:3!important;
+  top:clamp(89px,12.9dvh,112px)!important;
+  right:clamp(38px,10vw,61px)!important;
+  width:34px!important;
+  height:34px!important;
+  min-height:34px!important;
+  margin:0!important;
+  padding:0!important;
+  border:2px solid #fff0b0!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 34% 20%,#e6bc64,#95611f 83%)!important;
+  color:#fff2c4!important;
+  box-shadow:0 3px 8px #362015b0,inset 0 1px #ffe39b!important;
+  font:700 23px/1 system-ui,-apple-system,sans-serif!important;
+}
+/* Keep original Next Question / Finish Round button and callback, skin with
+   approved wax art that already includes one embossed gold arrow. */
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 auto!important;
+  align-self:center!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:89%!important;
+  min-height:57px!important;
+  max-height:65px!important;
+  margin:11px auto 0!important;
+  padding:6px 59px 7px 10px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent url("assets/ui/daily-explanation-wax-next-v2.svg") center/100% 100% no-repeat!important;
+  box-shadow:none!important;
+  color:#f9d887!important;
+  font:800 clamp(14px,4vw,20px)/1.12 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+  text-align:center!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 2px 2px rgba(34,7,7,.94),0 -1px 1px rgba(255,246,202,.35)!important;
+  filter:drop-shadow(0 2px 3px rgba(48,19,10,.54))!important;
+  transition:filter .18s ease-out,transform .14s ease-out!important;
+  cursor:pointer!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm:active{
+  transform:translateY(2px) scale(.988)!important;
+  filter:drop-shadow(0 1px 1px rgba(45,13,7,.7)) brightness(1.05)!important;
+}
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm:focus-visible,
+.bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-close:focus-visible{
+  outline:3px solid #fff6c2!important;
+  outline-offset:2px!important;
+}
+@keyframes bu-trivia-scroll-appear{
+  from{opacity:0;transform:translateY(-7px) scale(.99)}
+  to{opacity:1;transform:none}
+}
+@media(max-height:620px){
+  .bu65-info-overlay.bu-trivia-answer-scroll > .bu65-info-card{
+    padding-top:clamp(84px,15dvh,107px)!important;
+    padding-bottom:clamp(66px,11dvh,86px)!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-close{
+    top:clamp(59px,10.5dvh,79px)!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > h2{
+    font-size:clamp(17px,4.45vw,23px)!important;
+    margin-bottom:5px!important;
+    max-height:74px!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-info-body{
+    font-size:clamp(13px,3.6vw,15px)!important;
+    line-height:1.36!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm{
+    min-height:49px!important;
+    margin-top:6px!important;
+    font-size:clamp(13px,3.6vw,17px)!important;
+  }
+}
+@media(max-width:350px){
+  .bu65-info-overlay.bu-trivia-answer-scroll > .bu65-info-card{
+    padding-right:34px!important;
+    padding-left:34px!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm{
+    padding-right:52px!important;
+    font-size:14px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .bu65-info-overlay.bu-trivia-answer-scroll > .bu65-info-card{
+    animation:none!important;
+  }
+  .bu65-info-overlay.bu-trivia-answer-scroll .bu65-info-card > .bu65-confirm{
+    transition:none!important;
+  }
+}

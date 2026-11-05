@@ -122,3 +122,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Visual Lab ONLY — excavated limestone V2 answers (same material on A–D).
    Fixes A-only V1 stripe artifact. Leaves gold controls, scoring and finale. */
 (()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance';document.head.appendChild(l)})();
+
+
+/* VISUAL LAB ONLY — Trivia explanation scroll (approved Daily V3 parchment and
+   V2 wax artwork; isolated to actual answer-result popup, not other dialogs). */
+(()=>{if(document.getElementById('bu-trivia-answer-scroll-css-v1'))return;const l=document.createElement('link');l.id='bu-trivia-answer-scroll-css-v1';l.rel='stylesheet';l.href='trivia-answer-scroll-v1.css?v=20261105-trivia-scroll-v1';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-trivia-answer-scroll-js-v1'))return;const s=document.createElement('script');s.id='bu-trivia-answer-scroll-js-v1';s.src='trivia-answer-scroll-v1.js?v=20261105-trivia-scroll-v1';s.defer=true;document.head.appendChild(s)})();
