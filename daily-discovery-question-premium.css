@@ -309,3 +309,79 @@
     box-shadow:inset 0 3px 2px rgba(255,251,221,.95),inset -5px -7px 10px rgba(95,62,35,.32),0 5px 0 #735639,0 8px 0 #162d31,0 13px 17px rgba(0,8,13,.54)!important;
   }
 }
+
+
+/* V4 — carved-stone material and reliable answer feedback.
+   The V3 sandstone background on nth-child(even) was painted after the
+   .incorrect/.correct states, hiding their status and flattening those faces.
+   Keep all four tablets raised; tint the SAME carved stone for feedback.
+   No changes to gameplay, answer attempts, saves, sizing, or question modals. */
+#bu375-daily #bu375-body.bu65-playing .bu375-answer:not(.correct):not(.incorrect),
+#bu375-daily #bu375-body.bu65-playing .bu375-answer:nth-child(even):not(.correct):not(.incorrect){
+  background-color:#dbc49b!important;
+  background-image:
+    radial-gradient(ellipse 76% 70% at 18% 9%,rgba(255,250,217,.63),transparent 75%),
+    radial-gradient(ellipse 80% 120% at 94% 95%,rgba(122,82,44,.28),transparent 67%),
+    radial-gradient(ellipse 23% 20% at 73% 24%,rgba(124,84,48,.10),transparent 85%),
+    linear-gradient(106deg,#ead7ad 0%,#d5b985 52%,#c49e6e 100%)!important;
+  box-shadow:inset 0 3px 2px rgba(255,251,221,.95),
+    inset 3px 0 3px rgba(255,240,196,.70),
+    inset -5px -7px 10px rgba(95,62,35,.38),
+    inset 0 0 0 2px rgba(238,213,160,.70),
+    0 5px 0 #735639,0 8px 0 #162d31,0 13px 17px rgba(0,8,13,.54)!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.incorrect,
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.incorrect:nth-child(even){
+  background-color:#a94448!important;
+  background-image:
+    radial-gradient(ellipse 85% 74% at 18% 0%,rgba(255,218,199,.79),transparent 76%),
+    radial-gradient(ellipse 70% 100% at 94% 100%,rgba(93,24,35,.51),transparent 68%),
+    radial-gradient(ellipse 60% 60% at 62% 36%,rgba(180,66,62,.22),transparent 80%),
+    linear-gradient(110deg,#e79a88 0%,#ca615e 45%,#983b48 100%)!important;
+  border-color:#a34a43!important;
+  color:#481f29!important;
+  box-shadow:
+    inset 0 3px 2px rgba(255,238,215,.9),
+    inset 3px 0 3px rgba(255,224,196,.55),
+    inset -5px -7px 10px rgba(82,18,31,.48),
+    inset 0 0 0 2px rgba(255,190,169,.50),
+    0 5px 0 #71343a,0 8px 0 #162d31,
+    0 13px 17px rgba(0,8,13,.52)!important;
+  animation:bu375-wrong-stone-flash .48s ease-out both!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.incorrect span{
+  color:#481f29!important;
+  text-shadow:0 1px 0 rgba(255,221,196,.55)!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.incorrect::after{
+  opacity:.20!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.correct,
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.correct:nth-child(even){
+  background-color:#91b999!important;
+  background-image:
+    radial-gradient(ellipse 85% 73% at 16% 8%,rgba(246,255,218,.78),transparent 76%),
+    radial-gradient(ellipse 76% 95% at 94% 94%,rgba(25,90,61,.26),transparent 74%),
+    linear-gradient(110deg,#c4e4ba 0%,#9fc8a5 48%,#73aa8d 100%)!important;
+  border-color:#6d9e79!important;
+  box-shadow:
+    inset 0 3px 2px rgba(250,255,222,.9),
+    inset 3px 0 3px rgba(230,255,200,.55),
+    inset -5px -7px 10px rgba(34,92,62,.35),
+    inset 0 0 0 2px rgba(207,243,189,.54),
+    0 5px 0 #3e765b,0 8px 0 #162d31,
+    0 13px 17px rgba(0,8,13,.52)!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu375-answer.correct::after{
+  opacity:.22!important;
+}
+@keyframes bu375-wrong-stone-flash{
+  0%{filter:brightness(1.45) saturate(1.45);outline:2px solid rgba(255,111,95,.98);outline-offset:0}
+  50%{filter:brightness(1.16) saturate(1.24);outline:2px solid rgba(255,111,95,.72);outline-offset:0}
+  100%{filter:brightness(1) saturate(1);outline:2px solid transparent;outline-offset:0}
+}
+@media(prefers-reduced-motion:reduce){
+ #bu375-daily #bu375-body.bu65-playing .bu375-answer.incorrect{
+  animation:none!important;
+ }
+}
