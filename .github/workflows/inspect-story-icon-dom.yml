@@ -1,0 +1,23 @@
+name: Inspect Story Adventure icon DOM (read-only)
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-icon-dom.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          for term in ['📖','💡','👁','📜','↻','⤨','🔀','class="story','story-toolbar','id="story','word-wheel','puzzle-tools','trail-tools','episode-complete','Next Chapter','Play Again']:
+           ms=list(re.finditer(re.escape(term),s,re.I))
+           print('TERM',repr(term),'COUNT',len(ms))
+           for m in ms[:4]:
+            print('EXCERPT',repr(s[max(0,m.start()-420):m.end()+580])[:1050])
+          for f in ['journey-progress-caption.js','daily-discovery-gold-icons-test.js','daily-discovery-polish-test.css']:
+           print('LOADED',f,Path(f).exists())
+          PY
