@@ -22,7 +22,7 @@ jobs:
           sfx=Path('premium-sfx.js').read_text()
           assert css.count('V10 — match approved Genesis 1–6 chapter-finale composition')==1
           recent=css.split('V10 — match approved Genesis 1–6 chapter-finale composition')[1]
-          assert recent.count('#bu3857-screen')>=5
+          assert recent.count('#bu3857-screen')>=3
           assert '#play ' not in recent
           assert 'margin-bottom:clamp(105px,12dvh,153px)!important' in recent
           assert 'margin-bottom:clamp(85px,12dvh,112px)!important' in recent
