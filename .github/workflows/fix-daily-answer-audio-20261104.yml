@@ -1,0 +1,22 @@
+name: Repair Daily Discovery answer audio in Visual Lab
+on:
+  push:
+    paths: ['.github/workflows/fix-daily-answer-audio-20261104.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply narrow fix and test
+        run: python3 .github/scripts/fix_daily_answer_audio_20261104.py
+      - name: Commit only the tested core module
+        run: |
+          git add bible_unfolded_core_part*.js
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git diff --cached --stat
+          git commit -m "Visual Lab: restore audible Daily Discovery correct and wrong answer feedback"
+          git push origin HEAD:main
