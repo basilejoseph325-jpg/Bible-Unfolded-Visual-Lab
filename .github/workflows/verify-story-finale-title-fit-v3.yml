@@ -1,0 +1,43 @@
+name: Verify Story finale title fit V3 (TEST ONLY)
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-title-fit-v3.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate V3 plaque and both screens
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          src=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          old=Path('assets/ui/story-complete-inscription-plaque-v2.svg').read_text()
+          new=Path('assets/ui/story-complete-inscription-plaque-v3.svg').read_text()
+          ET.fromstring(new)
+          assert old.replace('<path d="M109 122l8 8-8 8M571 122l-8 8 8 8" stroke="#dfbc70" stroke-width="1.3"/>','')==new
+          assert 'M109 122l8 8' not in new
+          assert "title.replaceChildren(span)" in src
+          assert "span.textContent=wording" in src
+          assert "'.bu3815-chapter-finale'" in src
+          assert "'.bu3863-finale'" in src
+          assert 'bu-story-finale-title-text' in src
+          assert 'story-complete-inscription-plaque-v3.svg' in css
+          assert 'overflow:hidden!important' in css
+          assert 'text-wrap:balance!important' in css
+          assert 'white-space:normal!important' in css
+          assert '#bu3857-screen .bu3863-finale.bu-story-finale-v2' in css
+          assert 'justify-content:flex-start!important' in css
+          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-finale-v3-plaque-fit' in loader
+          assert 'story-chapter-complete-v2-test.js?v=20261105-test-chapter-finale-v3-plaque-fit' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'story-adventure-metallic-icons-test.js' in loader
+          assert '.onclick=' not in src
+          print('PASS: original and new Story completion headings wrapped within V3 arrow-free plaque; navigation/audio untouched')
+          PY
