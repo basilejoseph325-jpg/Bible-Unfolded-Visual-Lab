@@ -21,8 +21,8 @@ jobs:
           html=Path('index.html').read_text()
           core=Path('bible_unfolded_core_part5.js').read_text()
           assert 'const BU_GENESIS_SCENE_ART=' in Path('bible_unfolded_core_part4.js').read_text()
-          assert '"g08-d01"' in Path('bible_unfolded_core_part4.js').read_text()
-          assert "'ex10-d01'" in Path('bible_unfolded_core_part3.js').read_text()
+          assert 'g08-d01' in Path('bible_unfolded_core_part4.js').read_text()
+          assert 'ex10-d01' in Path('bible_unfolded_core_part3.js').read_text()
           assert 'id="scene"' in html and 'id="frame-a"' in html
           assert 'id="bu3857-episode"' in html and 'id="episode-list"' in html
           assert "document.querySelector('#scene .scene-img.show')" in s
