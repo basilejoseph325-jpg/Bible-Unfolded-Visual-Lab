@@ -47,6 +47,16 @@
   const title=card.querySelector('h2');
   const primary=card.querySelector(modern?'#bu3857-next-episode':'#toJourney');
   if(!title||!primary)return;
+  // The original engine leaves long headings free to exceed the plaque.
+  // Keep the exact wording, but put it into a measurable block-level wrapper
+  // so it wraps naturally inside the engraved frame on narrow phones.
+  if(!title.querySelector(':scope > .bu-story-finale-title-text')){
+   const wording=title.textContent;
+   const span=document.createElement('span');
+   span.className='bu-story-finale-title-text';
+   span.textContent=wording;
+   title.replaceChildren(span);
+  }
   const art=document.createElement('img');
   art.className='bu-story-finale-book-emblem';
   art.src=EMBLEM;art.alt='';art.draggable=false;
