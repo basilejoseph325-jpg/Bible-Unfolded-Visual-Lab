@@ -1,0 +1,8 @@
+Asset: trivia-real-rock-v4.jpg
+Source: https://commons.wikimedia.org/wiki/File:Beige_wavy_slate_seamless_stone_surface_texture.jpg
+Direct file: https://upload.wikimedia.org/wikipedia/commons/c/c6/Beige_wavy_slate_seamless_stone_surface_texture.jpg
+Photographer/creator: Sisters.seamless
+License: Creative Commons CC0 1.0 Universal Public Domain Dedication
+Date of source: 25 June 2020
+This asset is a real photograph of a textured stone surface, not an illustration.
+Only use as a textured surface; photo does not claim any archaeological provenance.
