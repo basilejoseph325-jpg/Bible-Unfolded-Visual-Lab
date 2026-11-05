@@ -1,0 +1,20 @@
+name: Inspect Daily explanation modal safely
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-scroll-modal.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          t=Path('index.html').read_text()
+          for term in ['function showInfo(', 'function details(', 'function bu65ShowInfo(', 'bu65-info-overlay', 'Next Question →','class="bu65','className=\'bu65']:
+           m=list(re.finditer(re.escape(term),t))
+           print('SEARCH',term,'COUNT',len(m))
+           for a in m[:4]:print('EXCERPT',repr(t[max(0,a.start()-350):a.start()+3000])[:3400])
+          PY
