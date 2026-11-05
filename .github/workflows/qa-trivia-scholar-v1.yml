@@ -4,6 +4,8 @@ on:
     paths:
       - 'trivia-scholar-treasury-v1.css'
       - 'trivia-scholar-treasury-v1.js'
+      - 'trivia-excavated-tablets-v2.css'
+      - 'assets/ui/trivia-unearthed-patina-v2.svg'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-trivia-scholar-v1.yml'
 permissions: {contents: read}
@@ -35,6 +37,16 @@ jobs:
           assert 'trivia-scholar-treasury-v1.js?v=' in l
           for f in ('daily-gold-bible-v3.svg','daily-gold-hint-v3.svg','daily-gold-eye-v3.svg','daily-complete-laurel-v1.svg','story-gold-back-v1.svg'):
             assert Path('assets/ui',f).is_file(),f
+          v2=Path('trivia-excavated-tablets-v2.css').read_text()
+          svg=Path('assets/ui/trivia-unearthed-patina-v2.svg').read_text()
+          assert v2.count('{')==v2.count('}')
+          assert 'repeating-linear-gradient(' not in v2
+          assert 'assets/ui/trivia-unearthed-patina-v2.svg' in v2
+          assert '.bu34-answer.correct:disabled' in v2 and '.bu34-answer.wrong:disabled' in v2
+          assert ':not(.correct):not(.wrong)' in v2
+          assert 'pointer-events:none!important' in v2
+          assert svg.startswith('<svg') and svg.endswith('</svg>')
+          assert 'trivia-excavated-tablets-v2.css?v=' in l
           assert 'mixed-trivia-noninteractive-visual-v1.css?v=' in l
           assert 'mixed-trivia-compass-editorial-v2.css?v=' in l
           print('PASS: Trivia scoped styling, result ring, accessible native buttons, assets and prior layers')

@@ -117,3 +117,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    handlers, sound, progress, answer states and reward rules are unchanged. */
 (()=>{if(document.getElementById('bu-trivia-scholar-css-v1'))return;const l=document.createElement('link');l.id='bu-trivia-scholar-css-v1';l.rel='stylesheet';l.href='trivia-scholar-treasury-v1.css?v=20261105-scholar-play-result-v1';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bu-trivia-scholar-js-v1'))return;const s=document.createElement('script');s.id='bu-trivia-scholar-js-v1';s.src='trivia-scholar-treasury-v1.js?v=20261105-scholar-play-result-v1';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Visual Lab ONLY — excavated limestone V2 answers (same material on A–D).
+   Fixes A-only V1 stripe artifact. Leaves gold controls, scoring and finale. */
+(()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-excavated-tablets-v2.css?v=20261105-unearthed-relic-v2';document.head.appendChild(l)})();

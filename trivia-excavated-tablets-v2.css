@@ -1,0 +1,126 @@
+/* Visual Lab only: Trivia UNEARTHED RELIC tablets V2.
+   Root cause: V1 used a line pattern on A only, then separately overwrote
+   the other three with plain gradients. This version replaces all four
+   with identical aged mineral material and one shared texture SVG.
+   All four real buttons, feedback, scoring and handlers remain untouched. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+  background-color:#c5a273!important;
+  background-image:
+   radial-gradient(ellipse 18% 75% at -3% 10%,rgba(75,44,27,.42),transparent 100%),
+   radial-gradient(ellipse 26% 55% at 103% 92%,rgba(75,44,27,.4),transparent 100%),
+   radial-gradient(ellipse 39% 41% at 50% -4%,rgba(252,228,169,.43),transparent 93%),
+   radial-gradient(ellipse 37% 62% at 82% 48%,rgba(127,81,48,.16),transparent 90%),
+   linear-gradient(137deg,#997047 0%,#d2ae7b 15%,#e3c58f 39%,#d2ad77 72%,#986e46 100%)!important;
+  border:3px solid #735032!important;
+  border-radius:10px 16px 13px 11px/14px 11px 15px 9px!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,233,174,.76),
+    inset 0 0 0 2px #b58b58,
+    inset 0 0 0 5px rgba(82,48,26,.38),
+    inset 0 8px 11px rgba(103,62,37,.33),
+    inset 0 -5px 9px rgba(74,43,26,.31),
+    0 3px 0 #5d412b,0 5px 0 #342e25,
+    0 8px 13px rgba(0,9,18,.5)!important;
+  color:#1b3230!important;
+  text-shadow:0 1px rgba(254,230,171,.38)!important;
+  overflow:hidden!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  z-index:0!important;
+  border-radius:inherit!important;
+  background:transparent url("assets/ui/trivia-unearthed-patina-v2.svg?v=20261105") center/100% 100% no-repeat!important;
+  opacity:.88!important;
+  mix-blend-mode:multiply!important;
+  pointer-events:none!important;
+}
+/* The same surface, gently flipped for natural stone individuality. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]::before,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]::before{
+  transform:scaleX(-1)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::after{
+  content:""!important;position:absolute!important;
+  inset:7px 7px 8px!important;z-index:1!important;
+  border:1.4px solid rgba(79,48,28,.54)!important;
+  border-radius:6px 10px 9px 5px/10px 6px 11px 8px!important;
+  box-shadow:inset 1px 2px 3px rgba(72,43,23,.30),
+    inset -1px -1px rgba(255,240,184,.39),
+    0 1px rgba(255,238,180,.32)!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > b,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > span{
+  position:relative!important;z-index:2!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > span{
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(15px,2.18dvh,20px)!important;
+  font-weight:750!important;
+  line-height:1.23!important;
+  letter-spacing:-.014em!important;
+  color:inherit!important;
+  text-shadow:0 1px rgba(252,231,179,.41)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > b{
+  background:radial-gradient(circle at 26% 12%,#456c6e,#1d4449 46%,#092c38 75%,#041b24)!important;
+  border:2.3px solid #c7a36b!important;
+  color:#ffe3a7!important;
+  text-shadow:0 1px 2px #001b24!important;
+  box-shadow:inset 0 1px rgba(255,242,187,.60),
+    inset 0 0 0 2px rgba(105,63,30,.67),
+    0 3px 0 #5a3f28,0 4px 7px rgba(48,27,21,.56)!important;
+}
+/* Status styling always wins over aged stone, INCLUDING nth-choice variants. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct:disabled{
+  background-color:#1d654f!important;
+  background-image:radial-gradient(ellipse at 12% -15%,rgba(201,255,204,.41),transparent 84%),linear-gradient(145deg,#327a60,#165a4b 70%,#0e453f)!important;
+  border:2px solid #a4dfb1!important;
+  color:#f3ffeb!important;
+  opacity:1!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong:disabled{
+  background-color:#953c3c!important;
+  background-image:radial-gradient(ellipse at 18% -12%,rgba(255,198,188,.38),transparent 84%),linear-gradient(145deg,#b85c56,#7e3439 72%,#692c36)!important;
+  border:2px solid #f0a1a0!important;
+  color:#fff2e8!important;
+  opacity:1!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::before{
+  opacity:.14!important;
+  mix-blend-mode:soft-light!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::after{
+  border-color:rgba(252,233,192,.34)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong) > span{
+  text-shadow:0 1px 2px rgba(0,13,21,.5)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:disabled:not(.correct):not(.wrong){
+  opacity:.64!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.bu3922-eliminated:not(.correct){
+  opacity:.32!important;filter:grayscale(.4)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:not(:disabled):active{
+  transform:translateY(2px)!important;
+  box-shadow:inset 0 3px 8px rgba(83,49,29,.46),
+    inset 0 0 0 3px #b48d5c,0 1px 0 #553d28,0 3px 5px #00111f88!important;
+}
+@media(max-height:675px){
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > span{
+    font-size:clamp(12px,1.86dvh,16px)!important;
+  }
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::after{
+    inset:4px 5px 5px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer{
+    transition:none!important;
+  }
+}
