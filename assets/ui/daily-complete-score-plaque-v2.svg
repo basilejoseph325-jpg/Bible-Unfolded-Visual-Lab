@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="166" viewBox="0 0 520 166" fill="none" aria-hidden="true">
+<defs>
+<linearGradient id="rim" x1=".06" y1="0" x2=".9" y2="1"><stop stop-color="#fff6c5"/><stop offset=".2" stop-color="#c99943"/><stop offset=".38" stop-color="#755019"/><stop offset=".56" stop-color="#f4cf78"/><stop offset=".78" stop-color="#b07b30"/><stop offset="1" stop-color="#ffe6a1"/></linearGradient>
+<linearGradient id="inside" x1=".02" y1=".04" x2=".87" y2="1"><stop stop-color="#204e55"/><stop offset=".42" stop-color="#0c303b"/><stop offset="1" stop-color="#061e2b"/></linearGradient>
+<filter id="shadow" x="-10%" y="-35%" width="120%" height="190%"><feDropShadow dx="0" dy="7" stdDeviation="8" flood-color="#00090f" flood-opacity=".72"/></filter>
+</defs>
+<g filter="url(#shadow)">
+<path d="M44 17H476Q499 17 502 42V124Q499 149 476 149H44Q21 149 18 124V42Q21 17 44 17Z" fill="#5b3b17" stroke="url(#rim)" stroke-width="4"/>
+<path d="M48 25H472Q490 25 493 45V119Q490 141 472 141H48Q30 141 27 119V45Q30 25 48 25Z" fill="url(#inside)" stroke="#f3d38c" stroke-width="1.7"/>
+<path d="M55 34H465Q482 34 483 49V115Q481 132 465 132H55Q38 132 37 115V49Q39 34 55 34Z" stroke="#a67830" stroke-width="1.2"/>
+<path d="M73 49l9-9 9 9-9 9ZM447 49l9-9 9 9-9 9ZM73 117l9-9 9 9-9 9ZM447 117l9-9 9 9-9 9Z" fill="url(#rim)"/>
+<path d="M112 83H174M346 83H408" stroke="url(#rim)" stroke-width="2" opacity=".77"/>
+
+<path d="M47 22H470" stroke="#fff1ba" stroke-width="1.1" opacity=".6"/>
+</g></svg>
