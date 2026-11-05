@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install image support
         run: python3 -m pip install --user pillow
-      - name: Build clean V2 scroll without baked-in Word Builder heading
+      - name: Build seamless V3 scroll without baked-in Word Builder heading
         run: python3 .github/scripts/build_daily_explanation_scroll.py
       - name: Verify isolation, script, image, and controls
         run: |
@@ -20,7 +20,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           from PIL import Image
-          im=Image.open('assets/ui/daily-discovery-explanation-scroll-v2.webp')
+          im=Image.open('assets/ui/daily-discovery-explanation-scroll-v3.webp')
           assert im.size==(720,1040)
           js=Path('daily-discovery-explanation-scroll.js').read_text()
           css=Path('daily-discovery-explanation-scroll.css').read_text()
@@ -31,16 +31,16 @@ jobs:
           assert 'Correct!|^Answer:' in js
           assert 'card.querySelector' in js
           assert 'bu65-info-body' in css and 'overflow-y:auto' in css
-          assert 'daily-discovery-explanation-scroll-v2.webp' in css
+          assert 'daily-discovery-explanation-scroll-v3.webp' in css
           assert 'daily-discovery-explanation-scroll.js?v=20261104-test-scroll-v1' in loader
           assert 'visual-lab-test-banner.js' in loader
           assert 'daily-explanation-wax-next-v2.svg' in Path('daily-discovery-explanation-scroll.css').read_text()
           assert 'source-cleaned scroll' in Path('daily-discovery-explanation-scroll.css').read_text()
-          print('PASS: V2 clean scroll, wax arrow asset, native controls and Daily-only scope')
+          print('PASS: V3 seamless scroll, wax arrow asset, native controls and Daily-only scope')
           PY
       - name: Commit only cleaned V2 photographic scroll art
         run: |
-          git add assets/ui/daily-discovery-explanation-scroll-v2.webp
+          git add assets/ui/daily-discovery-explanation-scroll-v3.webp
           if git diff --cached --quiet; then exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
