@@ -740,7 +740,7 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
 }
 @media(max-height:810px){
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{
-  margin-bottom:clamp(40px,7dvh,69px)!important;
+  margin-bottom:clamp(85px,12dvh,112px)!important;
  }
 }
 @media(max-height:650px){
