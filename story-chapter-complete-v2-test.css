@@ -594,17 +594,20 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
  flex:0 0 auto!important;
  position:static!important;
  width:min(94%,595px)!important;
- height:3px!important;
+ height:5px!important;
  margin:0 auto!important;
  padding:0!important;
  border:0!important;
  border-radius:0!important;
- background:linear-gradient(90deg,
-  transparent 0%,rgba(141,95,38,.23) 3%,
-  #c1934b 9%,#ffe4a0 22%,#f4cf80 48%,
-  #ffe7a8 72%,#c1934b 91%,transparent 100%)!important;
- clip-path:polygon(0 50%,9% 0,91% 0,100% 50%,91% 100%,9% 100%)!important;
- opacity:.93!important;
+ background:
+  linear-gradient(180deg,rgba(255,242,192,.94) 0%,#d3a85a 25%,#865320 52%,#b8853c 78%,#ffe1a1 100%),
+  linear-gradient(90deg,transparent,#f5d78e,transparent)!important;
+ background-blend-mode:normal!important;
+ clip-path:polygon(0 50%,7% 0,93% 0,100% 50%,93% 100%,7% 100%)!important;
+ -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 11%,#000 89%,transparent 100%)!important;
+ mask-image:linear-gradient(90deg,transparent 0%,#000 11%,#000 89%,transparent 100%)!important;
+ opacity:.97!important;
+ filter:drop-shadow(0 1px 2px rgba(1,12,19,.65))!important;
  box-shadow:none!important;
  pointer-events:none!important;
 }
