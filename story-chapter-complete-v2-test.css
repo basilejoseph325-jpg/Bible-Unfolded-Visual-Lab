@@ -473,3 +473,105 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
  -webkit-mask-image:linear-gradient(180deg,transparent 0%,transparent 44%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.58) 100%)!important;
  mask-image:linear-gradient(180deg,transparent 0%,transparent 44%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.58) 100%)!important;
 }
+
+
+/* V7 TEST — open cinematic title, no plaque. Root cause: fixed width gold
+   plaque had a narrower painted safe-area than long native chapter headings.
+   Replace the container with freely wrapping REAL DOM text, retaining existing
+   message, artwork, buttons and all completion navigation handlers. */
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2{
+ box-sizing:border-box!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:center!important;
+ justify-content:center!important;
+ width:min(100%,630px)!important;
+ max-width:100%!important;
+ min-width:0!important;
+ min-height:0!important;
+ height:auto!important;
+ flex:0 0 auto!important;
+ margin:clamp(2px,.5dvh,6px) auto clamp(4px,.8dvh,9px)!important;
+ padding:clamp(8px,1.6dvh,16px) clamp(9px,2.4vw,22px)!important;
+ border:0!important;
+ border-radius:0!important;
+ background:none!important;
+ background-image:none!important;
+ box-shadow:none!important;
+ overflow:visible!important;
+ white-space:normal!important;
+ text-align:center!important;
+ text-shadow:0 3px 7px rgba(0,6,11,.90),0 0 19px rgba(218,170,96,.16)!important;
+}
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text{
+ display:block!important;
+ box-sizing:border-box!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ padding:0!important;
+ margin:0 auto!important;
+ color:#ffe7ad!important;
+ font-family:Georgia,serif!important;
+ font-size:clamp(26px,6.2vw,39px)!important;
+ font-weight:700!important;
+ line-height:1.14!important;
+ letter-spacing:-.025em!important;
+ text-align:center!important;
+ text-wrap:balance!important;
+ overflow-wrap:break-word!important;
+ word-break:normal!important;
+ white-space:normal!important;
+ text-shadow:inherit!important;
+}
+/* Decorative rule is a separate element-like pseudo treatment, never an
+   enclosing box and never a barrier to variable-length chapter titles. */
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2::after,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2::after{
+ content:"✦"!important;
+ display:block!important;
+ position:static!important;
+ flex:0 0 auto!important;
+ width:min(52vw,228px)!important;
+ height:17px!important;
+ margin:clamp(7px,1.4dvh,12px) auto 0!important;
+ padding:0!important;
+ color:#e4bd73!important;
+ font:normal 12px/17px Georgia,serif!important;
+ letter-spacing:0!important;
+ text-align:center!important;
+ background:linear-gradient(90deg,transparent,rgba(226,184,112,.56) 41%,transparent 47%,transparent 53%,rgba(226,184,112,.56) 59%,transparent) center/100% 1px no-repeat!important;
+ box-shadow:none!important;
+ opacity:.9!important;
+ pointer-events:none!important;
+}
+/* Immediately perceptible, continuous cinematic movement. No end-of-cycle
+   dwell from ease-in-out; alternate direction without resetting abruptly. */
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-cinematic-photo{
+ animation:bu-story-finale-cinema-zoom-v7 7.2s linear infinite alternate!important;
+ transform:scale(1.15) translateX(-1.2%)!important;
+}
+@keyframes bu-story-finale-cinema-zoom-v7{
+ from{transform:scale(1.15) translateX(-1.2%)}
+ to{transform:scale(1.015) translateX(1.2%)}
+}
+@media(max-height:760px){
+ #play .bu3815-chapter-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text,
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text{
+  font-size:clamp(23px,5.7vw,32px)!important;
+ }
+ #play .bu3815-chapter-finale.bu-story-finale-v2 > h2,
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2{
+  padding-top:5px!important;padding-bottom:5px!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-cinematic-photo{
+  animation:none!important;transform:scale(1.02)!important;
+ }
+}
+.reduce-motion #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-cinematic-photo{
+ animation:none!important;transform:scale(1.02)!important;
+}
