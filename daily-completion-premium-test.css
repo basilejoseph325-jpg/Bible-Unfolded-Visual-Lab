@@ -188,3 +188,79 @@
  #bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-emblem i{animation:none!important}
  #bu375-daily #bu375-body.bu-daily-finale-v1 #bu375-home{transition:none!important}
 }
+
+
+/* V2 refinement: quieter score plaque, responsive balance, engraved replay.
+   The score-scaled gold confetti belongs ONLY to the final Daily screen. */
+#bu375-daily #bu375-body.bu-daily-finale-v1{
+ position:relative!important;
+ padding-top:clamp(26px,5dvh,58px)!important;
+ gap:clamp(9px,1.6dvh,16px)!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 .bu375-result-score{
+ background-image:url('assets/ui/daily-complete-score-plaque-v2.svg')!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 #bu375-again{
+ border:2px solid #d8b776!important;
+ border-radius:16px!important;
+ background:linear-gradient(160deg,#174650 0%,#0b313b 47%,#082a37 100%)!important;
+ box-shadow:inset 0 0 0 2px rgba(243,214,153,.14),
+            inset 0 1px 2px rgba(255,236,175,.38),
+            inset 0 -3px 8px rgba(0,10,15,.42),
+            0 5px 10px rgba(0,8,13,.35)!important;
+ text-shadow:0 1px 2px rgba(0,5,9,.74)!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 #bu375-again:active{
+ transform:translateY(1px)!important;
+ box-shadow:inset 0 3px 8px #061d29!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-confetti{
+ position:absolute!important;
+ inset:0!important;
+ height:100%!important;width:100%!important;
+ pointer-events:none!important;
+ z-index:4!important;
+ overflow:hidden!important;
+ contain:paint!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-confetti i{
+ position:absolute!important;
+ left:var(--x)!important;
+ top:-18px!important;
+ width:clamp(5px,1.8vw,9px)!important;
+ height:clamp(9px,2.8vw,14px)!important;
+ border-radius:2px!important;
+ background:var(--shade)!important;
+ border:0!important;
+ opacity:0;
+ box-shadow:0 0 4px #f7c87246!important;
+ transform:translate3d(0,-10px,0) rotate(0deg);
+ animation:bu-daily-finale-fall var(--duration) linear var(--delay) 1 both!important;
+}
+#bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-confetti i.bu-daily-finale-sparkle{
+ width:5px!important;height:5px!important;border-radius:50%!important;
+ box-shadow:0 0 8px 2px #ffe5a4a0!important;
+}
+@keyframes bu-daily-finale-fall {
+ 0%{opacity:0;transform:translate3d(0,-15px,0) rotate(0deg) scale(.75)}
+ 6%{opacity:.95}
+ 82%{opacity:.95}
+ 100%{opacity:0;transform:translate3d(var(--drift),95dvh,0) rotate(var(--twist)) scale(.84)}
+}
+/* The core's ungraded first-reward confetti must not double the graded finale.
+   All unrelated uses of #bu34-fx remain unchanged. */
+body:has(#bu375-body.bu-daily-finale-v1) #bu34-fx{display:none!important}
+@media(max-height:780px){
+ #bu375-daily #bu375-body.bu-daily-finale-v1{
+  padding-top:clamp(8px,2.4dvh,22px)!important;
+  gap:7px!important;
+ }
+ #bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-emblem{
+  height:clamp(85px,12dvh,105px)!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ #bu375-daily #bu375-body.bu-daily-finale-v1 .bu-daily-finale-confetti i{
+  animation:none!important;display:none!important;
+ }
+}
