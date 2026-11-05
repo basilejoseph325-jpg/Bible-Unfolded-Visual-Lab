@@ -21,7 +21,9 @@
   ['bu3863-clear','assets/ui/story-gold-clear-v1.svg'],
   ['bu3857-clear','assets/ui/story-gold-clear-v1.svg'],
   ['bu3857-check','assets/ui/story-gold-check-v1.svg'],
-  ['bu3857-reveal','assets/ui/daily-gold-eye-v3.svg']
+  ['bu3857-reveal','assets/ui/daily-gold-eye-v3.svg'],
+  ['bu3857-back','assets/ui/story-gold-back-v1.svg'],
+  ['bu3857-menu','assets/ui/story-gold-menu-v1.svg']
  ];
  function start(){
   // The original episode engine uses #play; Genesis episodes 7–9
