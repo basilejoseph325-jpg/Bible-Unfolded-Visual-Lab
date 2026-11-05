@@ -1,4 +1,4 @@
-name: Inspect Story Adventure exact reward-star animation (read only)
+name: Inspect Mixed Trivia landing markup and foliage (read only)
 on:
   push:
     paths:
@@ -11,24 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect exact Story Adventure discovery effect sources
+      - name: Inspect Mixed Trivia real markup and image treatments
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          for fn in ['index.html','bible_unfolded_core_part5.js']:
-            s=Path(fn).read_text(encoding='utf8')
-            print('\nSOURCE',fn)
-            for needle in ['.bu3814-particle-field','.bu3814-main-star','.bu3814-celebration','.buhq-glitter','.buhq-spark','.reveal-pulse','.reveal-spark','bu3814-particle-field','bu3814-main-star','buhq-glitter']:
-              idxs=[m.start() for m in re.finditer(re.escape(needle),s)]
-              print('NEEDLE',needle,'COUNT',len(idxs))
-              for i in idxs[:4]:
-                chunk=s[max(0,i-600):i+1600]
-                if len(chunk)>2300:chunk=chunk[:2300]
-                print('CONTEXT',i,repr(chunk))
-            for m in re.finditer(r'@keyframes\s+([\w-]+)',s):
-              name=m.group(1)
-              if any(x in name for x in ['bu3814','buhq','revealTwinkle']):
-                print('KEYFRAMES',name,repr(s[m.start():m.start()+1350]))
+          files=[Path('index.html'),Path('trivia-landing-test.html'),Path('trivia-landing-test-v2.html'),Path('bible_unfolded_core_part5.js'),Path('word-builder-flat-hero-v2.css')]
+          keys=['FULL-BIBLE CHALLENGE','Full-Bible Challenge','Mixed Trivia','Your Challenge','A different journey','spanning people','Prophecy','labHero','labCard','triviaLab','word-builder-olive-overlay.png','wb-hero-olive-corners.svg','trivia-native-v2.css','trivia-landing-test']
+          for fn in files:
+            if not fn.exists():continue
+            s=fn.read_text(encoding='utf8')
+            print('FILE',fn,'CHARS',len(s))
+            for key in keys:
+              hits=list(re.finditer(re.escape(key),s,re.I))
+              print('KEY',repr(key),'HITS',len(hits))
+              for m in hits[:3]:
+                b=max(0,m.start()-850);e=min(len(s),m.end()+1250)
+                print('CTX',repr(key),'POS',m.start(),repr(s[b:e][:2600]))
+            if fn.name=='index.html':
+              ids=['triviaLab','labHero','labCard','labPills','labTags','labContent','bu386-page']
+              for name in ids:
+                for m in list(re.finditer(r'#[a-zA-Z0-9_:., >+\-]*(?:'+re.escape(name)+r')[a-zA-Z0-9_:., >+\-]*\s*\{[^{}]{0,900}\}',s))[:9]:
+                  print('RULE',name,repr(m.group(0)[:1200]))
           PY
