@@ -1,0 +1,27 @@
+name: Inspect legacy and modern Story finale DOM and next SFX
+on:
+ push:
+  paths: ['.github/workflows/inspect-story-finale-differences-v8.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       import re,json
+       from pathlib import Path
+       h=Path('index.html').read_text()
+       s=Path('bible_unfolded_core_part5.js').read_text()
+       m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S)
+       s=json.loads(m.group(1))
+       for name,t,terms in [
+        ('HTML',h,['id="bu3857-screen"','id="bu3857-content"','id="bu3857-episode"','id="scene"','.bu3857-scroll','.bu3815-chapter-finale','.bu3857-topbar']),
+        ('CORE',s,['function bu3857Render(', 'function bu3857Open(', "id=\"bu3857-next-episode\"",'bu3857-next-episode', "id=\"toJourney\"",'toJourney','function startChapter(','function bu3863Render(', 'bu3857-episode','bu3857-hero','function bu3815','function bu3857Finish','playSoftTap','playTap','playClick','playUiClick'])]:
+        for term in terms:
+         print('TERM',name,term,'COUNT',t.count(term))
+         for m in list(re.finditer(re.escape(term),t))[:2]:
+          snippet=t[max(0,m.start()-550):m.start()+1600]
+          print('  CONTEXT',repr(snippet)[:2180])
+       PY
