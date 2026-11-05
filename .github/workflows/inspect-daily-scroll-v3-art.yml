@@ -1,0 +1,21 @@
+name: Inspect scroll V3 rendered source (read only)
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-scroll-v3-art.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m pip install --user pillow
+      - run: |
+          python3 - <<'PY'
+          import io,base64
+          from PIL import Image
+          im=Image.open('assets/ui/daily-discovery-explanation-scroll-v3.webp').convert('RGB')
+          im.thumbnail((300,440))
+          out=io.BytesIO()
+          im.save(out,format='JPEG',quality=52,optimize=True)
+          print('SCROLL_PREVIEW_BASE64='+base64.b64encode(out.getvalue()).decode())
+          PY
