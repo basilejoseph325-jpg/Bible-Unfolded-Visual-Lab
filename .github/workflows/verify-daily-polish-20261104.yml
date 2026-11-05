@@ -1,0 +1,35 @@
+name: Verify Daily Discovery polish is isolated to Visual Lab
+on:
+  push:
+    paths: ['.github/workflows/verify-daily-polish-20261104.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript and Daily-only selectors
+        shell: bash
+        run: |
+          node --check daily-discovery-gold-icons-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          css=Path('daily-discovery-polish-test.css').read_text()
+          js=Path('daily-discovery-gold-icons-test.js').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert css.count('bu375-daily')>=8
+          assert all(selector.strip().startswith('#bu375-daily') for selector in css.split('{') if selector.strip().startswith('#'))
+          assert 'bu375-question-title' in css
+          assert 'bu375-answer.correct' in css and 'bu375-answer.incorrect' in css
+          assert '.bu-daily-gold-icon' in css
+          assert "root=document.getElementById('bu375-daily')" in js
+          assert "b.replaceChildren(icon)" in js
+          assert "new MutationObserver" in js
+          assert "data-bu375-answer" not in js
+          assert 'cross' not in js.lower()
+          assert "daily-discovery-polish-test.css?v=20261104-approved-preview-v1" in loader
+          assert "daily-discovery-gold-icons-test.js?v=20261104-approved-preview-v1" in loader
+          print('PASS: gold icons, cross-free Bible, stone material, question contrast, answer feedback and Daily-only scoping')
+          PY
