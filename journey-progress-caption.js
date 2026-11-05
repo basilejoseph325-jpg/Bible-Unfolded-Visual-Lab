@@ -81,3 +81,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Leave Daily Discovery's approved master, native answers, and LIVE untouched. */
 (()=>{if(document.getElementById('bn-answer-scroll-css-v1'))return;const l=document.createElement('link');l.id='bn-answer-scroll-css-v1';l.rel='stylesheet';l.href='behind-name-explanation-scroll-test.css?v=20261105-name-scroll-v1';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bn-answer-scroll-js-v1'))return;const s=document.createElement('script');s.id='bn-answer-scroll-js-v1';s.src='behind-name-explanation-scroll-test.js?v=20261105-name-scroll-v1';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Visual Lab ONLY — Word Trails premium enamel and carved-stone visual test.
+   CSS-only: no game state, clue, audio, wheel sizing or native handler changes. */
+(()=>{if(document.getElementById('wt-premium-visual-v1'))return;const l=document.createElement('link');l.id='wt-premium-visual-v1';l.rel='stylesheet';l.href='word-trails-premium-game-and-finale-test.css?v=20261105-wt-archaeology-v1';document.head.appendChild(l)})();
