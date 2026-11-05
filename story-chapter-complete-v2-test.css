@@ -308,3 +308,28 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
 @media(prefers-reduced-motion:reduce){
  :is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere-art{transition:none!important}
 }
+
+
+/* V5 phone-screenshot correction: remove inset rectangular "fog panel".
+   The actual scroll shell carries the same backdrop as the completion card;
+   scenic art gains detail, but stays behind text and softly fades out. */
+#bu3857-screen .bu3857-scroll:has(.bu3863-finale.bu-story-finale-v2){
+ background:linear-gradient(175deg,#0c3440 0%,#0a303c 44%,#062632 100%)!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2{
+ background:transparent!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere{
+ background:radial-gradient(ellipse at 50% 20%,rgba(236,175,91,.13),transparent 51%)!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere > .bu-story-finale-atmosphere-art{
+ inset:-2px!important;
+ width:calc(100% + 4px)!important;
+ height:calc(100% + 4px)!important;
+ filter:blur(1px) saturate(.78) brightness(.76)!important;
+ opacity:.48!important;
+ background-position:50% 55%!important;
+ -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.60) 22%,rgba(0,0,0,.06) 43%,rgba(0,0,0,.11) 63%,rgba(0,0,0,.60) 90%,rgba(0,0,0,.67) 100%)!important;
+ mask-image:linear-gradient(180deg,rgba(0,0,0,.82) 0%,rgba(0,0,0,.60) 22%,rgba(0,0,0,.06) 43%,rgba(0,0,0,.11) 63%,rgba(0,0,0,.60) 90%,rgba(0,0,0,.67) 100%)!important;
+}
+/* Keep existing buttons, text layout and top navigation intact. */
