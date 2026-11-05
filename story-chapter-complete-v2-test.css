@@ -449,3 +449,27 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
  transform:scale(1.02)!important;
  will-change:auto!important;
 }
+
+
+/* V6 finishing pass: the moving hero supplies the chapter photo, so the
+   lower section becomes atmospheric teal instead of a second face/landscape
+   inset inside a rectangle. Completion-only: normal gameplay padding stays. */
+#bu3857-screen .bu3857-scroll:has(.bu3863-finale.bu-story-finale-v2){
+ padding:0!important;
+ background:linear-gradient(175deg,#0c3440 0%,#0a303c 44%,#062632 100%)!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2{
+ padding-left:clamp(12px,3.4vw,22px)!important;
+ padding-right:clamp(12px,3.4vw,22px)!important;
+ padding-bottom:max(12px,env(safe-area-inset-bottom))!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-atmosphere{
+ background:radial-gradient(ellipse at 50% 44%,rgba(198,148,80,.055),transparent 60%)!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-atmosphere > .bu-story-finale-atmosphere-art{
+ opacity:.13!important;
+ filter:blur(3px) saturate(.55) brightness(.62)!important;
+ background-position:center 70%!important;
+ -webkit-mask-image:linear-gradient(180deg,transparent 0%,transparent 44%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.58) 100%)!important;
+ mask-image:linear-gradient(180deg,transparent 0%,transparent 44%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.58) 100%)!important;
+}
