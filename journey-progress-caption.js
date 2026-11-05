@@ -103,3 +103,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* VISUAL LAB ONLY — Mixed Trivia first renovation: established decorative
    olive leaves on hero + informational topics as text, not fake buttons. */
 (()=>{if(document.getElementById('bu-mixed-nonbutton-v1'))return;const l=document.createElement('link');l.id='bu-mixed-nonbutton-v1';l.rel='stylesheet';l.href='mixed-trivia-noninteractive-visual-v1.css?v=20261105-foliage-labels-v1';document.head.appendChild(l)})();
+
+
+/* VISUAL LAB ONLY — Mixed Trivia compass typography V2.
+   Loaded after approved foliage and nonbutton labels. Informational text only. */
+(()=>{if(document.getElementById('bu-mixed-editorial-v2-css'))return;const l=document.createElement('link');l.id='bu-mixed-editorial-v2-css';l.rel='stylesheet';l.href='mixed-trivia-compass-editorial-v2.css?v=20261105-guide-hierarchy-v2';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-mixed-editorial-v2-js'))return;const s=document.createElement('script');s.id='bu-mixed-editorial-v2-js';s.src='mixed-trivia-compass-editorial-v2.js?v=20261105-guide-hierarchy-v2';s.defer=true;document.head.appendChild(s)})();

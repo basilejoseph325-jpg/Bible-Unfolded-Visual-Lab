@@ -1,0 +1,160 @@
+/* VISUAL LAB ONLY — Mixed Trivia compass panel / editorial typography V2.
+   Scoped EXCLUSIVELY to existing .bu-mix-summary: original photo, original
+   olive foliage, existing hero, six noninteractive themes and actual selection
+   buttons are deliberately untouched. */
+
+/* Treat this as a beautifully printed explorer's field guide, not a form. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary{
+  --bu-mix-ink:#223d3c;
+  --bu-mix-bronze:#a67d43;
+  --bu-mix-gold:#be9353;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary > h3{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  margin:clamp(13px,3vw,19px) auto 1px!important;
+  padding:0!important;
+  color:#1b3d42!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-size:clamp(29px,7vw,41px)!important;
+  font-weight:700!important;
+  line-height:1.13!important;
+  letter-spacing:-.018em!important;
+  text-transform:none!important;
+  text-align:center!important;
+  text-shadow:0 1px 0 #fff2d0,0 2px 3px rgba(107,69,30,.21)!important;
+  border:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary > h3::before{
+  content:"✦  THE JOURNEY AHEAD  ✦"!important;
+  display:block!important;
+  margin:0 0 4px!important;
+  color:#937040!important;
+  font:700 clamp(9px,2.25vw,11px)/1.1 system-ui,-apple-system,sans-serif!important;
+  letter-spacing:.23em!important;
+  text-shadow:0 1px rgba(255,246,217,.7)!important;
+  white-space:nowrap!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary > h3::after{
+  content:""!important;
+  display:block!important;
+  width:min(35%,160px)!important;
+  height:2px!important;
+  margin:9px auto 0!important;
+  background:linear-gradient(90deg,transparent,#bf914e 22%,#e9c586 50%,#bf914e 78%,transparent)!important;
+  box-shadow:0 1px rgba(255,250,222,.76)!important;
+}
+
+/* The dynamic question count becomes a ceremonial editorial statistic,
+   not a faux button, pill or clickable chip. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat{
+  box-sizing:border-box!important;
+  width:min(100%,440px)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  margin:8px auto 3px!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value{
+  position:relative!important;
+  display:inline-block!important;
+  padding:0 48px!important;
+  color:#7c5730!important;
+  font:700 clamp(36px,9vw,49px)/1 Georgia,"Times New Roman",serif!important;
+  letter-spacing:-.035em!important;
+  text-align:center!important;
+  font-variant-numeric:lining-nums tabular-nums!important;
+  text-shadow:0 1px rgba(255,251,220,.92),0 2px 2px rgba(102,63,28,.22)!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value::before,
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value::after{
+  content:""!important;
+  position:absolute!important;
+  top:52%!important;
+  width:clamp(20px,6vw,34px)!important;
+  height:1px!important;
+  background:linear-gradient(90deg,transparent,#a77f46 90%)!important;
+  pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value::before{
+  left:0!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value::after{
+  right:0!important;
+  transform:rotate(180deg)!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-label{
+  display:block!important;
+  margin-top:0!important;
+  color:#5d604c!important;
+  font:750 clamp(10px,2.7vw,12px)/1.28 system-ui,-apple-system,sans-serif!important;
+  letter-spacing:.20em!important;
+  text-align:center!important;
+  text-transform:uppercase!important;
+}
+
+/* Two compact conversational lines, differentiated by classic typography. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-invitation{
+  width:min(100%,495px)!important;
+  box-sizing:border-box!important;
+  margin:clamp(8px,2.1vw,13px) auto clamp(7px,1.8vw,12px)!important;
+  padding:0 9px!important;
+  background:transparent!important;
+  border:0!important;
+  color:#364640!important;
+  text-align:center!important;
+  text-shadow:0 1px rgba(255,248,217,.55)!important;
+  line-height:1.39!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-invitation-lead{
+  display:block!important;
+  font:400 clamp(15px,3.7vw,18px)/1.39 Georgia,"Times New Roman",serif!important;
+  letter-spacing:.003em!important;
+  text-wrap:balance!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-invitation-coda{
+  display:block!important;
+  margin-top:2px!important;
+  color:#866137!important;
+  font:italic 500 clamp(15px,3.7vw,18px)/1.35 Georgia,"Times New Roman",serif!important;
+  text-wrap:balance!important;
+}
+
+/* An editorial caption above existing decorative theme names; leave the
+   original six names, dot separators and nonbutton layout entirely intact. */
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-discoveries-caption{
+  width:min(86%,430px)!important;
+  margin:4px auto 0!important;
+  padding-top:9px!important;
+  border:0!important;
+  border-top:1px solid rgba(142,105,56,.37)!important;
+  background:transparent!important;
+  color:#806541!important;
+  font:700 clamp(9px,2.35vw,11px)/1.2 system-ui,-apple-system,sans-serif!important;
+  letter-spacing:.18em!important;
+  text-align:center!important;
+  pointer-events:none!important;
+}
+#bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary .bu-mix-themes{
+  margin-top:6px!important;
+}
+@media(max-width:360px){
+  #bu34-body .bu386-page.bu-mixed-visual .bu-mix-summary > h3{font-size:28px!important}
+  #bu34-body .bu386-page.bu-mixed-visual .bu-mix-invitation-lead,
+  #bu34-body .bu386-page.bu-mixed-visual .bu-mix-invitation-coda{font-size:14px!important}
+  #bu34-body .bu386-page.bu-mixed-visual .bu-mix-discovery-stat-value{font-size:35px!important}
+  #bu34-body .bu386-page.bu-mixed-visual .bu-mix-discoveries-caption{padding-top:6px!important}
+}
