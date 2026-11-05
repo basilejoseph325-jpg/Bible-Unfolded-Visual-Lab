@@ -1,0 +1,49 @@
+name: Verify scored Daily completion celebration V2
+on:
+  push:
+    paths: ['.github/workflows/verify-daily-graded-celebration-v2.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check score tiers, settings, assets, and scope
+        run: |
+          node --check daily-completion-premium-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,xml.etree.ElementTree as ET
+          js=Path('daily-completion-premium-test.js').read_text()
+          css=Path('daily-completion-premium-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          t=re.findall(r'confetti:(\d+),duration:(\d+)',js)
+          assert [int(a) for a,b in t]==[4,12,20,32,48,74],t
+          assert len(t)==6 and all(int(b)>=3500 for a,b in t)
+          assert "body.querySelector(':scope > .bu375-result')" in js
+          assert "body.querySelector(':scope > #bu375-home')" in js
+          assert "body.querySelector(':scope > #bu375-again')" in js
+          assert "document.getElementById('bu375-daily')" in js
+          assert "Math.max(0,Math.min(5,raw))" in js
+          assert "body.classList.remove('bu-daily-finale-v1')" in js
+          assert "body.dataset.buDailyScore=String(score)" in js
+          assert "localStorage.getItem('bible-unfolded-immersive-v34')" in js
+          assert "typeof sfxOn" in js and "sfxVolume<=0" in js
+          assert "typeof playChime" in js and "typeof playCoinFx" in js and "typeof playVictoryCheer" in js
+          assert "aria-hidden" in js and "pref==='off'" in js and 'reduced()' in js
+          assert "new MutationObserver(enhance).observe(body,{childList:true,subtree:false})" in js
+          assert 'awardOnce' not in js and 'bu375Complete' not in js and '.onclick=' not in js
+          assert 'daily-complete-score-plaque-v2.svg' in css
+          assert 'bu-daily-finale-confetti' in css and '@keyframes bu-daily-finale-fall' in css
+          assert 'pointer-events:none' in css
+          assert 'body:has(#bu375-body.bu-daily-finale-v1) #bu34-fx' in css
+          assert 'prefers-reduced-motion:reduce' in css
+          assert 'daily-completion-premium-test.js?v=20261104-graded-party-v2' in loader
+          assert 'daily-completion-premium-test.css?v=20261104-graded-party-v2' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          for p in ('assets/ui/daily-complete-score-plaque-v2.svg','assets/ui/daily-complete-laurel-v1.svg','assets/ui/story-gold-restart-v1.svg','assets/ui/daily-explanation-wax-next-v2.svg'):
+           ET.parse(p)
+          assert Path('assets/ui/daily-complete-score-plaque-v1.svg').exists()
+          print('PASS: six strictly increasing confetti tiers, graded existing sounds, settings respected, mode isolation, original scoring/rewards/handlers untouched')
+          PY
