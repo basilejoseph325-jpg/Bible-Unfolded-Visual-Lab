@@ -1,0 +1,46 @@
+name: Verify Story finale atmosphere V4 test only
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-atmosphere-v4.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check syntax, chapter-art lookups, layout isolation and loader
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          html=Path('index.html').read_text()
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          assert 'const BU_GENESIS_SCENE_ART=' in Path('bible_unfolded_core_part4.js').read_text()
+          assert '"g08-d01"' in Path('bible_unfolded_core_part4.js').read_text()
+          assert "'ex10-d01'" in Path('bible_unfolded_core_part3.js').read_text()
+          assert 'id="scene"' in html and 'id="frame-a"' in html
+          assert 'id="bu3857-episode"' in html and 'id="episode-list"' in html
+          assert "document.querySelector('#scene .scene-img.show')" in s
+          assert 'typeof BU_GENESIS_SCENE_ART' in s and 'typeof BU3857_SCENE_ART' in s
+          assert "card.prepend(bg)" in s
+          assert "card.classList.contains('bu-story-finale-v2')" in s
+          assert "const milestone=chapterMilestone(card,modern);" in s
+          assert "span.textContent=wording" in s
+          assert ".onclick=" not in s and "playChime()" not in s
+          assert 'position:absolute!important' in css
+          assert 'pointer-events:none!important' in css
+          assert 'bu-story-finale-atmosphere-art' in css
+          assert 'mask-image:linear-gradient' in css and '-webkit-mask-image:linear-gradient' in css
+          assert 'bu-story-finale-v2::after' in css
+          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-atmosphere-v4' in loader
+          assert 'story-chapter-complete-v2-test.js?v=20261105-test-chapter-atmosphere-v4' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'premium-sfx.js' in loader
+          assert 'story-adventure-metallic-icons-test.js' in loader
+          print('PASS: chapter-specific reused scenes in both engines, contrast masking, existing buttons/audio/spacing preserved, Visual Lab only')
+          PY
