@@ -626,3 +626,72 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
   padding:3px 0!important;
  }
 }
+
+
+/* V8 — unify original and later Story chapter-finale presentation.
+   The modern game engine had no built-in cinematic scene or scene-title band.
+   Keep the approved gold rules/buttons; restore the visual rhythm and legible
+   atmospheric lower panel without touching ANY standard gameplay views. */
+#bu3857-screen .bu3863-finale.bu-story-finale-v2{
+ gap:clamp(6px,1dvh,10px)!important;
+ padding-top:0!important;
+ justify-content:flex-start!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-cinematic-hero{
+ width:calc(100% + 2*clamp(12px,3.4vw,22px))!important;
+ max-width:none!important;
+ height:clamp(170px,24dvh,248px)!important;
+ margin:0 calc(-1*clamp(12px,3.4vw,22px)) 0!important;
+ border-radius:0!important;
+ border-top:0!important;
+ border-left:0!important;
+ border-right:0!important;
+ border-bottom:2px solid rgba(218,184,111,.75)!important;
+ box-shadow:0 3px 15px rgba(0,12,20,.4)!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{
+ display:flex!important;
+ box-sizing:border-box!important;
+ align-items:center!important;
+ justify-content:center!important;
+ flex:0 0 auto!important;
+ width:calc(100% + 2*clamp(12px,3.4vw,22px))!important;
+ max-width:none!important;
+ margin:-6px calc(-1*clamp(12px,3.4vw,22px)) clamp(12px,2.4dvh,28px)!important;
+ min-height:clamp(49px,7dvh,68px)!important;
+ padding:7px 14px!important;
+ border-top:1px solid rgba(242,212,142,.45)!important;
+ border-bottom:1px solid rgba(213,173,102,.8)!important;
+ background:linear-gradient(160deg,#123e48,#082c38)!important;
+ color:#f9db9a!important;
+ font:700 clamp(22px,5.2vw,34px)/1.17 Georgia,serif!important;
+ text-align:center!important;
+ text-shadow:0 2px 4px rgba(0,7,14,.72)!important;
+ white-space:normal!important;
+ overflow-wrap:break-word!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{
+ height:clamp(79px,11.5dvh,110px)!important;
+ width:clamp(95px,29vw,137px)!important;
+ margin-bottom:clamp(4px,.8dvh,9px)!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-atmosphere > .bu-story-finale-atmosphere-art{
+ opacity:.24!important;
+ filter:blur(2px) saturate(.72) brightness(.68)!important;
+ -webkit-mask-image:linear-gradient(180deg,transparent 0%,transparent 32%,rgba(0,0,0,.13) 56%,rgba(0,0,0,.7) 100%)!important;
+ mask-image:linear-gradient(180deg,transparent 0%,transparent 32%,rgba(0,0,0,.13) 56%,rgba(0,0,0,.7) 100%)!important;
+}
+@media(max-height:810px){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-cinematic-hero{height:clamp(115px,19dvh,170px)!important}
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{
+  min-height:clamp(38px,5.5dvh,53px)!important;
+  margin-bottom:clamp(5px,1.2dvh,11px)!important;
+  font-size:clamp(19px,4.6vw,27px)!important;
+ }
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:clamp(59px,8dvh,83px)!important}
+}
+@media(max-height:630px){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-cinematic-hero{height:92px!important}
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{min-height:32px!important;padding:3px 12px!important;margin-bottom:2px!important}
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:50px!important}
+}
