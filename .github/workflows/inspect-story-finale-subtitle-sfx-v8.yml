@@ -1,0 +1,27 @@
+name: Inspect Story finale subtitles and SFX exact source
+on:
+ push:
+  paths: ['.github/workflows/inspect-story-finale-subtitle-sfx-v8.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       import re,json
+       from pathlib import Path
+       s=Path('bible_unfolded_core_part5.js').read_text()
+       s=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S).group(1))
+       for term in ["function bu3857Open(", "function bu3857Exit(", "function bu3857Chapter(", "function bu3857Render(){","if(s.complete){","function bu3857Next","function bu3857Start", "bu3857Play", "bu3857Go", "function bu3857Save", "function bu3815Chapter", "id=\"toJourney\""]:
+        hits=list(re.finditer(re.escape(term),s))
+        print('TARGET',term,'COUNT',len(hits))
+        for m in hits[:1]:print('SNIP',repr(s[max(0,m.start()-160):m.start()+3400])[:3800])
+       for p in Path('.').glob('*.js'):
+        if p.stat().st_size>600000:continue
+        t=p.read_text(errors='replace')
+        for term in ["bu3857-next-episode","toJourney","play('navigate'","softTap(","premium-sfx","soundNavigate","pointerdown","addEventListener('click'"]:
+         hits=list(re.finditer(re.escape(term),t))
+         if hits:print('FILE',p.name,'TERM',term,'COUNT',len(hits),'EXAMPLE',repr(t[max(0,hits[0].start()-150):hits[0].start()+500])[:700])
+       PY
