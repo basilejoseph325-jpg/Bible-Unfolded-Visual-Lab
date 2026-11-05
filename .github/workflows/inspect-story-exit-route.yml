@@ -1,0 +1,21 @@
+name: Inspect actual modern Chapter Back destination
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-exit-route.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          s=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+          for term in ['function bu3857Exit','bu3857Exit=','bu3857Exit =','bu3857Exit(', 'function bu3857Open(', 'const bu3857Exit', 'function openEpisodes', "setScreen('episodes'"]:
+           hits=list(re.finditer(re.escape(term),s))
+           print('QUERY',term,'COUNT',len(hits))
+           for m in hits[:2]:print('SNIP',repr(s[max(0,m.start()-330):m.start()+1060])[:1440])
+          PY
