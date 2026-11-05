@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="166" viewBox="0 0 220 166" fill="none">
+<defs><linearGradient id="g" x1=".1" y1="0" x2=".85" y2="1"><stop stop-color="#fff9d5"/><stop offset=".24" stop-color="#f8d886"/><stop offset=".47" stop-color="#98621f"/><stop offset=".7" stop-color="#f4cb6d"/><stop offset="1" stop-color="#ffedb8"/></linearGradient><linearGradient id="page" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff3ce"/><stop offset=".5" stop-color="#d7b477"/><stop offset="1" stop-color="#aa752e"/></linearGradient><filter id="s"><feDropShadow dx="0" dy="2" stdDeviation="2.3" flood-color="#001017" flood-opacity=".8"/></filter><radialGradient id="halo"><stop stop-color="#ffe3a1" stop-opacity=".3"/><stop offset="1" stop-color="#ffe3a1" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="110" cy="84" rx="105" ry="80" fill="url(#halo)"/>
+<g filter="url(#s)">
+<path d="M86 140C37 124 29 64 59 24M134 140C183 124 191 64 161 24" stroke="url(#g)" stroke-width="3.3" stroke-linecap="round"/>
+<g fill="url(#g)" stroke="#91612b" stroke-width=".7">
+<path d="M83 133Q54 133 48 115Q72 118 83 133Z"/><path d="M70 120Q43 114 44 95Q62 103 70 120Z"/><path d="M57 99Q33 82 43 66Q55 78 57 99Z"/><path d="M51 74Q34 54 50 41Q57 57 51 74Z"/><path d="M56 50Q45 25 64 19Q68 36 56 50Z"/><path d="M72 34Q68 12 85 13Q86 29 72 34Z"/>
+<path d="M137 133Q166 133 172 115Q148 118 137 133Z"/><path d="M150 120Q177 114 176 95Q158 103 150 120Z"/><path d="M163 99Q187 82 177 66Q165 78 163 99Z"/><path d="M169 74Q186 54 170 41Q163 57 169 74Z"/><path d="M164 50Q175 25 156 19Q152 36 164 50Z"/><path d="M148 34Q152 12 135 13Q134 29 148 34Z"/>
+</g>
+<path d="M67 67Q84 60 107 71v53Q83 114 67 121Z" fill="url(#page)" stroke="url(#g)" stroke-width="3"/>
+<path d="M153 67Q136 60 113 71v53Q137 114 153 121Z" fill="url(#page)" stroke="url(#g)" stroke-width="3"/>
+<path d="M110 70v54" stroke="#fff5d0" stroke-width="4" stroke-linecap="round"/>
+<path d="M76 78q14-3 23 2M76 88q14-2 23 3M76 98q13-2 23 3M144 78q-14-3-23 2M144 88q-14-2-23 3M144 98q-13-2-23 3" stroke="#9b6d34" stroke-width="1.6" stroke-linecap="round"/>
+<path d="M61 121q24-8 49 6 25-14 49-6" stroke="url(#g)" stroke-width="4" stroke-linecap="round"/>
+<path d="M110 24l4 10 10 4-10 4-4 10-4-10-10-4 10-4Z" fill="url(#g)"/><path d="M87 40l2 6 6 2-6 2-2 6-2-6-6-2 6-2Z" fill="#f8dc97"/><path d="M133 40l2 6 6 2-6 2-2 6-2 6-2-6-6-2 6-2Z" fill="#f8dc97"/>
+</g></svg>
