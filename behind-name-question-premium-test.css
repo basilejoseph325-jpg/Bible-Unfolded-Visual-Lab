@@ -1,0 +1,277 @@
+/* Bible Unfolded | Behind the Name — premium question screen, Visual Lab ONLY.
+ * 2026-11-05: 75% approved Daily Discovery design language / 25% name-study identity.
+ * Scope: game question view only. Never change the home screen, reward engine,
+ * scoring, wrong-answer retry logic, explanation/research modals, or LIVE game. */
+#btn3926-play{
+ --bn-gold:#e8c580;
+ --bn-ink:#223943;
+}
+#btn3926-play .btn3926-body{
+ box-sizing:border-box!important;
+ gap:clamp(5px,.72dvh,9px)!important;
+ padding-inline:clamp(10px,2.7vw,17px)!important;
+ padding-bottom:max(7px,env(safe-area-inset-bottom))!important;
+}
+#btn3926-play .btn3926-question{
+ box-sizing:border-box!important;
+ position:relative!important;isolation:isolate!important;
+ flex:0 1 auto!important;
+ min-height:clamp(104px,15dvh,148px)!important;
+ max-height:28dvh!important;
+ margin:clamp(3px,.7dvh,8px) 1px clamp(5px,.9dvh,10px)!important;
+ padding:clamp(13px,1.75dvh,20px) clamp(14px,4vw,23px)!important;
+ overflow:hidden!important;
+ border:2px solid #d9b46f!important;
+ border-radius:19px 19px 16px 16px!important;
+ background-color:#153943!important;
+ background-image:
+  radial-gradient(ellipse 55% 110% at 50% -20%,rgba(225,173,88,.23),transparent 85%),
+  linear-gradient(105deg,rgba(5,28,37,.98),rgba(15,51,59,.96) 52%,rgba(5,29,40,.99))!important;
+ box-shadow:
+  inset 0 0 0 3px rgba(255,223,163,.12),
+  inset 0 2px 0 rgba(255,235,188,.26),
+  inset 0 -16px 25px rgba(0,13,23,.31),
+  0 4px 0 #6c573c,0 9px 17px rgba(0,12,20,.44),
+  0 0 14px rgba(221,173,98,.12)!important;
+ backdrop-filter:blur(2px);
+ -webkit-backdrop-filter:blur(2px);
+ text-align:center!important;
+}
+#btn3926-play .btn3926-question::before{
+ content:"✧"!important;
+ position:absolute!important;z-index:0!important;
+ right:clamp(10px,3vw,17px)!important;top:6px!important;
+ width:auto!important;height:auto!important;left:auto!important;bottom:auto!important;
+ background:none!important;
+ opacity:.5!important;color:#ffe1a3!important;
+ font:22px/1 Georgia,serif!important;
+ pointer-events:none!important;
+}
+#btn3926-play .btn3926-question::after{
+ content:""!important;
+ position:absolute!important;z-index:0!important;
+ left:24%!important;bottom:8px!important;top:auto!important;
+ width:52%!important;height:2px!important;
+ border:0!important;
+ background:linear-gradient(90deg,transparent,#b38849 20%,#ffdda0 50%,#b38849 80%,transparent)!important;
+ opacity:.7!important;
+ pointer-events:none!important;
+}
+#btn3926-play .btn3926-question .btn3926-overline{
+ position:relative!important;z-index:1!important;
+ margin:0 0 clamp(4px,.65dvh,8px)!important;
+ color:#f3d292!important;
+ font:700 clamp(10px,2.7vw,13px)/1.15 system-ui,sans-serif!important;
+ letter-spacing:.19em!important;
+ text-transform:uppercase!important;
+ text-shadow:0 1px 3px #00111b!important;
+}
+#btn3926-play .btn3926-question h2{
+ position:relative!important;z-index:1!important;
+ margin:0!important;
+ color:#fff0d0!important;
+ font:700 clamp(20px,5.35vw,28px)/1.16 Georgia,'Times New Roman',serif!important;
+ letter-spacing:-.015em!important;
+ text-shadow:0 2px 8px #000b!important;
+ text-wrap:balance!important;
+}
+/* Gold artwork on the same original action buttons; preserve hit targets.
+ * The fourth numeric button is redundant with the Discovery X of Y rail. */
+#btn3926-play .btn3926-icons{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:clamp(7px,1.5vw,11px)!important;
+ margin:0!important;
+ flex:0 0 auto!important;
+}
+#btn3926-play .btn3926-icons button:not(#btn3926-progress){
+ box-sizing:border-box!important;
+ position:relative!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ height:clamp(51px,7dvh,62px)!important;
+ min-width:0!important;
+ padding:4px!important;
+ border:1.5px solid #c7a46c!important;
+ border-radius:14px!important;
+ background:linear-gradient(135deg,#1a4955,#0c2e3b 65%,#082734)!important;
+ box-shadow:inset 0 1px 0 rgba(255,237,194,.20),inset 0 -2px 0 rgba(1,16,24,.33),0 5px 11px #0007!important;
+ color:#f1d38b!important;
+ font-size:0!important;
+ -webkit-tap-highlight-color:transparent;
+ transition:transform .14s ease,box-shadow .14s ease!important;
+}
+#btn3926-play .btn3926-icons button:not(#btn3926-progress):active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 3px 5px rgba(0,13,21,.5),0 2px 5px #0008!important;
+}
+#btn3926-play .btn3926-icons button:focus-visible{
+ outline:3px solid #ffe3a5!important;outline-offset:2px!important;
+}
+#btn3926-play #btn3926-progress{display:none!important;}
+#btn3926-play .btn-name-metal-art{
+ display:block!important;flex:0 0 auto!important;
+ width:clamp(29px,8vw,39px)!important;
+ height:clamp(29px,8vw,39px)!important;
+ padding:0!important;margin:0!important;
+ border:0!important;border-radius:0!important;
+ background:none!important;box-shadow:none!important;
+ pointer-events:none!important;
+}
+#btn3926-play .btn-name-metal-art img{
+ display:block!important;width:100%!important;height:100%!important;
+ object-fit:contain!important;
+ filter:drop-shadow(0 1px 2px #000b) drop-shadow(0 0 2px rgba(255,210,122,.22))!important;
+ pointer-events:none!important;
+}
+/* Four physically carved, warm sandstone answer plaques.
+ * No additional DOM wrappers and no interference with the native buttons. */
+#btn3926-play .btn3926-answers{
+ display:grid!important;
+ grid-template-rows:repeat(4,minmax(0,1fr))!important;
+ grid-template-columns:minmax(0,1fr)!important;
+ gap:clamp(8px,1.2dvh,13px)!important;
+ flex:1 1 auto!important;
+ min-height:0!important;
+ margin:0!important;
+ padding:2px 1px clamp(6px,1.4dvh,13px)!important;
+}
+#btn3926-play .btn3926-answer,
+#btn3926-play .btn3926-answer:nth-child(even){
+ box-sizing:border-box!important;isolation:isolate!important;
+ position:relative!important;display:flex!important;
+ align-items:center!important;
+ min-width:0!important;min-height:0!important;
+ width:100%!important;height:auto!important;
+ gap:clamp(11px,3.3vw,17px)!important;
+ padding:clamp(8px,1.35dvh,13px) clamp(12px,3.7vw,18px)!important;
+ overflow:hidden!important;
+ border:3px solid #9c754a!important;
+ border-radius:18px!important;
+ color:#253c43!important;
+ font:600 clamp(14px,3.75vw,17px)/1.25 system-ui,-apple-system,sans-serif!important;
+ text-align:left!important;
+ text-shadow:0 1px 0 rgba(255,255,227,.41)!important;
+ background-color:#ddc69e!important;
+ background-image:
+  radial-gradient(ellipse 70% 80% at 14% 5%,rgba(255,251,226,.78),transparent 75%),
+  radial-gradient(ellipse 70% 100% at 94% 90%,rgba(106,73,43,.22),transparent 75%),
+  repeating-linear-gradient(167deg,transparent 0 15px,rgba(112,79,50,.025) 16px 17px,transparent 18px 34px),
+  linear-gradient(108deg,#f0dfbc,#d9bd8e 51%,#c39e70)!important;
+ box-shadow:
+  inset 0 3px 1px rgba(255,253,227,.91),
+  inset 2px 0 2px rgba(255,237,196,.66),
+  inset -5px -7px 10px rgba(92,58,34,.35),
+  inset 0 0 0 2px rgba(238,212,169,.68),
+  0 5px 0 #715538,0 8px 0 #17333c,
+  0 12px 15px rgba(0,10,17,.51)!important;
+ transition:transform .13s ease,box-shadow .13s ease,border-color .13s ease!important;
+ -webkit-tap-highlight-color:transparent;
+}
+#btn3926-play .btn3926-answer:nth-child(4n+2):not(.is-wrong):not(.is-correct){
+ background-image:
+ radial-gradient(ellipse 76% 70% at 70% 6%,rgba(255,248,217,.70),transparent 78%),
+ radial-gradient(ellipse 70% 80% at 3% 92%,rgba(120,83,44,.19),transparent 75%),
+ repeating-linear-gradient(171deg,transparent 0 14px,rgba(111,79,44,.024) 15px 16px,transparent 17px 32px),
+ linear-gradient(112deg,#eddbb6,#d6bb8f 56%,#c5a575)!important;
+}
+#btn3926-play .btn3926-answer:nth-child(4n+3):not(.is-wrong):not(.is-correct){
+ background-image:
+ radial-gradient(ellipse 74% 90% at 28% 0%,rgba(255,251,222,.72),transparent 73%),
+ radial-gradient(ellipse 70% 80% at 89% 90%,rgba(114,77,41,.20),transparent 76%),
+ repeating-linear-gradient(168deg,transparent 0 17px,rgba(101,73,47,.023) 18px 19px,transparent 20px 36px),
+ linear-gradient(105deg,#ead8b1,#d8bd92 55%,#c5a170)!important;
+}
+#btn3926-play .btn3926-answer:nth-child(4n+4):not(.is-wrong):not(.is-correct){
+ background-image:
+ radial-gradient(ellipse 85% 80% at 26% 10%,rgba(255,249,221,.71),transparent 77%),
+ radial-gradient(ellipse 79% 75% at 95% 95%,rgba(117,73,39,.26),transparent 74%),
+ repeating-linear-gradient(174deg,transparent 0 16px,rgba(110,75,42,.025) 17px 18px,transparent 19px 33px),
+ linear-gradient(113deg,#ecdab5,#d5b78a 51%,#c4a16e)!important;
+}
+#btn3926-play .btn3926-answer::before{
+ content:""!important;position:absolute!important;z-index:0!important;
+ inset:7px!important;
+ border:1px solid rgba(112,75,39,.44)!important;
+ border-radius:11px!important;
+ box-shadow:inset 0 2px 1px rgba(255,245,213,.77)!important;
+ pointer-events:none!important;
+}
+#btn3926-play .btn3926-answer > span{
+ position:relative!important;z-index:1!important;
+ box-sizing:border-box!important;
+ display:grid!important;place-items:center!important;
+ flex:0 0 clamp(34px,8.9vw,41px)!important;
+ width:clamp(34px,8.9vw,41px)!important;
+ height:clamp(34px,8.9vw,41px)!important;
+ min-width:0!important;
+ margin:0!important;padding:0!important;
+ border:2px solid #ebce8e!important;
+ border-radius:50%!important;
+ background:linear-gradient(135deg,#304951,#14343f 62%,#0b2532)!important;
+ box-shadow:inset 0 1px 4px #031823ab,inset 0 0 0 2px #304c50a1,0 2px 3px #76543877!important;
+ color:#ffe4a6!important;
+ font:800 clamp(15px,4.2vw,20px)/1 Georgia,serif!important;
+ text-shadow:0 2px 2px #001b26!important;
+}
+#btn3926-play .btn3926-answer:not(:disabled):active{
+ transform:translateY(2px) scale(.997)!important;
+ box-shadow:inset 0 3px 5px rgba(95,62,31,.34),0 2px 0 #715538,0 5px 0 #17333c,0 7px 9px #0008!important;
+}
+#btn3926-play .btn3926-answer:focus-visible{
+ outline:3px solid #ffe6a5!important;outline-offset:2px!important;
+}
+/* Explicit outcome specificity: never let generic stone painting hide feedback. */
+#btn3926-play .btn3926-answer.is-wrong,
+#btn3926-play .btn3926-answer.is-wrong:nth-child(even),
+#btn3926-play .btn3926-answer.incorrect{
+ color:#51242b!important;
+ background-color:#c97474!important;
+ background-image:radial-gradient(ellipse at 15% 2%,rgba(255,226,208,.76),transparent 70%),
+ radial-gradient(ellipse at 95% 90%,rgba(98,20,35,.37),transparent 74%),
+ linear-gradient(108deg,#e8a595,#cb7775 50%,#a44952)!important;
+ border-color:#a75551!important;
+ box-shadow:inset 0 3px 2px #ffe9dbe0,inset -5px -7px 10px #56202a70,inset 0 0 0 2px #ffd3c480,
+  0 5px 0 #7e393d,0 8px 0 #17333c,0 12px 16px #0008,0 0 11px #ef686b66!important;
+ animation:bn-stone-wrong .48s ease-out!important;
+}
+#btn3926-play .btn3926-answer.is-correct,
+#btn3926-play .btn3926-answer.is-correct:nth-child(even),
+#btn3926-play .btn3926-answer.correct{
+ color:#173c2b!important;
+ background-color:#a8ccaa!important;
+ background-image:radial-gradient(ellipse at 17% 3%,rgba(245,255,228,.81),transparent 74%),
+ radial-gradient(ellipse at 95% 90%,rgba(30,95,57,.26),transparent 74%),
+ linear-gradient(108deg,#cde8c4,#a9d0af 55%,#7bad91)!important;
+ border-color:#78a67d!important;
+ box-shadow:inset 0 3px 2px #f2ffe1e8,inset -5px -7px 10px #305d4263,inset 0 0 0 2px #e9ffd48a,
+  0 5px 0 #527b5a,0 8px 0 #17333c,0 12px 16px #0008,0 0 11px #88dda675!important;
+}
+#btn3926-play .btn3926-answer.is-wrong > span,
+#btn3926-play .btn3926-answer.is-correct > span{
+ color:#ffebba!important;
+}
+#btn3926-play .btn3926-bottom{
+ flex:0 0 auto!important;
+ min-height:16px!important;
+ padding:0!important;margin:0!important;
+ font-size:clamp(10px,2.75vw,13px)!important;
+ line-height:1.12!important;
+}
+/* Short displays preserve all four answers with no vertical scroll. */
+@media(max-height:710px){
+ #btn3926-play .btn3926-question{min-height:82px!important;padding:10px 12px!important;margin:1px 0 3px!important}
+ #btn3926-play .btn3926-question h2{font-size:clamp(17px,4.8vw,23px)!important}
+ #btn3926-play .btn3926-icons button:not(#btn3926-progress){height:44px!important}
+ #btn3926-play .btn3926-answers{gap:6px!important;padding-bottom:5px!important}
+ #btn3926-play .btn3926-answer{padding:5px 9px!important}
+ #btn3926-play .btn3926-answer > span{width:31px!important;height:31px!important;flex-basis:31px!important}
+ #btn3926-play .btn3926-bottom{display:none!important}
+}
+@keyframes bn-stone-wrong{
+ 0%{filter:brightness(1.22);outline:2px solid #ff8b82;outline-offset:0}
+ 100%{filter:brightness(1);outline:2px solid transparent;outline-offset:0}
+}
+@media(prefers-reduced-motion:reduce){
+ #btn3926-play .btn3926-answer.is-wrong{animation:none!important}
+ #btn3926-play .btn3926-answer,#btn3926-play .btn3926-icons button{transition:none!important}
+}
