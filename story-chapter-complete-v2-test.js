@@ -145,6 +145,30 @@
   const milestone=chapterMilestone(card,modern);
   cinematicHero(card,modern,art);
   atmosphere(card,modern);
+  // V11: match the legacy completion structure instead of adding pixel offsets.
+  // Group only the modern engine's EXISTING achievement controls into a
+  // flexibly centered stage; native buttons retain their original handlers.
+  if(modern&&!card.querySelector(':scope > .bu-story-finale-stage')){
+   const stage=document.createElement('section');
+   stage.className='bu-story-finale-stage';
+   stage.setAttribute('aria-label','Chapter completion');
+   const chapterHeading=document.getElementById('bu3857-episode')?.textContent||'';
+   const chapterName=title.textContent||'';
+   const label=document.createElement('div');
+   label.className='bu-story-finale-complete-tag';
+   const book=/EXODUS/i.test(chapterHeading)?'EXODUS':'GENESIS';
+   label.textContent=book+' · '+chapterName+' COMPLETE';
+   label.setAttribute('aria-hidden','true');
+   const nodes=Array.from(card.children).filter(node=>
+    !node.classList.contains('bu-story-finale-atmosphere')&&
+    !node.classList.contains('bu-story-finale-cinematic-hero')&&
+    !node.classList.contains('bu-story-finale-scene-label')
+   );
+   stage.appendChild(art);
+   stage.appendChild(label);
+   for(const node of nodes){if(node!==art)stage.appendChild(node)}
+   card.appendChild(stage);
+  }
   card.classList.add('bu-story-finale-v2');
   card.dataset.buStoryMilestone=milestone?'major':'chapter';
   // The V2 treatment does not introduce a second score or alter story copy.
