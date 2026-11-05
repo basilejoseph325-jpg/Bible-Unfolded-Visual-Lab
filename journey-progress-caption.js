@@ -65,3 +65,45 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Visual Lab only: independent Behind the Name visual skin. */
 (()=>{const s=document.createElement('script');s.src='behind-name-visual-preview.js?v=20261105';document.body.appendChild(s)})();
+
+
+/* VISUAL LAB: Behind the Name research-screen concept, 2026-11-05. */
+(()=>{'use strict';
+const css=`
+#btn3926-play .btn3926-body{gap:clamp(5px,.8dvh,9px);padding-inline:clamp(10px,3vw,16px)}
+#btn3926-play .btn3926-question{position:relative;min-height:clamp(88px,17dvh,170px);flex:1 1 120px;gap:5px;padding:clamp(11px,2.1dvh,20px) 13px;border-radius:9px 16px 10px 14px;background:linear-gradient(108deg,#bd925d,#efd9ae 9%,#f5e6c3 42%,#e6c592 88%,#ab7b45);border:1px solid #c59660;box-shadow:inset 0 0 0 3px #fff4d02c,inset 0 0 18px #80502455,0 7px 13px #00131d70}
+#btn3926-play .btn3926-question .btn3926-overline{font:700 clamp(10px,2.6vw,12px)/1.2 Georgia,serif;color:#72502b;letter-spacing:1.5px}
+#btn3926-play .btn3926-question h2{font:700 clamp(16px,4.6vw,23px)/1.21 Georgia,serif;color:#38281a;text-shadow:0 1px #fff5d480;overflow-wrap:break-word}
+#btn3926-play .btn3926-question .btn-preview-name{display:block;font:700 clamp(27px,7.8vw,40px)/1.05 Georgia,serif;color:#9a631c;letter-spacing:.35px;margin-top:clamp(3px,.6dvh,7px);text-shadow:0 1px #fff4d6,0 2px 2px #694a2b44}
+#btn3926-play .btn3926-icons{grid-template-columns:repeat(3,minmax(0,1fr)) minmax(55px,.75fr);gap:clamp(6px,1.5vw,10px)}
+#btn3926-play .btn3926-icons button{height:clamp(40px,6.4dvh,50px);border:1px solid #d8b374;border-radius:12px;background:linear-gradient(150deg,#155363,#0a303d);color:#f1d18e;box-shadow:inset 0 1px #ffffff29,0 3px 7px #0008}
+#btn3926-play .btn3926-icons button svg{width:clamp(23px,5.6dvh,29px);height:clamp(23px,5.6dvh,29px);stroke:#f1cc84;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;fill:none;pointer-events:none}
+#btn3926-play .btn3926-icons #btn3926-progress{font:800 clamp(14px,4vw,19px)/1 Georgia,serif}
+#btn3926-play .btn3926-answers{gap:clamp(7px,1.05dvh,11px)}
+#btn3926-play .btn3926-answer{border:1px solid #d4ac73;border-radius:15px;background:linear-gradient(155deg,#15515c,#0a3341 80%);color:#fff5df;box-shadow:inset 0 1px #ffffff2a,0 3px 7px #00162288;font-size:clamp(13px,3.65vw,17px);font-weight:760;padding-inline:clamp(10px,3vw,15px);gap:clamp(9px,2.3vw,13px)}
+#btn3926-play .btn3926-answer span{width:clamp(31px,9vw,40px);height:clamp(31px,9vw,40px);flex:0 0 clamp(31px,9vw,40px);background:linear-gradient(150deg,#154450,#082a36);border:1px solid #d6b16f;color:#f2d18a;border-radius:10px;font:700 clamp(15px,4.5vw,21px)/1 Georgia,serif}
+#btn3926-play .btn3926-answer.is-correct{background:#165c51;border-color:#77e0b5}
+#btn3926-play .btn3926-answer.is-wrong{background:#542d38;border-color:#ed9f9f}
+#btn3926-play .btn3926-feedback{color:#f0dfbd}
+@media(max-height:700px){#btn3926-play .btn3926-question{min-height:76px;flex-basis:90px;padding:7px 11px}#btn3926-play .btn3926-question .btn-preview-name{font-size:clamp(24px,6vw,32px);margin-top:1px}#btn3926-play .btn3926-answers{min-height:148px}#btn3926-play .btn3926-body{gap:4px}}
+`;
+function boot(){
+const root=document.getElementById('btn3926-play');if(!root||document.getElementById('btn-preview-style'))return;
+const sheet=document.createElement('style');sheet.id='btn-preview-style';sheet.textContent=css;document.head.appendChild(sheet);
+const icons={
+'btn3926-bible':'<path d="M12 7.5c-3.1-1.9-6.3-2.1-9-1.2v12c3-.9 6.1-.5 9 1.3 2.9-1.8 6-2.2 9-1.3v-12c-2.7-.9-5.9-.7-9 1.2Z"/><path d="M12 7.5v12.1"/>',
+'btn3926-hint':'<path d="M9 18h6m-5 3h4M8.5 14.6A6.5 6.5 0 1 1 16 14.5c-.8.7-1.2 1.5-1.3 2.5H9.3c-.1-1-.3-1.7-.8-2.4Z"/>',
+'btn3926-info':'<path d="M2.2 12s3.4-5.7 9.8-5.7 9.8 5.7 9.8 5.7-3.4 5.7-9.8 5.7S2.2 12 2.2 12Z"/><circle cx="12" cy="12" r="2.8"/>'};
+for(const [id,path] of Object.entries(icons)){const button=document.getElementById(id);if(button)button.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+path+'</svg>';}
+const prompt=document.getElementById('btn3926-prompt');if(!prompt)return;
+function decorate(){
+ if(prompt.querySelector('.btn-preview-name'))return;
+ const t=prompt.textContent.trim();const m=t.match(/^Which meaning belongs to\s+(.+?)\?$/i);
+ if(!m)return;
+ prompt.replaceChildren(document.createTextNode('Which meaning belongs to'));
+ const span=document.createElement('span');span.className='btn-preview-name';span.textContent=m[1]+'?';prompt.appendChild(span);
+}
+new MutationObserver(decorate).observe(prompt,{childList:true});decorate();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
+})();
