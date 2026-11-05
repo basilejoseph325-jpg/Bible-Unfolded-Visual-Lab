@@ -1,0 +1,162 @@
+/* Visual Lab ONLY — Behind the Name answer explanation scroll, candidate V1.
+   Uses the immutable Daily Discovery V3 photographic parchment and V2 wax asset.
+   The actual #btn3926-modal, text nodes, close control, and Next Puzzle click
+   handler are preserved. Other BN dialogs and every other mode are untouched. */
+#btn3926-modal.bn-explanation-scroll{
+  box-sizing:border-box!important;
+  z-index:125!important;
+  padding:8px 4px max(8px,env(safe-area-inset-bottom))!important;
+  background:rgba(0,18,25,.78)!important;
+  backdrop-filter:blur(6px)!important;
+  -webkit-backdrop-filter:blur(6px)!important;
+}
+#btn3926-modal.bn-explanation-scroll .btn3926-dialog{
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  width:min(99vw,480px)!important;
+  height:min(85dvh,690px)!important;
+  min-height:0!important;
+  max-height:min(85dvh,690px)!important;
+  padding:clamp(125px,18dvh,153px) clamp(38px,10vw,64px)
+    clamp(108px,14dvh,132px)!important;
+  border:0!important;
+  border-radius:0!important;
+  overflow:hidden!important;
+  background-color:#d8ae71!important;
+  background-image:url('assets/ui/daily-discovery-explanation-scroll-v3.webp')!important;
+  background-position:center!important;
+  background-size:100% 100%!important;
+  background-repeat:no-repeat!important;
+  box-shadow:0 13px 35px rgba(0,0,0,.43)!important;
+  color:#422816!important;
+  animation:bn-scroll-appear .22s ease-out both;
+}
+#btn3926-modal.bn-explanation-scroll .btn3926-dialog > h2{
+  position:relative!important;
+  z-index:1!important;
+  flex:0 0 auto!important;
+  margin:0 5px 7px!important;
+  padding:0 10px!important;
+  max-height:3.5em!important;
+  overflow-wrap:anywhere!important;
+  text-align:center!important;
+  font:italic 700 clamp(18px,4.8vw,25px)/1.12 "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  color:#31572c!important;
+  text-shadow:0 1px #fff1c1,0 2px 2px rgba(68,39,14,.17)!important;
+}
+#btn3926-modal.bn-explanation-scroll #btn3926-modal-body{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:1 1 auto!important;
+  flex-direction:column!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  padding:0!important;
+}
+#btn3926-modal.bn-explanation-scroll .bn-scroll-copy{
+  box-sizing:border-box!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:#9d703b transparent;
+  padding:0 3px!important;
+  color:#422816!important;
+}
+#btn3926-modal.bn-explanation-scroll .bn-scroll-copy > p{
+  margin:0 0 10px!important;
+  font:italic 500 clamp(14px,3.75vw,17px)/1.46 "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  letter-spacing:.005em!important;
+  color:#422816!important;
+  text-shadow:0 1px rgba(255,245,212,.24)!important;
+  overflow-wrap:break-word!important;
+}
+#btn3926-modal.bn-explanation-scroll .bn-scroll-copy > .btn3927-result{
+  font:700 clamp(14px,3.75vw,17px)/1.35 Georgia,serif!important;
+  font-style:normal!important;
+  text-align:center!important;
+  color:#31572c!important;
+  margin:0 0 10px!important;
+}
+#btn3926-modal.bn-explanation-scroll.bn-answer-revealed .bn-scroll-copy > .btn3927-result{
+  color:#884b2c!important;
+}
+#btn3926-modal.bn-explanation-scroll .bn-scroll-copy > .btn3926-meaning{
+  text-align:center!important;
+  font:italic 700 clamp(18px,4.9vw,25px)/1.18 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+  color:#6a3b1c!important;
+  margin:3px 0 12px!important;
+}
+#btn3926-modal.bn-explanation-scroll .bn-scroll-copy > .btn3926-note{
+  font-size:clamp(12px,3.15vw,14px)!important;
+  color:#63452d!important;
+}
+#btn3926-modal.bn-explanation-scroll .btn3926-x{
+  box-sizing:border-box!important;
+  position:absolute!important;
+  z-index:3!important;
+  top:clamp(93px,13.8dvh,120px)!important;
+  right:clamp(38px,10vw,61px)!important;
+  width:32px!important;height:32px!important;
+  display:grid!important;place-items:center!important;
+  padding:0!important;
+  border:2px solid #fff0b0!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 34% 20%,#e6bc64,#95611f 83%)!important;
+  color:#fff2c4!important;
+  box-shadow:0 3px 8px #362015b0,inset 0 1px #ffe39b!important;
+  font:700 23px/1 system-ui!important;
+}
+#btn3926-modal.bn-explanation-scroll .btn3929-next{
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  align-self:center!important;
+  width:89%!important;
+  min-height:57px!important;
+  margin:11px auto 0!important;
+  padding:6px 55px 7px 10px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent url('assets/ui/daily-explanation-wax-next-v2.svg') center / 100% 100% no-repeat!important;
+  box-shadow:none!important;
+  color:#f9d887!important;
+  text-align:center!important;
+  font:800 clamp(15px,4.1vw,19px)/1.12 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 2px 2px rgba(34,7,7,.94),0 -1px 1px rgba(255,246,202,.35)!important;
+  filter:drop-shadow(0 2px 3px rgba(48,19,10,.54));
+  transition:filter .18s ease-out,transform .14s ease-out!important;
+}
+#btn3926-modal.bn-explanation-scroll .btn3929-next:active{
+  transform:translateY(2px) scale(.988)!important;
+  filter:drop-shadow(0 1px 1px rgba(45,13,7,.70)) brightness(1.06)!important;
+}
+#btn3926-modal.bn-explanation-scroll .btn3929-next:focus-visible,
+#btn3926-modal.bn-explanation-scroll .btn3926-x:focus-visible{
+  outline:3px solid #fff6c2!important;
+  outline-offset:2px!important;
+}
+@keyframes bn-scroll-appear{
+  from{opacity:0;transform:translateY(-7px) scale(.99)}
+  to{opacity:1;transform:none}
+}
+@media(max-height:620px){
+  #btn3926-modal.bn-explanation-scroll .btn3926-dialog{
+    padding-top:clamp(84px,15dvh,107px)!important;
+    padding-bottom:clamp(66px,11dvh,86px)!important;
+  }
+  #btn3926-modal.bn-explanation-scroll .btn3926-x{
+    top:clamp(61px,10.5dvh,83px)!important;
+  }
+  #btn3926-modal.bn-explanation-scroll .btn3929-next{min-height:49px!important;margin-top:6px!important}
+  #btn3926-modal.bn-explanation-scroll .bn-scroll-copy > p{line-height:1.36!important;margin-bottom:7px!important}
+}
+@media(prefers-reduced-motion:reduce){
+  #btn3926-modal.bn-explanation-scroll .btn3926-dialog{animation:none!important}
+  #btn3926-modal.bn-explanation-scroll .btn3929-next{transition:none!important}
+}
