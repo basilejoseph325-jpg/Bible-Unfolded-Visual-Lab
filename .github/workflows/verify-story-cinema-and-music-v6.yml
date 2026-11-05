@@ -1,0 +1,54 @@
+name: Verify TEST Story finale cinema title fit and soundtrack
+on:
+ push:
+  paths: ['.github/workflows/verify-story-cinema-and-music-v6.yml']
+permissions: {contents: read}
+jobs:
+ verify:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - name: Validate syntax and scoped Story rendering/audio
+     run: |
+      node --check bible_unfolded_core_part5.js
+      node --check story-chapter-complete-v2-test.js
+      node --check journey-progress-caption.js
+      python3 - <<'PY'
+      from pathlib import Path
+      import json,re
+      raw=Path('bible_unfolded_core_part5.js').read_text()
+      m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+      assert m
+      core=json.loads(m.group(1))
+      target=core[core.index('function bu25Target(){'):core.index('function bu25UpdateStatus(){')]
+      assert target.count("if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';")==1
+      assert "if(!$('bu375-daily').hidden)return 'daily';" in target
+      assert "if(!$('crossword-screen').hidden)return 'trails';" in target
+      assert 'const duckGoal=1;' in core and 'const goal=1;' in core
+      assert "if(s.complete){" in core
+      assert 'const sceneSrc=BU3857_SCENE_ART[d.id]||BU_GENESIS_SCENE_ART[d.id];' in core
+      js=Path('story-chapter-complete-v2-test.js').read_text()
+      css=Path('story-chapter-complete-v2-test.css').read_text()
+      loader=Path('journey-progress-caption.js').read_text()
+      assert "const hero=document.createElement('figure')" in js
+      assert "card.insertBefore(hero,emblem)" in js
+      assert "if(!modern)return;" in js
+      assert "photo.src=art.src;" in js
+      assert "const bg=document.createElement('div')" in js
+      assert "span.textContent=wording" in js and "title.replaceChildren(span)" in js
+      assert ".onclick=" not in js and "music.volume" not in js and "syncMusic()" not in js
+      assert "bu-story-finale-cinematic-hero" in css
+      assert "@keyframes bu-story-finale-cinema-zoom" in css
+      assert "prefers-reduced-motion:reduce" in css
+      assert ".reduce-motion #bu3857-screen" in css
+      assert 'bu3815-chapter-finale' in css
+      assert "#play .bu3815-chapter-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text" in css
+      assert "font-size:clamp(18px,4.85vw,24px)" in css
+      assert ".bu3857-scroll:has(.bu3863-finale.bu-story-finale-v2)" in css
+      assert "padding:0!important" in css
+      assert "opacity:.13!important" in css
+      assert "story-chapter-complete-v2-test.js?v=20261105-story-cinema-music-v6" in loader
+      assert "story-chapter-complete-v2-test.css?v=20261105-story-cinema-music-v6" in loader
+      assert "visual-lab-test-banner.js" in loader and "premium-sfx.js" in loader
+      print("PASS: newer chapter hero zoom, original chapters unchanged, title constraint, continuous background, BOTH Story engines use story music, no duck and no new SFX")
+      PY
