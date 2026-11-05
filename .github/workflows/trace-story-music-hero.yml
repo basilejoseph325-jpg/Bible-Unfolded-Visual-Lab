@@ -1,0 +1,38 @@
+name: Trace Story music transitions and scene artwork (targeted)
+on:
+ push:
+  paths: ['.github/workflows/trace-story-music-hero.yml']
+permissions: {contents: read}
+jobs:
+ trace:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       import re,json
+       from pathlib import Path
+       corpus={}
+       for f in Path('.').glob('bible_unfolded_core_part*.js'):
+        raw=f.read_text()
+        m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+        if m:
+         try:raw=json.loads(m.group(1))
+         except:pass
+        corpus[f.name]=raw
+       terms=['bu3857Open=','function bu3857Open','const bu3857Open','bu3857Open=function','function bu3857Exit','bu3857Exit=','bu3857State.complete','s.complete=true','musicVolume','bu25AudioPulse','bu25Set','bu25Select','bu25Music','setModeMusic','musicDirector','backgroundMusic','function bu3818','bu3857Chapter(','bu34Music','audioScene']
+       for term in terms:
+        print('\nTERM',term)
+        total=0
+        for name,src in corpus.items():
+         hits=list(re.finditer(re.escape(term),src))
+         if hits:
+          print('FILE',name,'COUNT',len(hits))
+          for match in hits[:3]:
+           i=match.start()
+           left=350 if term not in ['function bu3857Open','s.complete=true','function bu3857Exit'] else 700
+           right=1100 if term not in ['function bu3857Open','s.complete=true','function bu3857Exit'] else 2300
+           print('SNIP',repr(src[max(0,i-left):i+right])[:3200])
+          total+=len(hits)
+        print('TOTAL',total)
+       PY
