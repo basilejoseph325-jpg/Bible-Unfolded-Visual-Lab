@@ -55,10 +55,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Decorative book/laurel, engraved title plaque, beveled navigation and brief
    noninteractive gold confetti only when a chapter-completion screen renders. */
 (()=>{if(document.getElementById('bu-story-chapter-complete-v2-css'))return;const l=document.createElement('link');l.id='bu-story-chapter-complete-v2-css';l.rel='stylesheet';l.href='story-chapter-complete-v2-test.css?v=20261105-story-finale-parity-v10';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-story-chapter-complete-v2-js'))return;const s=document.createElement('script');s.id='bu-story-chapter-complete-v2-js';s.src='story-chapter-complete-v2-test.js?v=20261105-stage-layout-v11';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-story-chapter-complete-v2-js'))return;const s=document.createElement('script');s.id='bu-story-chapter-complete-v2-js';s.src='story-chapter-complete-v2-test.js?v=20261105-paired-actions-v11b';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Visual Lab ONLY — V11 structural Story completion parity.
    Load AFTER legacy V2–V10 CSS so a centered modern achievement stage
    replaces accumulated margin offsets. Does not touch Episodes 1–6. */
-(()=>{if(document.getElementById('bu-story-finale-stage-v11-css'))return;const l=document.createElement('link');l.id='bu-story-finale-stage-v11-css';l.rel='stylesheet';l.href='story-finale-structural-parity-v11.css?v=20261105-stage-layout-v11';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-story-finale-stage-v11-css'))return;const l=document.createElement('link');l.id='bu-story-finale-stage-v11-css';l.rel='stylesheet';l.href='story-finale-structural-parity-v11.css?v=20261105-paired-actions-v11b';document.head.appendChild(l)})();
