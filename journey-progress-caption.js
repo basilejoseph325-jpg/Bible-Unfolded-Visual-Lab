@@ -25,4 +25,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Visual Lab ONLY: home screen TEST label; no layout or input interception. */
 (()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=20261104-test-ribbon-v1';document.head.appendChild(s)})();
 
+/* Visual Lab ONLY — four Daily Discovery polish refinements (no other game modes). */
+(()=>{if(document.getElementById('bu-daily-polish-test'))return;const l=document.createElement('link');l.id='bu-daily-polish-test';l.rel='stylesheet';l.href='daily-discovery-polish-test.css?v=20261104-approved-preview-v1';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-daily-gold-icons-test'))return;const s=document.createElement('script');s.id='bu-daily-gold-icons-test';s.src='daily-discovery-gold-icons-test.js?v=20261104-approved-preview-v1';s.defer=true;document.head.appendChild(s)})();
+
 /* The obsolete Story gesture overlay is intentionally NOT loaded. The native sound system handles gestures without duplicate tap or swish samples. */
