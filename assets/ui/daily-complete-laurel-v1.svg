@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="202" viewBox="0 0 280 202" fill="none" aria-hidden="true">
+<defs>
+<linearGradient id="gold" x1="0" y1="0" x2="0.82" y2="1"><stop stop-color="#fff9d6"/><stop offset=".22" stop-color="#f8df91"/><stop offset=".46" stop-color="#ad7427"/><stop offset=".7" stop-color="#e5b955"/><stop offset="1" stop-color="#fff3bc"/></linearGradient>
+<linearGradient id="deep" x1="0" y1="0" x2="0.9" y2="1"><stop stop-color="#ffedac"/><stop offset=".5" stop-color="#996021"/><stop offset="1" stop-color="#5f3815"/></linearGradient>
+<radialGradient id="aura"><stop stop-color="#f6c76e" stop-opacity=".20"/><stop offset=".58" stop-color="#e0ad5d" stop-opacity=".06"/><stop offset="1" stop-color="#e0ad5d" stop-opacity="0"/></radialGradient>
+<filter id="shadow" x="-50%" y="-50%" width="200%" height="200%"><feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-color="#030e14" flood-opacity=".8"/></filter>
+<filter id="light"><feGaussianBlur stdDeviation="5"/></filter>
+</defs>
+<ellipse cx="140" cy="99" rx="106" ry="91" fill="url(#aura)"/>
+<g stroke-linecap="round" filter="url(#shadow)">
+<path d="M117 169C64 151 53 91 86 46" stroke="url(#deep)" stroke-width="3.8"/>
+<path d="M163 169C216 151 227 91 194 46" stroke="url(#deep)" stroke-width="3.8"/>
+<g fill="url(#gold)" stroke="#6b431e" stroke-width=".9">
+<path d="M103 156Q79 160 68 147Q91 143 103 156Z"/><path d="M94 143Q70 140 65 122Q86 126 94 143Z"/>
+<path d="M83 128Q59 120 62 101Q80 112 83 128Z"/><path d="M76 110Q54 96 64 79Q77 94 76 110Z"/>
+<path d="M73 89Q55 69 70 56Q79 72 73 89Z"/><path d="M78 71Q67 48 84 40Q90 58 78 71Z"/>
+<path d="M89 54Q86 30 106 27Q107 46 89 54Z"/><path d="M107 163Q86 177 73 169Q91 157 107 163Z"/>
+<path d="M177 156Q201 160 212 147Q189 143 177 156Z"/><path d="M186 143Q210 140 215 122Q194 126 186 143Z"/>
+<path d="M197 128Q221 120 218 101Q200 112 197 128Z"/><path d="M204 110Q226 96 216 79Q203 94 204 110Z"/>
+<path d="M207 89Q225 69 210 56Q201 72 207 89Z"/><path d="M202 71Q213 48 196 40Q190 58 202 71Z"/>
+<path d="M191 54Q194 30 174 27Q173 46 191 54Z"/><path d="M173 163Q194 177 207 169Q189 157 173 163Z"/>
+</g>
+<path d="M126 170Q140 178 154 170" stroke="#e8bf71" stroke-width="2.3"/>
+<path d="M140 47l12 33 33 12-33 12-12 33-12-33-33-12 33-12Z" fill="url(#gold)" stroke="#fff0b4" stroke-width="2.3"/>
+<path d="M140 58l8 25 25 9-25 9-8 25-8-25-25-9 25-9Z" fill="none" stroke="#fff7cd" stroke-opacity=".67" stroke-width="1"/>
+<path d="M140 25v14M107 40l-7-8M173 40l7-8M95 92H82M185 92h13" stroke="url(#gold)" stroke-width="2.1"/>
+</g>
+</svg>
