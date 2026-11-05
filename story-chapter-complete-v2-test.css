@@ -574,3 +574,52 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
 .reduce-motion #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-cinematic-photo{
  animation:none!important;transform:scale(1.02)!important;
 }
+
+
+/* V7B TEST — owner's two-sided OPEN FRAME: long tapered antique-gold rules
+   ABOVE and BELOW the title, no vertical frame and no fixed title safe-area.
+   This is DOM/CSS decoration only; natural text wrapping remains unrestricted. */
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2{
+ width:min(100%,680px)!important;
+ padding:clamp(5px,1dvh,9px) 0!important;
+ gap:clamp(8px,1.6dvh,14px)!important;
+}
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2::before,
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2::after,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2::before,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2::after{
+ content:""!important;
+ display:block!important;
+ flex:0 0 auto!important;
+ position:static!important;
+ width:min(94%,595px)!important;
+ height:3px!important;
+ margin:0 auto!important;
+ padding:0!important;
+ border:0!important;
+ border-radius:0!important;
+ background:linear-gradient(90deg,
+  transparent 0%,rgba(141,95,38,.23) 3%,
+  #c1934b 9%,#ffe4a0 22%,#f4cf80 48%,
+  #ffe7a8 72%,#c1934b 91%,transparent 100%)!important;
+ clip-path:polygon(0 50%,9% 0,91% 0,100% 50%,91% 100%,9% 100%)!important;
+ opacity:.93!important;
+ box-shadow:none!important;
+ pointer-events:none!important;
+}
+#play .bu3815-chapter-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2 > .bu-story-finale-title-text{
+ width:100%!important;
+ padding:0 clamp(7px,1.8vw,14px)!important;
+ max-width:100%!important;
+ min-width:0!important;
+ margin:0 auto!important;
+}
+@media(max-height:760px){
+ #play .bu3815-chapter-finale.bu-story-finale-v2 > h2,
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > h2{
+  gap:7px!important;
+  padding:3px 0!important;
+ }
+}
