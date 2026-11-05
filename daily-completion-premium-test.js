@@ -12,7 +12,7 @@
    const result=body.querySelector(':scope > .bu375-result');
    const home=body.querySelector(':scope > #bu375-home');
    const replay=body.querySelector(':scope > #bu375-again');
-   if(!result||!home||!replay)return;
+   if(!result||!home||!replay){body.classList.remove('bu-daily-finale-v1');return;}
    if(body.classList.contains('bu-daily-finale-v1'))return;
    inChange=true;
    try {
