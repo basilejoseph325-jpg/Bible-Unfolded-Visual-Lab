@@ -20,7 +20,7 @@
    // Keep native button and click handler; remove only its duplicate text arrow.
    if(!next.dataset.buWaxV2){
     next.dataset.buWaxV2='1';
-    next.textContent=(next.textContent||'').replace(/\\s*[→›➜]\\s*$/u,'').trim();
+    next.textContent=(next.textContent||'').replace(/\s*[→›➜]\s*$/u,'').trim();
    }
    overlay.classList.add('bu-daily-explanation-scroll');
   });
