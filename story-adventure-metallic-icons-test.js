@@ -41,8 +41,8 @@
     }
     // Completion buttons keep their human-readable labels and native handlers.
     for(const [id,path,strip] of [
-     ['playAgain','assets/ui/story-gold-restart-v1.svg',/^(?:↻|⟲)\\s*/u],
-     ['read-story','assets/ui/daily-gold-bible-v3.svg',/^📖\\s*/u]
+     ['playAgain','assets/ui/story-gold-restart-v1.svg',/^(?:↻|⟲)\s*/u],
+     ['read-story','assets/ui/daily-gold-bible-v3.svg',/^📖\s*/u]
     ]){
      const button=root.querySelector('#'+id);
      if(!button||button.querySelector(':scope > img.bu-story-metal-icon'))continue;
