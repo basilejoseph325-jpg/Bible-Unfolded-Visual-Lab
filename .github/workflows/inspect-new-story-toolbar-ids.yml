@@ -1,0 +1,23 @@
+name: Inspect newer Story toolbar button IDs
+on:
+  push:
+    paths: ['.github/workflows/inspect-new-story-toolbar-ids.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          s=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+          assert m
+          s=json.loads(m.group(1))
+          a=s.index('const toolbar=solved')
+          print('TOOLBAR',s[a:a+3600])
+          for id in ['bu3863-reveal','bu3863-restart','bu3857-hint','bu3863-hint','bu3863-eye','playAgain','read-story']:
+           print('ID',id,'COUNT',s.count(id))
+          PY
