@@ -551,7 +551,6 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
    dwell from ease-in-out; alternate direction without resetting abruptly. */
 #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-cinematic-photo{
  animation:bu-story-finale-cinema-zoom-v7 7.2s linear infinite alternate!important;
- transform:scale(1.15) translateX(-1.2%)!important;
 }
 @keyframes bu-story-finale-cinema-zoom-v7{
  from{transform:scale(1.15) translateX(-1.2%)}
