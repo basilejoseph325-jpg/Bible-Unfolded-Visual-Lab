@@ -1,0 +1,25 @@
+name: Inspect dynamically rendered Daily completion
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-finish-engine.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          for p in list(Path('.').glob('*.js')):
+           if p.stat().st_size>6000000:continue
+           s=p.read_text(errors='replace')
+           m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+           if m:
+            try:s=json.loads(m.group(1))
+            except: pass
+           for word in ['Every answer is progress','Explore Today','already collected','A new round will be available tomorrow','bu375-finished','bu375-end','bu375-complete','renderDailyComplete','bu375-summary']:
+            match=re.search(re.escape(word),s,re.I)
+            if match:print('FILE',p,'TERM',word,'TEXT',repr(s[max(0,match.start()-1600):match.end()+2500])[:4400])
+          PY
