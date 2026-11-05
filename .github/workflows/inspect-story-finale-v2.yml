@@ -1,0 +1,26 @@
+name: Inspect Story chapter finale targets V2
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-finale-v2.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          h=Path('index.html').read_text()
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',core)
+          assert m
+          s=json.loads(m.group(1))
+          for label,source in [('HTML',h),('CORE',s)]:
+           for term in ['The creative periods begin to unfold','GENESIS · THE CREATION ACCOUNT COMPLETE','Next Chapter','playAgain','toJourney','read-story','bu3857-replay','bu3857-next-episode','bu3857-complete','bu3857-done','bu3857-finish','bu3857-summary','class="completion','class="bu3857-']:
+            matches=list(re.finditer(re.escape(term),source,re.I))
+            print(label,'TERM',term,'COUNT',len(matches))
+            for ma in matches[:2]:
+             print('SNIP',repr(source[max(0,ma.start()-850):ma.end()+1200])[:2150])
+          PY
