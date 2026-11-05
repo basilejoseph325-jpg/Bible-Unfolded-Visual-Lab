@@ -26,8 +26,12 @@
    if(typeof sfxOn==='undefined'||!sfxOn||typeof sfxVolume==='undefined'||sfxVolume<=0)return;
    if(typeof playChime==='function')playChime();
    if(pref==='gentle')return;
-   if(score===3&&typeof playCoinFx==='function')playCoinFx('spend');
-   if(score>=4&&typeof playCoinFx==='function')playCoinFx('earn');
+   // Increasing sound layering by score; existing approved samples only.
+   if(score===2&&typeof playCoinFx==='function')playCoinFx('spend');
+   if(score>=3&&typeof playCoinFx==='function')playCoinFx('earn');
+   if(score===4&&typeof playChime==='function')window.setTimeout(()=>{
+    if(!document.hidden&&typeof sfxOn!=='undefined'&&sfxOn)playChime();
+   },330);
    if(score===5&&typeof playVictoryCheer==='function')playVictoryCheer();
   }catch(_){/* audio must never block the result controls */}
  }
