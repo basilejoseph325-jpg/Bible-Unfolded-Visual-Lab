@@ -1,0 +1,27 @@
+name: Inspect exact Story Next audio and finale scene drawing
+on:
+ push:
+  paths: ['.github/workflows/inspect-exact-next-audio-v9.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       from pathlib import Path
+       import re,json
+       raw=Path('bible_unfolded_core_part5.js').read_text()
+       s=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+       for term in ["$('toJourney').onclick","$('bu3857-next-episode').onclick","function bu25Target","function bu3857Render(){","function bu3857Open","bu3857Open=","function openEpisodes","function bu3857Exit","function startChapter","function bu3815","clickSfx","function tap","function tick"]:
+        m=list(re.finditer(re.escape(term),s))
+        print('KEY',term,'COUNT',len(m))
+        for h in m[:2]:
+         snippet=s[max(0,h.start()-350):h.start()+1250].replace('data:image','DATA_IMG:')
+         print('SNIP',repr(snippet)[:1900])
+       a=Path('premium-sfx.js').read_text()
+       for term in ['const storyLevel','lastClick?.storyLevel','HTMLMediaElement.prototype.play','function rememberTouch']:
+        i=a.find(term)
+        print('PREMIUM',term,repr(a[max(i-70,0):i+690]))
+       PY
