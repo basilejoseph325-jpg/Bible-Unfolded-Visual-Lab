@@ -1,0 +1,92 @@
+/* Daily Discovery answer-explanation scroll only — Visual Lab v1.
+   The background is a genuine raster artwork assembled from the existing
+   photographed Word Builder scroll rollers; NOT a CSS-drawn scroll.
+   No changes to game logic, text content, or other dialogs/modes. */
+.bu65-info-overlay.bu-daily-explanation-scroll {
+ background:rgba(0,18,25,.78)!important;
+ backdrop-filter:blur(6px)!important;
+ padding:8px 4px max(8px,env(safe-area-inset-bottom))!important;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-card{
+ box-sizing:border-box!important;
+ display:flex!important;flex-direction:column!important;
+ width:min(99vw,480px)!important;
+ height:min(85dvh,690px)!important;min-height:0!important;
+ max-height:min(85dvh,690px)!important;
+ padding:clamp(76px,12dvh,103px) clamp(38px,10vw,64px)
+         clamp(62px,9dvh,85px)!important;
+ border:0!important;border-radius:0!important;
+ box-shadow:0 13px 35px rgba(0,0,0,.43)!important;
+ background-color:#d8ae71!important;
+ background-image:url('assets/ui/daily-discovery-explanation-scroll-v1.webp')!important;
+ background-size:100% 100%!important;
+ background-position:center!important;
+ background-repeat:no-repeat!important;
+ color:#3c2619!important;
+ animation:bu-daily-scroll-appear .22s ease-out both;
+ overflow:hidden!important;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-card h2{
+ flex:none!important;
+ font:700 clamp(24px,6.1vw,31px)/1.14 Georgia,serif!important;
+ color:#315d35!important;
+ text-align:center!important;
+ text-shadow:0 1px 0 rgba(255,244,194,.7)!important;
+ margin:0 32px 13px 0!important;
+ overflow-wrap:anywhere;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-body{
+ flex:1 1 auto!important;min-height:0!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+ overscroll-behavior:contain!important;
+ font:500 clamp(14px,3.9vw,17px)/1.5 Georgia,serif!important;
+ color:#3b2619!important;text-shadow:0 1px rgba(255,245,212,.25)!important;
+ background:transparent!important;
+ scrollbar-width:thin;scrollbar-color:#9d703b transparent;
+ padding:0 2px!important;
+ white-space:pre-wrap!important;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-close{
+ z-index:2!important;position:absolute!important;
+ top:clamp(65px,10dvh,84px)!important;
+ right:clamp(39px,10.5vw,60px)!important;
+ width:38px!important;height:38px!important;min-height:38px!important;
+ border-radius:50%!important;
+ background:radial-gradient(circle at 34% 20%,#e6bc64,#95611f 83%)!important;
+ border:2px solid #fff0b0!important;
+ color:#fff2c4!important;
+ box-shadow:0 3px 8px #362015b0,inset 0 1px #ffe39b!important;
+ font:700 25px system-ui!important;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-confirm{
+ flex:none!important;
+ width:100%!important;
+ margin:13px 0 0!important;
+ min-height:52px!important;
+ padding:7px 10px!important;
+ background:linear-gradient(160deg,#8d251d,#65160e 60%,#440e0b)!important;
+ color:#ffe6a4!important;
+ border:2px solid #d7a457!important;
+ border-radius:25px!important;
+ font:800 clamp(14px,4.2vw,18px) Georgia,serif!important;
+ text-shadow:0 1px 2px #2c0909!important;
+ box-shadow:inset 0 2px 2px #e5734d88,0 4px 6px #5b361d7a!important;
+}
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-confirm:focus-visible,
+.bu65-info-overlay.bu-daily-explanation-scroll .bu65-close:focus-visible {
+ outline:3px solid #fff6c2!important;outline-offset:2px!important;
+}
+@keyframes bu-daily-scroll-appear{from{opacity:0;transform:translateY(-7px) scale(.99)}
+ to{opacity:1;transform:none}}
+@media(max-height:620px){
+ .bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-card{
+  padding-top:62px!important;padding-bottom:55px!important;
+ }
+ .bu65-info-overlay.bu-daily-explanation-scroll .bu65-close{top:52px!important;}
+ .bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-body{
+  font-size:14px!important;line-height:1.38!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .bu65-info-overlay.bu-daily-explanation-scroll .bu65-info-card{animation:none!important;}
+}
