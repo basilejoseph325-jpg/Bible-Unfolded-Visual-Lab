@@ -1,0 +1,43 @@
+name: Verify Daily Discovery V2 parchment refinements
+on:
+  push:
+    paths: ['.github/workflows/verify-daily-scroll-v2.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check assets and JS only within Daily Discovery
+        run: |
+          node --check daily-discovery-explanation-scroll.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          art=Path('assets/ui/daily-discovery-explanation-scroll-v2.webp')
+          assert art.exists() and art.stat().st_size>25000
+          seal=Path('assets/ui/daily-explanation-wax-next-v2.svg')
+          root=ET.fromstring(seal.read_text())
+          assert root.tag.endswith('svg') and root.attrib.get('viewBox')=='0 0 500 104'
+          assert 'M413 44H430V35L447 52L430 69V60H413Z' in seal.read_text()
+          build=Path('.github/scripts/build_daily_explanation_scroll.py').read_text()
+          assert "im.crop((0,0,im.width,clean_height))" in build
+          assert 'clean_height=int(im.height*.70)' in build
+          css=Path('daily-discovery-explanation-scroll.css').read_text()
+          assert 'daily-discovery-explanation-scroll-v2.webp' in css
+          assert 'daily-explanation-wax-next-v2.svg' in css
+          assert 'font-style:italic!important' in css
+          assert 'padding-top:clamp(125px,18dvh,153px)' in css
+          js=Path('daily-discovery-explanation-scroll.js').read_text()
+          assert "document.getElementById('bu375-daily')" in js
+          assert 'bu65-info-overlay:not(.bu-daily-explanation-scroll)' in js
+          assert "next.dataset.buWaxV2" in js
+          assert "overlay.classList.add('bu-daily-explanation-scroll')" in js
+          assert "next.textContent=(next.textContent||'').replace" in js
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'daily-discovery-explanation-scroll.css?v=20261104-clean-art-wax-v2' in loader
+          assert 'daily-discovery-explanation-scroll.js?v=20261104-clean-art-wax-v2' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          print('PASS: clean V2 parchment file, roller crop, embossed arrow seal, type, title spacing, Daily-only scope and native controls')
+          PY
