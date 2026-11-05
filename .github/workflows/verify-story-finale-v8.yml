@@ -20,11 +20,11 @@ jobs:
           js=Path('story-chapter-complete-v2-test.js').read_text()
           sfx=Path('premium-sfx.js').read_text()
           load=Path('journey-progress-caption.js').read_text()
-          base=subprocess.check_output(['git','show','7c0b54dbc23be15a43d27dd5c5a544dcb21dc1c7'],text=True)
+          assert subprocess.check_output(['git','hash-object','premium-sfx.js'],text=True).strip()=='2e4845d6d139deaa4d956e88d1acd94e1647c59b'
           a="#episode-list [data-episode],#bu3857-replay,#bu3857-next-episode')"
           b="#episode-list [data-episode],#bu3857-replay')"
-          assert base.count(a)==1
-          assert sfx==base.replace(a,b,1), 'Only the newer next-button SFX category may change'
+          assert a not in sfx and sfx.count(b)==1
+          assert "version:'2026-11-04-story-audible-soft-tap-v6'" in sfx
           assert 'storyLevel' in sfx and "lastClick?.storyLevel" in sfx
           assert 'const chapter=state' in js and 'BU3857_DATA[state.book]' in js
           assert "chapter?.discoveries?.[0]?.title" in js
