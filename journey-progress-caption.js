@@ -65,7 +65,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Behind the Name approved material refinement: scoped to play screen only.
    This stylesheet loads after the existing native-layout preview. */
-(()=>{if(document.getElementById('bn-stone-material-v3'))return;const l=document.createElement('link');l.id='bn-stone-material-v3';l.rel='stylesheet';l.href='behind-name-question-premium-test.css?v=20261105-name-study-v3';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bn-stone-material-v3'))return;const l=document.createElement('link');l.id='bn-stone-material-v3';l.rel='stylesheet';l.href='behind-name-question-premium-test.css?v=20261105-solid-wrong-v4';document.head.appendChild(l)})();
 
 /* Visual Lab only: independent Behind the Name visual skin. */
 (()=>{const s=document.createElement('script');s.src='behind-name-visual-preview.js?v=20261105-name-study-v3';document.body.appendChild(s)})();
