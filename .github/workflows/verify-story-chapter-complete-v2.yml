@@ -50,8 +50,9 @@ jobs:
           assert 'assets/ui/story-complete-inscription-plaque-v2.svg' in css
           assert 'prefers-reduced-motion:reduce' in css
           assert 'pointer-events:none' in css
+          assert 'body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx' in css
           assert 'story-chapter-complete-v2-test.js?v=20261105-test-chapter-finale-v2' in loader
-          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-finale-v2' in loader
+          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-finale-v2b' in loader
           assert 'visual-lab-test-banner.js' in loader
           assert '20261104-story-gold-all-roots' not in loader or 'story-adventure-metallic-icons-test.js' in loader
           assert 'premium-sfx.js' in loader
