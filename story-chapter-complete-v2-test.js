@@ -44,7 +44,7 @@
  }
  // Reuse the chapter's existing artwork rather than flattening a mockup
  // (which would bake in text and buttons). Missing art leaves teal untouched.
- function chapterArt(modern){
+ function chapterArt(modern,ending=false){
   if(!modern){
    const frame=document.querySelector('#scene .scene-img.show');
    const image=frame?.style.backgroundImage||'';
@@ -57,7 +57,7 @@
   if(!found)return null;
   const book=found[1].toUpperCase(),number=Number(found[2]);
   if(book==='GENESIS'&&number>=7&&number<=9){
-   const key='g'+String(number).padStart(2,'0')+'-d01';
+   const key='g'+String(number).padStart(2,'0')+(ending?'-d10':'-d01');
    if(typeof BU_GENESIS_SCENE_ART!=='undefined'){
     const src=BU_GENESIS_SCENE_ART[key];
     if(src)return {src};
@@ -67,7 +67,7 @@
   }
   if(book==='EXODUS'){
    const chapter=number+6;
-   const key='ex'+chapter+'-d01';
+   const key='ex'+chapter+(ending?'-d10':'-d01');
    if(typeof BU3857_SCENE_ART!=='undefined'){
     const src=BU3857_SCENE_ART[key];
     if(src)return {src};
@@ -76,7 +76,7 @@
   return null;
  }
  function atmosphere(card,modern){
-  const art=chapterArt(modern);
+  const art=chapterArt(modern,true);
   if(!art)return;
   const bg=document.createElement('div');
   bg.className='bu-story-finale-atmosphere';
