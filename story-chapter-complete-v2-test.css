@@ -244,3 +244,67 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
  #bu3857-screen .bu3863-finale.bu-story-finale-v2{padding-top:8px!important;gap:5px!important}
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:65px!important}
 }
+
+
+/* V4 cinematic chapter atmosphere — TEST ONLY.
+   Reuses the actual episode art as background and NEVER touches chapter hero,
+   headings, buttons, scroll placement or content. No baked UI, no collages. */
+#play .bu3815-chapter-finale.bu-story-finale-v2,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 {
+ background:radial-gradient(ellipse at 50% 18%,rgba(209,156,76,.105),transparent 45%),
+            linear-gradient(175deg,#0c3440 0%,#0a303c 44%,#062632 100%)!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere{
+ position:absolute!important;
+ inset:0!important;
+ width:100%!important;height:100%!important;
+ padding:0!important;margin:0!important;
+ z-index:0!important;isolation:isolate!important;
+ pointer-events:none!important;
+ overflow:hidden!important;
+ background:radial-gradient(ellipse at 52% 25%,rgba(234,169,90,.12),transparent 48%)!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere > .bu-story-finale-atmosphere-art{
+ position:absolute!important;
+ inset:-9px!important;
+ width:calc(100% + 18px)!important;
+ height:calc(100% + 18px)!important;
+ padding:0!important;margin:0!important;
+ background-size:cover!important;
+ background-repeat:no-repeat!important;
+ background-position:center center!important;
+ filter:blur(5px) saturate(.64) brightness(.64)!important;
+ opacity:.31!important;
+ -webkit-mask-image:linear-gradient(180deg,rgba(0,0,0,.8) 0%,rgba(0,0,0,.65) 22%,rgba(0,0,0,.10) 48%,rgba(0,0,0,.15) 69%,rgba(0,0,0,.63) 100%)!important;
+ mask-image:linear-gradient(180deg,rgba(0,0,0,.8) 0%,rgba(0,0,0,.65) 22%,rgba(0,0,0,.10) 48%,rgba(0,0,0,.15) 69%,rgba(0,0,0,.63) 100%)!important;
+ pointer-events:none!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > :not(.bu-story-finale-atmosphere):not(.bu-story-finale-shower){
+ position:relative;z-index:1;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2::after{
+ content:"✦"!important;
+ position:absolute!important;
+ bottom:clamp(13px,3.2dvh,42px)!important;
+ left:50%!important;
+ transform:translateX(-50%)!important;
+ z-index:0!important;
+ width:clamp(160px,47vw,250px)!important;
+ height:20px!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ color:#e2bf78!important;
+ font:500 13px/1 Georgia,serif!important;
+ letter-spacing:0!important;
+ text-shadow:0 0 9px rgba(248,201,118,.26)!important;
+ background:linear-gradient(90deg,transparent 0%,rgba(213,166,79,.36) 42%,transparent 48%,transparent 52%,rgba(213,166,79,.36) 58%,transparent 100%) center/100% 1px no-repeat!important;
+ opacity:.68!important;
+ pointer-events:none!important;
+}
+@media(max-height:680px){
+ :is(#play,#bu3857-screen) .bu-story-finale-v2::after{
+  bottom:6px!important;opacity:.35!important;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-atmosphere-art{transition:none!important}
+}
