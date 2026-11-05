@@ -1,0 +1,28 @@
+name: Inspect Behind the Name wrong-answer fade
+on:
+  push:
+    paths: ['.github/workflows/inspect-behind-name-wrong-20261105.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect original game CSS and wrong-answer JavaScript
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text(encoding='utf-8')
+          for term in ['.btn3926-answer.is-wrong','.btn3926-answer:disabled','btn3926-answer','is-wrong','btn3926-answers']:
+            matches=list(re.finditer(re.escape(term),s))
+            print('TERM',repr(term),'COUNT',len(matches))
+            for j,m in enumerate(matches[:15]):
+              a=max(0,m.start()-300);b=min(len(s),m.end()+420)
+              snippet=s[a:b].replace('\n',' ')
+              print('MATCH',j,'OFFSET',m.start(),repr(snippet))
+          for f in ['behind-name-visual-preview.js','behind-name-question-premium-test.css','journey-progress-caption.js']:
+            t=Path(f).read_text()
+            print('FILE',f,'LENGTH',len(t),'HAS WRONG OPACITY',bool(re.search(r'is-wrong[^}]{0,400}opacity',t,re.S)))
+          PY
