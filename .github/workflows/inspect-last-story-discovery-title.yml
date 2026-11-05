@@ -1,0 +1,24 @@
+name: Inspect late chapter last discovery title fields
+on:
+ push:
+  paths: ['.github/workflows/inspect-last-story-discovery-title.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       import re,json
+       from pathlib import Path
+       for p in Path('.').glob('bible_unfolded_core_part*.js'):
+        s=p.read_text()
+        m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S)
+        if m:s=json.loads(m.group(1))
+        for term in ['const BU_GENESIS_EPISODES','const BU_GENESIS_CHAPTERS','const BU3857_CHAPTERS','function bu3857Current','function bu3857Chapter','genesis_ep07','g07-d10','g08-d10','g09-d10','BU3857_SCENE_ALT']:
+         found=list(re.finditer(re.escape(term),s))
+         if not found:continue
+         print('FILE',p.name,'TERM',term,'COUNT',len(found))
+         for m in found[:2]:print('SNIP',repr(s[max(0,m.start()-140):m.start()+1900])[:2100])
+       PY
