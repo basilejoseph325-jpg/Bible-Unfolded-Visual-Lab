@@ -31,7 +31,7 @@ jobs:
           css=Path('story-adventure-metallic-icons-test.css').read_text()
           html=Path('index.html').read_text()
           from re import findall
-          matches=findall(r"\['(scene-[a-z-]+|to-home|play-menu)','([^']+)'\]",src)
+          matches=findall(r"\['(scene-[a-z-]+|bu3863-[a-z-]+|bu3857-[a-z-]+|to-home|play-menu)','([^']+)'\]",src)
           assert len(matches)==17,matches
           for id,path in matches:
            assert Path(path).exists(),path
@@ -51,8 +51,8 @@ jobs:
           assert 'wheel' in css.splitlines()[0].lower() or 'wheel' in css
           assert 'touch-action' not in css
           loader=Path('journey-progress-caption.js').read_text()
-          assert 'story-adventure-metallic-icons-test.css?v=20261104-story-gold-v1' in loader
-          assert 'story-adventure-metallic-icons-test.js?v=20261104-story-gold-v1' in loader
+          assert 'story-adventure-metallic-icons-test.css?v=20261104-story-gold-multi-engine-v2' in loader
+          assert 'story-adventure-metallic-icons-test.js?v=20261104-story-gold-multi-engine-v2' in loader
           assert 'visual-lab-test-banner.js' in loader
           assert 'docs/design-system/ANSWER_TABLETS_AND_GOLD_ICONS_RULES.md' in Path('BIBLE_UNFOLDED_RULEBOOK_START_HERE.md').read_text()
           print('PASS: all seventeen icon mappings validated, seven new SVGs, approved masters, and Story-only scope')
