@@ -1,0 +1,17 @@
+name: Inspect newer Story header controls
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-new-header.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text()
+          p=s.index('id="bu3857-screen"')
+          print('ROOT',repr(s[p-100:p+2100]))
+          PY
