@@ -41,3 +41,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Do not alter wheel geometry, audio, scoring, story layout or live repository. */
 (()=>{if(document.getElementById('bu-story-metal-icons-css'))return;const l=document.createElement('link');l.id='bu-story-metal-icons-css';l.rel='stylesheet';l.href='story-adventure-metallic-icons-test.css?v=20261104-all-story-roots-v4';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bu-story-metal-icons-js'))return;const s=document.createElement('script');s.id='bu-story-metal-icons-js';s.src='story-adventure-metallic-icons-test.js?v=20261104-all-story-roots-v4';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Visual Lab ONLY — Daily Discovery completion celebration redesign.
+   Visual assets + native button decoration only; no change to rewards, score,
+   scripture, question/answer logic, sound effects, or live game. */
+(()=>{if(document.getElementById('bu-daily-completion-premium-css'))return;const l=document.createElement('link');l.id='bu-daily-completion-premium-css';l.rel='stylesheet';l.href='daily-completion-premium-test.css?v=20261104-completion-art-v1';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-daily-completion-premium-js'))return;const s=document.createElement('script');s.id='bu-daily-completion-premium-js';s.src='daily-completion-premium-test.js?v=20261104-completion-art-v1';s.defer=true;document.head.appendChild(s)})();
