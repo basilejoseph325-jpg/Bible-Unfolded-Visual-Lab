@@ -1,0 +1,41 @@
+name: Verify Genesis 7–9 Story gold icon root fix
+on:
+  push:
+    paths: ['.github/workflows/verify-genesis-story-icons-v3.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify roots assets and no gameplay changes
+        run: |
+          node --check story-adventure-metallic-icons-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,xml.etree.ElementTree as ET
+          js=Path('story-adventure-metallic-icons-test.js').read_text()
+          css=Path('story-adventure-metallic-icons-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          source=Path('index.html').read_text()
+          assert "for(const rootId of ['play','bu3857-screen'])" in js
+          assert "new MutationObserver(refresh).observe(root" in js
+          assert "id.startsWith('bu3857-')||id.startsWith('bu3863-')" in js
+          assert "btn.replaceChildren(icon)" in js
+          assert "['bu3857-replay','assets/ui/story-gold-restart-v1.svg'" in js
+          assert '#bu3857-screen .bu3863-toolbar button > img.bu-story-metal-icon' in css
+          assert '#bu3857-screen #bu3857-replay > img.bu-story-metal-icon' in css
+          assert 'story-adventure-metallic-icons-test.js?v=20261104-story-roots-v3' in loader
+          assert 'story-adventure-metallic-icons-test.css?v=20261104-story-roots-v3' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'id="bu3857-screen"' in source
+          assert 'id="play"' in source
+          for name in ('context','shuffle','clear','check','restart','back','menu'):
+           ET.parse('assets/ui/story-gold-'+name+'-v1.svg')
+          for name in ('bible','hint','eye'):
+           ET.parse('assets/ui/daily-gold-'+name+'-v3.svg')
+          rules=Path('docs/design-system/ANSWER_TABLETS_AND_GOLD_ICONS_RULES.md').read_text()
+          assert '## H. Game-wide master icon style approved' in rules
+          print('PASS: both active Story roots, complete Genesis toolbar, unchanged master art, isolated JS/CSS, approved design rules')
+          PY
