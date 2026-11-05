@@ -1,0 +1,22 @@
+name: Inspect safe Daily celebration audio
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-celebration-audio.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+          if m:s=json.loads(m.group(1))
+          for t in ['function bu34Celebrate','function playCoinFx','function playSuccess','function playSound','function startAudio','audioCtx','AudioContext','function bu375Complete','function playWin','function bu375Draw']:
+           ms=list(re.finditer(re.escape(t),s))
+           print('TERM',t,'COUNT',len(ms))
+           for a in ms[:2]:print('SNIP',repr(s[max(0,a.start()-280):a.start()+3300])[:3700])
+          PY
