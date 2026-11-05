@@ -86,3 +86,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Visual Lab ONLY — Word Trails premium enamel and carved-stone visual test.
    CSS-only: no game state, clue, audio, wheel sizing or native handler changes. */
 (()=>{if(document.getElementById('wt-premium-visual-v1'))return;const l=document.createElement('link');l.id='wt-premium-visual-v1';l.rel='stylesheet';l.href='word-trails-premium-game-and-finale-test.css?v=20261105-wt-archaeology-v1';document.head.appendChild(l)})();
+
+
+/* Visual Lab ONLY — Word Trails completion V2 cinematic star constellation and
+   engraved crossword exhibit. Loads AFTER the approved V1 gameplay stylesheet.
+   No changes to win handlers, rewards, scores, clues, audio or native buttons. */
+(()=>{if(document.getElementById('wt-completion-cinema-v2'))return;const l=document.createElement('link');l.id='wt-completion-cinema-v2';l.rel='stylesheet';l.href='word-trails-cinematic-completion-v2-test.css?v=20261105-v2-orbiting-stars';document.head.appendChild(l)})();

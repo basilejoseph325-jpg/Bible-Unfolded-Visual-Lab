@@ -1,0 +1,230 @@
+/* Bible Unfolded / Visual Lab ONLY — Word Trails cinematic victory V2.
+   Applies to the native .xword-finish.trail-finish ONLY. Never modify the
+   question screen, crossword dimensions/data, scoring, music or navigation.
+   Inspired by Story Adventure's free-floating spark particles (NOT its box). */
+
+/* Atmospheric gold light behind the real win components; no blocking overlay. */
+#crossword-screen .xword-finish.trail-finish{
+  position:relative!important;isolation:isolate!important;
+}
+#crossword-screen .xword-finish.trail-finish::before{
+  content:"";position:absolute;z-index:-1;
+  top:0;left:-4%;right:-4%;height:70%;
+  background:
+    radial-gradient(ellipse 46% 34% at 50% 13%,rgba(245,202,111,.22),transparent 95%),
+    radial-gradient(ellipse 76% 53% at 50% 62%,rgba(17,88,86,.23),transparent 95%);
+  pointer-events:none;
+  animation:wt-v2-ambience 6.5s ease-in-out infinite alternate;
+}
+
+/* The old single Unicode star's container MUST NOT render as a square.
+   Use a transparent stage, with only two moving gold-glyph layers. */
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star {
+  box-sizing:border-box!important;
+  display:block!important;
+  position:relative!important;
+  flex:0 0 auto!important;
+  align-self:center!important;
+  isolation:isolate!important;
+  width:clamp(96px,27vw,122px)!important;
+  height:clamp(68px,10dvh,95px)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:0!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  text-shadow:none!important;
+  background:transparent!important;
+  background-image:none!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  outline:0!important;
+  backdrop-filter:none!important;
+  -webkit-backdrop-filter:none!important;
+  filter:none!important;
+  animation:none!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+}
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star::before{
+  content:"✦";position:absolute;z-index:2;
+  left:50%;top:50%;width:1.5em;height:1.3em;
+  display:grid;place-items:center;
+  transform:translate(-50%,-50%);
+  color:#ffdda1!important;
+  font:normal 700 clamp(55px,16vw,78px)/1 Georgia,"Times New Roman",serif!important;
+  text-shadow:0 1px 1px #6a4925,0 0 12px rgba(255,224,136,.83),
+              0 0 31px rgba(239,173,58,.50)!important;
+  background:none!important;border:0!important;box-shadow:none!important;
+  filter:drop-shadow(0 3px 4px rgba(37,18,9,.34));
+  animation:wt-v2-star-breathe 3.8s ease-in-out infinite;
+  pointer-events:none!important;
+}
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star::after{
+  content:"✧        ✦        ✧";position:absolute;z-index:1;
+  left:50%;top:48%;
+  width:max-content;max-width:none;
+  color:rgba(255,227,159,.68);
+  font:normal 700 clamp(13px,4.2vw,19px)/1 Georgia,serif;
+  white-space:pre;
+  text-shadow:0 0 7px rgba(255,219,134,.9),0 0 16px rgba(246,181,75,.44);
+  background:none!important;border:0!important;box-shadow:none!important;
+  transform:translate(-50%,-50%) rotate(-13deg);
+  animation:wt-v2-star-orbit 7.5s ease-in-out infinite;
+  pointer-events:none!important;
+}
+@keyframes wt-v2-star-breathe{
+  0%,100%{opacity:.88;transform:translate(-50%,-50%) scale(.94) rotate(-7deg)}
+  46%{opacity:1;transform:translate(-50%,-52%) scale(1.12) rotate(4deg)}
+  72%{opacity:.96;transform:translate(-50%,-50%) scale(1.04) rotate(-2deg)}
+}
+@keyframes wt-v2-star-orbit{
+  0%,100%{opacity:.47;transform:translate(-50%,-50%) rotate(-15deg) scale(.96)}
+  45%{opacity:.88;transform:translate(-51%,-64%) rotate(16deg) scale(1.13)}
+  73%{opacity:.66;transform:translate(-48%,-40%) rotate(6deg) scale(1.02)}
+}
+@keyframes wt-v2-ambience{
+  from{opacity:.55;transform:scale(.99)}
+  to{opacity:1;transform:scale(1.04)}
+}
+
+/* Triumph title: no surrounding box, just antique-gold tapered rule below. */
+#crossword-screen .xword-finish.trail-finish > h2{
+  position:relative!important;
+  flex:0 0 auto!important;
+  margin:1px auto 2px!important;
+  padding:0 4px 8px!important;
+  max-width:100%!important;
+  color:#ffe3a1!important;
+  font:700 clamp(25px,6.4vw,35px)/1.12 Georgia,"Times New Roman",serif!important;
+  letter-spacing:-.012em!important;
+  text-align:center!important;
+  text-wrap:balance!important;
+  text-shadow:0 2px 0 rgba(88,51,26,.95),
+    0 4px 7px rgba(0,8,14,.83),
+    0 0 16px rgba(255,200,100,.34)!important;
+}
+#crossword-screen .xword-finish.trail-finish > h2::after{
+  content:"";position:absolute;
+  bottom:0;left:15%;width:70%;height:2px;
+  background:linear-gradient(90deg,transparent,#8d643a 15%,#ffe4a0 50%,#8d643a 85%,transparent);
+  box-shadow:0 0 8px rgba(250,206,121,.42);
+  pointer-events:none;
+}
+#crossword-screen .xword-finish.trail-finish > p{
+  font:italic 500 clamp(13px,3.5vw,17px)/1.22 Georgia,serif!important;
+  letter-spacing:.018em!important;
+  color:#f6e5c1!important;
+  text-shadow:0 2px 6px #001723!important;
+}
+
+/* A real raised archival exhibit, NOT just the same solved puzzle with
+   a thin outline. Keep the generated grid and all letters untouched. */
+#crossword-screen .xword-finish.trail-finish > .trail-victory-grid{
+  box-sizing:border-box!important;
+  position:relative!important;
+  flex:0 1 auto!important;
+  z-index:1!important;
+  max-width:100%!important;
+  max-height:23dvh!important;
+  margin:clamp(5px,1dvh,10px) auto clamp(4px,.8dvh,8px)!important;
+  padding:clamp(6px,1.6vw,10px)!important;
+  border:3px solid #d7b16b!important;
+  border-radius:17px!important;
+  background:
+    radial-gradient(ellipse 100% 65% at 50% -23%,rgba(233,195,111,.27),transparent 95%),
+    repeating-linear-gradient(160deg,transparent 0 17px,rgba(240,225,180,.025) 18px 19px,transparent 20px 39px),
+    linear-gradient(146deg,rgba(16,63,70,.95),rgba(3,28,38,.95))!important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,237,190,.88),
+    inset 0 0 0 3px rgba(58,35,19,.83),
+    inset 0 0 0 5px rgba(240,193,105,.33),
+    inset 0 -10px 22px rgba(0,10,17,.41),
+    0 5px 0 #664526,
+    0 11px 20px rgba(0,9,16,.72),
+    0 0 24px rgba(224,168,72,.18)!important;
+  overflow:visible!important;
+}
+#crossword-screen .xword-finish.trail-finish > .trail-victory-grid .filled{
+  border:1px solid #cea66d!important;
+  border-radius:6px!important;
+  background:
+    radial-gradient(ellipse at 17% 0%,rgba(255,249,224,.92),transparent 78%),
+    repeating-linear-gradient(163deg,transparent 0 11px,rgba(129,85,42,.038) 12px 13px,transparent 14px 25px),
+    linear-gradient(136deg,#f9e8c1,#d7b37f 68%,#be915d)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,253,222,.91),
+    inset -2px -3px 3px rgba(103,67,31,.26),
+    0 2px 0 #896039,
+    0 4px 5px rgba(0,12,19,.46)!important;
+  color:#15383d!important;
+  text-shadow:0 1px rgba(255,247,211,.75)!important;
+}
+
+/* Add a thin surrounding etched aura. Decorative only, no clickable overlay. */
+#crossword-screen .xword-finish.trail-finish > .trail-victory-grid::before{
+  content:"";position:absolute;z-index:-1;
+  inset:-8px;
+  border:1px solid rgba(239,207,137,.46);
+  border-radius:20px;
+  box-shadow:0 0 13px rgba(248,193,92,.12);
+  pointer-events:none;
+}
+
+/* Polished engraved reward, with unobtrusive ceremonial lighting. */
+#crossword-screen .xword-finish.trail-finish > .trail-victory-reward{
+  position:relative!important;
+  border:1.5px solid #d8b376!important;
+  border-radius:16px!important;
+  background:
+    radial-gradient(ellipse at 50% -40%,rgba(255,213,128,.25),transparent 82%),
+    linear-gradient(140deg,#20535a,#0a3643 62%,#082935)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,228,159,.36),
+    inset 0 0 0 3px rgba(2,25,36,.58),
+    0 4px 0 #5b422d,0 9px 14px #0007!important;
+  color:#ffe5b0!important;
+  text-shadow:0 1px 4px #041825!important;
+}
+#crossword-screen .xword-finish.trail-finish > .trail-scripture-wide{
+  border-color:#e0b875!important;
+  background:linear-gradient(135deg,#21525a,#092e3d 75%)!important;
+  box-shadow:inset 0 1px rgba(255,237,194,.40),inset 0 0 0 2px rgba(4,27,35,.50),0 4px 10px #00111ccc!important;
+}
+#crossword-screen .xword-finish.trail-finish > #cross-continue{
+  background:linear-gradient(180deg,#fff0bf 0%,#f7d88c 40%,#d49e53 100%)!important;
+  border-color:#ffe5aa!important;
+  box-shadow:inset 0 2px rgba(255,249,208,.91),inset 0 -2px rgba(133,80,37,.40),0 5px 0 #8a653e,0 8px 12px #0009!important;
+}
+#crossword-screen .xword-finish.trail-finish > #cross-repeat{
+  background:linear-gradient(140deg,#20545b,#092f3d 73%)!important;
+  border-color:#d2ab71!important;
+  box-shadow:inset 0 1px rgba(255,238,189,.39),0 4px 0 #36515a,0 7px 9px #0007!important;
+}
+#crossword-screen .xword-finish.trail-finish a:focus-visible,
+#crossword-screen .xword-finish.trail-finish button:focus-visible{
+  outline:3px solid #ffe7ad!important;outline-offset:2px!important;
+}
+@media(max-height:690px){
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-star{
+    height:clamp(54px,8dvh,72px)!important;
+  }
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-star::before{
+    font-size:clamp(46px,13vw,61px)!important;
+  }
+  #crossword-screen .xword-finish.trail-finish > h2{
+    font-size:clamp(23px,5.7vw,29px)!important;
+  }
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-grid{
+    margin:3px auto!important;padding:4px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #crossword-screen .xword-finish.trail-finish::before,
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-star::before,
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-star::after{
+    animation:none!important;
+  }
+}
