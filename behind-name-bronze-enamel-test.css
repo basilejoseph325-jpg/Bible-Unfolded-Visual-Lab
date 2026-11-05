@@ -1,0 +1,151 @@
+/* Visual Lab ONLY — Behind the Name: antique bronze + polished mineral enamel.
+   Candidate v1, 2026-11-05. Answer plaques ONLY. Preserve the approved name
+   question plaque, metallic toolbar icons, single-screen geometry and gameplay.
+   Reversible: delete this link from journey-progress-caption.js to roll back. */
+
+/* Natural resting state — a recessed deep teal enamel field surrounded by
+   burnished bronze hardware. An opaque color always backs the highlight layers. */
+#btn3926-play #btn3926-answers > .btn3926-answer:not(.is-wrong):not(.is-correct):not(.incorrect):not(.correct),
+#btn3926-play #btn3926-answers > .btn3926-answer:nth-child(even):not(.is-wrong):not(.is-correct):not(.incorrect):not(.correct){
+  background-color:#174650!important;
+  background-image:
+    radial-gradient(ellipse 86% 140% at 17% -38%,rgba(159,222,209,.23),transparent 75%),
+    radial-gradient(ellipse 80% 92% at 101% 104%,rgba(0,12,24,.47),transparent 77%),
+    repeating-linear-gradient(169deg,transparent 0 20px,rgba(178,221,200,.017) 21px 22px,transparent 23px 45px),
+    linear-gradient(118deg,#285b63 0%,#194753 43%,#10353f 100%)!important;
+  border:3px solid #bd9152!important;
+  border-radius:17px!important;
+  color:#f8edda!important;
+  text-shadow:0 2px 2px rgba(0,15,20,.64)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,231,171,.83),
+    inset 3px 0 3px rgba(251,199,111,.40),
+    inset -4px -5px 8px rgba(0,14,21,.58),
+    inset 0 0 0 2px rgba(55,35,20,.78),
+    0 5px 0 #6d4829,
+    0 8px 0 #14313a,
+    0 12px 17px rgba(0,8,15,.61)!important;
+}
+/* All four tiles remain visibly the SAME enamel. Only the light direction varies. */
+#btn3926-play #btn3926-answers > .btn3926-answer:nth-child(even):not(.is-wrong):not(.is-correct):not(.incorrect):not(.correct){
+  background-image:
+    radial-gradient(ellipse 82% 128% at 77% -37%,rgba(166,226,215,.20),transparent 74%),
+    radial-gradient(ellipse 80% 91% at 0% 108%,rgba(0,11,19,.45),transparent 78%),
+    repeating-linear-gradient(166deg,transparent 0 20px,rgba(169,221,199,.016) 21px 22px,transparent 23px 45px),
+    linear-gradient(116deg,#285962 0%,#194853 50%,#103540 100%)!important;
+}
+/* The inner bronze lip defines a real recessed enamel well, not a flat fill. */
+#btn3926-play #btn3926-answers > .btn3926-answer::before{
+  inset:7px!important;
+  border:1px solid rgba(233,185,110,.67)!important;
+  border-radius:10px!important;
+  background:transparent!important;
+  box-shadow:
+    inset 0 2px 2px rgba(255,234,187,.16),
+    inset 0 -2px 3px rgba(0,13,23,.55),
+    0 1px 1px rgba(0,12,18,.53)!important;
+  pointer-events:none!important;
+  z-index:0!important;
+}
+/* Faint enamel sheen and barely visible mineral veining; not sandstone grain. */
+#btn3926-play #btn3926-answers > .btn3926-answer::after{
+  content:""!important;
+  position:absolute!important;
+  z-index:0!important;
+  inset:8px!important;
+  border-radius:9px!important;
+  background:
+    radial-gradient(ellipse 94% 71% at 18% 0%,rgba(210,243,222,.17),transparent 72%),
+    linear-gradient(116deg,transparent 3%,rgba(218,255,241,.035) 25%,transparent 39%,rgba(153,213,198,.028) 69%,transparent 84%)!important;
+  box-shadow:inset 0 1px 0 rgba(255,238,196,.08)!important;
+  opacity:1!important;
+  pointer-events:none!important;
+}
+/* Bright ivory text without sacrificing question accessibility or size. */
+#btn3926-play #btn3926-answers > .btn3926-answer > div{
+  position:relative!important;
+  z-index:1!important;
+  min-width:0!important;
+  color:#f9edd8!important;
+  font-weight:650!important;
+  text-shadow:0 1px 3px rgba(0,12,20,.83)!important;
+}
+/* A/B/C/D set into a bronze ferrule — separate from the smooth enamel panel. */
+#btn3926-play #btn3926-answers > .btn3926-answer > span{
+  position:relative!important;
+  z-index:1!important;
+  border:2px solid #e5bd79!important;
+  border-radius:50%!important;
+  background:radial-gradient(ellipse at 28% 21%,#295a63,#0b2935 76%)!important;
+  color:#ffe2a7!important;
+  text-shadow:0 1px 2px #04131b!important;
+  box-shadow:
+    inset 0 1px 1px rgba(255,236,179,.28),
+    inset 0 0 0 2px rgba(40,35,31,.88),
+    0 2px 0 #916836,
+    0 3px 5px rgba(0,12,20,.63)!important;
+}
+/* Semantic feedback remains solid and highly visible, even after another miss
+   disables an earlier wrong choice. No JS classes or handlers are modified. */
+#btn3926-play #btn3926-answers > .btn3926-answer.is-wrong,
+#btn3926-play #btn3926-answers > .btn3926-answer.is-wrong:disabled,
+#btn3926-play #btn3926-answers > .btn3926-answer.incorrect,
+#btn3926-play #btn3926-answers > .btn3926-answer.incorrect:disabled{
+  opacity:1!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  color:#fff1e7!important;
+  background-color:#892b39!important;
+  background-image:
+    radial-gradient(ellipse 85% 120% at 16% -23%,rgba(255,176,151,.37),transparent 76%),
+    radial-gradient(ellipse 75% 98% at 104% 101%,rgba(45,4,21,.51),transparent 77%),
+    linear-gradient(115deg,#b84f54 0%,#923242 49%,#6c2437 100%)!important;
+  border-color:#d48775!important;
+  text-shadow:0 1px 3px rgba(37,0,17,.65)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,213,190,.79),
+    inset 2px 0 2px rgba(255,179,156,.40),
+    inset -4px -6px 8px rgba(47,8,22,.58),
+    inset 0 0 0 2px rgba(92,30,34,.75),
+    0 5px 0 #7d3b3a,
+    0 8px 0 #14313a,
+    0 12px 17px rgba(0,8,15,.56),
+    0 0 9px rgba(243,116,109,.20)!important;
+}
+#btn3926-play #btn3926-answers > .btn3926-answer.is-correct,
+#btn3926-play #btn3926-answers > .btn3926-answer.correct{
+  opacity:1!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  color:#f2ffeb!important;
+  background-color:#16624c!important;
+  background-image:
+    radial-gradient(ellipse 91% 119% at 16% -20%,rgba(212,249,188,.32),transparent 73%),
+    radial-gradient(ellipse 80% 95% at 99% 101%,rgba(3,40,30,.49),transparent 76%),
+    linear-gradient(113deg,#428b70 0%,#216a56 53%,#105541 100%)!important;
+  border-color:#c6b880!important;
+  text-shadow:0 1px 3px rgba(0,32,21,.67)!important;
+  box-shadow:
+    inset 0 2px 0 rgba(229,255,201,.76),
+    inset 2px 0 2px rgba(193,241,191,.40),
+    inset -4px -6px 8px rgba(2,49,35,.52),
+    inset 0 0 0 2px rgba(21,77,55,.75),
+    0 5px 0 #316e4e,
+    0 8px 0 #14313a,
+    0 12px 17px rgba(0,8,15,.56),
+    0 0 9px rgba(131,232,151,.18)!important;
+}
+#btn3926-play #btn3926-answers > .btn3926-answer.is-wrong > div,
+#btn3926-play #btn3926-answers > .btn3926-answer.incorrect > div,
+#btn3926-play #btn3926-answers > .btn3926-answer.is-correct > div,
+#btn3926-play #btn3926-answers > .btn3926-answer.correct > div{
+  color:#fff4e9!important;
+  text-shadow:0 1px 3px rgba(0,12,19,.70)!important;
+}
+/* No change to flex sizing, tile height, original 2px press, or focus rings.
+   Keep disabled buttons disabled; do not override gameplay or hint elimination. */
+@media(prefers-reduced-motion:reduce){
+  #btn3926-play #btn3926-answers > .btn3926-answer{
+    transition:none!important;
+  }
+}
