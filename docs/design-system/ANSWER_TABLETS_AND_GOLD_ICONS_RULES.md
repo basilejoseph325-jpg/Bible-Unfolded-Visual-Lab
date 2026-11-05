@@ -91,3 +91,15 @@ This file is a **binding visual-design addendum**, subordinate to the project sa
 6. If an icon changes after approval, record the new version, owner acceptance and master asset filenames here in **both repositories**; preserve older approved versions for recovery.
 
 **Scope of this approval:** the V3 metallic trio is approved for **Daily Discovery live** and as the **visual standard for future icon creation**. It does **not** direct immediate icon changes in other modes.
+
+
+## H. Game-wide master icon style approved — November 4, 2026
+
+**Owner approval:** The owner confirmed that the metallic-gold Story Adventure icon upgrade works and looks excellent across most chapters, and explicitly directed that **this exact visual language will be used across every part of Bible Unfolded**. Treat this as a **permanent game-wide DESIGN STANDARD**, not permission to immediately change every mode or the live site.
+
+- Preserve and reuse the original immutable icons `assets/ui/daily-gold-bible-v3.svg`, `daily-gold-hint-v3.svg`, and `daily-gold-eye-v3.svg`, plus the matching Story Adventure collection `assets/ui/story-gold-context-v1.svg`, `story-gold-shuffle-v1.svg`, `story-gold-clear-v1.svg`, `story-gold-check-v1.svg`, `story-gold-restart-v1.svg`, `story-gold-back-v1.svg`, and `story-gold-menu-v1.svg`.
+- **Every future game icon** must belong to this exact family: dimensional engraved antique gold, layered cream-to-gold-to-bronze gradients, modest glow and shadow, individually recognizable silhouettes, transparent 64×64 artwork and consistent optical size. Avoid emoji glyphs, flat monochrome replacements, mismatched strokes, artificial extra capsules, or decoration that obscures the functions. No cross on Bible imagery.
+- **Functional controls retain their original semantics**: Bible, story/context, hint, shuffle, undo/clear, check, reveal, replay, back, and menu stay distinct. Keep the same real button, label/aria, sound, cost, save behavior and handler; only change presentation.
+- **Story Adventure has multiple rendering engines and completion paths.** Inspect all active episode roots and their generated button selectors, including Genesis/Abraham/Isaac/Rebekah and newer story chapters, not just `#play`. A successful icon replacement in one chapter is not proof of full coverage. The November 4 approval includes a report of remaining chapters not yet matched; those exceptions require a scoped Visual Lab correction and verification.
+- **Rollout remains staged:** Visual Lab first for each mode or renderer, owner visual approval, then explicitly approved transfer to live. This approval of the artistic standard does not authorize a blanket code migration across modes or changes to story wheels/layout.
+- Future new icon assets must be matched against the approved source SVGs and checked visually on a real phone. Version and preserve them in GitHub. This section supersedes any older suggestions that the V3 metallic look is merely optional or a one-mode-only design style.
