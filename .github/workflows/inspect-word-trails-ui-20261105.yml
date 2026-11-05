@@ -1,4 +1,4 @@
-name: Inspect Story Adventure actual star effect (read only)
+name: Inspect Story Adventure exact reward-star animation (read only)
 on:
   push:
     paths:
@@ -11,26 +11,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Identify actual moving Story Adventure sparkles, stars and their CSS/JS
+      - name: Inspect exact Story Adventure discovery effect sources
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          sources=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
-          pats=['reveal-spark','story-spark','sparkle','starburst','star-field','stardust','starfield','twinkle','orbit','swirl','spiral','motes','glimmer','magic-dust','star-particle','particle-star','star-layer','star-shower','reveal-star']
-          for src in sources:
-            s=src.read_text(encoding='utf8')
-            print('\nSOURCE',src,'BYTES',len(s))
-            for p in pats:
-              hits=[m.start() for m in re.finditer(re.escape(p),s,re.I)]
-              if hits:
-                print('MATCH',p,'COUNT',len(hits))
-                for off in hits[:8]:print('CTX',off,repr(s[max(0,off-290):off+480]))
-            # Named keyframes containing story star, spark, pulse, swirl, orbit, shimmer, twinkle
+          for fn in ['index.html','bible_unfolded_core_part5.js']:
+            s=Path(fn).read_text(encoding='utf8')
+            print('\nSOURCE',fn)
+            for needle in ['.bu3814-particle-field','.bu3814-main-star','.bu3814-celebration','.buhq-glitter','.buhq-spark','.reveal-pulse','.reveal-spark','bu3814-particle-field','bu3814-main-star','buhq-glitter']:
+              idxs=[m.start() for m in re.finditer(re.escape(needle),s)]
+              print('NEEDLE',needle,'COUNT',len(idxs))
+              for i in idxs[:4]:
+                chunk=s[max(0,i-600):i+1600]
+                if len(chunk)>2300:chunk=chunk[:2300]
+                print('CONTEXT',i,repr(chunk))
             for m in re.finditer(r'@keyframes\s+([\w-]+)',s):
               name=m.group(1)
-              if re.search(r'star|spark|orbit|swirl|twinkl|glow|shine|spiral|magic|mote',name,re.I):
-                print('ANIMATION',name,'AT',m.start(),'CSS',repr(s[m.start():m.start()+700]))
-          print('END')
+              if any(x in name for x in ['bu3814','buhq','revealTwinkle']):
+                print('KEYFRAMES',name,repr(s[m.start():m.start()+1350]))
           PY
