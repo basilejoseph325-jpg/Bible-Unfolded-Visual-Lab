@@ -11,32 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Print relevant native Word Trails rules and renderer
+      - name: Print exact matching CSS selectors
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
           s=Path('index.html').read_text(encoding='utf8')
-          t=Path('bible_unfolded_core_part5.js').read_text(encoding='utf8')
-          print('HEAD: INDEX',len(s),'PART5',len(t))
-          for needle in ['id="crossword-screen"','id="xword-content"','id="cross-content"','id="cross-back"','id="cross-pick"','word-trails-cinematic.css','journey-progress-caption.js']:
-            hits=list(re.finditer(re.escape(needle),s,re.I))
-            print('HTML MATCH',needle,len(hits))
-            for m in hits[:2]: print('HTML CONTEXT',repr(s[max(0,m.start()-450):m.start()+1600]))
-          print('NATIVE CSS RULES')
+          keys=['#crossword-screen','#xword-content','.trail-board','.trail-square','.trail-finish','.trail-victory-grid','.trail-victory-star','.trail-wheel','.trail-wheel-row','.xword-letter','.trail-topline','.trail-word-preview','.trail-toolbar','.bu3918-trail','.trail-quick','.trail-actions']
+          for key in keys:
+            positions=[m.start() for m in re.finditer(re.escape(key),s,re.I)]
+            print('KEY',repr(key),'COUNT',len(positions))
+            for off in positions[:2]+positions[-3:]:
+              print('HIT',off,repr(s[max(0,off-180):off+650]))
+          print('RULES')
           rules=[]
-          for m in re.finditer(r'([^{}]{0,270})\\{([^{}]{0,2400})\\}',s):
+          for m in re.finditer(r'([^{}]{0,250})\{([^{}]{0,2400})\}',s):
             selector=m.group(1).strip()
-            if (len(selector)>200 or '<' in selector or '=>' in selector):continue
-            if re.search(r'\\b(?:trail-|xword-|crossword-screen|cross-continue|cross-repeat)\\b',selector,re.I):
+            if len(selector)>200 or '<' in selector or '=>' in selector:continue
+            if re.search(r'(trail-|xword-|crossword-screen|cross-continue|cross-repeat)',selector,re.I):
               rules.append((m.start(),selector,m.group(2).strip()))
-          print('COUNT RULES',len(rules))
-          for offset,selector,body in rules[-180:]:
-            print('RULE',offset,repr(selector),repr(body[:650]))
-          i=t.find('Word Trail Complete!')
-          print('COMPLETE RENDER',repr(t[i-2100:i+3200]))
-          j=t.find('let html=',i)
-          if j>0:print('GAME RENDER',repr(t[j-100:j+7200]))
-          print('END')
+          print('RULE COUNT',len(rules))
+          for off,sel,body in rules[-130:]:
+            print('RULE',off,repr(sel),repr(body[:800]))
           PY
