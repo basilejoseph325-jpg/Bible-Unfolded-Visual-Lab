@@ -1,0 +1,17 @@
+name: Inspect existing scroll art dimensions
+on:
+  push:
+    paths: ['.github/workflows/inspect-scroll-art-dimensions.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from PIL import Image
+          for n in ['word-builder-scroll-top.webp','word-builder-scroll-bottom.webp','word-builder-rules-art.jpg','scrolls.jpg']:
+            im=Image.open(n)
+            print(n,im.size,im.mode,im.getpixel((im.width//2,im.height//2)))
+          PY
