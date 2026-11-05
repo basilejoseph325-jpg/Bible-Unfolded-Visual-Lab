@@ -1,0 +1,28 @@
+name: Inspect syncMusic and Story completion soundtrack trigger
+on:
+ push:
+  paths: ['.github/workflows/inspect-story-syncmusic.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       import re,json
+       from pathlib import Path
+       texts={}
+       for p in Path('.').glob('bible_unfolded_core_part*.js'):
+        raw=p.read_text()
+        m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+        texts[p.name]=json.loads(m.group(1)) if m else raw
+       for pat in ['function syncMusic(', 'syncMusic=function', 'function bu25MusicMode', 'function bu25SetTrack','function bu25Sync', 'let bu25Current','const bu25Audio','function bu25Audio', 'const track=', 'bu25Current=', 'function bu3857Next', 'bu3857Render();', 'awardChapter(', 'function bu3857Solve(']:
+        print('\n',pat)
+        for name,src in texts.items():
+         matches=list(re.finditer(re.escape(pat),src))
+         if not matches:continue
+         print('FILE',name,'COUNT',len(matches))
+         for m in matches[:4]:
+          print('SNIP',repr(src[max(0,m.start()-330):m.start()+1900])[:2300])
+       PY
