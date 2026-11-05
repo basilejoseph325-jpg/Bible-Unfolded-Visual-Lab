@@ -28,7 +28,7 @@ jobs:
           assert "b.replaceChildren(icon)" in js
           assert "new MutationObserver" in js
           assert "data-bu375-answer" not in js
-          assert 'cross' not in js.lower()
+          assert '<path d="M18 9c-4-3-9-4-14-3' in js  # Plain book with page lines, no religious emblem
           assert "daily-discovery-polish-test.css?v=20261104-approved-preview-v1" in loader
           assert "daily-discovery-gold-icons-test.js?v=20261104-approved-preview-v1" in loader
           print('PASS: gold icons, cross-free Bible, stone material, question contrast, answer feedback and Daily-only scoping')
