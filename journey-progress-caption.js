@@ -62,3 +62,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Load AFTER legacy V2–V10 CSS so a centered modern achievement stage
    replaces accumulated margin offsets. Does not touch Episodes 1–6. */
 (()=>{if(document.getElementById('bu-story-finale-stage-v11-css'))return;const l=document.createElement('link');l.id='bu-story-finale-stage-v11-css';l.rel='stylesheet';l.href='story-finale-structural-parity-v11.css?v=20261105-paired-actions-v11b';document.head.appendChild(l)})();
+
+/* Visual Lab only: independent Behind the Name visual skin. */
+(()=>{const s=document.createElement('script');s.src='behind-name-visual-preview.js?v=20261105';document.body.appendChild(s)})();
