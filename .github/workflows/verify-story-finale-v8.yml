@@ -1,0 +1,52 @@
+name: Verify Story V8 unified finale and navigation cue
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-v8.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify native chapter text, mode isolation and one-only SFX selector adjustment
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check premium-sfx.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          sfx=Path('premium-sfx.js').read_text()
+          load=Path('journey-progress-caption.js').read_text()
+          base=subprocess.check_output(['git','show','7c0b54dbc23be15a43d27dd5c5a544dcb21dc1c7'],text=True)
+          a="#episode-list [data-episode],#bu3857-replay,#bu3857-next-episode')"
+          b="#episode-list [data-episode],#bu3857-replay')"
+          assert base.count(a)==1
+          assert sfx==base.replace(a,b,1), 'Only the newer next-button SFX category may change'
+          assert 'storyLevel' in sfx and "lastClick?.storyLevel" in sfx
+          assert 'const chapter=state' in js and 'BU3857_DATA[state.book]' in js
+          assert "chapter?.discoveries?.[0]?.title" in js
+          assert "card.insertBefore(label,emblem)" in js
+          assert "label.textContent=caption" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert "if(!modern)return" in js
+          assert 'new MutationObserver(scan)' in js
+          assert '.onclick=' not in js
+          assert 'V8 — unify original and later' in css
+          tail=css.split('V8 — unify original and later',1)[1]
+          assert 'bu-story-finale-cinematic-hero' in tail
+          assert 'bu-story-finale-scene-label' in tail
+          assert 'height:clamp(170px,24dvh,248px)' in tail
+          assert 'opacity:.24!important' in tail
+          assert 'max-height:630px' in tail
+          assert '20261105-unified-finale-v8' in load
+          assert 'premium-sfx.js?v=20261105-story-next-audio-v8' in load
+          assert 'visual-lab-test-banner.js' in load
+          assert 'story-adventure-metallic-icons-test.js' in load
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',core,re.S)
+          assert m and "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in json.loads(m.group(1))
+          print('PASS: V8 full-width Story cinema and matching native scene title, audio one-selector-only change, no gameplay handler change, test-only loader')
+          PY
