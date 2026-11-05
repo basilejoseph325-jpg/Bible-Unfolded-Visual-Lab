@@ -20,3 +20,11 @@
 - The final Episode 7 V11 screenshot supplied by the owner is the visual authority. The exact button wording can vary by destination, but Replay and Chapters must sit together.
 
 **Approval scope:** This document locks the future chapter-end standard and authorizes the requested migration of tested Story improvements to LIVE. It does **not** authorize a redesign of unrelated game modes, and does **not** imply any unimplemented Chapters button has already been tested.
+
+
+## Implementation status — November 5, 2026 (V11B)
+
+- The new **two-column Replay + Chapters row** is now implemented for the newer Genesis/Exodus chapter-completion renderer in Visual Lab and has been promoted to LIVE by the owner's explicit instruction.
+- `story-chapter-complete-v2-test.js` moves the existing `#bu3857-replay` button and its original click handler into a shared `.bu-story-finale-actions` row, adds `#bu-story-finale-chapters`, and delegates Chapters to the engine's existing `#bu3857-back` action. `story-finale-structural-parity-v11.css` styles the two equal columns. No new independent navigation logic or sound sample is added.
+- The approved Story source/audio files are identical in TEST and LIVE after the V11 promotion; the V11B addition affects only the completion presentation files and loader cache references.
+- Automated syntax and structural checks passed. Final physical-device visual/click verification of the paired row remains pending; do not claim that the owner physically approved a rendered V11B screenshot.
