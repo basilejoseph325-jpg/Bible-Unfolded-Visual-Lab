@@ -92,3 +92,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    engraved crossword exhibit. Loads AFTER the approved V1 gameplay stylesheet.
    No changes to win handlers, rewards, scores, clues, audio or native buttons. */
 (()=>{if(document.getElementById('wt-completion-cinema-v2'))return;const l=document.createElement('link');l.id='wt-completion-cinema-v2';l.rel='stylesheet';l.href='word-trails-cinematic-completion-v2-test.css?v=20261105-v2-orbiting-stars';document.head.appendChild(l)})();
+
+
+/* Visual Lab ONLY — replace rejected Word Trails V2 Unicode pseudo-stars with
+   actual Story Adventure-inspired 18-particle light field + gold SVG. */
+(()=>{if(document.getElementById('wt-star-v3-css'))return;const l=document.createElement('link');l.id='wt-star-v3-css';l.rel='stylesheet';l.href='word-trails-starfield-v3-test.css?v=20261105-authentic-story-spark-v3';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('wt-star-v3-js'))return;const s=document.createElement('script');s.id='wt-star-v3-js';s.src='word-trails-starfield-v3-test.js?v=20261105-authentic-story-spark-v3';s.defer=true;document.head.appendChild(s)})();

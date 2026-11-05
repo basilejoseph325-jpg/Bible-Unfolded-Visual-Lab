@@ -1,0 +1,37 @@
+name: Validate Word Trails star V3 (read-only)
+on:
+  push:
+    paths:
+      - 'word-trails-starfield-v3-test.css'
+      - 'word-trails-starfield-v3-test.js'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/word-trails-star-v3-qa.yml'
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check scoped star enhancer and unchanged puzzle engine
+        run: |
+          node --check word-trails-starfield-v3-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          c=Path('word-trails-starfield-v3-test.css').read_text()
+          j=Path('word-trails-starfield-v3-test.js').read_text()
+          l=Path('journey-progress-caption.js').read_text()
+          assert c.count('{')==c.count('}'), 'CSS braces'
+          assert 'content:none!important' in c, 'Old glyph star not suppressed'
+          assert 'bu3814' in j and '137.5' in j and 'i<18' in j, 'Story Adventure exact burst origin missing'
+          assert 'Math.cos(theta)' in j and 'Math.sin(theta)' in j
+          assert 'word-trails-starfield-v3-test.css?v=' in l
+          assert 'word-trails-starfield-v3-test.js?v=' in l
+          assert 'word-trails-cinematic-completion-v2-test.css?v=' in l
+          assert 'word-trails-premium-game-and-finale-test.css?v=' in l
+          assert '#crossword-screen .xword-finish.trail-finish > .trail-victory-star' in c
+          assert 'new MutationObserver(upgrade).observe(root,{childList:true})' in j
+          assert 'trailSave' not in j and 'awardOnce' not in j and 'onclick' not in j
+          print('PASS scoped Word Trails-only V3 CSS, JS and loader')
+          PY

@@ -1,0 +1,138 @@
+/* Visual Lab only — Word Trails V3 star correction.
+   Source: Story Adventure's real bu3814 18-particle victory starburst,
+   revealTwinkle and buhq glimmer. NO replacement Unicode pseudo-stars.
+   Do not modify completion artifacts, rewards, buttons, gameplay or layout. */
+
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star.wt-star-v3{
+  box-sizing:border-box!important;
+  position:relative!important;
+  isolation:isolate!important;
+  display:block!important;
+  flex:0 0 auto!important;
+  align-self:center!important;
+  width:clamp(130px,37vw,174px)!important;
+  height:clamp(85px,12dvh,114px)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:0!important;
+  background:none!important;
+  background-color:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;
+  backdrop-filter:none!important;
+  filter:none!important;
+  font-size:0!important;
+  color:transparent!important;
+  text-shadow:none!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+  animation:none!important;
+}
+/* Remove the actual V2 mistake — giant text star and decorative Unicode
+   glyph companions. These are permanently suppressed in V3. */
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star.wt-star-v3::before,
+#crossword-screen .xword-finish.trail-finish > .trail-victory-star.wt-star-v3::after {
+  content:none!important;
+  display:none!important;
+  animation:none!important;
+  background:none!important;
+  box-shadow:none!important;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-core{
+  box-sizing:border-box!important;
+  position:absolute!important;
+  z-index:2!important;
+  width:clamp(78px,21vw,99px)!important;
+  height:clamp(78px,21vw,99px)!important;
+  left:50%!important;top:50%!important;
+  display:block!important;
+  overflow:visible!important;
+  transform:translate(-50%,-50%);
+  transform-origin:center;
+  filter:drop-shadow(0 1px 3px rgba(36,23,12,.37)) drop-shadow(0 0 9px rgba(255,213,119,.30));
+  animation:wt-star-v3-breathe 3.6s ease-in-out infinite;
+  pointer-events:none!important;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-core .wt-star-v3-rays{
+  transform-origin:72px 72px;
+  animation:wt-star-v3-ray-turn 12s linear infinite;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-field{
+  position:absolute!important;inset:0!important;
+  z-index:1!important;
+  display:block!important;
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-field i{
+  position:absolute!important;
+  left:50%!important;
+  top:50%!important;
+  display:block!important;
+  box-sizing:border-box!important;
+  border:0!important;
+  border-radius:50%!important;
+  width:4px!important;
+  height:4px!important;
+  margin:0!important;
+  padding:0!important;
+  background:#f6d887!important;
+  box-shadow:0 0 5px 1px rgba(255,215,120,.72),0 0 10px rgba(247,201,100,.25)!important;
+  opacity:0;
+  transform:translate(-50%,-50%) scale(.2);
+  pointer-events:none!important;
+  /* Same golden-angle radial placement and out-fade as Story Adventure
+     (bu3814-burst), with a quiet staggered repeating rhythm. */
+  animation:wt-star-v3-burst 4.8s ease-out var(--wt-delay) infinite;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-field i:nth-child(3n){
+  width:3px!important;height:3px!important;
+  background:#d6f1e7!important;
+  box-shadow:0 0 6px rgba(205,248,234,.7)!important;
+}
+#crossword-screen .wt-star-v3 .wt-star-v3-field i:nth-child(5n){
+  width:5px!important;height:5px!important;
+  background:#fff0bf!important;
+}
+@keyframes wt-star-v3-breathe{
+  0%,100%{opacity:.85;transform:translate(-50%,-50%) scale(.96) rotate(-4deg)}
+  47%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(3deg)}
+}
+@keyframes wt-star-v3-ray-turn{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+@keyframes wt-star-v3-burst{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.20)}
+  9%{opacity:.73}
+  27%{opacity:.65}
+  42%{opacity:.25}
+  53%{opacity:0;transform:translate(calc(-50% + var(--wt-dx)),calc(-50% + var(--wt-dy))) scale(.16)}
+  100%{opacity:0;transform:translate(calc(-50% + var(--wt-dx)),calc(-50% + var(--wt-dy))) scale(.16)}
+}
+@media(max-height:700px){
+  #crossword-screen .xword-finish.trail-finish > .trail-victory-star.wt-star-v3{
+    height:clamp(68px,9dvh,91px)!important;
+  }
+  #crossword-screen .wt-star-v3 .wt-star-v3-core{
+    width:clamp(65px,18vw,82px)!important;
+    height:clamp(65px,18vw,82px)!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #crossword-screen .wt-star-v3 .wt-star-v3-core,
+  #crossword-screen .wt-star-v3 .wt-star-v3-core .wt-star-v3-rays{animation:none!important}
+  #crossword-screen .wt-star-v3 .wt-star-v3-field i{display:none!important;animation:none!important}
+}
+html.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-core,
+html.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-core .wt-star-v3-rays,
+body.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-core,
+body.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-core .wt-star-v3-rays{animation:none!important}
+html.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-field,
+body.reduce-motion #crossword-screen .wt-star-v3 .wt-star-v3-field{display:none!important}
