@@ -1,0 +1,23 @@
+name: Inspect Daily Discovery completion DOM
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-completion-dom.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          for term in ["Every answer is progress.","TODAY'S DISCOVERY COMPLETE","Back to Bible Unfolded","Explore Today's Questions Again","Your daily reward was already collected","no penalty for mistakes","bu65-complete","daily-complete","finishDaily","bu375-daily"]:
+           ms=list(re.finditer(re.escape(term),s,re.I));print('TERM',term,'COUNT',len(ms))
+           for m in ms[:3]: print('EXCERPT',repr(s[max(0,m.start()-1500):m.end()+2000])[:3900])
+          for f in ['daily-discovery-cinematic.css','daily-discovery-question-premium.css']:
+           t=Path(f).read_text()
+           for m in list(re.finditer('complete|finish|result',t,re.I))[:6]:
+            print('CSS',f,repr(t[max(0,m.start()-90):m.end()+280]))
+          PY
