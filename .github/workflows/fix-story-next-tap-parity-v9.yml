@@ -1,0 +1,39 @@
+name: TEST match Story Next tap with original engine
+on:
+ push:
+  paths: ['.github/workflows/fix-story-next-tap-parity-v9.yml']
+permissions: {contents: write}
+jobs:
+ patch:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       set -eu
+       test "$(git hash-object bible_unfolded_core_part5.js)" = "171f747f3dc9f81f273585b590568fda4001a778"
+       python3 - <<'PY'
+       from pathlib import Path
+       import re,json
+       p=Path("bible_unfolded_core_part5.js")
+       s=p.read_text()
+       a="if(el.closest('#episode-list [data-episode],#episodes .episode-card,#bu3857-replay,#bu3857-next-episode'))return 'entry';"
+       b="if(el.closest('#episode-list [data-episode],#episodes .episode-card,#bu3857-replay'))return 'entry';"
+       assert s.count(a)==1
+       assert s.count(b)==0
+       updated=s.replace(a,b,1)
+       assert updated.replace(b,a,1)==s
+       src=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',updated,re.S).group(1))
+       assert b in src and a not in src
+       assert "if(el.closest('#buhq-wheel [data-buhq],#play #wheel .tile'))return 'letter';" in src
+       assert "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in src
+       assert "const duckGoal=1;" in src and "const goal=1;" in src
+       p.write_text(updated)
+       print('PASS: remove modern Next extra synthetic soft tap; preserve all other source and source audio handlers')
+       PY
+   - run: |
+       git add bible_unfolded_core_part5.js
+       git diff --cached --check
+       git config user.name "github-actions[bot]"
+       git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+       git commit -m "TEST: remove newer Story Next double-layer soft tap to match original Next"
+       git push origin HEAD:main
