@@ -71,3 +71,53 @@
 @media(prefers-reduced-motion:reduce){
  #bu375-daily #bu375-body.bu65-playing .bu375-answer{transition:none!important}
 }
+
+
+/* V2 toolbar correction: the original game styles every .bu3918-tools span
+   as a full button. That inadvertently put a second tiny framed button AROUND
+   our SVG. Reset only the icon's span; keep the actual outer button intact. */
+#bu375-daily #bu375-body.bu65-playing .bu3918-tools button > span.bu-daily-gold-icon{
+  box-sizing:content-box!important;
+  display:block!important;
+  flex:none!important;
+  width:clamp(38px,10.5vw,48px)!important;
+  height:clamp(38px,10.5vw,48px)!important;
+  min-width:0!important;
+  min-height:0!important;
+  max-width:none!important;
+  max-height:none!important;
+  margin:0 auto!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  outline:none!important;
+  background:transparent!important;
+  background-image:none!important;
+  box-shadow:none!important;
+  color:#f8cf77!important;
+  font-size:inherit!important;
+  line-height:normal!important;
+  filter:drop-shadow(0 1px 1px #020f16)
+         drop-shadow(0 0 4px rgba(255,202,94,.53))!important;
+  pointer-events:none!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu3918-tools button > span.bu-daily-gold-icon > svg{
+  display:block!important;
+  width:100%!important;
+  height:100%!important;
+  min-width:0!important;
+  min-height:0!important;
+  padding:0!important;
+  margin:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:none!important;
+  box-shadow:none!important;
+  stroke:#f7d07c!important;
+  stroke-width:2!important;
+  fill:none!important;
+  overflow:visible!important;
+}
+#bu375-daily #bu375-body.bu65-playing .bu3918-tools button > span.bu-daily-gold-icon > svg circle[fill="currentColor"]{
+  fill:#f7d07c!important;
+}
