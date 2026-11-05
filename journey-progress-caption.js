@@ -67,6 +67,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    This stylesheet loads after the existing native-layout preview. */
 (()=>{if(document.getElementById('bn-stone-material-v3'))return;const l=document.createElement('link');l.id='bn-stone-material-v3';l.rel='stylesheet';l.href='behind-name-question-premium-test.css?v=20261105-solid-wrong-v4';document.head.appendChild(l)})();
 
+/* Visual Lab ONLY — Behind the Name optional bronze/enamel answer-material test.
+   Loaded after sandstone candidate; only affects four answer buttons. */
+(()=>{if(document.getElementById('bn-enamel-material-v1'))return;const l=document.createElement('link');l.id='bn-enamel-material-v1';l.rel='stylesheet';l.href='behind-name-bronze-enamel-test.css?v=20261105-enamel-v1';document.head.appendChild(l)})();
+
 /* Visual Lab only: independent Behind the Name visual skin. */
 (()=>{const s=document.createElement('script');s.src='behind-name-visual-preview.js?v=20261105-name-study-v3';document.body.appendChild(s)})();
 
