@@ -6,6 +6,8 @@ on:
       - 'trivia-scholar-treasury-v1.js'
       - 'trivia-excavated-tablets-v2.css'
       - 'trivia-excavated-tablets-v3.css'
+      - 'trivia-photo-stone-tablets-v4.css'
+      - 'assets/ui/trivia-real-rock-v4.jpg'
       - 'assets/ui/trivia-tablet-a-relief-v3.svg'
       - 'assets/ui/trivia-tablet-b-relief-v3.svg'
       - 'assets/ui/trivia-tablet-c-relief-v3.svg'
@@ -59,7 +61,7 @@ jobs:
           assert v3.count('{')==v3.count('}')
           assert v3.count('--tablet-art:url(')==4
           assert 'repeating-linear-gradient(' not in v3
-          assert 'trivia-excavated-tablets-v3.css?v=' in l
+          assert 'trivia-excavated-tablets-v3.css?v=' not in l
           assert 'trivia-excavated-tablets-v2.css?v=' not in l
           assert '.correct:disabled' in v3 and '.wrong:disabled' in v3
           assert 'pointer-events:none!important' in v3
@@ -71,7 +73,15 @@ jobs:
             sizes=[float(node.get('rx','0')) for node in root.iter() if node.tag.endswith('ellipse')]
             assert not any(rx >= 25 for rx in sizes), 'cartoon oval patches still present'
           assert 'trivia-tablet-a-relief-v3.svg?v=4' in v3
-          assert 'trivia-excavated-tablets-v3.css?v=20261105-four-unique-reliefs-v3-noblobs' in l
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4' in l
+          photograph=Path('assets/ui/trivia-real-rock-v4.jpg').read_bytes()
+          assert len(photograph)>600000 and photograph[:3]==bytes([255,216,255])
+          v4=Path('trivia-photo-stone-tablets-v4.css').read_text()
+          assert v4.count('{')==v4.count('}')
+          assert v4.count('--stone-y:')==4
+          assert 'trivia-real-rock-v4.jpg?v=1' in v4
+          assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
+          assert 'pointer-events:none!important' in v4
           assert all(x.startswith(b'<svg') and x.endswith(b'</svg>') for x in textures)
           print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY

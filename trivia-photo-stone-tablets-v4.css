@@ -1,0 +1,92 @@
+/* VISUAL LAB ONLY — Trivia REAL PHOTOGRAPHIC STONE V4.
+ Root cause: V2/V3 invented hard-edged scratches, brown patches and plasticky
+ multi-borders instead of a physical rock surface. V4 uses an actual CC0
+ photo by Sisters.seamless, stored locally as trivia-real-rock-v4.jpg.
+ Four unique photo positions, simplified relief. Do not edit game logic. */
+
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="0"]{--stone-y:0%;--stone-warm:#dfca9c}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]{--stone-y:33%;--stone-warm:#dec79a}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]{--stone-y:67%;--stone-warm:#e2cca0}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{--stone-y:100%;--stone-warm:#deca9d}
+
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+ position:relative!important;isolation:isolate!important;
+ box-sizing:border-box!important;overflow:hidden!important;
+ border:2px solid #957b56!important;
+ border-top-color:#e8d5a8!important;border-left-color:#baa073!important;
+ border-right-color:#77654a!important;border-bottom-color:#5c4936!important;
+ border-radius:10px 12px 10px 9px!important;
+ background-color:var(--stone-warm)!important;
+ background-image:radial-gradient(ellipse at 38% -25%,rgba(255,251,225,.40),transparent 88%),
+ linear-gradient(146deg,#eeddb2 0%,var(--stone-warm) 56%,#b49a71 100%)!important;
+ box-shadow:inset 0 2px rgba(255,249,217,.72),
+ inset 0 -5px 9px rgba(85,66,44,.24),
+ inset 2px 0 4px rgba(255,236,199,.10),
+ inset -3px 0 5px rgba(75,57,38,.19),
+ 0 4px 0 #755c40,0 6px 0 #493b2e,0 9px 13px rgba(0,10,19,.48)!important;
+ color:#1f3737!important;text-shadow:0 1px rgba(255,243,206,.49)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::before{
+ content:""!important;display:block!important;position:absolute!important;
+ inset:0!important;z-index:0!important;border:0!important;
+ background-image:url("assets/ui/trivia-real-rock-v4.jpg?v=1")!important;
+ background-position:50% var(--stone-y)!important;
+ background-size:100% auto!important;
+ background-repeat:no-repeat!important;
+ opacity:.73!important;
+ filter:sepia(.61) saturate(.72) brightness(1.15) contrast(1.10)!important;
+ mix-blend-mode:multiply!important;
+ transform:none!important;box-shadow:none!important;
+ pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::after{
+ content:""!important;display:block!important;position:absolute!important;
+ inset:5px!important;z-index:1!important;
+ border:1px solid rgba(82,66,44,.18)!important;
+ border-radius:6px!important;background:transparent!important;
+ box-shadow:inset 0 2px 3px rgba(55,45,33,.11),
+ inset 0 -1px rgba(253,239,205,.17)!important;
+ pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>b,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>span{position:relative!important;z-index:2!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>span{
+ color:inherit!important;
+ font:700 clamp(15px,2.1dvh,19px)/1.24 Georgia,"Times New Roman",serif!important;
+ letter-spacing:-.01em!important;
+ text-shadow:0 1px rgba(255,245,218,.58)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>b{
+ border:2px solid #c5a87a!important;
+ background:radial-gradient(circle at 28% 16%,#46696b,#1b454a 58%,#092f3a)!important;
+ color:#ffe4ac!important;
+ box-shadow:inset 0 1px rgba(255,240,192,.51),
+ 0 2px 0 #765c42,0 3px 5px rgba(24,23,18,.48)!important;
+}
+/* Correctness and failure feedback remain solid green/red. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct:disabled{
+ background-color:#1d654f!important;
+ background-image:linear-gradient(145deg,#327a60,#165a4b 70%,#0e453f)!important;
+ border:2px solid #a4dfb1!important;color:#f3ffeb!important;opacity:1!important;
+ filter:none!important;
+ box-shadow:inset 0 1px rgba(218,255,213,.43),0 3px 0 #275342,0 5px 9px rgba(40,169,91,.39)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong:disabled{
+ background-color:#953c3c!important;
+ background-image:linear-gradient(145deg,#b85c56,#7e3439 72%,#692c36)!important;
+ border:2px solid #f0a1a0!important;color:#fff2e8!important;opacity:1!important;
+ filter:none!important;
+ box-shadow:inset 0 1px rgba(255,224,207,.43),0 3px 0 #5c3132,0 5px 9px rgba(200,63,76,.39)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::before{display:none!important;content:none!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::after{border-color:rgba(255,241,209,.23)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)>span{text-shadow:0 1px 2px rgba(0,19,22,.5)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:disabled:not(.correct):not(.wrong){opacity:.64!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.bu3922-eliminated:not(.correct){opacity:.32!important;filter:grayscale(.4)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:not(:disabled):active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 3px 7px rgba(75,56,40,.3),
+ 0 1px 0 #705941,0 2px 5px rgba(0,10,18,.45)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:focus-visible{outline:3px solid #fff0b8!important;outline-offset:2px!important}
+@media(max-height:670px){#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>span{font-size:clamp(12px,1.8dvh,16px)!important}}
+@media(prefers-reduced-motion:reduce){#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer{transition:none!important}}
