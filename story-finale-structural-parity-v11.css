@@ -166,3 +166,36 @@
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-stage > h2::before,
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-stage > h2::after{height:3px!important}
 }
+
+
+/* V11B approved two-button row for modern Story chapter completions. */
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-stage > .bu-story-finale-actions{
+ box-sizing:border-box!important;
+ display:grid!important;
+ grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;
+ gap:clamp(8px,2vw,15px)!important;
+ width:100%!important;
+ max-width:470px!important;
+ flex:0 0 auto!important;
+ margin:0 auto!important;
+ padding:0!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-actions > button{
+ box-sizing:border-box!important;
+ display:flex!important;
+ justify-content:center!important;
+ align-items:center!important;
+ width:100%!important;
+ min-width:0!important;
+ min-height:46px!important;
+ margin:0!important;
+ padding:clamp(9px,1.2dvh,14px) 5px!important;
+ font-size:clamp(13px,3.8vw,17px)!important;
+ white-space:normal!important;
+ line-height:1.15!important;
+}
+@media(max-width:350px){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 .bu-story-finale-actions > button{
+  font-size:12px!important;
+ }
+}
