@@ -42,6 +42,52 @@
   card.appendChild(shower);
   setTimeout(()=>{shower.remove()},5200);
  }
+ // Reuse the chapter's existing artwork rather than flattening a mockup
+ // (which would bake in text and buttons). Missing art leaves teal untouched.
+ function chapterArt(modern){
+  if(!modern){
+   const frame=document.querySelector('#scene .scene-img.show');
+   const image=frame?.style.backgroundImage||'';
+   // Early chapters already display the approved illustration in #scene.
+   if(image&&image!=='none')return {image};
+   return null;
+  }
+  const heading=document.getElementById('bu3857-episode')?.textContent||'';
+  const found=heading.match(/(GENESIS|EXODUS)\s*[·•\-]\s*EPISODE\s*(\d+)/i);
+  if(!found)return null;
+  const book=found[1].toUpperCase(),number=Number(found[2]);
+  if(book==='GENESIS'&&number>=7&&number<=9){
+   const key='g'+String(number).padStart(2,'0')+'-d01';
+   if(typeof BU_GENESIS_SCENE_ART!=='undefined'){
+    const src=BU_GENESIS_SCENE_ART[key];
+    if(src)return {src};
+   }
+   const cover=document.querySelector('#episode-list .episode-card[data-episode="'+(number-1)+'"] img');
+   if(cover?.src)return {src:cover.src};
+  }
+  if(book==='EXODUS'){
+   const chapter=number+6;
+   const key='ex'+chapter+'-d01';
+   if(typeof BU3857_SCENE_ART!=='undefined'){
+    const src=BU3857_SCENE_ART[key];
+    if(src)return {src};
+   }
+  }
+  return null;
+ }
+ function atmosphere(card,modern){
+  const art=chapterArt(modern);
+  if(!art)return;
+  const bg=document.createElement('div');
+  bg.className='bu-story-finale-atmosphere';
+  bg.setAttribute('aria-hidden','true');
+  const painting=document.createElement('div');
+  painting.className='bu-story-finale-atmosphere-art';
+  if(art.src)painting.style.backgroundImage='url("'+art.src+'")';
+  else painting.style.backgroundImage=art.image;
+  bg.appendChild(painting);
+  card.prepend(bg);
+ }
  function enhance(card,modern){
   if(card.classList.contains('bu-story-finale-v2'))return;
   const title=card.querySelector('h2');
@@ -65,6 +111,7 @@
   if(oldStar)oldStar.replaceWith(art);
   else card.prepend(art);
   const milestone=chapterMilestone(card,modern);
+  atmosphere(card,modern);
   card.classList.add('bu-story-finale-v2');
   card.dataset.buStoryMilestone=milestone?'major':'chapter';
   // The V2 treatment does not introduce a second score or alter story copy.
