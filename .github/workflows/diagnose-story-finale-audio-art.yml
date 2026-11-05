@@ -1,0 +1,38 @@
+name: Diagnose Story finale artwork audio and title overflow
+on:
+  push:
+    paths: ['.github/workflows/diagnose-story-finale-audio-art.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          sources={}
+          for f in ('index.html','bible_unfolded_core_part3.js','bible_unfolded_core_part4.js','bible_unfolded_core_part5.js','premium-sfx.js'):
+           s=Path(f).read_text(errors='replace')
+           m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S)
+           if m:
+            try:s=json.loads(m.group(1))
+            except Exception as e:print('DECODE ERROR',f,str(e))
+           sources[f]=s
+          tasks={
+           'index.html':[r'\.bu3857-scroll\s*\{',r'\.bu3863-finale\s*\{',r'\.bu3863-finale\s+',r'#bu3857-screen\s*\{',r'\.bu3815-chapter-finale\s*\{',r'\.scene-img\s*\{'],
+           'bible_unfolded_core_part5.js':[r'function bu3857Open\(',r'function bu3857Render\(',r'if\(s.complete\)',r'function startChapter\(',r'function bu3857Exit\(',r'function musicFor',r'function playMusic',r'function bu381',r'musicTrack',r'musicMode',r'function setMusic',r'function bu34Music'],
+           'bible_unfolded_core_part3.js':[r'BU3857_SCENE_ART',r'BU_GENESIS_SCENE_ART',r'function bu3857Open',r'BU3857_DATA'],
+           'premium-sfx.js':[r'function.*Music',r'duck',r'music']
+          }
+          for f,patterns in tasks.items():
+           s=sources[f]
+           print('\nFILE',f,'SIZE',len(s))
+           for pat in patterns:
+            matches=list(re.finditer(pat,s,re.I))
+            print('PAT',pat,'COUNT',len(matches))
+            for m in matches[:4]:
+             a=max(0,m.start()-300);b=min(len(s),m.start()+(3800 if pat in ('if\\(s.complete\\)', 'function bu3857Open\\(') else 1450))
+             print('SNIP',repr(s[a:b])[:4500])
+          PY
