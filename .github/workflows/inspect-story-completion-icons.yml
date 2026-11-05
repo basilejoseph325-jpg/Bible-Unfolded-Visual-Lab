@@ -1,0 +1,19 @@
+name: Inspect Story completion button IDs
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-completion-icons.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text()
+          for t in ['Next Chapter','Play Again','Read Story','Bible Trivia ↗','scene-restart']:
+           ms=list(re.finditer(re.escape(t),s,re.I));print('TERM',t,'COUNT',len(ms))
+           for m in ms[:6]:print('EXCERPT',repr(s[max(0,m.start()-500):m.end()+500])[:1100])
+          PY
