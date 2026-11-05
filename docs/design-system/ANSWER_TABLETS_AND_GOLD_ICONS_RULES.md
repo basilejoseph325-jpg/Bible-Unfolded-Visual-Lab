@@ -54,3 +54,15 @@ These are **historical implementation pointers**, not a license to copy selector
 ## E. Rulebook priority and change control
 
 This file is a **binding visual-design addendum**, subordinate to the project safety/content rules and the permanent Headquarters operational rulebook. Do not weaken existing source-first Bible-content rules (NWT 2013 and JW.org). Updates to these approved visual standards require explicit owner approval. Keep this document versioned in GitHub in **both** `Bible-Unfolded-Visual-Lab` and `Story-Trails`; update both copies when the owner changes the design rules, **without automatically altering live gameplay**.
+
+
+## F. Metallic artwork refinement — November 4, 2026 (owner-directed prototype)
+
+**New accepted direction, not yet accepted final artwork:** The owner compared the initial simple SVG glyphs with the premium mockup and found the mockup **materially more refined**. The approved direction is therefore **individual transparent image assets with fine engraved details and dimensional metallic gold**, not merely thickened single-color SVG outlines or increased glow. Before using a new icon as the gold standard for other modes, show the actual on-device implementation and obtain owner approval.
+
+- Render **separate individual assets** for Bible, Hint, and Reveal, each with nuanced gold tonal gradations (light cream-gold edges, rich mid-gold faces, darker bronze undercuts), restrained inner highlights, selective shadowing, and controlled soft glow. Keep silhouettes legible at a 38–48 px mobile display size, but avoid cartoon-like thick strokes and uniform yellow outlines.
+- **No cross on any Bible artwork**, ever; include no cross, cruciform decoration, religious insignia, or emoji substitution. Bible imagery is an open book with page curves and fine manuscript lines.
+- **Preserve existing navy/teal outer action buttons**, gold borders, hit areas, click handlers, titles and aria labels. The SVG asset itself is transparent; no second pill/capsule, nested button background, or image rectangle.
+- Keep Daily Discovery styling isolated to Daily Discovery. Only trial the richer artwork in **Visual Lab** until visual owner acceptance; this directive does **not** authorize live changes or a game-wide switch.
+- Compare the actual game with the visual reference at native phone scale for metallic highlights, engraving, scale, icon spacing, and quality. Static syntax checks and successful GitHub Pages deployments do **not** prove visual equivalence.
+- Trial implementation assets (Visual Lab): `assets/ui/daily-gold-bible-v3.svg`, `daily-gold-hint-v3.svg`, `daily-gold-eye-v3.svg`, rendered by `daily-discovery-gold-icons-test.js`. These are **candidate artwork**, not locked final icon assets, until the owner inspects and approves them.
