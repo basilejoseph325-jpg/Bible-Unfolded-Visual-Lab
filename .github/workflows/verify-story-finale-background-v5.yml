@@ -1,0 +1,31 @@
+name: Verify V5 Story finale backdrop edge fix
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-background-v5.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'V5 phone-screenshot correction' in css
+          assert '#bu3857-screen .bu3857-scroll:has(.bu3863-finale.bu-story-finale-v2)' in css
+          assert '#bu3857-screen .bu3863-finale.bu-story-finale-v2{\n background:transparent!important;' in css
+          assert 'filter:blur(1px) saturate(.78) brightness(.76)' in css
+          assert 'opacity:.48!important' in css
+          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-atmosphere-v5' in loader
+          assert 'story-chapter-complete-v2-test.js?v=20261105-test-chapter-atmosphere-v4' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'bu-story-finale-title-text' in js
+          assert "card.prepend(bg)" in js
+          assert '.onclick=' not in js and 'playChime()' not in js
+          print('PASS: V5 full-bleed Story scene removes hard-edged rectangle, retains approved content/audio, and stays Visual Lab only')
+          PY
