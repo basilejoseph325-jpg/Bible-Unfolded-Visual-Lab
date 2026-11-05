@@ -1,0 +1,41 @@
+name: Verify V10 Story finale screenshot parity TEST ONLY
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-parity-v10.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify only modern completion visuals and approved audio preservation
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          node --check premium-sfx.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          script=Path('story-chapter-complete-v2-test.js').read_text()
+          sfx=Path('premium-sfx.js').read_text()
+          assert css.count('V10 — match approved Genesis 1–6 chapter-finale composition')==1
+          recent=css.split('V10 — match approved Genesis 1–6 chapter-finale composition')[1]
+          assert recent.count('#bu3857-screen')>=5
+          assert '#play ' not in recent
+          assert 'margin-bottom:clamp(105px,12dvh,153px)!important' in recent
+          assert 'margin-bottom:clamp(85px,12dvh,112px)!important' in recent
+          assert 'max-height:650px' in recent
+          assert 'opacity:.58!important' in recent
+          assert 'brightness(.87)' in recent
+          assert '-webkit-mask-image:' in recent and 'mask-image:' in recent
+          assert 'story-chapter-complete-v2-test.css?v=20261105-story-finale-parity-v10' in loader
+          assert 'story-chapter-complete-v2-test.js?v=20261105-final-scene-parity-v9' in loader
+          assert 'premium-sfx.js?v=20261105-story-next-audio-v8' in loader
+          assert subprocess.check_output(['git','hash-object','premium-sfx.js'],text=True).strip()=='2e4845d6d139deaa4d956e88d1acd94e1647c59b'
+          assert subprocess.check_output(['git','hash-object','bible_unfolded_core_part5.js'],text=True).strip()=='225e0a3e530c56f01d0d09aa51d0e3ae7542590c'
+          assert subprocess.check_output(['git','hash-object','story-chapter-complete-v2-test.js'],text=True).strip()=='6720f45b7311811eb678525048a598da44567913'
+          assert "const art=chapterArt(modern,true);" in script
+          print('PASS: newer Story completion only; original episodes unmodified, V9 sounds byte-identical, final-scene artwork and controls preserved')
+          PY
