@@ -1,0 +1,41 @@
+name: Inspect Word Trails actual DOM CSS and completion hooks (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-word-trails-ui-20261105.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print Word Trails DOM and styling evidence
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          sources=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+          needles=[
+            'Word Trail Complete!', 'Word Trail Complete','DISCOVER WORDS',
+            'Discover Words','Bible Word Trails','Choose Another Word Trail',
+            'Play Again', 'cross-play','cross-board','cross-wheel',
+            'cross-grid','cross-answer','cross-finish','cross-win',
+            'cross-done','cross-complete','trail-complete',
+            'cross-tools','cross-btn','cross-clue','cross-letters',
+            'cross-game', 'bu3918', 'journey-progress-caption.js',
+            'word-trails-cinematic.css'
+          ]
+          for src in sources:
+            s=src.read_text(encoding='utf8')
+            print('\\nSOURCE',src, 'bytes',len(s))
+            for needle in needles:
+              hits=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
+              if not hits: continue
+              print('\\nMATCH',repr(needle),'count',len(hits),'positions',[str(n) for n in hits[:5]])
+              for off in (hits[:2] if len(hits)<3 else hits[:1]+hits[-1:]):
+                print('EXCERPT', repr(s[max(0,off-480):min(len(s),off+850)]))
+            print('END SOURCE')
+          PY
