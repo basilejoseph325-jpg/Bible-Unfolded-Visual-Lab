@@ -695,3 +695,22 @@ body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{min-height:32px!important;padding:3px 12px!important;margin-bottom:2px!important}
  #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:50px!important}
 }
+
+
+/* V9: align newer chapter endings with the original cinematic presentation. */
+#bu3857-screen:has(.bu3863-finale.bu-story-finale-v2) .bu3857-progress-rail{display:none!important}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{margin-bottom:clamp(56px,7.7dvh,96px)!important}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{width:clamp(108px,30vw,141px)!important;height:clamp(85px,11.5dvh,111px)!important}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-atmosphere > .bu-story-finale-atmosphere-art{
+ opacity:.43!important;filter:blur(1.6px) saturate(.70) brightness(.73)!important;background-position:center 55%!important;
+ -webkit-mask-image:linear-gradient(180deg,transparent 0%,transparent 25%,rgba(0,0,0,.10) 35%,rgba(0,0,0,.22) 47%,rgba(0,0,0,.55) 72%,rgba(0,0,0,.72) 100%)!important;
+ mask-image:linear-gradient(180deg,transparent 0%,transparent 25%,rgba(0,0,0,.10) 35%,rgba(0,0,0,.22) 47%,rgba(0,0,0,.55) 72%,rgba(0,0,0,.72) 100%)!important
+}
+@media(max-height:810px){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{margin-bottom:clamp(18px,4dvh,42px)!important}
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:clamp(63px,8.5dvh,83px)!important}
+}
+@media(max-height:620px){
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-scene-label{margin-bottom:7px!important}
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-book-emblem{height:54px!important}
+}
