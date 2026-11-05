@@ -51,7 +51,7 @@ jobs:
           assert ':not(.correct):not(.wrong)' in v2
           assert 'pointer-events:none!important' in v2
           assert svg.startswith('<svg') and svg.endswith('</svg>')
-          assert 'trivia-excavated-tablets-v2.css?v=' in l
+          assert 'trivia-excavated-tablets-v2.css?v=' not in l, 'superseded V2 must not load'
           assert 'mixed-trivia-noninteractive-visual-v1.css?v=' in l
           assert 'mixed-trivia-compass-editorial-v2.css?v=' in l
           import hashlib
@@ -64,7 +64,7 @@ jobs:
           assert '.correct:disabled' in v3 and '.wrong:disabled' in v3
           assert 'pointer-events:none!important' in v3
           textures=[Path(f'assets/ui/trivia-tablet-{k}-relief-v3.svg').read_bytes() for k in 'abcd']
-          assert len(set(map(hashlib.sha256,textures)))==4
+          assert len(set(hashlib.sha256(item).hexdigest() for item in textures))==4
           assert all(x.startswith(b'<svg') and x.endswith(b'</svg>') for x in textures)
           print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY
