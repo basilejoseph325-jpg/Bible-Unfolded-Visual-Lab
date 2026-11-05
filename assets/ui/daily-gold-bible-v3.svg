@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none"><defs><linearGradient id="metal" x1="0" y1="0" x2=".82" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".18" stop-color="#ffe9a3"/><stop offset=".41" stop-color="#b97625"/><stop offset=".60" stop-color="#ffdd75"/><stop offset=".82" stop-color="#d79b3a"/><stop offset="1" stop-color="#fff0b4"/></linearGradient><linearGradient id="edge" x1="0" y1="0" x2="0.7" y2="1"><stop stop-color="#fff6be"/><stop offset=".52" stop-color="#e7b451"/><stop offset="1" stop-color="#986021"/></linearGradient><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.3"/></filter><filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="1.5" stdDeviation="1.1" flood-color="#020f1b" flood-opacity=".83"/></filter></defs>
+<g opacity=".26" filter="url(#glow)" stroke="#ffd86f" stroke-width="4.2"><path d="M31.9 16.5C24 11.8 16 10 6.5 12v36.1c10-2.3 18.3-.5 25.4 4.5 7.5-5 15.5-6.8 25.6-4.5V12C48 10 40 11.8 31.9 16.5Z"/></g>
+<g filter="url(#shadow)" stroke-linejoin="round" stroke-linecap="round">
+<path d="M31.9 16.5C24 11.8 16 10 6.5 12v36.1c10-2.3 18.3-.5 25.4 4.5 7.5-5 15.5-6.8 25.6-4.5V12C48 10 40 11.8 31.9 16.5Z" fill="#674118" fill-opacity=".42" stroke="url(#metal)" stroke-width="3.1"/>
+<path d="M31.9 18.8C24 14.7 16.8 13.4 9 14.4v30.2c9-.9 15.3 1 22.9 5.3 7.6-4.3 14.9-6.2 22.8-5.3V14.4c-8-1-15.1.3-22.8 4.4Z" stroke="url(#edge)" stroke-width="1.8"/>
+<path d="M31.9 17.4v34.7" stroke="#fff0b2" stroke-width="2.2"/>
+<path d="M12 20.5c5.8-.5 10.6.9 15.9 3.7M12 26.4c5.9-.5 10.7 1 15.9 3.7M12 32.3c5.9-.5 10.7.8 15.9 3.7M12 38.2c5.7-.4 10.8.8 15.9 3.4M36 24.2c5.1-2.8 10.1-4.2 15.9-3.7M36 30.1c5.1-2.8 10.1-4.2 15.9-3.7M36 36c5.1-2.9 10.2-4.1 15.9-3.7M36 41.6c5-2.7 10.1-3.8 15.9-3.4" stroke="url(#metal)" stroke-width="1.75"/>
+<path d="M5 49.6c9.9-2 18.7-.5 26.9 5.1 8.1-5.6 16.9-7.1 27-5.1" stroke="#f8d27c" stroke-width="1.4"/>
+<path d="M10 14.2c6.5-.5 12.2 1 18.9 4.6M54 14.2c-6.5-.5-12.2 1-18.9 4.6" stroke="#fff6cb" stroke-width=".85" opacity=".85"/>
+</g></svg>
