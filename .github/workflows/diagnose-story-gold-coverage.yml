@@ -1,0 +1,30 @@
+name: Diagnose missing Story Adventure icon coverage
+on:
+  push:
+    paths: ['.github/workflows/diagnose-story-gold-coverage.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          import re,json
+          from pathlib import Path
+          h=Path('index.html').read_text()
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',core)
+          assert m
+          s=json.loads(m.group(1))
+          for term in ['id="bu3857','id="bu3863','id="play"','class="bu3863','bu3857-screen','bu3857-root','bu3857-page','bu3857-content','bu3857-wrapper','bu3857Open(','bu3863-toolbar','id="bu3863-scripture"','bu3857Draw(','bu3857Render(']:
+           print('TERM',repr(term),'HTML',h.count(term),'CORE',s.count(term))
+           matches=list(re.finditer(re.escape(term),s))
+           for a in matches[:2]:
+            print('CORE_SNIP',repr(s[max(0,a.start()-460):a.start()+700])[:1200])
+          for term in ['id="bu3857','id="bu3863','id="play"','bu3857-screen','bu3857-content']:
+           matches=list(re.finditer(re.escape(term),h))
+           for a in matches[:2]:
+            print('HTML_SNIP',repr(h[max(0,a.start()-600):a.start()+800])[:1500])
+          print('FILE_END')
+          PY
