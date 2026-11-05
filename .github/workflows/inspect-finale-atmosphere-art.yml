@@ -1,0 +1,26 @@
+name: Inspect Story finale chapter image sources
+on:
+  push:
+    paths: ['.github/workflows/inspect-finale-atmosphere-art.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          h=Path('index.html').read_text()
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw)
+          src=json.loads(m.group(1))
+          for label,s,terms in [('HTML',h,['id="scene"','class="scene"','class="scene','id="scene-image"','id="gamepanel"','id="bu3857-content"']),('CORE',src,['BU_GENESIS_SCENE_ART','BU3857_SCENE_ART','GENESIS_SCENE_ART','activeBook','scene.innerHTML','scene.style.backgroundImage','bu3857-content','genesis_ep08','A role for humankind'])]:
+           for term in terms:
+            all=list(re.finditer(re.escape(term),s))
+            print(label,'TERM',term,'COUNT',len(all))
+            for x in all[:2]:print('SNIP',repr(s[max(0,x.start()-420):x.start()+1450])[:1900])
+          for x in Path('.').glob('*'):
+           if x.is_dir() and ('asset' in x.name or 'scene' in x.name):print('DIR',x.name)
+          PY
