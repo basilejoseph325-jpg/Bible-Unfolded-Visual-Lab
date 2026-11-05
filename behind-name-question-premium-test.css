@@ -275,3 +275,42 @@
  #btn3926-play .btn3926-answer.is-wrong{animation:none!important}
  #btn3926-play .btn3926-answer,#btn3926-play .btn3926-icons button{transition:none!important}
 }
+
+/* BN V4 — fully opaque wrong-answer feedback, including previous misses.
+ * Native gameplay disables eliminated choices, and the earlier name-preview
+ * stylesheet applies opacity:.8 to .is-wrong. Never dim, desaturate or expose
+ * the teal base through incorrect sandstone; CSS-only, no click changes. */
+#btn3926-play .btn3926-answer.is-wrong,
+#btn3926-play .btn3926-answer.is-wrong:disabled,
+#btn3926-play .btn3926-answer.is-wrong[disabled],
+#btn3926-play .btn3926-answer.is-wrong[aria-disabled="true"],
+#btn3926-play .btn3926-answer.incorrect,
+#btn3926-play .btn3926-answer.incorrect:disabled{
+  opacity:1!important;
+  filter:none!important;
+  -webkit-filter:none!important;
+  color:#4d252b!important;
+  background-color:#cc827a!important;
+  background-image:
+    radial-gradient(ellipse at 18% 5%,rgba(255,226,205,.72),transparent 73%),
+    radial-gradient(ellipse at 94% 96%,rgba(102,28,39,.26),transparent 70%),
+    linear-gradient(108deg,#e7aba0 0%,#d07d79 50%,#a74c57 100%)!important;
+  border-color:#a75253!important;
+  box-shadow:inset 0 3px 2px #ffebdde6,
+    inset -5px -7px 10px #682b3566,
+    inset 0 0 0 2px #ffd7c68c,
+    0 5px 0 #824149,
+    0 8px 0 #17333c,
+    0 12px 16px rgba(0,10,17,.52)!important;
+}
+#btn3926-play .btn3926-answer.is-wrong > span,
+#btn3926-play .btn3926-answer.incorrect > span{
+  opacity:1!important;
+  filter:none!important;
+}
+#btn3926-play .btn3926-answer.is-wrong:disabled,
+#btn3926-play .btn3926-answer.incorrect:disabled{
+  /* Do not change disabled state / clicks. This only keeps earlier misses
+     equally opaque when native logic marks them unavailable. */
+  text-shadow:none!important;
+}
