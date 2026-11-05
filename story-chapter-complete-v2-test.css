@@ -168,3 +168,11 @@
  :is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower i{animation:none!important}
  :is(#play,#bu3857-screen) .bu-story-finale-v2 .gold-button{transition:none!important}
 }
+
+
+/* Native Story confetti also fires on legacy Chapter Complete. Replace only
+   that visual shower while the V2 finale is active; keep its original fanfare,
+   voice announcement, music level, SFX preferences and other uses unchanged. */
+body:has(#play:not([hidden]) .bu3815-chapter-finale.bu-story-finale-v2) #bu34-fx{
+ display:none!important;
+}
