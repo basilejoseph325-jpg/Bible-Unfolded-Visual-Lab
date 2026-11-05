@@ -48,3 +48,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    scripture, question/answer logic, sound effects, or live game. */
 (()=>{if(document.getElementById('bu-daily-completion-premium-css'))return;const l=document.createElement('link');l.id='bu-daily-completion-premium-css';l.rel='stylesheet';l.href='daily-completion-premium-test.css?v=20261104-graded-party-v2';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bu-daily-completion-premium-js'))return;const s=document.createElement('script');s.id='bu-daily-completion-premium-js';s.src='daily-completion-premium-test.js?v=20261104-graded-party-v2';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Visual Lab ONLY — Story Adventure Chapter Complete V2.
+   Two actual chapter engines; original story text/actions/music/announcers intact.
+   Decorative book/laurel, engraved title plaque, beveled navigation and brief
+   noninteractive gold confetti only when a chapter-completion screen renders. */
+(()=>{if(document.getElementById('bu-story-chapter-complete-v2-css'))return;const l=document.createElement('link');l.id='bu-story-chapter-complete-v2-css';l.rel='stylesheet';l.href='story-chapter-complete-v2-test.css?v=20261105-test-chapter-finale-v2';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-story-chapter-complete-v2-js'))return;const s=document.createElement('script');s.id='bu-story-chapter-complete-v2-js';s.src='story-chapter-complete-v2-test.js?v=20261105-test-chapter-finale-v2';s.defer=true;document.head.appendChild(s)})();
