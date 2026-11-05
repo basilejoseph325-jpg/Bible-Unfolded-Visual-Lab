@@ -7,6 +7,7 @@ glyphs={
 'clear':'''<path d="M18 17a21 21 0 1 1-6 19" stroke="url(#gold)" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M10 13v14h14" fill="none" stroke="url(#bronze)" stroke-width="4.2" stroke-linecap="round"/><path d="M22 13a21 21 0 0 1 27 17" fill="none" stroke="#fff4c6" stroke-width="1.2" opacity=".72"/>''',
 'restart':'''<path d="M49 23A22 22 0 1 0 54 36" stroke="url(#gold)" stroke-width="4.2" fill="none" stroke-linecap="round"/><path d="M47 13l3 12-13-2" stroke="url(#bronze)" stroke-width="4.4" fill="none" stroke-linecap="round"/><path d="M25 30l7 4 8-9" fill="none" stroke="#ffe5a1" stroke-width="2.1"/>''',
 'back':'''<path d="M40 11L18 32l22 21" stroke="url(#gold)" stroke-width="6.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><path d="M35 15L19 32" stroke="#fff4c4" stroke-width="1.6" stroke-linecap="round"/>''',
+'check':'''<path d="M10 33l14 14 30-33" fill="none" stroke="url(#gold)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 32l11 11 27-29" fill="none" stroke="#fff5be" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>''',
 'menu':'''<path d="M12 17h40M12 32h40M12 47h40" stroke="url(#gold)" stroke-width="5.1" stroke-linecap="round"/><path d="M14 15h35M14 30h35M14 45h35" stroke="#fff8d3" stroke-width="1.1" stroke-linecap="round" opacity=".72"/>'''
 }
 for k,paths in glyphs.items():
