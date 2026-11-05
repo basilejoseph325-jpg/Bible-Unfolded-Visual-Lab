@@ -1,0 +1,26 @@
+name: Inspect Daily answer SFX exact runtime
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-audio-20261104.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          p=[]
+          for i in range(1,6):
+            s=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d\] = (".*");',s)
+            p.append(json.loads(m.group(1)))
+          s=''.join(p)
+          for term in ['function bu3846WrongTone','function bu375Choose','function bu375Draw','function playChime','function bu3846','function playFx','function startAudio','function audioContext','function bu65Daily']:
+            matches=list(re.finditer(re.escape(term),s))
+            print('TERM',term,'COUNT',len(matches))
+            for m in matches[:7]:
+              print(repr(s[max(0,m.start()-250):m.start()+2600])[:3000])
+          PY
