@@ -88,6 +88,24 @@
   bg.appendChild(painting);
   card.prepend(bg);
  }
+ function cinematicHero(card,modern,emblem){
+  if(!modern)return;
+  const art=chapterArt(true);
+  if(!art)return;
+  const hero=document.createElement('figure');
+  hero.className='bu-story-finale-cinematic-hero';
+  hero.setAttribute('aria-hidden','true');
+  const photo=document.createElement('img');
+  photo.className='bu-story-finale-cinematic-photo';
+  if(art.src)photo.src=art.src;
+  else return;
+  photo.alt='';photo.draggable=false;
+  photo.decoding='async';
+  hero.appendChild(photo);
+  // Only a newly rendered chapter ending gets the cinematic visual.
+  // Existing scene, heading and button event handlers remain native.
+  card.insertBefore(hero,emblem);
+ }
  function enhance(card,modern){
   if(card.classList.contains('bu-story-finale-v2'))return;
   const title=card.querySelector('h2');
@@ -111,6 +129,7 @@
   if(oldStar)oldStar.replaceWith(art);
   else card.prepend(art);
   const milestone=chapterMilestone(card,modern);
+  cinematicHero(card,modern,art);
   atmosphere(card,modern);
   card.classList.add('bu-story-finale-v2');
   card.dataset.buStoryMilestone=milestone?'major':'chapter';
