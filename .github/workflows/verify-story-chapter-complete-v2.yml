@@ -1,0 +1,59 @@
+name: Verify Story chapter complete V2 (TEST ONLY)
+on:
+  push:
+    paths: ['.github/workflows/verify-story-chapter-complete-v2.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify two renderers, assets, native handlers and Visual Lab scope
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          import re,json
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          html=Path('index.html').read_text()
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',core)
+          assert m
+          src=json.loads(m.group(1))
+          for p in ['assets/ui/story-complete-book-laurel-v2.svg','assets/ui/story-complete-inscription-plaque-v2.svg']:
+           a=Path(p)
+           assert a.exists() and a.stat().st_size>500,p
+           root=ET.parse(a).getroot()
+           assert root.tag.endswith('svg') and root.attrib.get('viewBox'),p
+          assert "document.getElementById('gamepanel')" in js
+          assert "document.getElementById('bu3857-content')" in js
+          assert "'.bu3815-chapter-finale'" in js
+          assert "'.bu3863-finale'" in js
+          assert "'#bu3857-next-episode':'#toJourney'" in js
+          assert "new MutationObserver(scan).observe(root,{childList:true,subtree:false})" in js
+          assert "card.classList.contains('bu-story-finale-v2')" in js
+          assert "const setting=celebrateSetting();" in js
+          assert 'NO_MOTION()' in js
+          assert "falling(card,n)" in js
+          assert "audio owners" in js
+          assert '.onclick=' not in js and 'awardOnce' not in js and 'bu381Play(' not in js
+          assert 'bu3815-chapter-finale' in src and 'bu3863-finale' in src
+          assert 'bu3857-next-episode' in src and 'bu3857-replay' in src
+          assert 'id="gamepanel"' in html and 'id="bu3857-content"' in html
+          assert '#play .bu3815-chapter-finale.bu-story-finale-v2' in css
+          assert '#bu3857-screen .bu3863-finale.bu-story-finale-v2' in css
+          assert '#play .bu-story-finale-v2 .bu34-minor' in css
+          assert 'assets/ui/story-complete-inscription-plaque-v2.svg' in css
+          assert 'prefers-reduced-motion:reduce' in css
+          assert 'pointer-events:none' in css
+          assert 'story-chapter-complete-v2-test.js?v=20261105-test-chapter-finale-v2' in loader
+          assert 'story-chapter-complete-v2-test.css?v=20261105-test-chapter-finale-v2' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert '20261104-story-gold-all-roots' not in loader or 'story-adventure-metallic-icons-test.js' in loader
+          assert 'premium-sfx.js' in loader
+          print('PASS: both renderers, original text/buttons, no event substitution or new sounds, premium SVGs, test-only loader')
+          PY
