@@ -1,0 +1,47 @@
+name: Verify Daily Discovery premium completion (TEST ONLY)
+on:
+  push:
+    paths: ['.github/workflows/verify-daily-completion-premium.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify assets, safe dynamic result enhancement, and Visual Lab isolation
+        run: |
+          node --check daily-completion-premium-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          imgs=['assets/ui/daily-complete-laurel-v1.svg','assets/ui/daily-complete-score-plaque-v1.svg','assets/ui/daily-explanation-wax-next-v2.svg','assets/ui/story-gold-restart-v1.svg']
+          for p in imgs:
+           assert Path(p).exists(),p
+           root=ET.parse(p).getroot()
+           assert root.tag.endswith('svg'),p
+           assert 'linearGradient' in Path(p).read_text(),p
+          js=Path('daily-completion-premium-test.js').read_text()
+          css=Path('daily-completion-premium-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert "document.getElementById('bu375-daily')" in js
+          assert "body.querySelector(':scope > .bu375-result')" in js
+          assert "body.querySelector(':scope > #bu375-home')" in js
+          assert "body.querySelector(':scope > #bu375-again')" in js
+          assert "new MutationObserver(enhance).observe(body,{childList:true,subtree:false})" in js
+          assert "body.classList.remove('bu-daily-finale-v1')" in js
+          assert "replay.prepend(icon)" in js
+          assert 'awardOnce' not in js and 'bu375Complete' not in js and '.onclick=' not in js
+          assert '#bu375-daily #bu375-body.bu-daily-finale-v1' in css
+          assert 'daily-complete-score-plaque-v1.svg' in css
+          assert 'daily-explanation-wax-next-v2.svg' in css
+          assert '#bu375-again' in css
+          assert 'prefers-reduced-motion:reduce' in css
+          assert 'daily-completion-premium-test.js?v=20261104-completion-art-v1' in loader
+          assert 'daily-completion-premium-test.css?v=20261104-completion-art-v1' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'story-adventure-metallic-icons-test.js' in loader
+          assert '20261104-story-letter-swipes-v6b' in loader
+          print('PASS: final-page-only artwork, valid SVGs, score and reward logic untouched, navigation preserved, Visual Lab only')
+          PY
