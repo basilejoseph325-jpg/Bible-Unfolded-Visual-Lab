@@ -1,4 +1,4 @@
-name: Inspect Mixed Trivia landing markup and foliage (read only)
+name: Inspect Trivia native question and round-ending renderer (read only)
 on:
   push:
     paths:
@@ -11,27 +11,37 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Mixed Trivia real markup and image treatments
+      - name: Inspect actual Trivia selectors, answer states and result controls
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          files=[Path('index.html'),Path('trivia-landing-test.html'),Path('trivia-landing-test-v2.html'),Path('bible_unfolded_core_part5.js'),Path('word-builder-flat-hero-v2.css')]
-          keys=['FULL-BIBLE CHALLENGE','Full-Bible Challenge','Mixed Trivia','Your Challenge','A different journey','spanning people','Prophecy','labHero','labCard','triviaLab','word-builder-olive-overlay.png','wb-hero-olive-corners.svg','trivia-native-v2.css','trivia-landing-test']
-          for fn in files:
-            if not fn.exists():continue
-            s=fn.read_text(encoding='utf8')
-            print('FILE',fn,'CHARS',len(s))
-            for key in keys:
-              hits=list(re.finditer(re.escape(key),s,re.I))
-              print('KEY',repr(key),'HITS',len(hits))
-              for m in hits[:3]:
-                b=max(0,m.start()-850);e=min(len(s),m.end()+1250)
-                print('CTX',repr(key),'POS',m.start(),repr(s[b:e][:2600]))
-            if fn.name=='index.html':
-              ids=['triviaLab','labHero','labCard','labPills','labTags','labContent','bu386-page']
-              for name in ids:
-                for m in list(re.finditer(r'#[a-zA-Z0-9_:., >+\-]*(?:'+re.escape(name)+r')[a-zA-Z0-9_:., >+\-]*\s*\{[^{}]{0,900}\}',s))[:9]:
-                  print('RULE',name,repr(m.group(0)[:1200]))
+          paths=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),Path('trivia-native-v2.css')]
+          needles=['Which statement about God appears','Keep exploring!','Score 60%','First try +20','New answer Points','Beginner challenge','Play Again','First-completion reward','bu-native-trivia','triviaLab','bu34-trivia','bu34-body','trivia finish','trivia-results','bu386-page']
+          def clean(s):
+            s=re.sub(r'data:image/[^;]*;base64,[A-Za-z0-9+/=]{140,}', '[EMBEDDED_IMAGE]', s)
+            return s.replace('\n',' ')[:2800]
+          for f in paths:
+            if not f.exists():continue
+            s=f.read_text(encoding='utf8')
+            print('FILE',f,'LEN',len(s))
+            for needle in needles:
+              hits=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
+              if not hits:continue
+              print('MATCH',repr(needle),'COUNT',len(hits))
+              for idx in hits[:2]+hits[-1:]:
+                print('CTX',repr(needle),idx,repr(clean(s[max(0,idx-1050):idx+1650])))
+            if f.name=='index.html':
+              for name in ['bu-native-trivia','bu34-body','bu34-trivia','triviaLab','bu38','bu39']:
+                pats=[m for m in re.finditer(r'[^{}<>]{0,210}\{[^{}]{0,1900}\}',s) if name in m.group(0)[:210]]
+                print('CSS_RULE_COUNT',name,len(pats))
+                for m in pats[-24:]:
+                  print('RULE',name,repr(clean(m.group(0)[:1600])))
+            if f.name=='trivia-native-v2.css':
+              rules=[m.group(0) for m in re.finditer(r'[^{}]{0,280}\{[^{}]{0,2300}\}',s) if 'base64' not in m.group(0)]
+              print('TRIVIA_CSS_RULES',len(rules))
+              for rule in rules[-135:]:
+                print('RULE',repr(clean(rule[:1100])))
+            print('END FILE')
           PY
