@@ -1,0 +1,47 @@
+name: TEST remove announcer music ducking without touching voices
+on:
+  push:
+    paths: ['.github/workflows/disable-announcer-ducking-test.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Neutralize both music duck factors in packed core
+        run: python3 .github/scripts/disable_announcer_ducking_20261104.py
+      - name: Verify no voices/audio or UI behavior changed
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          path=Path('bible_unfolded_core_part5.js')
+          now=path.read_text()
+          old=subprocess.check_output(['git','show','HEAD:bible_unfolded_core_part5.js'],text=True)
+          a='const goal=bu381Voice.active?0.30:1;'
+          b='const goal=1; // Announcer voice no longer lowers background music.'
+          c='const duckGoal=(canPlay&&bu381Voice.active)?0.32:1;'
+          d="const duckGoal=1; // Preserve the user's selected soundtrack level during speech."
+          assert now==old.replace(a,b).replace(c,d),"Unexpected changes outside exactly two audio duck controls"
+          for source in [now]:
+           packed=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',source,re.S)
+           assert packed,"Packed JS missing"
+           body=json.loads(packed.group(1))
+           assert a not in body and c not in body
+           assert b in body and d in body
+           assert 'function bu381Play(' in body
+           assert 'bu381Voice.active=true;' in body
+           assert 'bu25AudioPulse=function(){' in body
+           assert 'musicVolume/100*.72' in body
+           assert "if(!selected&&!player.paused)player.pause();" in body
+          print('PASS: exact two-only source replacement; voice clips, preferences, music, and SFX unchanged')
+          PY
+      - name: Commit only safely patched core file
+        run: |
+          git add bible_unfolded_core_part5.js
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST: remove announcer music ducking from both playback controllers"
+          git push origin HEAD:main
