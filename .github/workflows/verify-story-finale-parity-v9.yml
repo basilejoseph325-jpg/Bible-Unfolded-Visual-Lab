@@ -1,0 +1,48 @@
+name: Verify Story finale parity V9 - TEST ONLY
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-parity-v9.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          node --check premium-sfx.js
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          core=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+          assert subprocess.check_output(['git','hash-object','bible_unfolded_core_part5.js'],text=True).strip()=='225e0a3e530c56f01d0d09aa51d0e3ae7542590c'
+          assert "if(el.closest('#episode-list [data-episode],#episodes .episode-card,#bu3857-replay'))return 'entry';" in core
+          assert "#bu3857-replay,#bu3857-next-episode'))return 'entry';" not in core
+          assert "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in core
+          assert "const duckGoal=1;" in core and "const goal=1;" in core
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          sfx=Path('premium-sfx.js').read_text()
+          assert "function chapterArt(modern,ending=false)" in js
+          assert "const art=chapterArt(modern,true);" in js
+          assert "const key='g'+String(number).padStart(2,'0')+(ending?'-d10':'-d01');" in js
+          assert "const key='ex'+chapter+(ending?'-d10':'-d01');" in js
+          assert "const art=chapterArt(true);" in js
+          assert "label.textContent=caption;" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert '.onclick=' not in js and 'playChime()' not in js
+          assert 'V9: align newer chapter endings' in css
+          assert "#bu3857-screen:has(.bu3863-finale.bu-story-finale-v2) .bu3857-progress-rail{display:none!important}" in css
+          assert "margin-bottom:clamp(56px,7.7dvh,96px)!important" in css
+          assert "opacity:.43!important" in css
+          assert '20261105-final-scene-parity-v9' in loader
+          assert 'premium-sfx.js?v=20261105-story-next-audio-v8' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert '#bu3857-replay,#bu3857-next-episode' not in sfx
+          assert 'storyLevel' in sfx
+          print("PASS: exact original Next audio parity (extra layer removed), later chapter final-scene atmosphere and vertical spacing, gold rail hidden, no navigation changes, TEST only")
+          PY
