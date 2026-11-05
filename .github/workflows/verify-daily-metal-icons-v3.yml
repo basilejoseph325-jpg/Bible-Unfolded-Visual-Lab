@@ -1,0 +1,45 @@
+name: Verify Daily metallic icon artwork candidate
+on:
+  push:
+    paths: ['.github/workflows/verify-daily-metal-icons-v3.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify individual transparent SVGs, JS wiring and isolation
+        run: |
+          node --check daily-discovery-gold-icons-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          assets=['daily-gold-bible-v3.svg','daily-gold-hint-v3.svg','daily-gold-eye-v3.svg']
+          for name in assets:
+            p=Path('assets/ui')/name
+            svg=p.read_text()
+            root=ET.fromstring(svg)
+            assert root.tag.endswith('svg') and root.attrib.get('viewBox')=='0 0 64 64'
+            assert '<image' not in svg and '<rect' not in svg, 'Icons should be transparent without rectangular backplates'
+            assert 'linearGradient' in svg and 'shadow' in svg and 'glow' in svg
+            print('PASS: transparent metallic SVG',name)
+          bible=(Path('assets/ui')/assets[0]).read_text()
+          assert 'cross' not in bible.lower() and 'crucifix' not in bible.lower()
+          js=Path('daily-discovery-gold-icons-test.js').read_text()
+          assert "root=document.getElementById('bu375-daily')" in js
+          assert "b.replaceChildren(icon)" in js
+          assert 'img.src=imagePaths[i]' in js
+          assert 'img.alt=' in js and 'aria-hidden' in js
+          for name in assets:assert name in js
+          css=Path('daily-discovery-polish-test.css').read_text()
+          assert 'V3: individual premium metallic artwork' in css
+          assert '.bu-daily-gold-icon > img' in css
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'daily-discovery-gold-icons-test.js?v=20261104-metallic-art-v3' in loader
+          assert 'daily-discovery-polish-test.css?v=20261104-metallic-art-v3' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert Path('docs/design-system/ANSWER_TABLETS_AND_GOLD_ICONS_RULES.md').read_text().count('Metallic artwork refinement')==1
+          print('PASS: Daily-only icon wiring, cache versions, preserved controls and updated rulebook')
+          PY
