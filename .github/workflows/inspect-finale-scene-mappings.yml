@@ -1,0 +1,22 @@
+name: Inspect Story scene artwork mappings for finale
+on:
+ push:
+  paths: ['.github/workflows/inspect-finale-scene-mappings.yml']
+permissions: {contents: read}
+jobs:
+ inspect:
+  runs-on: ubuntu-latest
+  steps:
+   - uses: actions/checkout@v4
+   - run: |
+       python3 - <<'PY'
+       from pathlib import Path
+       import re
+       for f in list(Path('.').glob('*.js'))+[Path('index.html')]:
+        s=f.read_text(errors='replace')
+        for term in ['BU_GENESIS_SCENE_ART=', 'BU_GENESIS_SCENE_ART =','BU3857_SCENE_ART=', 'BU3857_SCENE_ART =', 'GENESIS_EP08','genesis_ep08', 'genesis_ep07','genesis_ep09','assets/scenes/','frame-b']:
+         hits=list(re.finditer(re.escape(term),s))
+         if hits:
+          print('FILE',f.name,'TERM',term,'COUNT',len(hits))
+          for h in hits[:2]: print('SNIP',repr(s[max(0,h.start()-240):h.start()+1400])[:1700])
+       PY
