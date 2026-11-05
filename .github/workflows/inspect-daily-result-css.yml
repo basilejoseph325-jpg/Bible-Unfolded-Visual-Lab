@@ -1,0 +1,22 @@
+name: Inspect Daily completion layout rules
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-result-css.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          for filename in ['index.html','daily-discovery-cinematic.css','daily-discovery-polish-test.css','daily-discovery-question-premium.css']:
+           s=Path(filename).read_text()
+           for selector in ['.bu375-result{','.bu375-result-score{','.bu375-hero{','.bu375-button{','.bu375-intro{','.bu375-fine{','#bu375-body{','#bu375-daily .bu34-body{']:
+            matches=list(re.finditer(re.escape(selector),s))
+            if matches:
+             print('FILE',filename,'SELECTOR',selector,'COUNT',len(matches))
+             for a in matches[-4:]:print('RULE',repr(s[a.start():a.start()+800]))
+          PY
