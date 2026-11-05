@@ -1,0 +1,22 @@
+name: Inspect current Story Chapter selection and Next navigation
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-chapters-route-pre-live.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect exact chapter action and destination
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          core=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+          for term in ["$('bu3857-next-episode').onclick","$('bu3857-replay').onclick","$('bu3857-back').onclick","function bu3857Open","function bu3857Exit","function bu3857Render(){","id=\"bu3857-next-episode\"","id=\"bu3857-replay\"","function bu3857OpenBook","bu3857ShowBooks","$('bu3857-screen').hidden"]:
+           hits=[m.start() for m in re.finditer(re.escape(term),core)]
+           print('KEY',term,'COUNT',len(hits))
+           for i in hits[:1]:print('SNIP',repr(core[max(0,i-400):i+1300])[:1850])
+          PY
