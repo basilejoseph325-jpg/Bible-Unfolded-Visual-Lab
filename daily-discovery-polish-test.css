@@ -121,3 +121,18 @@
 #bu375-daily #bu375-body.bu65-playing .bu3918-tools button > span.bu-daily-gold-icon > svg circle[fill="currentColor"]{
   fill:#f7d07c!important;
 }
+
+
+/* V3: individual premium metallic artwork rather than simple flat SVG strokes.
+   Keep existing approved outer toolbar buttons and eliminate nested capsules.
+   img avoids legacy span/svg selectors overriding the asset's gold gradients. */
+#bu375-daily #bu375-body.bu65-playing .bu3918-tools button > span.bu-daily-gold-icon > img{
+ display:block!important;width:100%!important;height:100%!important;
+ object-fit:contain!important;border:0!important;border-radius:0!important;
+ min-width:0!important;min-height:0!important;max-width:none!important;
+ padding:0!important;margin:0!important;
+ background:transparent!important;box-shadow:none!important;
+ pointer-events:none!important;
+ filter:drop-shadow(0 1px 1px rgba(0,9,17,.72))
+        drop-shadow(0 0 2px rgba(245,182,62,.25))!important;
+}
