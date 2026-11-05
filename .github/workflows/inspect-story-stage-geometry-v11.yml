@@ -1,0 +1,23 @@
+name: Inspect Story finale stage sizing before shared-layout refactor
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-stage-geometry-v11.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          h=Path('index.html').read_text()
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          src=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S).group(1))
+          for label,t,terms in [('HTML',h,['.bu3857-scroll{','.bu3863-finale{','.bu3857-content{','.bu3815-chapter-finale{','.final-moment{','#gamepanel{','#bu3857-screen{']),('CORE',src,['class="moment final-moment bu3815-chapter-finale"','class="bu3863-finale"','class="completion-caption','id="bu3857-content"'])]:
+           for term in terms:
+            ms=list(re.finditer(re.escape(term),t))
+            print(label,term,len(ms))
+            for m in ms[:3]:print('CONTEXT',repr(t[max(0,m.start()-150):m.start()+1300])[:1550])
+          PY
