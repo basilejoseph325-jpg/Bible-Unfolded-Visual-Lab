@@ -1,6 +1,7 @@
 /* Daily Discovery in Visual Lab only: replace emoji glyphs with cross-free,
    inline antique-gold SVGs without replacing buttons, handlers or aria labels. */
 (()=>{'use strict';
+ function boot(){
  const root=document.getElementById('bu375-daily');
  if(!root)return;
  const svg=[
@@ -33,4 +34,6 @@
  const obs=new MutationObserver(()=>refresh());
  obs.observe(root,{subtree:true,childList:true});
  refresh();
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
