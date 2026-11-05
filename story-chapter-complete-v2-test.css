@@ -1,0 +1,170 @@
+/* TEST ONLY: premium Story chapter complete. Do not restyle gameplay.
+   No changes to illustration, chapter text, wheel, audio, or real buttons. */
+#play .bu3815-chapter-finale.bu-story-finale-v2,
+#bu3857-screen .bu3863-finale.bu-story-finale-v2{
+ box-sizing:border-box!important;
+ position:relative!important;isolation:isolate!important;
+ display:flex!important;flex-direction:column!important;
+ align-items:center!important;justify-content:center!important;
+ gap:clamp(5px,1dvh,11px)!important;
+ width:100%!important;max-width:100%!important;
+ padding:clamp(7px,1.5dvh,17px) clamp(12px,3.2vw,22px)!important;
+ overflow:hidden!important;
+ background:radial-gradient(ellipse at 50% 12%,rgba(75,135,125,.2),transparent 70%)!important;
+}
+#play .bu3815-chapter-finale.bu-story-finale-v2{
+ height:100%!important;
+ min-height:0!important;
+}
+#bu3857-screen .bu3863-finale.bu-story-finale-v2{
+ height:100%!important;min-height:0!important;
+}
+#play .bu-story-finale-v2 > .bu3815-finale-halo,
+#play .bu-story-finale-v2 > .reveal-spark{
+ display:none!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-book-emblem{
+ box-sizing:border-box!important;display:block!important;
+ width:clamp(91px,31vw,145px)!important;
+ height:clamp(77px,12dvh,114px)!important;
+ min-height:0!important;max-width:100%!important;
+ flex:0 0 auto!important;
+ margin:0 auto!important;padding:0!important;
+ border:0!important;border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+ object-fit:contain!important;pointer-events:none!important;
+ filter:drop-shadow(0 2px 7px rgba(2,14,22,.7)) drop-shadow(0 0 8px rgba(255,213,119,.24))!important;
+}
+#play .bu-story-finale-v2 > .period-tag{
+ flex:0 0 auto!important;
+ margin:0 auto!important;padding:0!important;
+ font-size:clamp(9px,2.4vw,13px)!important;
+ letter-spacing:.12em!important;
+ line-height:1.25!important;text-align:center!important;
+ color:#e5ce90!important;text-transform:uppercase!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 > h2{
+ box-sizing:border-box!important;
+ position:relative!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:min(100%,490px)!important;
+ min-height:clamp(105px,17dvh,146px)!important;
+ flex:0 0 auto!important;
+ margin:0 auto!important;
+ padding:17px clamp(27px,7vw,46px)!important;
+ border:0!important;border-radius:0!important;
+ background:transparent url('assets/ui/story-complete-inscription-plaque-v2.svg') center / 100% 100% no-repeat!important;
+ box-shadow:none!important;
+ font:700 clamp(22px,6vw,36px)/1.17 Georgia,serif!important;
+ color:#ffe8ae!important;text-align:center!important;
+ text-shadow:0 2px 4px rgba(0,10,16,.86)!important;
+ overflow-wrap:break-word!important;word-break:normal!important;
+}
+#bu3857-screen .bu-story-finale-v2 > p{
+ flex:0 0 auto!important;
+ max-width:380px!important;
+ margin:0 auto!important;
+ font:400 clamp(12px,3.2vw,15px)/1.35 system-ui,sans-serif!important;
+ color:#d9e7df!important;text-align:center!important;
+}
+#play .bu-story-finale-v2 .gold-button#toJourney,
+#bu3857-screen .bu-story-finale-v2 #bu3857-next-episode{
+ box-sizing:border-box!important;
+ width:min(100%,470px)!important;
+ flex:0 0 auto!important;
+ min-height:clamp(52px,8dvh,68px)!important;
+ margin:clamp(3px,.8dvh,7px) auto 0!important;
+ padding:11px 19px!important;
+ border:2px solid #f9e1a2!important;
+ border-radius:18px!important;
+ background:linear-gradient(175deg,#fff0b4 0%,#e8c777 38%,#ba8440 92%,#a86c2e 100%)!important;
+ box-shadow:inset 0 3px 3px #fff8d299,inset 0 -4px 6px #81551c66,0 5px 13px #0008!important;
+ color:#17353c!important;
+ font:800 clamp(17px,4.5vw,23px)/1.15 system-ui,sans-serif!important;
+ text-shadow:0 1px 1px #fff1af70!important;
+ cursor:pointer!important;transition:transform .15s ease!important;
+}
+#play .bu-story-finale-v2 .gold-button#toJourney:active,
+#bu3857-screen .bu-story-finale-v2 #bu3857-next-episode:active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 3px 8px #81551c88!important;
+}
+#play .bu-story-finale-v2 .bu34-minor{
+ box-sizing:border-box!important;
+ display:flex!important;align-items:stretch!important;justify-content:center!important;
+ gap:8px!important;width:min(100%,470px)!important;
+ flex:0 0 auto!important;
+ margin:4px auto 0!important;
+}
+#play .bu-story-finale-v2 .bu34-minor button,
+#bu3857-screen .bu-story-finale-v2 #bu3857-replay{
+ box-sizing:border-box!important;min-height:clamp(41px,6dvh,51px)!important;
+ margin:0!important;padding:8px!important;
+ border:1.6px solid #d5b774!important;border-radius:15px!important;
+ background:linear-gradient(155deg,#174751 0%,#0a303a 73%)!important;
+ box-shadow:inset 0 1px #ffe7a133,inset 0 -2px 5px #00182366,0 3px 8px #00101955!important;
+ color:#f6e3b7!important;
+ font:750 clamp(13px,3.4vw,16px)/1.15 system-ui,sans-serif!important;
+}
+#play .bu-story-finale-v2 .bu34-link{
+ box-sizing:border-box!important;flex:0 0 auto!important;
+ margin:2px auto!important;padding:4px 9px!important;
+ min-height:29px!important;
+ font:700 clamp(12px,3.2vw,15px)/1.2 system-ui,sans-serif!important;
+ color:#e9d49f!important;
+ text-underline-offset:5px!important;
+}
+#bu3857-screen .bu-story-finale-v2 #bu3857-replay{
+ flex:0 0 auto!important;width:min(100%,470px)!important;
+ margin:0 auto!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower{
+ position:absolute!important;inset:0!important;z-index:5!important;
+ overflow:hidden!important;pointer-events:none!important;
+ contain:paint!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower i{
+ display:block!important;position:absolute!important;
+ left:var(--x)!important;top:-16px!important;
+ width:7px!important;height:12px!important;border-radius:2px!important;
+ background:var(--gold)!important;
+ opacity:0;pointer-events:none!important;
+ animation:bu-story-finale-fall var(--t) linear var(--d) 1 both!important;
+}
+:is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower i.bu-story-finale-spark{
+ width:5px!important;height:5px!important;border-radius:50%!important;
+ box-shadow:0 0 8px #ffe1a9!important;
+}
+@keyframes bu-story-finale-fall{
+ 0%{transform:translate3d(0,-10px,0) rotate(0);opacity:0}
+ 8%{opacity:1}
+ 80%{opacity:.95}
+ 100%{transform:translate3d(var(--dx),80dvh,0) rotate(var(--turn));opacity:0}
+}
+@media(max-height:760px){
+ #play .bu3815-chapter-finale.bu-story-finale-v2,
+ #bu3857-screen .bu3863-finale.bu-story-finale-v2{
+  gap:4px!important;padding:5px 9px!important;
+ }
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-book-emblem{
+  height:clamp(58px,10dvh,82px)!important;
+ }
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 > h2{
+  min-height:clamp(80px,14dvh,110px)!important;
+  font-size:clamp(19px,5vw,27px)!important;
+ }
+ #play .bu-story-finale-v2 .gold-button#toJourney,
+ #bu3857-screen .bu-story-finale-v2 #bu3857-next-episode{
+  min-height:47px!important;
+ }
+}
+@media(max-height:620px){
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 > .bu-story-finale-book-emblem{height:49px!important}
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 > h2{min-height:74px!important}
+ #play .bu-story-finale-v2 .bu34-link{min-height:24px!important;padding:2px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower{display:none!important}
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 .bu-story-finale-shower i{animation:none!important}
+ :is(#play,#bu3857-screen) .bu-story-finale-v2 .gold-button{transition:none!important}
+}
