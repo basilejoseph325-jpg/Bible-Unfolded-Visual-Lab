@@ -45,7 +45,7 @@ function boot(){
  const prompt=document.getElementById('btn3926-prompt');if(!prompt)return;
  function decorate(){
   if(prompt.querySelector('.btn-name-hero'))return;
-  const t=prompt.textContent.trim();const m=t.match(/^Which meaning belongs to\\s+(.+?)\\?$/i);
+  const t=prompt.textContent.trim();const m=t.match(/^Which meaning belongs to\s+(.+?)\?$/i);
   if(!m)return;
   prompt.replaceChildren(document.createTextNode('Which meaning belongs to'));
   const name=document.createElement('span');name.className='btn-name-hero';name.textContent=m[1]+'?';prompt.appendChild(name);
