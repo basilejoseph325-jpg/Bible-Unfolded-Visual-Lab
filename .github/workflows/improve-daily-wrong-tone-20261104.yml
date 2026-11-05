@@ -1,0 +1,21 @@
+name: Improve Daily wrong-answer audibility in Visual Lab
+on:
+  push:
+    paths: ['.github/workflows/improve-daily-wrong-tone-20261104.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply guarded wrong-answer tonal patch and regression test
+        run: python3 .github/scripts/improve_daily_wrong_tone_20261104.py
+      - name: Commit only tested game module
+        run: |
+          git add bible_unfolded_core_part5.js
+          git diff --cached --quiet && exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Visual Lab: make Daily wrong-answer cue clear on phone speakers"
+          git push origin HEAD:main
