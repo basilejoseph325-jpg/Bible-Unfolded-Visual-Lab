@@ -1,0 +1,45 @@
+name: Verify antique-gold open-title Story finale V7B
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-open-frame-v7b.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check decorative lines, animated scene, mode isolation
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          css=Path('story-chapter-complete-v2-test.css').read_text()
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          x=css.split("V7B TEST — owner's two-sided OPEN FRAME",1)
+          assert len(x)==2
+          tail=x[1]
+          assert '> h2::before' in tail and '> h2::after' in tail
+          assert 'height:5px!important' in tail and 'clip-path:polygon' in tail
+          assert 'mask-image:linear-gradient(90deg' in tail
+          assert '#865320' in tail and '#ffe1a1' in tail
+          assert 'content:""!important' in tail
+          v7=css.split('V7 TEST — open cinematic title',1)[1]
+          assert 'background:none!important' in v7 and 'background-image:none!important' in v7
+          assert 'width:min(100%,680px)!important' in tail
+          assert 'bu-story-finale-cinema-zoom-v7 7.2s linear infinite alternate' in v7
+          assert 'prefers-reduced-motion:reduce' in v7
+          assert "span.textContent=wording" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert '.onclick=' not in js and 'playChime()' not in js
+          assert 'story-chapter-complete-v2-test.css?v=20261105-antique-open-frame-v7b' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          raw=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+          assert m
+          src=json.loads(m.group(1))
+          assert "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in src
+          print('PASS: free-wrapping headings between tapered carved-gold lines, 7.2s cinematography, native handlers/audio preserved, Visual Lab only')
+          PY
