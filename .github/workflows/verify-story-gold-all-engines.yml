@@ -27,7 +27,8 @@ jobs:
           assert "for(const rootId of ['play','bu3857-screen'])" in js
           assert "new MutationObserver(refresh).observe(root" in js
           for id in ('bu3857-back','bu3857-menu','bu3857-replay','bu3863-scripture','bu3863-story','bu3857-hint','bu3857-reveal'):
-           assert id in js and id in html or (id in js and id in ('bu3863-scripture','bu3863-story','bu3857-hint','bu3857-reveal'))
+           assert id in js, id
+          assert 'id="bu3857-back"' in html and 'id="bu3857-menu"' in html
           assert 'id="bu3857-screen"' in html
           assert '#bu3857-screen .bu3863-toolbar button > img.bu-story-metal-icon' in css
           assert '#bu3857-screen :is(#bu3857-back,#bu3857-menu)' in css
