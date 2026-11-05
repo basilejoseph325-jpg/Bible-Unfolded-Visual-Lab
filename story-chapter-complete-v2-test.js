@@ -168,6 +168,24 @@
    stage.appendChild(label);
    for(const node of nodes){if(node!==art)stage.appendChild(node)}
    card.appendChild(stage);
+   // Approved template: paired Replay + Chapters actions.
+   // Move the EXISTING replay node (and its native handler) into a shared row.
+   // Chapters delegates to the actual modern Back action, not a new route.
+   const replay=stage.querySelector('#bu3857-replay');
+   const nativeBack=document.getElementById('bu3857-back');
+   if(replay&&nativeBack){
+    const row=document.createElement('div');
+    row.className='bu-story-finale-actions';
+    replay.parentNode.insertBefore(row,replay);
+    row.appendChild(replay);
+    const chapters=document.createElement('button');
+    chapters.type='button';
+    chapters.id='bu-story-finale-chapters';
+    chapters.className='secondary-button';
+    chapters.textContent='Chapters';
+    chapters.addEventListener('click',()=>nativeBack.click());
+    row.appendChild(chapters);
+   }
   }
   card.classList.add('bu-story-finale-v2');
   card.dataset.buStoryMilestone=milestone?'major':'chapter';
