@@ -1,0 +1,25 @@
+name: Inspect premium audio public hooks
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-premium-audio-hooks.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          files=['index.html','bible_unfolded_core_part5.js','premium-sfx.js','daily-answer-sounds.js']
+          for p in files:
+           if not Path(p).exists():continue
+           s=Path(p).read_text(errors='replace')
+           m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+           if m:s=json.loads(m.group(1))
+           for pat in ['BUPremiumSFX','sfxOn','sfxVolume','BU34_AUDIO_KEY','bu34Audio','playChime','trailCelebrateSound','function playVictoryCheer','function playFx(']:
+            m=list(re.finditer(re.escape(pat),s))
+            if m:print('FILE',p,'TERM',pat,'COUNT',len(m))
+            for a in m[:2]:print('SNIP',repr(s[max(0,a.start()-180):a.start()+650])[:850])
+          PY
