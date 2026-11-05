@@ -1,0 +1,457 @@
+/* BIBLE UNFOLDED — VISUAL LAB ONLY
+   Bible Trivia question and final-score V1: the Scholar's Treasury.
+   The question renderer, A/B/C/D controls, hint costs, scoring,
+   reward-once, menu, modal, and round-navigation logic are unchanged.
+   This stylesheet targets real standard Trivia markup, NOT Daily
+   Discovery, Behind the Name, or Scholar Research. */
+
+/* I. Engraved night-teal question table, with a deliberately subtle inner rim */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question {
+  position:relative!important;
+  isolation:isolate!important;
+  box-sizing:border-box!important;
+  background-color:#0a3240!important;
+  background-image:
+    radial-gradient(ellipse 90% 42% at 50% -11%,rgba(157,199,177,.23),transparent 89%),
+    repeating-linear-gradient(152deg,transparent 0 29px,rgba(242,223,175,.021) 30px 31px,transparent 32px 68px),
+    linear-gradient(145deg,#164752 0%,#0b303e 58%,#082832 100%)!important;
+  border:2px solid #c3a06b!important;
+  border-radius:19px!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,234,176,.46),
+    inset 0 0 0 3px rgba(2,23,30,.62),
+    inset 0 0 0 5px rgba(232,190,110,.19),
+    inset 0 -8px 14px rgba(0,12,20,.33),
+    0 4px 0 #59452d,
+    0 8px 14px rgba(0,10,18,.46)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-count{
+  color:#eed49c!important;
+  text-transform:uppercase!important;
+  font:800 clamp(9px,1.5dvh,12px)/1.18 system-ui,-apple-system,sans-serif!important;
+  letter-spacing:.12em!important;
+  text-shadow:0 1px 2px #001b26!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu34-progress{
+  background:linear-gradient(180deg,#153943,#305964)!important;
+  border:1px solid rgba(209,169,102,.35)!important;
+  border-radius:10px!important;
+  box-shadow:inset 0 2px 3px rgba(0,13,20,.6)!important;
+  overflow:hidden!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu34-progress > div{
+  background:linear-gradient(90deg,#ae783d,#ffe5a2 50%,#d7a55c)!important;
+  box-shadow:0 0 7px rgba(246,203,122,.39)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > h2{
+  box-sizing:border-box!important;
+  width:100%!important;
+  padding:clamp(7px,1.15dvh,12px) clamp(10px,2.6vw,18px)!important;
+  border:1.5px solid #ccaa71!important;
+  border-radius:12px!important;
+  background:
+    radial-gradient(ellipse at 50% -55%,rgba(237,191,110,.18),transparent 82%),
+    linear-gradient(138deg,rgba(8,43,54,.98),rgba(2,30,43,.98))!important;
+  box-shadow:
+    inset 0 0 0 2px rgba(222,182,114,.12),
+    inset 0 1px 0 rgba(255,233,191,.24),
+    0 3px 7px rgba(0,9,18,.40)!important;
+  color:#ffe8b4!important;
+  font-family:Georgia,"Times New Roman",serif!important;
+  font-weight:700!important;
+  letter-spacing:-.016em!important;
+  text-shadow:0 2px 4px rgba(0,11,21,.83)!important;
+  line-height:1.18!important;
+  text-wrap:balance!important;
+}
+
+/* II. Four physical ivory tablets, full native hit area preserved. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer {
+  box-sizing:border-box!important;
+  position:relative!important;
+  isolation:isolate!important;
+  border:1.8px solid #cda96f!important;
+  border-radius:13px!important;
+  background-color:#e9d2a7!important;
+  background-image:
+    radial-gradient(ellipse 94% 87% at 22% -19%,rgba(255,252,226,.86),transparent 87%),
+    repeating-linear-gradient(157deg,transparent 0 22px,rgba(126,79,39,.035) 23px 24px,transparent 25px 50px),
+    linear-gradient(143deg,#f9e8c2 0%,#e8cf9f 53%,#d0a572 100%)!important;
+  color:#233b3b!important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,254,223,.91),
+    inset 0 0 0 2px rgba(250,230,180,.28),
+    inset -3px -3px 5px rgba(112,75,37,.22),
+    0 3px 0 #7f5d36,
+    0 5px 8px rgba(0,11,18,.38)!important;
+  text-shadow:0 1px 0 rgba(255,251,215,.66)!important;
+  cursor:pointer!important;
+  transition:transform .13s ease,box-shadow .13s ease,filter .13s ease!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]{
+  background-image:radial-gradient(ellipse at 84% 0%,rgba(255,250,214,.72),transparent 82%),linear-gradient(137deg,#f3dfb7 0%,#e8cea0 54%,#d7b584 100%)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]{
+  background-image:radial-gradient(ellipse at 12% 5%,rgba(255,248,216,.80),transparent 85%),linear-gradient(150deg,#f8e3b6 0%,#e4c594 54%,#d3aa72 100%)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{
+  background-image:radial-gradient(ellipse at 90% 5%,rgba(255,253,223,.76),transparent 84%),linear-gradient(135deg,#f6e5c0 0%,#e6cda0 54%,#cfaa79 100%)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer > b{
+  box-sizing:border-box!important;
+  flex:0 0 auto!important;
+  display:grid!important;
+  place-items:center!important;
+  width:clamp(31px,7.8vw,39px)!important;
+  height:clamp(31px,7.8vw,39px)!important;
+  border:2px solid #d9b375!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 33% 20%,#265966,#0c3542 67%,#05232e 100%)!important;
+  color:#ffe4ad!important;
+  font:800 clamp(17px,4.2vw,21px)/1 Georgia,serif!important;
+  text-shadow:0 1px 2px #00131d!important;
+  box-shadow:
+    inset 0 1px rgba(255,241,190,.53),
+    inset 0 0 0 2px #244a4b,
+    0 2px 0 #785734,
+    0 3px 5px rgba(0,11,18,.42)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer > span{
+  min-width:0!important;
+  color:inherit!important;
+  font-family:system-ui,-apple-system,sans-serif!important;
+  font-weight:700!important;
+  font-size:clamp(12px,1.9dvh,17px)!important;
+  line-height:1.27!important;
+  text-shadow:inherit!important;
+}
+@media(hover:hover){
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:not(:disabled):hover{
+    filter:brightness(1.035)!important;
+  }
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:not(:disabled):active{
+  transform:translateY(2px)!important;
+  box-shadow:inset 0 2px 5px rgba(107,66,31,.31),0 1px 0 #785734,0 2px 3px rgba(0,11,18,.37)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:focus-visible{
+  outline:3px solid #fff0b7!important;
+  outline-offset:2px!important;
+}
+/* State rules after all mineral variation rules: success and failure must
+   be solid, unmistakable RED/GREEN even when buttons are disabled. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct:disabled{
+  opacity:1!important;filter:none!important;
+  border:2px solid #a4dfb1!important;
+  background-color:#1d654f!important;
+  background-image:radial-gradient(ellipse at 12% -15%,rgba(201,255,204,.41),transparent 84%),linear-gradient(145deg,#327a60,#165a4b 70%,#0e453f)!important;
+  color:#f3ffeb!important;
+  text-shadow:0 1px 2px #073b31!important;
+  box-shadow:inset 0 1px rgba(221,255,219,.46),inset 0 -3px rgba(8,63,48,.34),0 0 0 2px rgba(139,217,162,.22),0 2px 8px rgba(27,166,90,.43)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong:disabled{
+  opacity:1!important;filter:none!important;
+  border:2px solid #f0a1a0!important;
+  background-color:#953c3c!important;
+  background-image:radial-gradient(ellipse at 18% -12%,rgba(255,198,188,.38),transparent 84%),linear-gradient(145deg,#b85c56,#7e3439 72%,#692c36)!important;
+  color:#fff2e8!important;
+  text-shadow:0 1px 2px #4b1d22!important;
+  box-shadow:inset 0 1px rgba(255,227,208,.45),inset 0 -3px rgba(82,20,22,.3),0 0 0 2px rgba(240,142,142,.24),0 2px 8px rgba(219,74,82,.36)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct > b,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong > b{
+  border-color:rgba(255,241,207,.89)!important;
+  background-image:linear-gradient(150deg,rgba(14,42,47,.84),rgba(7,23,31,.9))!important;
+  color:#fff1cb!important;
+  box-shadow:inset 0 1px rgba(255,239,195,.2),0 2px 3px #0005!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:disabled:not(.correct):not(.wrong){
+  opacity:.64!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.bu3922-eliminated:not(.correct){
+  opacity:.32!important;
+  filter:grayscale(.4)!important;
+  border-style:dashed!important;
+}
+
+/* III. Real Trivia toolbar, approved metallic icons. Three original buttons
+   plus noninteractive progress span. No nested buttons or changed handlers. */
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools{
+  border:1px solid rgba(220,183,119,.72)!important;
+  border-radius:15px!important;
+  background:linear-gradient(135deg,rgba(15,56,65,.85),rgba(4,35,45,.94))!important;
+  box-shadow:inset 0 1px rgba(255,229,178,.24),0 3px 7px #00131c55!important;
+  padding:3px!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button{
+  box-sizing:border-box!important;
+  position:relative!important;
+  border:1.5px solid #cda76c!important;
+  border-radius:12px!important;
+  background:linear-gradient(150deg,#1c4d56,#082f3d 80%)!important;
+  box-shadow:inset 0 1px rgba(255,235,188,.30),0 3px 5px #00111c80!important;
+  color:transparent!important;
+  font-size:0!important;
+  text-shadow:none!important;
+  min-width:0!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button::before{
+  content:""!important;
+  display:block!important;
+  width:clamp(29px,7.8vw,39px)!important;
+  height:clamp(29px,7.8vw,39px)!important;
+  max-height:100%!important;
+  background:transparent var(--bu-trivia-tool-art) center / contain no-repeat!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button:nth-of-type(1){
+  --bu-trivia-tool-art:url("assets/ui/daily-gold-bible-v3.svg");
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button:nth-of-type(2){
+  --bu-trivia-tool-art:url("assets/ui/daily-gold-hint-v3.svg");
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button:nth-of-type(3){
+  --bu-trivia-tool-art:url("assets/ui/daily-gold-eye-v3.svg");
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button > span{
+  font-size:0!important;
+  color:transparent!important;
+  min-height:0!important;
+  border:0!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  padding:0!important;
+  width:auto!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > span{
+  box-sizing:border-box!important;
+  border:1.5px solid #cda76c!important;
+  border-radius:12px!important;
+  background:linear-gradient(150deg,#1c4d56,#082f3d 80%)!important;
+  color:#ffe3a8!important;
+  box-shadow:inset 0 1px rgba(255,235,188,.29),0 3px 5px #00111c80!important;
+  font-family:Georgia,serif!important;
+  font-weight:800!important;
+  text-shadow:0 1px 3px #00151c!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button:focus-visible{
+  outline:3px solid #ffebba!important;
+  outline-offset:2px!important;
+}
+
+/* IV. Small native points/help ledger stays legible but subordinate. */
+#bu34-trivia #bu34-body.bu65-playing #bu383-score{
+  color:#f2dcaa!important;
+  text-shadow:0 1px 3px #00151e!important;
+  font:700 clamp(10px,1.5dvh,12px)/1.2 system-ui,-apple-system,sans-serif!important;
+  letter-spacing:.01em!important;
+}
+
+/* V. End-of-round: a Scholar's Medal, same navy/bronze materials as the
+   question page. Native score, eligibility wording and two original buttons
+   are preserved, including the original reward-once calculation. */
+#bu34-trivia #bu34-body > .bu34-summary{
+  --bu-trivia-percent:0%;
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:clamp(5px,1dvh,11px)!important;
+  width:100%!important;
+  min-height:100%!important;
+  max-width:100%!important;
+  margin:0 auto!important;
+  padding:clamp(10px,2.3dvh,25px) clamp(12px,4vw,26px)!important;
+  background:
+    radial-gradient(ellipse 80% 39% at 50% 12%,rgba(217,175,97,.16),transparent 93%),
+    radial-gradient(ellipse 95% 72% at 50% 42%,rgba(20,77,78,.2),transparent 89%)!important;
+  border:0!important;
+  text-align:center!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > div:first-child{
+  flex:0 0 auto!important;
+  box-sizing:border-box!important;
+  width:clamp(116px,33vw,157px)!important;
+  height:clamp(74px,11dvh,103px)!important;
+  padding:0!important;
+  margin:0 auto!important;
+  color:transparent!important;
+  font-size:0!important;
+  line-height:0!important;
+  text-shadow:none!important;
+  background:transparent url("assets/ui/daily-complete-laurel-v1.svg") center / contain no-repeat!important;
+  border:0!important;
+  box-shadow:none!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > h2{
+  position:relative!important;
+  width:100%!important;
+  max-width:510px!important;
+  margin:0 auto!important;
+  padding:0 0 9px!important;
+  color:#ffe4aa!important;
+  font:700 clamp(30px,7.1vw,43px)/1.17 Georgia,"Times New Roman",serif!important;
+  letter-spacing:-.016em!important;
+  text-shadow:0 2px 0 #654826,0 3px 8px rgba(0,12,20,.67)!important;
+  text-wrap:balance!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > h2::after{
+  content:""!important;
+  display:block!important;
+  height:2px!important;
+  width:min(47%,210px)!important;
+  margin:clamp(6px,1dvh,11px) auto 0!important;
+  background:linear-gradient(90deg,transparent,#ae7a3e 15%,#ffe4ab 50%,#ae7a3e 85%,transparent)!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > .big{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 auto!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:2px!important;
+  width:clamp(134px,20dvh,185px)!important;
+  height:clamp(134px,20dvh,185px)!important;
+  min-height:0!important;
+  margin:0 auto!important;
+  padding:10px!important;
+  border:2px solid #e5c187!important;
+  border-radius:50%!important;
+  color:#ffe7b1!important;
+  font:800 clamp(56px,10dvh,86px)/1 Georgia,serif!important;
+  background:
+    radial-gradient(circle at 50% 50%,#103f4a 0 60%,transparent 61%),
+    conic-gradient(from -90deg,#e6bb74 0 var(--bu-trivia-percent),rgba(171,138,79,.29) var(--bu-trivia-percent) 100%)!important;
+  box-shadow:inset 0 0 0 5px #092c38,inset 0 0 0 7px rgba(233,193,116,.36),inset 0 9px 22px rgba(4,19,25,.38),0 4px 0 #66472c,0 10px 24px rgba(0,10,20,.59)!important;
+  text-shadow:0 3px 5px #031b27!important;
+  font-variant-numeric:lining-nums tabular-nums!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > .big > span{
+  align-self:center!important;
+  margin:25px 0 0!important;
+  color:#f5da9d!important;
+  font:700 clamp(19px,3.6dvh,27px)/1 Georgia,serif!important;
+  text-shadow:0 2px 3px #001721!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > p{
+  box-sizing:border-box!important;
+  width:min(100%,520px)!important;
+  margin:0 auto!important;
+  padding:0!important;
+  color:#f0e0bd!important;
+  font:500 clamp(13px,2dvh,17px)/1.35 Georgia,serif!important;
+  text-shadow:0 1px 3px #031a25!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > p:first-of-type{
+  color:#ffe9ba!important;
+  font-weight:650!important;
+  letter-spacing:.012em!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > p:nth-of-type(2),
+#bu34-trivia #bu34-body > .bu34-summary > .v37-trivia-badge{
+  box-sizing:border-box!important;
+  width:min(100%,500px)!important;
+  border:1px solid #cba46b!important;
+  border-radius:13px!important;
+  background:linear-gradient(140deg,rgba(29,83,86,.9),rgba(9,45,57,.97))!important;
+  padding:clamp(8px,1.45dvh,12px) 12px!important;
+  box-shadow:inset 0 1px rgba(255,232,176,.33),inset 0 0 0 2px rgba(4,31,40,.5),0 4px 9px #00121f80!important;
+  color:#ffe2a6!important;
+  font-weight:700!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > p:nth-of-type(3){
+  color:#dfd4bd!important;
+  font:500 clamp(11px,1.6dvh,13px)/1.3 system-ui,-apple-system,sans-serif!important;
+  opacity:.89!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-retry,
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-return{
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 auto!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:min(100%,510px)!important;
+  min-height:clamp(45px,7dvh,60px)!important;
+  margin:0 auto!important;
+  padding:7px 13px!important;
+  border-radius:15px!important;
+  transition:filter .13s ease,transform .13s ease!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-retry{
+  border:1.5px solid #ffe4a7!important;
+  background:linear-gradient(180deg,#ffedba,#f4d28a 47%,#c99550 100%)!important;
+  box-shadow:inset 0 2px rgba(255,255,224,.76),inset 0 -2px rgba(143,85,36,.34),0 4px 0 #805b39,0 7px 12px #00101b91!important;
+  color:#22383a!important;
+  font:800 clamp(17px,4vw,22px)/1.1 Georgia,serif!important;
+  text-shadow:0 1px rgba(255,249,217,.59)!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-return{
+  gap:10px!important;
+  border:1.5px solid #d1ad71!important;
+  background:linear-gradient(145deg,#20505a,#0a303f 73%)!important;
+  box-shadow:inset 0 1px rgba(255,232,180,.30),0 3px 0 #3f5553,0 6px 10px #00101b7d!important;
+  color:transparent!important;
+  font-size:0!important;
+  text-shadow:none!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-return::before{
+  content:""!important;
+  display:inline-block!important;
+  width:24px!important;height:24px!important;
+  background:transparent url("assets/ui/story-gold-back-v1.svg") center/contain no-repeat!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > #bu34-return::after{
+  content:"Choose Another Challenge"!important;
+  color:#ffe0a8!important;
+  font:750 clamp(15px,3.55vw,18px)/1.2 Georgia,serif!important;
+  text-shadow:0 1px 3px #00161e!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > button:focus-visible{
+  outline:3px solid #ffebbb!important;
+  outline-offset:3px!important;
+}
+#bu34-trivia #bu34-body > .bu34-summary > button:active{
+  transform:translateY(2px)!important;
+  filter:brightness(1.03)!important;
+}
+@media(max-height:660px){
+  #bu34-trivia #bu34-body > .bu34-summary{
+    gap:5px!important;
+    padding:8px 12px!important;
+  }
+  #bu34-trivia #bu34-body > .bu34-summary > div:first-child{
+    height:65px!important;width:108px!important;
+  }
+  #bu34-trivia #bu34-body > .bu34-summary > h2{
+    font-size:clamp(25px,6vw,34px)!important;
+    padding-bottom:4px!important;
+  }
+  #bu34-trivia #bu34-body > .bu34-summary > .big{
+    width:clamp(107px,18dvh,135px)!important;
+    height:clamp(107px,18dvh,135px)!important;
+    font-size:clamp(48px,8dvh,62px)!important;
+  }
+  #bu34-trivia #bu34-body > .bu34-summary > p{
+    font-size:clamp(11px,1.7dvh,14px)!important;
+    line-height:1.25!important;
+  }
+  #bu34-trivia #bu34-body > .bu34-summary > #bu34-retry,
+  #bu34-trivia #bu34-body > .bu34-summary > #bu34-return{min-height:43px!important}
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer > b{
+    width:27px!important;height:27px!important;font-size:16px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #bu34-trivia #bu34-body.bu65-playing .bu34-answer,
+  #bu34-trivia #bu34-body > .bu34-summary > button{transition:none!important}
+}

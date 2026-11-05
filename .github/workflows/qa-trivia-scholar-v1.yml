@@ -1,0 +1,41 @@
+name: QA Trivia Scholar Treasury V1 (Visual Lab only)
+on:
+  push:
+    paths:
+      - 'trivia-scholar-treasury-v1.css'
+      - 'trivia-scholar-treasury-v1.js'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/qa-trivia-scholar-v1.yml'
+permissions: {contents: read}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify syntax, scope, gold icons, red/green and native controls
+        shell: bash
+        run: |
+          node --check trivia-scholar-treasury-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('trivia-scholar-treasury-v1.css').read_text()
+          j=Path('trivia-scholar-treasury-v1.js').read_text()
+          l=Path('journey-progress-caption.js').read_text()
+          assert s.count('{')==s.count('}')
+          assert s.count('(')==s.count(')')
+          assert s.count('> .bu34-answer.correct')>=1
+          assert s.count('> .bu34-answer.wrong')>=1
+          assert ':disabled' in s
+          assert '#bu34-body.bu65-playing' in s
+          assert '#bu34-body > .bu34-summary' in s
+          assert "bu34-answer" not in j and "onclick" not in j and "addEventListener('click'" not in j
+          assert 'new MutationObserver(enhance).observe(body,{childList:true})' in j
+          assert 'trivia-scholar-treasury-v1.css?v=' in l
+          assert 'trivia-scholar-treasury-v1.js?v=' in l
+          for f in ('daily-gold-bible-v3.svg','daily-gold-hint-v3.svg','daily-gold-eye-v3.svg','daily-complete-laurel-v1.svg','story-gold-back-v1.svg'):
+            assert Path('assets/ui',f).is_file(),f
+          assert 'mixed-trivia-noninteractive-visual-v1.css?v=' in l
+          assert 'mixed-trivia-compass-editorial-v2.css?v=' in l
+          print('PASS: Trivia scoped styling, result ring, accessible native buttons, assets and prior layers')
+          PY
