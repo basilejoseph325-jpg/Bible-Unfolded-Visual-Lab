@@ -54,3 +54,36 @@
  box-shadow:none!important;object-fit:contain!important;pointer-events:none!important;
  filter:drop-shadow(0 1px 2px rgba(0,9,17,.58))!important;
 }
+
+
+/* Actual newer Genesis episode engine (7–9), and later chapter renderer.
+   Earlier V2 styling targeted #play only; these buttons live in #bu3857-screen.
+   Match approved metallic artwork without changing any geometry or tap logic. */
+#bu3857-screen .bu3863-toolbar button > img.bu-story-metal-icon {
+ display:block!important;
+ width:clamp(24px,7.3vw,35px)!important;
+ height:clamp(24px,7.3vw,35px)!important;
+ max-width:100%!important;max-height:100%!important;
+ min-width:0!important;min-height:0!important;
+ margin:auto!important;padding:0!important;border:0!important;
+ border-radius:0!important;
+ background:transparent!important;box-shadow:none!important;
+ object-fit:contain!important;pointer-events:none!important;
+ filter:drop-shadow(0 1px 2px rgba(0,8,14,.72))
+        drop-shadow(0 0 2px rgba(246,193,83,.22))!important;
+}
+#bu3857-screen .bu3863-toolbar button:has(> img.bu-story-metal-icon) {
+ display:inline-flex!important;
+ align-items:center!important;
+ justify-content:center!important;
+}
+#bu3857-screen #bu3857-replay > img.bu-story-metal-icon{
+ display:inline-block!important;
+ width:clamp(19px,5vw,25px)!important;
+ height:clamp(19px,5vw,25px)!important;
+ vertical-align:middle!important;
+ margin:0 6px 0 0!important;
+ padding:0!important;border:0!important;
+ background:transparent!important;box-shadow:none!important;
+ object-fit:contain!important;pointer-events:none!important;
+}
