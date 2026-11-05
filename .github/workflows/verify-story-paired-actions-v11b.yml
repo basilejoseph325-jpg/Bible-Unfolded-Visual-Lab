@@ -1,0 +1,37 @@
+name: Verify Story paired Replay Chapters V11B
+on:
+  push:
+    paths: ['.github/workflows/verify-story-paired-actions-v11b.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check journey-progress-caption.js
+          node --check premium-sfx.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-finale-structural-parity-v11.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert "const replay=stage.querySelector('#bu3857-replay');" in js
+          assert "const nativeBack=document.getElementById('bu3857-back');" in js
+          assert "row.appendChild(replay);" in js
+          assert "chapters.id='bu-story-finale-chapters';" in js
+          assert "chapters.addEventListener('click',()=>nativeBack.click());" in js
+          assert "if(modern&&!card.querySelector(':scope > .bu-story-finale-stage'))" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert "document.getElementById('gamepanel')" in js
+          assert ".onclick=" not in js
+          assert ".bu-story-finale-stage > .bu-story-finale-actions" in css
+          assert "grid-template-columns:minmax(0,1fr) minmax(0,1fr)" in css
+          assert "min-height:46px" in css
+          assert "20261105-paired-actions-v11b" in loader
+          assert subprocess.check_output(['git','hash-object','premium-sfx.js'],text=True).strip()=='2e4845d6d139deaa4d956e88d1acd94e1647c59b'
+          assert subprocess.check_output(['git','hash-object','bible_unfolded_core_part5.js'],text=True).strip()=='225e0a3e530c56f01d0d09aa51d0e3ae7542590c'
+          print('PASS: modern Chapters delegates to native Back; existing Replay node/handler preserved; two accessible buttons; no audio or core changes')
+          PY
