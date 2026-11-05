@@ -1,0 +1,56 @@
+name: Verify Story completion structural parity V11 TEST
+on:
+  push:
+    paths: ['.github/workflows/verify-story-finale-structural-v11.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate structural change, sound freeze and scope
+        run: |
+          node --check story-chapter-complete-v2-test.js
+          node --check premium-sfx.js
+          node --check journey-progress-caption.js
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          js=Path('story-chapter-complete-v2-test.js').read_text()
+          css=Path('story-finale-structural-parity-v11.css').read_text()
+          basecss=Path('story-chapter-complete-v2-test.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          src=Path('bible_unfolded_core_part5.js').read_text()
+          core=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',src,re.S).group(1))
+          assert 'if(modern&&!card.querySelector' in js
+          assert "stage.className='bu-story-finale-stage'" in js
+          assert "stage.appendChild(art)" in js
+          assert "stage.appendChild(label)" in js
+          assert "for(const node of nodes){if(node!==art)stage.appendChild(node)}" in js
+          assert "card.appendChild(stage)" in js
+          assert "label.className='bu-story-finale-complete-tag'" in js
+          assert "label.textContent=book+' · '+chapterName+' COMPLETE'" in js
+          assert "span.textContent=wording" in js
+          assert "card.insertBefore(hero,emblem)" in js
+          assert "card.querySelector(modern?'#bu3857-next-episode':'#toJourney')" in js
+          assert '.onclick=' not in js
+          assert '#play ' not in css and '.bu3815-chapter-finale' not in css
+          assert '#bu3857-screen .bu3863-finale.bu-story-finale-v2 > .bu-story-finale-stage' in css
+          assert 'flex:1 1 auto!important' in css
+          assert 'justify-content:center!important' in css
+          assert '.bu-story-finale-complete-tag' in css
+          assert '.bu-story-finale-stage > h2::before' in css
+          assert '.bu-story-finale-stage > h2::after' in css
+          assert 'max-height:650px' in css
+          assert 'story-finale-structural-parity-v11.css?v=20261105-stage-layout-v11' in loader
+          assert 'story-chapter-complete-v2-test.js?v=20261105-stage-layout-v11' in loader
+          assert loader.index('story-chapter-complete-v2-test.css?')<loader.index('story-finale-structural-parity-v11.css?')
+          assert 'visual-lab-test-banner.js' in loader
+          assert subprocess.check_output(['git','hash-object','premium-sfx.js'],text=True).strip()=='2e4845d6d139deaa4d956e88d1acd94e1647c59b'
+          assert subprocess.check_output(['git','hash-object','bible_unfolded_core_part5.js'],text=True).strip()=='225e0a3e530c56f01d0d09aa51d0e3ae7542590c'
+          assert "if(!$('play').hidden||!$('bu3857-screen').hidden)return 'story';" in core
+          assert "const duckGoal=1;" in core
+          assert '.bu3815-chapter-finale' in basecss
+          print('PASS: centered flexible structural stage in newer Story finales, original layout CSS untouched, native buttons preserved, sound bytes unchanged, test only')
+          PY
