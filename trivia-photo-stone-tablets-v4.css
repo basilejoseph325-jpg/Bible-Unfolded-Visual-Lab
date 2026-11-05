@@ -90,3 +90,47 @@
 #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:focus-visible{outline:3px solid #fff0b8!important;outline-offset:2px!important}
 @media(max-height:670px){#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>span{font-size:clamp(12px,1.8dvh,16px)!important}}
 @media(prefers-reduced-motion:reduce){#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer{transition:none!important}}
+
+
+/* Trivia V4 footer-clearance correction — VISUAL LAB ONLY.
+   Root cause: the no-scroll .bu65-playing .bu34-question is a fixed-height
+   flex column with four answers flex:1 1 0 and overflow:hidden.
+   #bu383-score had just a 10px min-height while tablet D's stone side/shadow
+   extends ~9px beyond its layout box, visually cutting through the caption.
+   Reserve a distinct 27–30px flex strip so tablets yield ~4px each, leaving
+   stone image, full-width touch targets and font sizes untouched. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question #bu383-score {
+  box-sizing:border-box!important;
+  display:flex!important;
+  flex:0 0 clamp(27px,3dvh,31px)!important;
+  align-items:center!important;
+  justify-content:center!important;
+  min-height:clamp(27px,3dvh,31px)!important;
+  width:100%!important;
+  margin:0!important;
+  padding:8px 2px 0!important;
+  position:relative!important;
+  z-index:5!important;
+  color:#f3dcab!important;
+  background:transparent!important;
+  font:700 clamp(10px,1.45dvh,12px)/1.25 system-ui,-apple-system,sans-serif!important;
+  text-shadow:0 1px 2px rgba(2,16,25,.88)!important;
+  text-align:center!important;
+  white-space:nowrap!important;
+  overflow:visible!important;
+  pointer-events:none!important;
+}
+@media(max-height:675px) {
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question #bu383-score {
+    flex-basis:25px!important;
+    min-height:25px!important;
+    padding-top:7px!important;
+    font-size:10px!important;
+  }
+}
+@media(max-width:350px) {
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question #bu383-score{
+    font-size:9px!important;
+    letter-spacing:-.015em!important;
+  }
+}

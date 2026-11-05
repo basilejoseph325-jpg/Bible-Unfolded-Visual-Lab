@@ -83,5 +83,13 @@ jobs:
           assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
           assert 'pointer-events:none!important' in v4
           assert all(x.startswith(b'<svg') and x.endswith(b'</svg>') for x in textures)
+          assert '#bu34-body.bu65-playing > .bu34-question #bu383-score' in v4
+          assert 'flex:0 0 clamp(27px,3dvh,31px)!important' in v4
+          assert 'padding:8px 2px 0!important' in v4
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in l
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4' not in l.replace('trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance','')
+          assert v4.count('trivia-real-rock-v4.jpg?v=1')==1
+          assert v4.count('--stone-y:')==4
+          assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
           print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY
