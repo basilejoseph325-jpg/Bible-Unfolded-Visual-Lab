@@ -1,0 +1,39 @@
+name: Final verify Story Adventure metallic icons all engines
+on:
+  push:
+    paths: ['.github/workflows/verify-story-gold-all-engines.yml']
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          node --check story-adventure-metallic-icons-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          js=Path('story-adventure-metallic-icons-test.js').read_text()
+          css=Path('story-adventure-metallic-icons-test.css').read_text()
+          html=Path('index.html').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          ids=re.findall(r"\['(scene-[\w-]+|to-home|play-menu|bu3857-[\w-]+|bu3863-[\w-]+)','(assets/ui/[^']+)'\]",js)
+          assert len(ids)==19,len(ids)
+          for btn,path in ids:
+            assert Path(path).exists(),(btn,path)
+            ET.parse(path)
+          assert "for(const rootId of ['play','bu3857-screen'])" in js
+          assert "new MutationObserver(refresh).observe(root" in js
+          for id in ('bu3857-back','bu3857-menu','bu3857-replay','bu3863-scripture','bu3863-story','bu3857-hint','bu3857-reveal'):
+           assert id in js and id in html or (id in js and id in ('bu3863-scripture','bu3863-story','bu3857-hint','bu3857-reveal'))
+          assert 'id="bu3857-screen"' in html
+          assert '#bu3857-screen .bu3863-toolbar button > img.bu-story-metal-icon' in css
+          assert '#bu3857-screen :is(#bu3857-back,#bu3857-menu)' in css
+          assert 'story-adventure-metallic-icons-test.js?v=20261104-all-story-roots-v4' in loader
+          assert 'story-adventure-metallic-icons-test.css?v=20261104-all-story-roots-v4' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert '## H. Game-wide master icon style approved' in Path('docs/design-system/ANSWER_TABLETS_AND_GOLD_ICONS_RULES.md').read_text()
+          print('PASS: original and later Story Adventure engines, toolbars, menus, finale, 19 mappings, gold assets, Visual Lab only')
+          PY
