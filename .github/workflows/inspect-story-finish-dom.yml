@@ -1,0 +1,29 @@
+name: Locate remaining Story completion icon DOM
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-finish-dom.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          sources=[('index.html',Path('index.html').read_text())]
+          for p in sorted(Path('.').glob('bible_unfolded_core_part*.js')):
+           s=p.read_text()
+           m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+           if m:
+            try:s=json.loads(m.group(1))
+            except Exception:pass
+           sources.append((str(p),s))
+          for name,s in sources:
+           for term in ['Read Story','Play Again','Next Chapter','story-complete','chapter-complete','chapterComplete','play-again','read-story','📖']:
+            matches=list(re.finditer(re.escape(term),s,re.I))
+            if name!='index.html' or term!='📖':
+             print('SRC',name,'TERM',term,'COUNT',len(matches))
+             for m in matches[:2]:print('EXCERPT',repr(s[max(0,m.start()-420):m.end()+470])[:950])
+          PY
