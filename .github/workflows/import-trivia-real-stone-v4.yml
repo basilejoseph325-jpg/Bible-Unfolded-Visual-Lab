@@ -1,0 +1,50 @@
+name: Import authentic CC0 photo for Trivia tablet Visual Lab V4
+on:
+  push:
+    paths:
+      - '.github/workflows/import-trivia-real-stone-v4.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download licensed real stone photograph (not AI/vector)
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p assets/ui
+          curl --fail --location --retry 3 --retry-delay 3 --silent --show-error \
+            --user-agent 'BibleUnfoldedArtwork/1.0 (educational noncommercial game; license CC0; source Wikimedia Commons)' \
+            'https://upload.wikimedia.org/wikipedia/commons/c/c6/Beige_wavy_slate_seamless_stone_surface_texture.jpg' \
+            -o assets/ui/trivia-real-rock-v4.jpg
+          test "$(stat -c %s assets/ui/trivia-real-rock-v4.jpg)" -ge 100000
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('assets/ui/trivia-real-rock-v4.jpg')
+          b=p.read_bytes()
+          assert b[:3]==b'\xff\xd8\xff' and b[-2:]==b'\xff\xd9', 'Expected original JPEG'
+          print('Authentic licensed source photo bytes',len(b))
+          PY
+          cat > assets/ui/trivia-real-rock-v4-LICENSE.txt <<'EOF'
+          Asset: trivia-real-rock-v4.jpg
+          Source: https://commons.wikimedia.org/wiki/File:Beige_wavy_slate_seamless_stone_surface_texture.jpg
+          Direct file: https://upload.wikimedia.org/wikipedia/commons/c/c6/Beige_wavy_slate_seamless_stone_surface_texture.jpg
+          Photographer/creator: Sisters.seamless
+          License: Creative Commons CC0 1.0 Universal Public Domain Dedication
+          Date of source: 25 June 2020
+          This asset is a real photograph of a textured stone surface, not an illustration.
+          Only use as a textured surface; photo does not claim any archaeological provenance.
+          EOF
+      - name: Commit original photo in its own isolated asset
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add assets/ui/trivia-real-rock-v4.jpg assets/ui/trivia-real-rock-v4-LICENSE.txt
+          if git diff --cached --quiet; then echo 'Photo already imported'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Visual Lab: import real CC0 stone photograph for Trivia only"
+          git push origin HEAD:main
