@@ -1,0 +1,105 @@
+/* VISUAL LAB ONLY — Trivia excavated tablets V3. V2 root cause:
+ all four loaded the SAME ancient stone pattern (two mirrored copies).
+ Use four independently drawn mineral textures, consistent materials,
+ more pronounced high bevel + lower cast shadow. No handlers changed. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="0"]{--tablet-art:url("assets/ui/trivia-tablet-a-relief-v3.svg?v=3");--stone-lit:#edd5a3;--stone-mid:#cfad7b;--stone-dark:#916742}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]{--tablet-art:url("assets/ui/trivia-tablet-b-relief-v3.svg?v=3");--stone-lit:#e9d0a2;--stone-mid:#cda779;--stone-dark:#8c6441}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]{--tablet-art:url("assets/ui/trivia-tablet-c-relief-v3.svg?v=3");--stone-lit:#ead1a0;--stone-mid:#cba477;--stone-dark:#92653d}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{--tablet-art:url("assets/ui/trivia-tablet-d-relief-v3.svg?v=3");--stone-lit:#e8d0a4;--stone-mid:#d0ad7d;--stone-dark:#936a45}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+ box-sizing:border-box!important;position:relative!important;isolation:isolate!important;
+ overflow:hidden!important;
+ border:3px solid #795435!important;
+ border-top-color:#b28c5b!important;
+ border-left-color:#997144!important;
+ border-right-color:#5d4128!important;
+ border-bottom-color:#4c3726!important;
+ border-radius:12px 17px 12px 14px/14px 12px 17px 13px!important;
+ background-color:#c8a573!important;
+ background-image:radial-gradient(ellipse 72% 96% at 38% 12%,rgba(255,250,218,.55),transparent 88%),
+ radial-gradient(ellipse 35% 85% at -4% 82%,rgba(68,43,25,.23),transparent 95%),
+ radial-gradient(ellipse 35% 85% at 105% 48%,rgba(59,41,27,.23),transparent 90%),
+ linear-gradient(147deg,var(--stone-lit) 0%,var(--stone-mid) 62%,var(--stone-dark) 100%)!important;
+ color:#1c3432!important;
+ box-shadow:inset 0 3px 0 rgba(255,247,208,.88),
+ inset 4px 0 0 rgba(255,232,175,.38),
+ inset -4px 0 0 rgba(69,48,29,.27),
+ inset 0 -8px 0 rgba(70,48,30,.35),
+ inset 0 -16px 19px rgba(82,54,30,.25),
+ inset 0 11px 14px rgba(252,230,180,.15),
+ 0 2px 0 #ba935e,0 5px 0 #65472e,0 7px 0 #3c3025,
+ 0 11px 16px rgba(0,10,18,.57)!important;
+ text-shadow:0 1px rgba(255,239,194,.43)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::before{
+ content:""!important;position:absolute!important;inset:0!important;
+ z-index:0!important;border-radius:inherit!important;
+ background:transparent var(--tablet-art) center/100% 100% no-repeat!important;
+ opacity:.91!important;mix-blend-mode:multiply!important;
+ transform:none!important;pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::after{
+ content:""!important;position:absolute!important;
+ inset:7px 7px 11px 8px!important;z-index:1!important;
+ border:2px solid rgba(101,67,39,.58)!important;
+ border-top-color:rgba(100,64,38,.72)!important;
+ border-left-color:rgba(103,65,39,.53)!important;
+ border-bottom-color:rgba(255,229,176,.54)!important;
+ border-right-color:rgba(243,212,158,.37)!important;
+ border-radius:8px 11px 10px 8px/10px 9px 11px 9px!important;
+ box-shadow:inset 0 3px 5px rgba(84,49,30,.22),
+ inset 2px 0 3px rgba(92,53,31,.12),
+ inset 0 -1px rgba(255,243,193,.42),
+ 0 2px rgba(255,239,182,.29)!important;
+ pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > b,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > span{
+ position:relative!important;z-index:2!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > span{
+ font:700 clamp(15px,2.16dvh,20px)/1.23 Georgia,"Times New Roman",serif!important;
+ letter-spacing:-.012em!important;color:inherit!important;
+ text-shadow:0 1px rgba(255,236,187,.55)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer] > b{
+ border:2.2px solid #c7a36b!important;
+ background:radial-gradient(circle at 28% 19%,#416c6d,#19444c 47%,#0a2c37 79%,#041e28)!important;
+ color:#ffe3ae!important;text-shadow:0 1px #041921!important;
+ box-shadow:inset 0 1px rgba(255,237,185,.65),
+ inset 0 0 0 2px rgba(83,55,34,.55),
+ 0 2px 0 #724c30,0 4px 6px rgba(34,24,19,.61)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="0"]:not(.correct):not(.wrong){border-radius:12px 17px 10px 14px/12px 11px 14px 18px!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="1"]:not(.correct):not(.wrong){border-radius:16px 11px 16px 10px/13px 17px 11px 13px!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="2"]:not(.correct):not(.wrong){border-radius:10px 16px 13px 17px/16px 11px 16px 10px!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]:not(.correct):not(.wrong){border-radius:16px 14px 11px 15px/10px 16px 15px 11px!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.correct:disabled{
+ background:#1d654f!important;
+ background-image:radial-gradient(ellipse at 12% -15%,rgba(201,255,204,.4),transparent 84%),linear-gradient(145deg,#327a60,#165a4b 70%,#0e453f)!important;
+ border:2px solid #a4dfb1!important;color:#f3ffeb!important;opacity:1!important;filter:none!important;
+ box-shadow:inset 0 2px rgba(225,254,211,.38),inset 0 -4px rgba(8,60,44,.31),
+ 0 2px 0 #275342,0 5px 10px rgba(40,169,91,.45)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong,#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.wrong:disabled{
+ background:#953c3c!important;
+ background-image:radial-gradient(ellipse at 18% -15%,rgba(255,200,188,.38),transparent 84%),linear-gradient(145deg,#b85c56,#7e3439 72%,#692c36)!important;
+ border:2px solid #f0a1a0!important;color:#fff2e8!important;opacity:1!important;filter:none!important;
+ box-shadow:inset 0 2px rgba(255,224,207,.36),inset 0 -4px rgba(74,17,24,.38),
+ 0 2px 0 #5c3132,0 5px 10px rgba(200,63,76,.45)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::before{opacity:.14!important;mix-blend-mode:soft-light!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)::after{border-color:rgba(251,233,192,.3)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:is(.correct,.wrong)>span{text-shadow:0 1px 2px rgba(4,24,32,.6)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:disabled:not(.correct):not(.wrong){opacity:.64!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer.bu3922-eliminated:not(.correct){opacity:.32!important;filter:grayscale(.4)!important}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:not(:disabled):active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 3px 9px rgba(82,49,30,.46),inset 0 0 0 3px #b68c59,
+ 0 1px 0 #5d4029,0 3px 5px rgba(0,9,18,.47)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer:focus-visible{outline:3px solid #fff0b8!important;outline-offset:2px!important}
+@media(max-height:675px){
+ #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]>span{font-size:clamp(12px,1.88dvh,16px)!important}
+ #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]::after{inset:4px 5px 6px!important}
+}
+@media(prefers-reduced-motion:reduce){#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer{transition:none!important}}

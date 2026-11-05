@@ -5,6 +5,11 @@ on:
       - 'trivia-scholar-treasury-v1.css'
       - 'trivia-scholar-treasury-v1.js'
       - 'trivia-excavated-tablets-v2.css'
+      - 'trivia-excavated-tablets-v3.css'
+      - 'assets/ui/trivia-tablet-a-relief-v3.svg'
+      - 'assets/ui/trivia-tablet-b-relief-v3.svg'
+      - 'assets/ui/trivia-tablet-c-relief-v3.svg'
+      - 'assets/ui/trivia-tablet-d-relief-v3.svg'
       - 'assets/ui/trivia-unearthed-patina-v2.svg'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-trivia-scholar-v1.yml'
@@ -49,5 +54,17 @@ jobs:
           assert 'trivia-excavated-tablets-v2.css?v=' in l
           assert 'mixed-trivia-noninteractive-visual-v1.css?v=' in l
           assert 'mixed-trivia-compass-editorial-v2.css?v=' in l
-          print('PASS: Trivia scoped styling, result ring, accessible native buttons, assets and prior layers')
+          import hashlib
+          v3=Path('trivia-excavated-tablets-v3.css').read_text()
+          assert v3.count('{')==v3.count('}')
+          assert v3.count('--tablet-art:url(')==4
+          assert 'repeating-linear-gradient(' not in v3
+          assert 'trivia-excavated-tablets-v3.css?v=' in l
+          assert 'trivia-excavated-tablets-v2.css?v=' not in l
+          assert '.correct:disabled' in v3 and '.wrong:disabled' in v3
+          assert 'pointer-events:none!important' in v3
+          textures=[Path(f'assets/ui/trivia-tablet-{k}-relief-v3.svg').read_bytes() for k in 'abcd']
+          assert len(set(map(hashlib.sha256,textures)))==4
+          assert all(x.startswith(b'<svg') and x.endswith(b'</svg>') for x in textures)
+          print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY
