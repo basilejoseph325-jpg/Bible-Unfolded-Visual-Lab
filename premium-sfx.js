@@ -84,7 +84,7 @@ function rememberTouch(ev){
  const action=el.closest('button,a,[role="button"],input,select,summary');
  const words=action?((action.id||'')+' '+(action.getAttribute('aria-label')||'')+' '+(action.textContent||'').slice(0,70)).toLowerCase():'';
  const answer=!!el.closest('.bu375-answer,.bu34-answer,.bu3868-answer,[data-answer],[data-bu375-answer],#btn3926-answers > *,#bu375-daily .bu375-answers > *,#bu3857-screen .bu3868-choices > *');
- const storyLevel=!!el.closest('#journey-stops .route-stop,#episodes .episode-card,.level-card,#episodes [data-episode],#episodes .episode-row,#episodes .episode-tile,#episode-list [data-episode],#bu3857-replay,#bu3857-next-episode') ||
+ const storyLevel=!!el.closest('#journey-stops .route-stop,#episodes .episode-card,.level-card,#episodes [data-episode],#episodes .episode-row,#episodes .episode-tile,#episode-list [data-episode],#bu3857-replay') ||
    (!!el.closest('#episodes')&&!!action&&!el.closest('#episodes .bu34-top,#episodes .back,#episodes .menu'));
  lastClick={at:Date.now(),undo:/undo|reverse/.test(words),answer,storyLevel};
 }
