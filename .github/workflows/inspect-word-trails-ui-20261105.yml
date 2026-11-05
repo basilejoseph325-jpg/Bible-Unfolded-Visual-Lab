@@ -1,40 +1,41 @@
-name: Inspect Trivia question and score DOM (read only, bounded)
+name: Inspect actual Trivia CSS specificity and button DOM (read only)
 on:
   push:
     paths:
       - '.github/workflows/inspect-word-trails-ui-20261105.yml'
   workflow_dispatch:
-permissions:
-  contents: read
+permissions: {contents: read}
 jobs:
   inspect:
     runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect bounded actual Trivia markup and styling
+      - name: Extract bounded Trivia markup CSS and feedback state names
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          targets=['Keep exploring!','Score 60%','First try +20','New answer Points','Beginner challenge','bu34-trivia','bu34-body','triviaLab','Trivia complete','First-completion','Play Again','Which statement about God appears']
-          paths=[Path('index.html'),Path('bible_unfolded_core_part5.js')]
-          for f in paths:
-            s=f.read_text(encoding='utf8')
-            print('FILE',f,'LEN',len(s),flush=True)
-            for key in targets:
-              pos=0;indices=[]
+          s=Path('index.html').read_text(encoding='utf8')
+          t=Path('bible_unfolded_core_part5.js').read_text(encoding='utf8')
+          needles=['.bu34-answer{','.bu34-answer.', '.bu34-answer:', '.bu34-answers{','.bu34-summary{','.bu34-summary ','.bu34-question{','.bu34-question h2','.bu34-count{','.bu34-progress{','.bu3918-tools', '#bu34-trivia .bu34-body', 'bu34-answer wrong','bu34-answer correct', 'bu34-answer disabled', 'bu34-quiz','bu34-next', 'bu34-choices', 'function bu34Draw', 'function bu34Choose', 'function bu34Finish']
+          for f,v in [('index',s),('part5',t)]:
+            print('SOURCE',f,'LEN',len(v),flush=True)
+            for key in needles:
+              pos=0;hits=[]
               while True:
-                i=s.lower().find(key.lower(),pos)
-                if i<0:break
-                indices.append(i);pos=i+len(key)
-                if len(indices)>=12:break
-              if not indices:continue
-              print('TERM',repr(key),'N',len(indices),flush=True)
-              for idx in indices[-3:]:
-                chunk=s[max(0,idx-950):min(len(s),idx+2350)]
-                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[IMAGE]',chunk)
-                print('CTX',repr(key),'AT',idx,repr(chunk)[:3300],flush=True)
-          print('END',flush=True)
+                p=v.find(key,pos)
+                if p<0:break
+                hits.append(p);pos=p+len(key)
+                if len(hits)>=40:break
+              if not hits:continue
+              print('MATCH',repr(key),'COUNT_LIMIT',len(hits),flush=True)
+              for p in hits[:3]+hits[-2:]:
+                before=330 if key.startswith('.') or key.startswith('#') else 350
+                after=1300 if key.startswith('.') or key.startswith('#') else 2100
+                raw=v[max(0,p-before):min(len(v),p+after)]
+                raw=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[IMAGE]',raw)
+                print('HIT',repr(key),p,repr(raw)[:2600],flush=True)
+            print('ENDSOURCE',f,flush=True)
           PY
