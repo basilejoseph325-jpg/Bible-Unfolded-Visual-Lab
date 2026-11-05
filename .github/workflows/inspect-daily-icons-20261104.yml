@@ -1,0 +1,28 @@
+name: Inspect Daily Discovery toolbar for approved visual polish
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-icons-20261104.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path('index.html').read_text()
+          raw=''
+          for i in range(1,6):
+            t=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d\] = (".*");',t)
+            assert m
+            raw+=json.loads(m.group(1))
+          for name,t in [('main',s),('core',raw)]:
+            for pattern in ['bu3918-tools','bu3918-daily','bu375-reference','data-bu375-answer','bu3918-action','bu3918-eye','bu3918-hint','bu375-question-title','bu375-answers','bu375-answer']:
+              matches=list(re.finditer(re.escape(pattern),t))
+              print('SOURCE',name,'PATTERN',pattern,'TOTAL',len(matches))
+              for m in matches[:8]:
+                print(repr(t[max(0,m.start()-280):m.start()+620])[:950])
+          PY
