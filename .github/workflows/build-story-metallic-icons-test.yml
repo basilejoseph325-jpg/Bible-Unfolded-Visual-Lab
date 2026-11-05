@@ -1,0 +1,60 @@
+name: Build and verify Story Adventure metallic icons in Visual Lab
+on:
+  push:
+    paths: ['.github/workflows/build-story-metallic-icons-test.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate matching Story icon artwork
+        run: python3 .github/scripts/build_story_gold_icons.py
+      - name: Verify SVG assets, CSS/JS, scope and approved reference
+        run: |
+          node --check story-adventure-metallic-icons-test.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          new=['context','shuffle','clear','restart','back','menu']
+          for name in new:
+           p=Path('assets/ui')/('story-gold-'+name+'-v1.svg')
+           assert p.exists(),p
+           source=p.read_text();xml=ET.fromstring(source)
+           assert xml.tag.endswith('svg') and xml.get('viewBox')=='0 0 64 64'
+           assert 'linearGradient' in source and '<rect' not in source
+          for p in ('assets/ui/daily-gold-bible-v3.svg','assets/ui/daily-gold-hint-v3.svg','assets/ui/daily-gold-eye-v3.svg'):
+           assert Path(p).exists(),p
+          src=Path('story-adventure-metallic-icons-test.js').read_text()
+          css=Path('story-adventure-metallic-icons-test.css').read_text()
+          html=Path('index.html').read_text()
+          from re import findall
+          matches=findall(r"\['(scene-[a-z-]+|to-home|play-menu)','([^']+)'\]",src)
+          assert len(matches)==9,matches
+          for id,path in matches:
+           assert 'id="'+id+'"' in html,id
+           assert Path(path).exists(),path
+          assert "root=document.getElementById('play')" in src
+          assert "btn.replaceChildren(icon)" in src
+          assert "new MutationObserver(refresh)" in src
+          assert css.count('#play')>=3
+          assert 'story-quick-actions' in css
+          assert 'wheel' in css.splitlines()[0].lower() or 'wheel' in css
+          assert 'touch-action' not in css
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'story-adventure-metallic-icons-test.css?v=20261104-story-gold-v1' in loader
+          assert 'story-adventure-metallic-icons-test.js?v=20261104-story-gold-v1' in loader
+          assert 'visual-lab-test-banner.js' in loader
+          assert 'docs/design-system/ANSWER_TABLETS_AND_GOLD_ICONS_RULES.md' in Path('BIBLE_UNFOLDED_RULEBOOK_START_HERE.md').read_text()
+          print('PASS: all nine controls mapped to existing elements, six new SVGs, approved masters, and Story-only scope')
+          PY
+      - name: Commit ONLY generated icon assets
+        run: |
+          git add assets/ui/story-gold-*.svg
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Visual Lab: add matching metallic Story Adventure gold icons"
+          git push origin HEAD:main
