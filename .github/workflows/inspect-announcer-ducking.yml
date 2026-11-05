@@ -1,0 +1,33 @@
+name: Inspect announcer music ducking (read only)
+on:
+  push:
+    paths: ['.github/workflows/inspect-announcer-ducking.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trace announcer audio and volume ducking
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          files=['index.html','premium-sfx.js']
+          for p in Path('.').glob('bible_unfolded_core_part*.js'):
+           files.append(str(p))
+          for fname in files:
+           s=Path(fname).read_text(errors='replace')
+           match=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s)
+           if match:
+            try:s=json.loads(match.group(1))
+            except: pass
+           queries=['duck','announcer','function bu381Play','function bu381','playVoice','speechSynthesis','SpeechSynthesis','voiceover','music.volume','musicVolume','gain.setTargetAtTime']
+           counts={x:len(list(re.finditer(re.escape(x),s,re.I))) for x in queries}
+           print('FILE',fname,'COUNTS',counts)
+           if fname not in ('index.html','bible_unfolded_core_part5.js'):continue
+           for x in ['function bu381Play','function bu381','duck','speechSynthesis','function playVoice','function nameWrongChime','music.volume']:
+            matches=list(re.finditer(re.escape(x),s,re.I))
+            for m in matches[:10]:
+             print('SNIP',fname,x,repr(s[max(0,m.start()-460):m.start()+1850])[:2400])
+          PY
