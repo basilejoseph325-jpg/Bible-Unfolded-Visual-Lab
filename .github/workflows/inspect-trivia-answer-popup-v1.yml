@@ -1,0 +1,41 @@
+name: Inspect actual Trivia answer-popup DOM and CSS (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-trivia-answer-popup-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract focused live Trivia explanation markup/handlers
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          sources=[p for p in [Path('index.html'), *sorted(Path('.').glob('bible_unfolded_core_part*.js'))] if p.exists()]
+          terms=[
+           'Two attempts used', 'Correct answer:', 'Next Question',
+           'bu65-info-overlay', 'bu65-info-card', 'bu65-info-body',
+           'bu65-confirm', 'bu65-close', 'showInfo', 'infoOverlay',
+           'bu65-info','bu383-trivia-modal','bu34-explain'
+          ]
+          for p in sources:
+            s=p.read_text(encoding='utf8',errors='replace')
+            print('FILE',str(p),'CHARS',len(s),flush=True)
+            for term in terms:
+              matches=list(re.finditer(re.escape(term),s,re.IGNORECASE))
+              if not matches:continue
+              print('TERM',repr(term),'COUNT',len(matches),flush=True)
+              selected=matches[:2]+([matches[-1]] if len(matches)>2 else [])
+              for m in selected:
+                k=m.start()
+                chunk=s[max(0,k-850):min(len(s),k+1550)]
+                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[embedded-photo]',chunk)
+                print('AT',k,repr(chunk)[:2450],flush=True)
+            print('END',str(p),flush=True)
+          PY
