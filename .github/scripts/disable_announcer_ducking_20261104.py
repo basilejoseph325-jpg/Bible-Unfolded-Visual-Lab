@@ -22,7 +22,13 @@ assert "bu381Voice.duck+= (goal-bu381Voice.duck)*0.24;" in src
 assert "const desired=selected?baseVolume*bu3818CurrentDuck:0;" in src
 assert "const baseVolume=Math.max(0,Math.min(1,musicVolume/100*.72));" in src
 assert "if(!selected&&!player.paused)player.pause();" in src
-updated=raw[:m.start(2)]+json.dumps(src,ensure_ascii=False,separators=(',',':'))+raw[m.end(2):]
-assert updated.count('__BU_STAGE41_CORE_PARTS__')==raw.count('__BU_STAGE41_CORE_PARTS__')
+# Patch original packed JSON text in place to avoid reserializing the 4.5MB
+# bundle or changing its encoding, embedded clips, whitespace, or unrelated data.
+updated=raw
+for old,replacement in [(old1,new1),(old2,new2)]:
+ assert updated.count(old)==1,(old,updated.count(old))
+ updated=updated.replace(old,replacement,1)
+assert len(updated)-len(raw)==sum(len(replacement)-len(old) for old,replacement in [(old1,new1),(old2,new2)])
+assert json.loads(re.search(r'(__BU_STAGE41_CORE_PARTS__\[\d+\] = )(".*")(;)',updated,re.S).group(2))==src
 p.write_text(updated)
 print('PASS: both announcer duck multipliers neutralized; playback and volumes preserved')
