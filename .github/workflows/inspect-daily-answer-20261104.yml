@@ -1,0 +1,29 @@
+name: Inspect Daily Discovery answer feedback and state
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-answer-20261104.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          t=Path('index.html').read_text()
+          raw=''
+          for n in range(1,6):
+            x=Path(f'bible_unfolded_core_part{n}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d\] = (".*");',x)
+            assert m
+            raw+=json.loads(m.group(1))
+          for name,s in [('index',t),('core',raw)]:
+            for pattern in [r'bu375-answer',r'bu375.*incorrect',r'bu375.*wrong',r'bu375.*retry',r'bu375.*render',r'bu65-playing',r'classList.add\(.incorrect.',r'classList.remove\(.incorrect.']:
+              matches=list(re.finditer(pattern,s,re.I))
+              print('\nSOURCE',name,'PATTERN',pattern,'COUNT',len(matches))
+              for m in matches[:25]:
+                print('POSITION',m.start(),'EXCERPT',repr(s[max(0,m.start()-360):m.start()+650])[:1050])
+          PY
