@@ -24,40 +24,51 @@
   ['bu3857-reveal','assets/ui/daily-gold-eye-v3.svg']
  ];
  function start(){
-  const root=document.getElementById('play');
-  if(!root)return;
-  let running=false;
-  function refresh(){
-   if(running)return;running=true;
-   try{
-    for(const [id,path] of items){
-     const btn=root.querySelector('#'+id);
-     if(!btn||btn.querySelector(':scope > img.bu-story-metal-icon'))continue;
-     const icon=document.createElement('img');
-     icon.className='bu-story-metal-icon';
-     icon.src=path;icon.alt='';icon.draggable=false;
-     icon.setAttribute('aria-hidden','true');
-     btn.replaceChildren(icon);
-    }
-    // Completion buttons keep their human-readable labels and native handlers.
-    for(const [id,path,strip] of [
-     ['playAgain','assets/ui/story-gold-restart-v1.svg',/^(?:↻|⟲)\s*/u],
-     ['read-story','assets/ui/daily-gold-bible-v3.svg',/^📖\s*/u]
-    ]){
-     const button=root.querySelector('#'+id);
-     if(!button||button.querySelector(':scope > img.bu-story-metal-icon'))continue;
-     const label=(button.textContent||'').replace(strip,'').trim();
-     if(!label)continue;
-     const icon=document.createElement('img');
-     icon.className='bu-story-metal-icon';
-     icon.src=path;icon.alt='';icon.draggable=false;
-     icon.setAttribute('aria-hidden','true');
-     button.replaceChildren(icon,document.createTextNode(' '+label));
-    }
-   }finally{running=false}
+  // The original episode engine uses #play; Genesis episodes 7–9
+  // (Abraham/Lot, Isaac, Rebekah) and later chapters use #bu3857-screen.
+  // Observe BOTH independently because the newer engine re-renders its toolbar.
+  for(const rootId of ['play','bu3857-screen']){
+   const root=document.getElementById(rootId);
+   if(!root)continue;
+   let running=false;
+   const rootsItems=items.filter(([id])=>
+    rootId==='play' ? !id.startsWith('bu3857-')&&!id.startsWith('bu3863-')
+                    : id.startsWith('bu3857-')||id.startsWith('bu3863-'));
+   function refresh(){
+    if(running)return;running=true;
+    try{
+     for(const [id,path] of rootsItems){
+      const btn=root.querySelector('#'+id);
+      if(!btn||btn.querySelector(':scope > img.bu-story-metal-icon'))continue;
+      const icon=document.createElement('img');
+      icon.className='bu-story-metal-icon';
+      icon.src=path;icon.alt='';icon.draggable=false;
+      icon.setAttribute('aria-hidden','true');
+      btn.replaceChildren(icon);
+     }
+     // Finale actions keep readable labels and native event listeners.
+     const finale=rootId==='play' ? [
+      ['playAgain','assets/ui/story-gold-restart-v1.svg',/^(?:↻|⟲)\s*/u],
+      ['read-story','assets/ui/daily-gold-bible-v3.svg',/^📖\s*/u]
+     ] : [
+      ['bu3857-replay','assets/ui/story-gold-restart-v1.svg',/^(?:↻|⟲)\s*/u]
+     ];
+     for(const [id,path,strip] of finale){
+      const btn=root.querySelector('#'+id);
+      if(!btn||btn.querySelector(':scope > img.bu-story-metal-icon'))continue;
+      const label=(btn.textContent||'').replace(strip,'').trim();
+      if(!label)continue;
+      const icon=document.createElement('img');
+      icon.className='bu-story-metal-icon';
+      icon.src=path;icon.alt='';icon.draggable=false;
+      icon.setAttribute('aria-hidden','true');
+      btn.replaceChildren(icon,document.createTextNode(' '+label));
+     }
+    }finally{running=false}
+   }
+   new MutationObserver(refresh).observe(root,{childList:true,subtree:true});
+   refresh();
   }
-  new MutationObserver(refresh).observe(root,{childList:true,subtree:true});
-  refresh();
  }
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })();
