@@ -11,31 +11,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Print Word Trails DOM and styling evidence
+      - name: Print relevant native Word Trails rules and renderer
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          sources=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
-          needles=[
-            'Word Trail Complete!', 'Word Trail Complete','DISCOVER WORDS',
-            'Discover Words','Bible Word Trails','Choose Another Word Trail',
-            'Play Again', 'cross-play','cross-board','cross-wheel',
-            'cross-grid','cross-answer','cross-finish','cross-win',
-            'cross-done','cross-complete','trail-complete',
-            'cross-tools','cross-btn','cross-clue','cross-letters',
-            'cross-game', 'bu3918', 'journey-progress-caption.js',
-            'word-trails-cinematic.css'
-          ]
-          for src in sources:
-            s=src.read_text(encoding='utf8')
-            print('\\nSOURCE',src, 'bytes',len(s))
-            for needle in needles:
-              hits=[m.start() for m in re.finditer(re.escape(needle),s,re.I)]
-              if not hits: continue
-              print('\\nMATCH',repr(needle),'count',len(hits),'positions',[str(n) for n in hits[:5]])
-              for off in (hits[:2] if len(hits)<3 else hits[:1]+hits[-1:]):
-                print('EXCERPT', repr(s[max(0,off-480):min(len(s),off+850)]))
-            print('END SOURCE')
+          s=Path('index.html').read_text(encoding='utf8')
+          t=Path('bible_unfolded_core_part5.js').read_text(encoding='utf8')
+          print('HEAD: INDEX',len(s),'PART5',len(t))
+          for needle in ['id="crossword-screen"','id="xword-content"','id="cross-content"','id="cross-back"','id="cross-pick"','word-trails-cinematic.css','journey-progress-caption.js']:
+            hits=list(re.finditer(re.escape(needle),s,re.I))
+            print('HTML MATCH',needle,len(hits))
+            for m in hits[:2]: print('HTML CONTEXT',repr(s[max(0,m.start()-450):m.start()+1600]))
+          print('NATIVE CSS RULES')
+          rules=[]
+          for m in re.finditer(r'([^{}]{0,270})\\{([^{}]{0,2400})\\}',s):
+            selector=m.group(1).strip()
+            if (len(selector)>200 or '<' in selector or '=>' in selector):continue
+            if re.search(r'\\b(?:trail-|xword-|crossword-screen|cross-continue|cross-repeat)\\b',selector,re.I):
+              rules.append((m.start(),selector,m.group(2).strip()))
+          print('COUNT RULES',len(rules))
+          for offset,selector,body in rules[-180:]:
+            print('RULE',offset,repr(selector),repr(body[:650]))
+          i=t.find('Word Trail Complete!')
+          print('COMPLETE RENDER',repr(t[i-2100:i+3200]))
+          j=t.find('let html=',i)
+          if j>0:print('GAME RENDER',repr(t[j-100:j+7200]))
+          print('END')
           PY
