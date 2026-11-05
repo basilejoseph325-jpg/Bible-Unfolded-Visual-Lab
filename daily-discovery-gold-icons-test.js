@@ -19,7 +19,7 @@
   busy=true;
   try{
    [0,1,2].forEach(i=>{
-    const b=buttons[i];if(!b||b.dataset.buGoldIcon==='1')return;
+    const b=buttons[i];if(!b||(b.dataset.buGoldIcon==='1'&&b.querySelector('.bu-daily-gold-icon')))return;
     // The first three action slots are Scripture, Hint and Reveal.
     // Never change their button identity, event handler or accessibility label.
     const icon=document.createElement('span');
