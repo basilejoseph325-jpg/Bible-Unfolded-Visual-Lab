@@ -1,0 +1,24 @@
+name: Inspect original Story completion layout CSS
+on:
+  push:
+    paths: ['.github/workflows/inspect-story-finale-css.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          h=Path('index.html').read_text()
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',core)
+          s=json.loads(m.group(1))
+          for name,text in [('html',h),('core',s)]:
+           for key in ['.bu3815-chapter-finale','.bu3863-finale','.final-moment','.bu34-minor','.bu3815-finale-halo','.bu3857-scroll','bu3857-finale-icon','bu34-fx']:
+            matches=list(re.finditer(re.escape(key),text))
+            print(name,key,len(matches))
+            for a in matches[:4]:print('RULE',repr(text[max(0,a.start()-120):a.start()+1000])[:1150])
+          PY
