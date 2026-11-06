@@ -1,4 +1,4 @@
-name: QA Trivia phone-audible wrong-answer feedback browser test
+name: QA Trivia louder richer wrong-answer cue V5 real browser test
 on:
   push:
     paths:
@@ -66,7 +66,7 @@ jobs:
                 }finally{if(orig)window.AudioContext.prototype.createOscillator=orig}
               });
               console.log('DIRECT_WRONG_TONE',JSON.stringify(tones));
-              if(tones.calls!==4)throw new Error('Wrong tone must create two notes with two partials each');
+              if(tones.calls!==6)throw new Error('Wrong tone must create two rich notes with three harmonics each');
               // Isolate the two sound generators before clicking an answer (avoids
               // the existing announcer/chime audio that starts after a correct answer).
               await page.evaluate(()=>BUStage16TriviaLifecycle.getStart()('quick','all'));
@@ -98,13 +98,28 @@ jobs:
                 }
               });
               console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
-              if(volumeProbe.low.positiveNotes<3||volumeProbe.low.negativeNotes!==4||volumeProbe.high.positiveNotes<3||volumeProbe.high.negativeNotes!==4||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
+              if(volumeProbe.low.positiveNotes<3||volumeProbe.low.negativeNotes!==6||volumeProbe.high.positiveNotes<3||volumeProbe.high.negativeNotes!==6||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
                 throw new Error('Effects volume/mute did not control both chimes');
               if(!(volumeProbe.low.positive>.05&&volumeProbe.low.negative>.05&&
                    volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
                 throw new Error('Both chimes must be audible at 20% and scale with volume slider');
-              if(!(volumeProbe.low.negative/volumeProbe.low.positive>2.5&&volumeProbe.high.negative/volumeProbe.high.positive>2.5))
+              if(!(volumeProbe.low.negative/volumeProbe.low.positive>3&&volumeProbe.high.negative/volumeProbe.high.positive>3))
                 throw new Error('Positive and negative chimes are not balanced');
+              const rendered=await page.evaluate(async()=>{
+                const oldAudioContext=audioContext,oldSfx=sfxVolume,oldOn=sfxOn;
+                const offline=new OfflineAudioContext(1,48000,48000);
+                try{
+                  audioContext=()=>offline;sfxVolume=20;sfxOn=true;
+                  bu3846WrongTone();
+                  const buffer=await offline.startRendering(),samples=buffer.getChannelData(0);
+                  let sum=0,count=0,peak=0;
+                  for(let i=2400;i<28800;i++){const v=samples[i];sum+=v*v;peak=Math.max(peak,Math.abs(v));count++;}
+                  return {rms:Math.sqrt(sum/count),peak,seconds:buffer.duration};
+                }finally{audioContext=oldAudioContext;sfxVolume=oldSfx;sfxOn=oldOn}
+              });
+              console.log('RENDERED_NEGATIVE_20',JSON.stringify(rendered));
+              if(!(rendered.rms>.05&&rendered.peak>.10&&rendered.peak<1))
+                throw new Error('Actually rendered 20% negative tone was silent, excessively quiet or clipping');
               const clickProbe=await page.evaluate(()=>{
                 const facade=BUStage16TriviaLifecycle;
                 const topicKeys=facade.getTopics();
@@ -126,7 +141,7 @@ jobs:
                 }finally{window.AudioContext.prototype.createOscillator=orig}
               });
               console.log('ACTUAL_TRIVIA_WRONG_CLICK',JSON.stringify(clickProbe));
-              if(!clickProbe.started||clickProbe.oscillatorCalls!==4)throw new Error('Real wrong-answer click must generate both tones and speaker overtones');
+              if(!clickProbe.started||clickProbe.oscillatorCalls!==6)throw new Error('Real wrong-answer click must generate both rich notes with three partials');
               const correctProbe=await page.evaluate(()=>{
                 const facade=BUStage16TriviaLifecycle,quiz=facade.getQuiz(),q=quiz?.items?.[quiz.step];
                 if(!q)return {started:false};
