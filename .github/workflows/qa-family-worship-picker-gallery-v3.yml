@@ -1,9 +1,11 @@
-name: QA Family Worship V3 isolated photographic picker galleries
+name: QA Family Worship V4 crops and isolated topic scene fixes
 on:
   push:
     paths:
       - 'family-worship-picker-gallery-v3.js'
       - 'family-worship-picker-gallery-v3.css'
+      - 'family-worship-gallery-crop-v4.css'
+      - 'family-worship-menu-art/v4/**'
       - 'family-worship-menu-art/**'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-family-worship-picker-gallery-v3.yml'
@@ -29,8 +31,10 @@ jobs:
           assert len([x for x in files if x.name.startswith('topic-')])==42
           assert len([x for x in files if x.name.startswith('level-')])==4
           loader=Path('journey-progress-caption.js').read_text()
-          assert 'family-worship-picker-gallery-v3.js?v=20261106-topic-level-gallery-v3' in loader
+          assert 'family-worship-picker-gallery-v3.js?v=20261106-cropped-gallery-art-v4' in loader
+          assert 'family-worship-gallery-crop-v4.css?v=20261106-headroom-audit-v4' in loader
           assert 'family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3' in loader
+          assert len(list(Path('family-worship-menu-art/v4').glob('*.webp')))==3
           assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
           assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
@@ -68,7 +72,8 @@ jobs:
                 const photos=options.map(el=>el.dataset.buFwArt).filter(Boolean);
                 return {
                   count:options.length,photoCount:photos.length,uniquePaths:new Set(photos).size,
-                  allPrivate:photos.every(x=>x.startsWith('family-worship-menu-art/v1/')),
+                  allPrivate:photos.every(x=>x.startsWith('family-worship-menu-art/')),
+                  replacements:{peter:photos.some(x=>x.startsWith('family-worship-menu-art/v4/topic-25-')),paul:photos.some(x=>x.startsWith('family-worship-menu-art/v4/topic-26-')),ministry:photos.some(x=>x.startsWith('family-worship-menu-art/v4/topic-38-'))},
                   noahArt:noah?.dataset.buFwArt,
                   searchVisible:!!document.querySelector('#bu-fw-picker-layer .bu-fw-picker-search'),
                   picked:document.querySelector('#bu35-topic')?.value,
@@ -78,8 +83,26 @@ jobs:
                 };
               });
               console.log('TOPIC_GALLERY',JSON.stringify(topic));
-              if(topic.count!==42||topic.photoCount!==42||topic.uniquePaths!==42||!topic.allPrivate||!topic.noahArt?.includes('topic-09')||!topic.searchVisible)
+              if(topic.count!==42||topic.photoCount!==42||topic.uniquePaths!==42||!topic.allPrivate||!topic.noahArt?.includes('topic-09')||!topic.searchVisible||!Object.values(topic.replacements).every(Boolean))
                 throw Error('Photo picker missing topic images, isolation or search');
+              const framing=await page.evaluate(()=>{
+                const slugs=["topic-02-bible-people-events.jpg","topic-03-jesus-his-teachings.jpg","topic-05-early-congregation.jpg","topic-11-abram-s-journey.jpg","topic-14-gideon.webp","topic-15-ruth-naomi.webp","topic-16-david.webp","topic-21-daniel.webp","topic-23-jesus-illustrations.webp","topic-24-jesus-miracles.webp","topic-26-paul-timothy.webp","topic-28-jonah.webp","topic-32-sermon-on-the-mount.jpg","topic-34-pentecost.webp","topic-37-jehovah-s-qualities.webp","topic-38-jesus-ministry.webp","topic-39-kingdom-armageddon.webp","topic-42-christian-living.webp"];
+                const all=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-gallery-card')];
+                const result=slugs.map(slug=>{
+                  const b=all.find(x=>x.dataset.buFwArt?.endsWith(slug));
+                  const photo=b?.querySelector('.bu-fw-gallery-photo');
+                  return {slug,position:photo?getComputedStyle(photo).backgroundPositionY:null};
+                });
+                const accepted=['topic-22-jesus-early-life.webp','topic-33-model-prayer.webp'].map(slug=>{
+                  const b=all.find(x=>x.dataset.buFwArt?.endsWith(slug));
+                  const photo=b?.querySelector('.bu-fw-gallery-photo');
+                  return {slug,position:photo?getComputedStyle(photo).backgroundPositionY:null};
+                });
+                return {result,accepted};
+              });
+              console.log('HEADROOM_18',JSON.stringify(framing));
+              if(framing.result.some(x=>x.position!=='0%')||framing.accepted.some(x=>x.position!=='43%'))
+                throw Error('Upper-frame headroom correction or two approved exceptions not preserved');
               const fail=await page.evaluate(async()=>{
                 const paths=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')].map(x=>x.dataset.buFwArt);
                 const errors=[];
@@ -137,7 +160,7 @@ jobs:
               });
               console.log('SIX_PLAYER_EXTERIOR',JSON.stringify(six));
               if(six.people!==6||six.scroll>1||six.startBottom>six.viewport||!six.exteriorCss)throw Error('Frozen exterior no-scroll behavior regressed');
-              console.log('PASS Family Worship V3: 42 private topic photos, 4 level scenes, search, native selection, isolated Noah, six-player no-scroll layout');
+              console.log('PASS Family Worship V4: 18 top-aligned cards, approved exceptions, three new isolated scene assets, working picker and 6-player no-scroll');
             }catch(err){console.error('FAIL',err.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
