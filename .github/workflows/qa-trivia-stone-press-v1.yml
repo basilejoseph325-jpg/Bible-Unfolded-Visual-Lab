@@ -1,0 +1,74 @@
+name: QA Trivia stone click depression (Visual Lab only)
+on:
+  push:
+    paths:
+      - 'trivia-stone-press-v1.css'
+      - 'trivia-stone-press-v1.js'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/qa-trivia-stone-press-v1.yml'
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and source/cascade regression checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check trivia-stone-press-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          css=Path('trivia-stone-press-v1.css').read_text()
+          js=Path('trivia-stone-press-v1.js').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          v4=Path('trivia-photo-stone-tablets-v4.css').read_text()
+          assert css.count('{')==css.count('}')
+          assert '.bu-trivia-pressing' in css and 'transform:translateY(3px)!important' in css
+          assert '.correct:disabled.bu-trivia-pressing' in css
+          assert '.wrong:disabled.bu-trivia-pressing' in css
+          assert "pointerdown" in js and "pointerup" in js and "pointercancel" in js
+          assert "click" in js and "keydown" in js
+          assert "addEventListener('pointerdown'" in js and 'passive:true' in js
+          assert not any(t in js for t in ('preventDefault(', 'stopPropagation(', '.click()', 'dispatchEvent(', 'innerHTML', 'replaceWith'))
+          assert 'trivia-stone-press-v1.css?v=' in loader and 'trivia-stone-press-v1.js?v=' in loader
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in loader
+          assert v4.count('trivia-real-rock-v4.jpg?v=1')==1
+          assert '#bu383-score' in v4 and 'flex:0 0 clamp(27px,3dvh,31px)' in v4
+          print('PASS scoped press, judged colors, V4 photo and footer preserved')
+          PY
+      - name: Simulate pointer tap, disabled/recolored answer and keyboard
+        shell: bash
+        run: |
+          node <<'JS'
+          const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+          const handlers={},timeouts=new Map();let nextId=0, nativeClickCount=0;
+          const flags=new Set(),button={
+            disabled:false,
+            classList:{add:s=>flags.add(s),remove:s=>flags.delete(s),contains:s=>flags.has(s)},
+            matches:s=>s===':disabled'&&button.disabled
+          };
+          button.closest=()=>button;
+          const document={addEventListener:(name,cb)=>handlers[name]=cb};
+          const context={window:{},document,WeakMap,
+            setTimeout:(cb,ms)=>{const id=++nextId;timeouts.set(id,{cb,ms});return id},
+            clearTimeout:id=>timeouts.delete(id)};
+          vm.runInNewContext(fs.readFileSync('trivia-stone-press-v1.js','utf8'),context);
+          handlers.pointerdown({target:button,button:0});
+          assert(flags.has('bu-trivia-pressing'));
+          // Capture-phase click happens before native target handler.
+          handlers.click({target:button});
+          button.disabled=true;flags.add('wrong');nativeClickCount++;
+          assert(flags.has('bu-trivia-pressing'));
+          assert.equal(nativeClickCount,1);
+          assert([...timeouts.values()].some(x=>x.ms===215));
+          for(const [id,task] of [...timeouts])if(task.ms===215){timeouts.delete(id);task.cb();}
+          assert(!flags.has('bu-trivia-pressing'));
+          flags.delete('wrong');button.disabled=false;
+          handlers.keydown({target:button,key:'Enter',repeat:false});
+          assert(flags.has('bu-trivia-pressing'));
+          handlers.keyup({target:button,key:'Enter'});
+          assert([...timeouts.values()].some(x=>x.ms===215));
+          console.log('PASS: visible press survives disabled wrong state; keyboard; native event untouched');
+          JS

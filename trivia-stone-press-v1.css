@@ -1,0 +1,42 @@
+/* VISUAL LAB ONLY — Bible Trivia stone tablet PRESS feedback V1.
+   Root cause: original :not(:disabled):active vanishes when trivia immediately
+   disables/colorizes a clicked answer. A temporary class survives the click
+   transition without delaying native events, reward, audio or explanation.
+   Leaves approved photographic rock and footer spacing untouched. */
+
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].bu-trivia-pressing {
+  transform:translateY(3px)!important;
+  box-shadow:
+    inset 0 3px 7px rgba(65,47,31,.30),
+    inset 0 0 0 1px rgba(89,65,44,.14),
+    inset 0 -1px 2px rgba(56,42,29,.24),
+    0 1px 0 #725d44,
+    0 2px 3px rgba(0,10,18,.37)!important;
+  transition:transform .055s ease-out,box-shadow .055s ease-out!important;
+}
+
+/* A judged answer MUST remain visibly red/green during that brief press.
+   Keep a small status-colored edge-glow, plus the compressed physical shadow. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].correct.bu-trivia-pressing,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].correct:disabled.bu-trivia-pressing {
+  transform:translateY(3px)!important;
+  box-shadow:
+    inset 0 4px 9px rgba(4,43,27,.28),
+    inset 0 0 0 1px rgba(204,255,199,.29),
+    0 1px 0 #1f5646,
+    0 1px 7px rgba(86,221,121,.49)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].wrong.bu-trivia-pressing,
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].wrong:disabled.bu-trivia-pressing {
+  transform:translateY(3px)!important;
+  box-shadow:
+    inset 0 4px 9px rgba(76,20,23,.29),
+    inset 0 0 0 1px rgba(255,204,189,.25),
+    0 1px 0 #673638,
+    0 1px 7px rgba(238,96,101,.49)!important;
+}
+@media(prefers-reduced-motion:reduce) {
+  #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].bu-trivia-pressing {
+    transition:none!important;
+  }
+}
