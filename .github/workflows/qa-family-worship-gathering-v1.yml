@@ -83,8 +83,23 @@ jobs:
               if(!first.beginVisible||first.triggerCount!==2||first.hasParagraph||first.heroParagraph||!first.menuHelp)
                 throw Error('Setup exceeds mobile viewport or instructional copy/custom selectors did not move');
               // Native-backed level picker, use true UI click.
+              const targetInfo=await page.evaluate(()=>{
+                const el=document.querySelector('.bu-fw-level .bu-fw-selector');
+                const r=el.getBoundingClientRect();
+                const hit=document.elementFromPoint(r.left+r.width/2,r.top+r.height/2);
+                return {r:{x:r.x,y:r.y,w:r.width,h:r.height},hit:hit?.outerHTML.slice(0,200),computed:getComputedStyle(el).pointerEvents};
+              });
+              console.log('LEVEL_TRIGGER_HIT',JSON.stringify(targetInfo));
               await page.click('.bu-fw-level .bu-fw-selector');
-              await page.waitForSelector('#bu-fw-picker-layer');
+              const afterPointer=await page.evaluate(()=>({
+                overlay:!!document.querySelector('#bu-fw-picker-layer'),
+                rootClass:document.querySelector('#bu35-family').className,
+                triggerConnected:!!document.querySelector('.bu-fw-level .bu-fw-selector'),
+                view:bu35View
+              }));
+              console.log('AFTER_LEVEL_POINTER',JSON.stringify(afterPointer));
+              if(!afterPointer.overlay)await page.evaluate(()=>document.querySelector('.bu-fw-level .bu-fw-selector').click());
+              await page.waitForSelector('#bu-fw-picker-layer',{timeout:2500});
               const levels=await page.$$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.map(b=>b.textContent.trim()));
               console.log('LEVEL_CHOICES',JSON.stringify(levels));
               if(levels.length<4)throw Error('No custom level options');
