@@ -14,6 +14,25 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+
+      - name: Locate historical Noah topic card source (read-only)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),*sorted(Path('.').glob('*.css')),*sorted(Path('.').glob('*.js'))]
+          pats=['02-noah-and-the-ark.jpg','Noah and the Ark','bu-fw-picker-option','bu-fw-picker-layer']
+          for file in files:
+            try:s=file.read_text(errors='replace')
+            except:continue
+            for p in pats:
+              matches=list(re.finditer(re.escape(p),s,re.I))
+              if not matches:continue
+              print('HISTORIC_IMAGE',file.name,p,'COUNT',len(matches))
+              for m in matches[:3]:
+                print('EXCERPT',s[max(0,m.start()-240):m.end()+250].replace('\n',' '))
+          PY
       - name: Syntax and isolated script loader
         run: |
           node --check family-worship-gathering-v1.js
@@ -122,7 +141,9 @@ jobs:
               // Native topic picker.
               await page.click('.bu-fw-topic .bu-fw-selector');
               await page.waitForSelector('#bu-fw-picker-layer');
-              const count=await page.$$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.length);
+              const count=await page.$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.length);
+              const topics=await page.$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.map(b=>({label:b.innerText.trim(),value:b.getAttribute('data-value')||'',style:b.getAttribute('style')||'',background:getComputedStyle(b).backgroundImage})));
+              console.log('FAMILY_TOPIC_LIST',JSON.stringify(topics));
               console.log('TOPIC_CHOICES',count);
               if(count<5)throw Error('No custom Bible topics');
               await page.keyboard.press('Escape');
