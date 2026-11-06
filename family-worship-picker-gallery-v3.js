@@ -46,7 +46,7 @@
   "Jesus’ Resurrection": "family-worship-menu-art/v1/topic-35-jesus-resurrection.webp",
   "Future Promises": "family-worship-menu-art/v1/topic-36-future-promises.webp",
   "Jehovah’s Qualities": "family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp",
-  "Jesus’ Ministry": "family-worship-menu-art/v4/topic-38-jesus-ministry.webp",
+  "Jesus’ Ministry": "family-worship-menu-art/v5/topic-38-jesus-ministry.webp",
   "Kingdom & Armageddon": "family-worship-menu-art/v1/topic-39-kingdom-armageddon.webp",
   "Bible Prophecy": "family-worship-menu-art/v1/topic-40-bible-prophecy.webp",
   "Job & Integrity": "family-worship-menu-art/v1/topic-41-job-integrity.webp",
