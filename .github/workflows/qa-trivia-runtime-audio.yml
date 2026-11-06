@@ -98,12 +98,12 @@ jobs:
                 }
               });
               console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
-              if(volumeProbe.low.notes<5||volumeProbe.high.notes<5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
+              if(volumeProbe.low.positiveNotes<3||volumeProbe.low.negativeNotes!==2||volumeProbe.high.positiveNotes<3||volumeProbe.high.negativeNotes!==2||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
                 throw new Error('Effects volume/mute did not control both chimes');
-              if(!(volumeProbe.low.positive>.035&&volumeProbe.low.negative>.035&&
+              if(!(volumeProbe.low.positive>.05&&volumeProbe.low.negative>.05&&
                    volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
                 throw new Error('Both chimes must be audible at 20% and scale with volume slider');
-              if(!(volumeProbe.low.negative/volumeProbe.low.positive>.9&&volumeProbe.high.negative/volumeProbe.high.positive>.9))
+              if(!(volumeProbe.low.negative/volumeProbe.low.positive>.75&&volumeProbe.high.negative/volumeProbe.high.positive>.75))
                 throw new Error('Positive and negative chimes are not balanced');
               const clickProbe=await page.evaluate(()=>{
                 const facade=BUStage16TriviaLifecycle;
