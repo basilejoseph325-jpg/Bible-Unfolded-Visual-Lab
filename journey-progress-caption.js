@@ -141,3 +141,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Uses shared AudioContext, original rising success and descending incorrect
    notes with increased balanced volume. Existing Effects control retained. */
 (()=>{if(document.getElementById('bu-trivia-wrong-tone-v1'))return;const s=document.createElement('script');s.id='bu-trivia-wrong-tone-v1';s.src='trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5';s.defer=true;document.head.appendChild(s)})();
+
+
+/* VISUAL LAB ONLY — Family Worship Gathering Room V1.
+   Compact single-screen layout, custom native-backed selectors and instructions
+   moved to existing Menu > How to Play. No Family Worship game logic changes. */
+(()=>{if(document.getElementById('bu-fw-gathering-css-v1'))return;const l=document.createElement('link');l.id='bu-fw-gathering-css-v1';l.rel='stylesheet';l.href='family-worship-gathering-v1.css?v=20261106-compact-gathering-v1';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-fw-gathering-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-gathering-js-v1';s.src='family-worship-gathering-v1.js?v=20261106-compact-gathering-v1';s.defer=true;document.head.appendChild(s)})();
