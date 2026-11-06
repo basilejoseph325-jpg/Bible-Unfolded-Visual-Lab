@@ -81,9 +81,11 @@ jobs:
                   return gain;
                 };
                 function pair(volume,on){
-                  sfxVolume=volume;sfxOn=on;const start=notes,at=peaks.length;
-                  playChime();bu3846WrongTone();
-                  return {notes:notes-start,positive:peaks[at],negative:peaks[at+3],peaks:peaks.slice(at),frequencies:frequencies.slice(fr)};
+                  sfxVolume=volume;sfxOn=on;const start=notes,at=peaks.length,fr=frequencies.length;
+                  playChime();
+                  const positiveNotes=notes-start,negativeAt=peaks.length,middle=notes;
+                  bu3846WrongTone();
+                  return {notes:notes-start,positiveNotes,negativeNotes:notes-middle,positive:peaks[at],negative:peaks[negativeAt],peaks:peaks.slice(at),frequencies:frequencies.slice(fr)};
                 }
                 try{
                   return {low:pair(20,true),high:pair(65,true),muted:pair(0,true),off:pair(65,false)};
