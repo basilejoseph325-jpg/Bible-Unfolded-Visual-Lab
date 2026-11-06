@@ -1,48 +1,62 @@
-/* BIBLE UNFOLDED — VISUAL LAB ONLY — original Trivia wrong cue repair V1.
- * Root cause: bu3846WrongTone in the original core exits when the shared
- * AudioContext is missing, unlike playChime, which creates it via audioContext().
- * Its peak level (.016*linearVolume) is ~8x below the success chime.
- * Replace ONLY that legacy function binding, which Stage10 passes through
- * wrongTone:(...args)=>bu3846WrongTone(...args). No added click listener,
- * extra cue, scoring change, UI change, new sound sample, or other-mode SFX. */
+/* BIBLE UNFOLDED — VISUAL LAB ONLY — balanced, clearly audible Trivia feedback V2.
+ * Replace the two ORIGINAL sound function bindings (not answer listeners).
+ * - Original positive three-note rising chime / negative soft two-note descending cue.
+ * - Both gain envelopes are increased, balanced, and tied to the existing SFX slider.
+ * - Other-mode positive chimes keep their original sound and volume.
+ * - No scoring, retries, animation, music, announcer, or navigation changes. */
 (()=>{'use strict';
-  if(window.BU_TRIVIA_WRONG_TONE_REPAIR_V1)return;
+  if(window.BU_TRIVIA_FEEDBACK_AUDIO_V2)return;
   function install(){
-    // Must replace existing (already called by the live Trivia controller),
-    // rather than add a second wrong-sound listener that might double-play.
-    if(typeof bu3846WrongTone!=='function'||typeof audioContext!=='function')return false;
-    const original=bu3846WrongTone;
-    function restoredTriviaWrongTone(){
+    if(typeof bu3846WrongTone!=='function'||typeof playChime!=='function'||typeof audioContext!=='function')return false;
+    const previousCorrect=playChime;
+    const previousWrong=bu3846WrongTone;
+    function audibleFeedback(kind){
       try{
-        if(!sfxOn||Number(sfxVolume)<=0||document.hidden)return;
-        const ac=audioContext(); // creates/resumes the same context as success chime
+        const setting=Number(sfxVolume);
+        if(!sfxOn||!Number.isFinite(setting)||setting<=0||document.hidden)return;
+        const ac=audioContext(); // initialize same shared context as other Web Audio
         if(!ac)return;
         if(ac.state==='suspended'&&typeof ac.resume==='function'){
-          const p=ac.resume();if(p?.catch)p.catch(()=>{});
+          const resumed=ac.resume();
+          if(resumed?.catch)resumed.catch(()=>{});
         }
-        const relative=Math.max(0,Math.min(1,Number(sfxVolume)/100));
-        const volume=.075*Math.pow(relative,.70); // softer than success, audible
-        const base=ac.currentTime+.007;
-        [392,329.63].forEach((hz,i)=>{
-          const at=base+i*.103;
+        const slider=Math.max(0,Math.min(1,setting/100));
+        // Quieter at low settings; louder and comparable at every nonzero setting.
+        // Max oscillator level is modest to avoid clipping when the notes overlap.
+        const peak=(kind==='correct'?.120:.115)*Math.pow(slider,.60);
+        const notes=kind==='correct'?[392,493.88,587.33]:[392,329.63];
+        const gap=kind==='correct'?.11:.105;
+        const hold=kind==='correct'?.38:.23;
+        const attack=kind==='correct'?.018:.022;
+        const base=ac.currentTime+.006;
+        notes.forEach((hz,i)=>{
+          const at=base+i*gap;
           const osc=ac.createOscillator(),gain=ac.createGain();
-          osc.type='sine';
-          osc.frequency.setValueAtTime(hz,at);
+          osc.type='sine';osc.frequency.setValueAtTime(hz,at);
           gain.gain.setValueAtTime(.0001,at);
-          gain.gain.exponentialRampToValueAtTime(Math.max(.00011,volume*(i===1?.89:1)),at+.022);
-          gain.gain.exponentialRampToValueAtTime(.0001,at+.244);
+          gain.gain.exponentialRampToValueAtTime(Math.max(.00011,peak),at+attack);
+          gain.gain.exponentialRampToValueAtTime(.0001,at+hold);
           osc.connect(gain);gain.connect(ac.destination);
-          osc.start(at);osc.stop(at+.252);
-          osc.onended=()=>{try{osc.disconnect();gain.disconnect()}catch(_){}};
+          osc.start(at);osc.stop(at+hold+.01);
+          osc.onended=()=>{try{osc.disconnect();gain.disconnect()}catch(_){ }};
         });
-      }catch(_){/* Sound is optional; NEVER interrupt a submitted answer. */}
+      }catch(_){/* Audio failure must never interrupt question scoring or feedback. */}
     }
-    bu3846WrongTone=restoredTriviaWrongTone;
-    window.BU_TRIVIA_WRONG_TONE_REPAIR_V1=Object.freeze({
-      version:'2026-11-06-v1',
-      restoredOriginalTwoNoteCue:true,
-      originalAvailable:typeof original==='function'
+    playChime=function balancedTriviaCorrectTone(...args){
+      // Preserve the ORIGINAL correct chime in Story Adventure and all other modes.
+      if(typeof bu34Visible==='function'&&!bu34Visible())return previousCorrect.apply(this,args);
+      return audibleFeedback('correct');
+    };
+    bu3846WrongTone=function balancedTriviaWrongTone(){return audibleFeedback('wrong');};
+    window.BU_TRIVIA_FEEDBACK_AUDIO_V2=Object.freeze({
+      version:'2026-11-06-balanced-v2',
+      positiveNotes:3,negativeNotes:2,
+      respectsEffectsToggle:true,respectsSfxSlider:true,
+      originalCorrectAvailable:typeof previousCorrect==='function',
+      originalWrongAvailable:typeof previousWrong==='function'
     });
+    // Retain diagnostic used by earlier V1 checks without installing its old patch.
+    window.BU_TRIVIA_WRONG_TONE_REPAIR_V1=window.BU_TRIVIA_FEEDBACK_AUDIO_V2;
     return true;
   }
   if(!install()){
