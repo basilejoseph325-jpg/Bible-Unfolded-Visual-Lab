@@ -1,6 +1,7 @@
-/* BIBLE UNFOLDED — VISUAL LAB ONLY — balanced, clearly audible Trivia feedback V2.
+/* BIBLE UNFOLDED — VISUAL LAB ONLY — balanced, clearly audible Trivia feedback V3.
  * Replace the two ORIGINAL sound function bindings (not answer listeners).
- * - Original positive three-note rising chime / negative soft two-note descending cue.
+ * - Preserve existing correct-answer chime sequence exactly; amplify its volume only.
+ * - Keep original negative two-note descending pitch sequence, louder.
  * - Both gain envelopes are increased, balanced, and tied to the existing SFX slider.
  * - Other-mode positive chimes keep their original sound and volume.
  * - No scoring, retries, animation, music, announcer, or navigation changes. */
@@ -23,7 +24,7 @@
         const slider=Math.max(0,Math.min(1,setting/100));
         // Quieter at low settings; louder and comparable at every nonzero setting.
         // Max oscillator level is modest to avoid clipping when the notes overlap.
-        const peak=(kind==='correct'?.120:.115)*Math.pow(slider,.60);
+        const peak=(kind==='correct'?.120:.150)*Math.pow(slider,.60);
         const notes=kind==='correct'?[392,493.88,587.33]:[392,329.63];
         const gap=kind==='correct'?.11:.105;
         const hold=kind==='correct'?.38:.23;
@@ -42,15 +43,26 @@
         });
       }catch(_){/* Audio failure must never interrupt question scoring or feedback. */}
     }
+    function triviaQuestionPlaying(){
+      const body=document.getElementById('bu34-body');
+      return !!(body?.classList?.contains('bu65-playing')&&body.querySelector('.bu34-answer[data-answer]'));
+    }
     playChime=function balancedTriviaCorrectTone(...args){
-      // Preserve the ORIGINAL correct chime in Story Adventure and all other modes.
-      if(typeof bu34Visible==='function'&&!bu34Visible())return previousCorrect.apply(this,args);
-      return audibleFeedback('correct');
+      // Preserve the approved correct-answer melody and timing, including
+      // its later sound layers; only give it additional SFX volume in Trivia.
+      if(!triviaQuestionPlaying())return previousCorrect.apply(this,args);
+      const originalSetting=Number(sfxVolume);
+      if(!sfxOn||!Number.isFinite(originalSetting)||originalSetting<=0)
+        return previousCorrect.apply(this,args);
+      try{
+        sfxVolume=Math.min(100,originalSetting*1.5);
+        return previousCorrect.apply(this,args);
+      }finally{sfxVolume=originalSetting}
     };
     bu3846WrongTone=function balancedTriviaWrongTone(){return audibleFeedback('wrong');};
     window.BU_TRIVIA_FEEDBACK_AUDIO_V2=Object.freeze({
-      version:'2026-11-06-balanced-v2',
-      positiveNotes:3,negativeNotes:2,
+      version:'2026-11-06-balanced-v3',
+      correctMelodyPreserved:true,negativeNotes:2,
       respectsEffectsToggle:true,respectsSfxSlider:true,
       originalCorrectAvailable:typeof previousCorrect==='function',
       originalWrongAvailable:typeof previousWrong==='function'
