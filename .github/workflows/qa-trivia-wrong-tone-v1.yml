@@ -1,4 +1,4 @@
-name: QA Trivia balanced louder correct and wrong answer audio
+name: QA Trivia louder correct and wrong feedback (original chime preserved)
 on:
   push:
     paths:
@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Verify audio syntax and established Trivia artwork and tactile press stay intact
+      - name: Syntax and no unrelated visuals altered
         shell: bash
         run: |
           set -euo pipefail
@@ -25,54 +25,50 @@ jobs:
           loader=Path('journey-progress-caption.js').read_text()
           press=Path('trivia-stone-press-v1.js').read_text()
           assert 'playChime=function balancedTriviaCorrectTone' in s
+          assert 'previousCorrect.apply(this,args)' in s
+          assert 'sfxVolume=Math.min(100,originalSetting*1.5)' in s
           assert 'bu3846WrongTone=function balancedTriviaWrongTone' in s
-          assert '[392,493.88,587.33]' in s and '[392,329.63]' in s
-          assert "typeof bu34Visible==='function'" in s
-          assert 'audioContext()' in s and '!sfxOn' in s
-          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-balanced-feedback-v2' in loader
+          assert '[392,329.63]' in s
+          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-preserved-chime-louder-v3' in loader
           assert 'trivia-stone-press-v1.js?v=20261106-pressed-feedback-v1' in loader
           assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in loader
           assert "const selector='#bu34-trivia" in press
-          print('PASS: V2 cues, SFX controls and unchanged stone press loader')
+          print('PASS: original correct melody retained; wrong two-note cue boosted; stone visuals unchanged')
           PY
-      - name: Simulate loudness, balance, slider mute, Effects mute and non-Trivia success
+      - name: Simulate original correct chime boosted, wrong gain, slider, mute and other modes
         shell: bash
         run: |
           node <<'JS'
           const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
-          const code=fs.readFileSync('trivia-wrong-tone-repair-v1.js','utf8');
-          const played=[],peaks=[];let originalCorrect=0,originalWrong=0;
+          const played=[],peaks=[],correctVolumes=[];
           const ac={
             state:'running',currentTime:10,destination:{},
             createOscillator(){const osc={frequency:{setValueAtTime(f){osc.hz=f}},connect(){},start(){played.push(osc.hz)},stop(){},disconnect(){}};return osc},
             createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(v){if(v>.001)peaks.push(v)}},connect(){},disconnect(){}}}
           };
-          const ctx={window:{},document:{hidden:false,readyState:'complete',addEventListener(){}},
+          let playing=true,oldCorrect=0;
+          const ctx={window:{},document:{hidden:false,readyState:'complete',addEventListener(){},
+            getElementById(id){return id==='bu34-body'?{classList:{contains(){return playing}},querySelector(){return {}}}:null}},
             sfxOn:true,sfxVolume:65,
-            bu34Visible(){return true},
-            bu3846WrongTone(){originalWrong++},
-            playChime(){originalCorrect++},
-            audioContext(){return ac},
-            setTimeout(){}};
-          vm.runInNewContext(code,ctx);
-          assert.equal(ctx.window.BU_TRIVIA_FEEDBACK_AUDIO_V2.version,'2026-11-06-balanced-v2');
+            bu3846WrongTone(){},
+            playChime(){oldCorrect++;correctVolumes.push(ctx.sfxVolume)},
+            audioContext(){return ac},setTimeout(){}};
+          vm.runInNewContext(fs.readFileSync('trivia-wrong-tone-repair-v1.js','utf8'),ctx);
+          assert.equal(ctx.window.BU_TRIVIA_FEEDBACK_AUDIO_V2.version,'2026-11-06-balanced-v3');
           ctx.playChime();
-          assert.deepEqual(played.slice(0,3),[392,493.88,587.33]);
-          const positive=peaks[0];assert(positive>.09&&positive<.10);
+          assert.equal(oldCorrect,1);assert.equal(correctVolumes[0],97.5);
+          assert.equal(ctx.sfxVolume,65,'global SFX slider setting was not restored');
           ctx.bu3846WrongTone();
-          assert.deepEqual(played.slice(3,5),[392,329.63]);
-          const negative=peaks[3];assert(negative>.085&&negative<.095);
-          assert(negative/positive>.90&&negative/positive<1.1);
-          assert.equal(originalCorrect,0);assert.equal(originalWrong,0);
-          const before=played.length;
-          ctx.sfxVolume=0;ctx.playChime();ctx.bu3846WrongTone();assert.equal(played.length,before);
-          ctx.sfxVolume=65;ctx.sfxOn=false;ctx.playChime();ctx.bu3846WrongTone();assert.equal(played.length,before);
-          ctx.sfxOn=true;ctx.sfxVolume=20;ctx.playChime();ctx.bu3846WrongTone();
-          assert.equal(played.length,before+5);
-          const lowPositive=peaks[5],lowNegative=peaks[8];
-          assert(lowPositive<positive&&lowPositive>.035);
-          assert(lowNegative<negative&&lowNegative>.035);
-          ctx.bu34Visible=()=>false;ctx.playChime();
-          assert.equal(originalCorrect,1);
-          console.log('PASS: positive 3 notes and negative 2 notes balanced; SFX slider and mute work; other modes unchanged');
+          assert.deepEqual(played,[392,329.63]);
+          assert(peaks[0]>.11&&peaks[0]<.13,'Negative cue is still too quiet');
+          ctx.sfxVolume=20;ctx.playChime();ctx.bu3846WrongTone();
+          assert.equal(correctVolumes[1],30);assert.equal(played.length,4);
+          assert(peaks[2]>.05&&peaks[2]<peaks[0]);
+          ctx.sfxOn=false;ctx.playChime();ctx.bu3846WrongTone();
+          assert.equal(played.length,4);
+          ctx.sfxOn=true;ctx.sfxVolume=0;ctx.playChime();ctx.bu3846WrongTone();
+          assert.equal(played.length,4);
+          ctx.sfxVolume=65;playing=false;ctx.playChime();
+          assert.equal(correctVolumes[4],65,'Non-Trivia correct chime volume was altered');
+          console.log('PASS: approved positive melody called with 1.5x temporary gain, negative louder, original setting restored, mute and other modes respected');
           JS
