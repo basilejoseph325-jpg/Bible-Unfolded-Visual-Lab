@@ -1,0 +1,34 @@
+name: Inspect original Bible Trivia wrong/correct sound dispatch (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-trivia-wrong-audio-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find current Trivia click handler, sound branching and global sound adapter
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),Path('premium-sfx.js'),Path('trivia-stone-press-v1.js')]
+          for p in files:
+            if not p.exists():continue
+            s=p.read_text(encoding='utf8',errors='replace')
+            print('FILE',p,len(s),flush=True)
+            for key in ['bu34-answer','bu34Choose','bu34Answer','bu34Try','bu34Pick','bu34Tap','bu34Render','bu34Submit','bu34-question','bu65-sfx','wrongSound','soundWrong','playWrong','sfxWrong','triviaWrong','correctSound']:
+              indices=[m.start() for m in re.finditer(re.escape(key),s,re.I)]
+              if not indices:continue
+              print('TERM',key,'COUNT',len(indices),flush=True)
+              for at in indices[:5]:
+                chunk=s[max(0,at-700):min(len(s),at+1100)]
+                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[omitted audio/photo]',chunk)
+                print('AT',at,repr(chunk)[:1950],flush=True)
+            print('END FILE',p,flush=True)
+          PY
