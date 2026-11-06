@@ -1,4 +1,4 @@
-/* BIBLE UNFOLDED — VISUAL LAB ONLY — balanced, clearly audible Trivia feedback V4 (phone-audible negative cue).
+/* BIBLE UNFOLDED — VISUAL LAB ONLY — balanced, clearly audible Trivia feedback V5 (richer phone-audible negative cue).
  * Replace the two ORIGINAL sound function bindings (not answer listeners).
  * - Preserve existing correct-answer chime sequence exactly; amplify its volume only.
  * - Keep original negative two-note descending pitch sequence; amplify for small speakers.
@@ -11,42 +11,54 @@
     if(typeof bu3846WrongTone!=='function'||typeof playChime!=='function'||typeof audioContext!=='function')return false;
     const previousCorrect=playChime;
     const previousWrong=bu3846WrongTone;
-    /* V4 wrong-answer cue: same descending two notes, now phone-audible.
-     * A subtle octave overtone supports small speakers, while a longer
-     * decay and stronger gain make the negative response perceptually clear.
-     * Each note still has ONE audible tone event (not a double sound). */
-    function audibleFeedback(kind){
+    /* V5: same two soft descending notes, now bright and forward enough
+     * for Samsung/phone speakers. Previous pure tones measured strong in
+     * WebAudio but were still quiet to human ears on the actual phone.
+     * Amplify upper harmonics (784/659 and 1176/989 Hz), not just bass.
+     * A compressor protects against excessive combined peaks. */
+    function audibleFeedback(){
       try{
         const setting=Number(sfxVolume);
         if(!sfxOn||!Number.isFinite(setting)||setting<=0||document.hidden)return;
         const ac=audioContext();
         if(!ac)return;
         if(ac.state==='suspended'&&typeof ac.resume==='function'){
-          const resumed=ac.resume();if(resumed?.catch)resumed.catch(()=>{});
+          const p=ac.resume();if(p?.catch)p.catch(()=>{});
         }
         const slider=Math.max(0,Math.min(1,setting/100));
-        const base=ac.currentTime+.006;
-        // More acoustic energy than V3's .150*slider^.60 sine, without clipping.
-        const level=.46*Math.pow(slider,.45);
-        const notes=[392,329.63]; // ORIGINAL gentle descending two-note melody
-        notes.forEach((hz,i)=>{
-          const at=base+i*.137;
-          const fundamental=level*(i===0?1:.94);
-          // Important: on small phone speakers a pure 330Hz sine can nearly
-          // disappear. The octave partial helps the SAME note remain audible.
-          [[hz,fundamental],[hz*2,fundamental*.30]].forEach(([frequency,peak])=>{
+        // Stronger near the bottom of the slider, still zero at 0%.
+        const level=.95*Math.pow(slider,.28);
+        const output=typeof ac.createDynamicsCompressor==='function'
+          ? ac.createDynamicsCompressor() : ac.createGain();
+        if(output.threshold){
+          output.threshold.value=-14;
+          output.knee.value=6;
+          output.ratio.value=10;
+          output.attack.value=.003;
+          output.release.value=.16;
+        }else{
+          output.gain.value=.60; // conservative fallback without a limiter
+        }
+        output.connect(ac.destination);
+        const base=ac.currentTime+.008;
+        [392,329.63].forEach((hz,i)=>{
+          const at=base+i*.18, stop=at+.50;
+          // One rich, gentle "wrong" note = fundamental plus two harmonics.
+          // These three partials start together, never as three separate beeps.
+          [[1,.58],[2,.66],[3,.30]].forEach(([multiple,weight])=>{
             const osc=ac.createOscillator(),gain=ac.createGain();
+            const peak=level*weight*(i===1?.96:1);
             osc.type='sine';
-            osc.frequency.setValueAtTime(frequency,at);
+            osc.frequency.setValueAtTime(hz*multiple,at);
             gain.gain.setValueAtTime(.0001,at);
-            gain.gain.exponentialRampToValueAtTime(Math.max(.00011,peak),at+.019);
-            gain.gain.exponentialRampToValueAtTime(.0001,at+.345);
-            osc.connect(gain);gain.connect(ac.destination);
-            osc.start(at);osc.stop(at+.355);
+            gain.gain.exponentialRampToValueAtTime(peak,at+.026);
+            gain.gain.exponentialRampToValueAtTime(.0001,at+.46);
+            osc.connect(gain);gain.connect(output);
+            osc.start(at);osc.stop(stop);
             osc.onended=()=>{try{osc.disconnect();gain.disconnect()}catch(_){}};
           });
         });
-      }catch(_){/* Audio must never interrupt answering. */}
+      }catch(_){/* Sound must not interrupt answering. */}
     }
     function triviaQuestionPlaying(){
       const body=document.getElementById('bu34-body');
@@ -64,10 +76,10 @@
         return previousCorrect.apply(this,args);
       }finally{sfxVolume=originalSetting}
     };
-    bu3846WrongTone=function balancedTriviaWrongTone(){return audibleFeedback('wrong');};
+    bu3846WrongTone=function balancedTriviaWrongTone(){return audibleFeedback();};
     window.BU_TRIVIA_FEEDBACK_AUDIO_V2=Object.freeze({
-      version:'2026-11-06-phone-audible-v4',
-      correctMelodyPreserved:true,negativeNotes:2,phoneSpeakerOvertones:true,
+      version:'2026-11-06-rich-negative-v5',
+      correctMelodyPreserved:true,negativeNotes:2,phoneSpeakerOvertones:true,harmonicsPerNote:3,
       respectsEffectsToggle:true,respectsSfxSlider:true,
       originalCorrectAvailable:typeof previousCorrect==='function',
       originalWrongAvailable:typeof previousWrong==='function'
