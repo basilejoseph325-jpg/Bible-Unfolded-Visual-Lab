@@ -11,26 +11,39 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Trace exact v3.8.49 wrong tone, all callers, audio context and wrapper
+      - name: Analyze global audio init, Trivia Stage13 wrapper and test/live equivalence
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          files=[Path('index.html'),Path('bible_unfolded_core_part5.js'),Path('premium-sfx.js'),Path('trivia-stone-press-v1.js')]
-          patterns=['function bu3846WrongTone','bu3846WrongTone(', 'function bu34Choose(', 'bu34Choose=function', 'bu34Choose = function', 'function bu34Next(', 'window.BUQuestionFeedbackOverlay=', 'BUQuestionFeedbackOverlay=','let context=', 'var context=', 'const context=', 'function getAudioContext', 'function playCorrect','function successSound']
-          for p in files:
-            if not p.exists():continue
-            s=p.read_text(encoding='utf8',errors='replace')
-            print('FILE',p,len(s),flush=True)
-            for pat in patterns:
-              hits=[m.start() for m in re.finditer(re.escape(pat),s)]
-              if not hits:continue
-              print('PATTERN',repr(pat),'MATCHES',len(hits),flush=True)
-              for at in hits[:4]:
-                start=max(0,at-450);end=min(len(s),at+5100)
-                excerpt=s[start:end]
-                excerpt=re.sub(r'base64,[A-Za-z0-9+/=]{120,}','base64,[omitted]',excerpt)
-                print('AT',at,'TEXT',repr(excerpt)[:6000],flush=True)
-          print('END FILE',p,flush=True)
+          s=Path('bible_unfolded_core_part5.js').read_text()
+          idx=Path('index.html').read_text()
+          print('CORE LENGTH',len(s),'INDEX LENGTH',len(idx),flush=True)
+          for label,source in [('core',s),('index',idx)]:
+            pats=[
+             r'\b(?:let|var|const)\s+context\b',
+             r'function\s+audioContext\s*\(',
+             r'function\s+startAudio\s*\(',
+             r'\baudioContext\s*=\s*function',
+             r'function\s+bu3846WrongTone',
+             r'function\s+bu34Choose',
+             r'function\s+playChime',
+             r'setTriviaChoose\s*\(',
+             r'getTriviaChoose\s*\(',
+             r'ctx\.wrongTone',
+             r'wrongTone\s*\(',
+             r'oldTriviaChoose',
+             r'function\s+install\s*\(',
+             r'BUTriviaLifecycleFacade',
+            ]
+            print('FILE',label,flush=True)
+            for pat in pats:
+              matches=list(re.finditer(pat,source))
+              print('PAT',pat,'HITS',len(matches),flush=True)
+              for m in matches[:3]:
+                lo=max(0,m.start()-280);hi=min(len(source),m.start()+3500)
+                chunk=source[lo:hi]
+                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[omitted]',chunk)
+                print('CONTEXT',m.start(),repr(chunk)[:3850],flush=True)
           PY
