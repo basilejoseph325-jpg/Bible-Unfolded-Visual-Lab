@@ -153,3 +153,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    softly engraved card/hero edges and clear separation below +/- player count.
    Keeps all V1 setup geometry and picker interiors unchanged. */
 (()=>{if(document.getElementById('bu-fw-outer-v2-css'))return;const l=document.createElement('link');l.id='bu-fw-outer-v2-css';l.rel='stylesheet';l.href='family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2';document.head.appendChild(l)})();
+
+
+/* VISUAL LAB ONLY — Family Worship picker interiors V3.
+   Original outside V2 remains FROZEN. Reuses the established cinematic
+   menu style; all 42 topic + 4 level images are private immutable copies
+   under family-worship-menu-art/v1 (no other mode's assets modified). */
+(()=>{if(document.getElementById('bu-fw-gallery-v3-css'))return;const l=document.createElement('link');l.id='bu-fw-gallery-v3-css';l.rel='stylesheet';l.href='family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-fw-gallery-v3-js'))return;const s=document.createElement('script');s.id='bu-fw-gallery-v3-js';s.src='family-worship-picker-gallery-v3.js?v=20261106-topic-level-gallery-v3';s.defer=true;document.head.appendChild(s)})();
