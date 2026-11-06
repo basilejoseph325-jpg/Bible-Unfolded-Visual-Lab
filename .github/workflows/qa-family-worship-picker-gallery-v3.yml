@@ -31,7 +31,7 @@ jobs:
           assert len([x for x in files if x.name.startswith('topic-')])==42
           assert len([x for x in files if x.name.startswith('level-')])==4
           loader=Path('journey-progress-caption.js').read_text()
-          assert 'family-worship-picker-gallery-v3.js?v=20261106-ministry-scene-v5' in loader
+          assert ('family-worship-picker-gallery-v3.js?v=20261106-ministry-scene-v5' in loader or 'family-worship-picker-gallery-v3.js?v=20261106-isolated-art-v6' in loader)
           assert 'family-worship-gallery-crop-v4.css?v=20261106-headroom-audit-v4' in loader
           assert 'family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3' in loader
           assert len(list(Path('family-worship-menu-art/v4').glob('*.webp')))==3
