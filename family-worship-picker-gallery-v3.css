@@ -1,0 +1,135 @@
+/* Bible Unfolded — VISUAL LAB ONLY — Family Worship dropdown interiors V3.
+   Modeled on the existing Trivia Together photo-picker treatment.
+   Only #bu-fw-picker-layer is affected; approved setup exterior V2 frozen. */
+#bu-fw-picker-layer.bu-fw-gallery-mode{
+  background:#000c!important;
+  backdrop-filter:blur(5px);
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-dialog{
+  background:linear-gradient(150deg,#164a55 0%,#072c39 47%,#031a25 100%)!important;
+  border:1.5px solid #f6d394!important;
+  border-radius:22px!important;
+  box-shadow:inset 0 0 0 2px #e9c5841c,0 12px 40px #000e!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-head{
+  background:linear-gradient(160deg,#1d5260,#0b3341 66%,#052734)!important;
+  border-bottom:1px solid #d7b57485!important;
+  padding:15px 15px 12px!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-head h2{
+  font:700 clamp(22px,5.5vw,28px)/1.15 Georgia,serif!important;
+  color:#ffe4a8!important;
+  text-shadow:0 2px 6px #0008;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-close{
+  width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;
+  border:1px solid #e1be79!important;border-radius:12px!important;
+  background:linear-gradient(150deg,#164756,#082b39)!important;
+  color:#f9d697!important;
+  box-shadow:inset 0 1px #ffffff26,0 2px 6px #0007!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-search{
+  margin:11px 12px 8px!important;min-height:46px!important;
+  background:#062431!important;border:1px solid #dbc28b!important;
+  color:#ffedc4!important;border-radius:12px!important;
+  box-shadow:inset 0 2px 6px #0007,0 1px 0 #f9d99615!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-search::placeholder{
+  color:#d0d2cb!important;opacity:.77!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-options{
+  padding:5px 12px 15px!important;gap:9px!important;
+  overflow-y:auto!important;overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card{
+  box-sizing:border-box!important;
+  min-height:109px!important;height:109px!important;max-height:none!important;
+  position:relative!important;isolation:isolate!important;overflow:hidden!important;
+  display:flex!important;align-items:flex-end!important;justify-content:flex-start!important;
+  flex-direction:row!important;
+  margin:0!important;padding:13px 14px!important;gap:10px!important;
+  color:#ffe4a2!important;
+  background:#153d45!important;
+  border:1.2px solid #e2c48baf!important;
+  border-radius:15px!important;
+  box-shadow:inset 0 0 0 1px #ffebc520,0 3px 10px #0007!important;
+  text-align:left!important;
+  text-shadow:0 2px 5px #000f,0 0 11px #000c!important;
+  transition:transform .14s ease,border-color .14s ease!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card .bu-fw-gallery-photo{
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;z-index:0!important;
+  background-color:#154250!important;
+  background-size:cover!important;background-position:center 43%!important;
+  background-repeat:no-repeat!important;
+  pointer-events:none!important;
+  filter:saturate(.96) contrast(1.04);
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card::before{
+  content:""!important;
+  display:block!important;
+  position:absolute!important;
+  inset:0!important;z-index:1!important;
+  border:0!important;outline:0!important;padding:0!important;margin:0!important;
+  background:linear-gradient(180deg,#001a2230 0%,#00162125 31%,#00162197 77%,#001019de 100%)!important;
+  pointer-events:none!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card::after{
+  content:none!important;display:none!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card .bu-fw-gallery-label{
+  display:block!important;
+  flex:1 1 auto!important;position:relative!important;z-index:2!important;
+  margin:0!important;padding:0!important;
+  min-width:0!important;
+  color:#ffe2a0!important;
+  font:700 clamp(18px,4.65vw,23px)/1.13 Georgia,'Times New Roman',serif!important;
+  text-shadow:0 2px 4px #000f,0 0 13px #000d!important;
+  white-space:normal!important;
+  pointer-events:none!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card .bu-fw-picker-tick{
+  display:grid!important;place-items:center!important;
+  position:relative!important;z-index:2!important;
+  flex:0 0 auto!important;width:26px!important;height:26px!important;
+  color:#fff0bd!important;
+  font:700 23px/1 Georgia,serif!important;
+  text-shadow:0 1px 4px #000f!important;
+  pointer-events:none!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[aria-selected="true"]{
+  border:2px solid #ffe4a7!important;
+  box-shadow:inset 0 0 0 2px #ffe3a455,0 0 14px #e6b6634d,0 3px 9px #000a!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card:active{
+  transform:translateY(2px) scale(.992)!important;
+  box-shadow:inset 0 4px 10px #0009!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card:focus-visible{
+  outline:3px solid #ffe5a1!important;
+  outline-offset:2px!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode[data-bu-fw-gallery="level"] .bu-fw-picker-option.bu-fw-gallery-card{
+  height:122px!important;min-height:122px!important;
+}
+#bu-fw-picker-layer.bu-fw-gallery-mode[data-bu-fw-gallery="level"] .bu-fw-picker-options{
+  padding-top:11px!important;
+}
+@media(max-width:370px){
+  #bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card{
+    height:100px!important;min-height:100px!important;
+    padding:10px 11px!important;
+  }
+  #bu-fw-picker-layer.bu-fw-gallery-mode[data-bu-fw-gallery="level"] .bu-fw-picker-option.bu-fw-gallery-card{
+    height:112px!important;min-height:112px!important;
+  }
+  #bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card .bu-fw-gallery-label{
+    font-size:17px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  #bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card{transition:none!important}
+}
