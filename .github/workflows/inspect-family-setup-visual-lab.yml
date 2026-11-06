@@ -1,0 +1,31 @@
+name: Inspect Family Worship setup and How to Play hooks (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-family-setup-visual-lab.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect original game markup and render functions only
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,html
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+          patterns=[r'function bu35RenderSetup\s*\(',r'function bu35Render\s*\(',r'function bu35Open\s*\(',
+            r'Gather the Family',r'A topic may include nearby levels',r'Session options',r'Family Worship',r'How to Play',r'How To Play',
+            r'bu35-topic',r'bu3826-level',r'bu35-start',r'bu35-family',r'bu35Setup\s*=']
+          for p in files:
+            s=p.read_text(errors='replace')
+            print('FILE',p.name,'size',len(s))
+            for pat in patterns:
+              found=list(re.finditer(pat,s,re.I))
+              print(' PAT',pat,'HITS',len(found))
+              for m in found[:3]:
+                l,r=(m.start()-260,m.start()+2100)
+                t=s[max(0,l):min(len(s),r)].replace('\\n','\n')
+                print('  OFFSET',m.start(),'CONTEXT',t[:2400].replace('\n','\\n'))
+          PY
