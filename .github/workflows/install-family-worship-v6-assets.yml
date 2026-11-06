@@ -1,0 +1,84 @@
+name: Import isolated Family Worship V6 artwork ZIP
+on:
+  push:
+    paths:
+      - 'family_worship_art_v6.zip'
+permissions:
+  contents: write
+jobs:
+  install-v6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout approved Visual Lab only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate archive and install three isolated picture files
+        if: hashFiles('family_worship_art_v6.zip') != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import zipfile
+          from pathlib import Path
+          archive=Path('family_worship_art_v6.zip')
+          prefix='family-worship-menu-art/v6/'
+          names=('topic-10-tower-of-babel.jpg','topic-19-elisha.jpg','topic-27-samuel.jpg')
+          expected={prefix+n for n in names}
+          with zipfile.ZipFile(archive) as z:
+            actual=set(z.namelist())
+            assert actual==expected,(actual,expected)
+            for name in names:
+              data=z.read(prefix+name)
+              assert data.startswith(b'\xff\xd8') and data.endswith(b'\xff\xd9'),('not JPEG',name)
+              assert 20_000<len(data)<2_000_000,(name,len(data))
+              dest=Path(prefix+name)
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              dest.write_bytes(data)
+              print('Installed isolated image',dest,len(data),'bytes')
+          # Only rewire the three requested topic labels.
+          src=Path('family-worship-picker-gallery-v3.js')
+          text=src.read_text()
+          replacements={
+            '"The Tower of Babel": "family-worship-menu-art/v1/topic-10-the-tower-of-babel.webp"':
+              '"The Tower of Babel": "family-worship-menu-art/v6/topic-10-tower-of-babel.jpg"',
+            '"Elisha": "family-worship-menu-art/v1/topic-19-elisha.webp"':
+              '"Elisha": "family-worship-menu-art/v6/topic-19-elisha.jpg"',
+            '"Samuel": "family-worship-menu-art/v1/topic-27-samuel.webp"':
+              '"Samuel": "family-worship-menu-art/v6/topic-27-samuel.jpg"',
+          }
+          for old,new in replacements.items():
+            if new in text: continue
+            assert text.count(old)==1,('unexpected original mapping',old)
+            text=text.replace(old,new)
+          src.write_text(text)
+          loader=Path('journey-progress-caption.js')
+          text=loader.read_text()
+          old='family-worship-picker-gallery-v3.js?v=20261106-ministry-scene-v5'
+          new='family-worship-picker-gallery-v3.js?v=20261106-isolated-art-v6'
+          assert old in text or new in text,'missing gallery loader'
+          loader.write_text(text.replace(old,new))
+          PY
+          node --check family-worship-picker-gallery-v3.js
+          node --check journey-progress-caption.js
+          # Remove only the temporary transfer ZIP; keep the three private images.
+          rm family_worship_art_v6.zip
+          git add family-worship-menu-art/v6/ family-worship-picker-gallery-v3.js journey-progress-caption.js
+          git add -u family_worship_art_v6.zip
+          git diff --cached --check
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Visual Lab: install three isolated V6 Babel Elisha Samuel images"
+          git push origin HEAD:main
+      - name: Verify image cards and loader afterward
+        if: hashFiles('family-worship-menu-art/v6/topic-10-tower-of-babel.jpg') != ''
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('family-worship-picker-gallery-v3.js').read_text()
+          for name in ('topic-10-tower-of-babel.jpg','topic-19-elisha.jpg','topic-27-samuel.jpg'):
+            assert Path('family-worship-menu-art/v6',name).is_file()
+            assert s.count('family-worship-menu-art/v6/'+name)==1
+          assert 'family-worship-picker-gallery-v3.js?v=20261106-isolated-art-v6' in Path('journey-progress-caption.js').read_text()
+          print('PASS three isolated Family Worship menu images wired into Visual Lab')
+          PY
