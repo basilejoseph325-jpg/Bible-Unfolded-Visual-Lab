@@ -1,0 +1,116 @@
+/* BIBLE UNFOLDED — VISUAL LAB ONLY — Family Worship outer polish V2
+   Keep the V1 compact geometry, native game controls and custom picker interiors.
+   Only the exterior of the setup screen is decorated. */
+#bu35-family.bu-fw-gathering .bu35-top{
+  box-shadow:inset 0 -1px 0 #f7d89c32,0 4px 13px #0006!important;
+}
+#bu35-family.bu-fw-gathering .bu35-top h1{
+  color:#ffe2a6!important;
+  text-shadow:0 1px 0 #fff4c132,0 3px 9px #000c!important;
+}
+#bu35-family.bu-fw-gathering .bu35-hero{
+  border-color:#ebca8bc7!important;
+  background-image:
+    linear-gradient(90deg,#061f2dcd 0%,#10374484 40%,#062432b0 100%),
+    url('bible-book-art/46_1_corinthians.webp')!important;
+  box-shadow:inset 0 0 0 2px #ffde9f20,inset 0 -12px 24px #05121c85,
+    0 4px 14px #0009,0 0 0 1px #ae854635!important;
+}
+#bu35-family.bu-fw-gathering .bu35-hero::before{
+  content:"";position:absolute;inset:5px;border:1px solid #f5d49439;
+  border-radius:12px;pointer-events:none;
+}
+#bu35-family.bu-fw-gathering .bu35-hero::after{
+  color:#ffde9daf!important;
+  text-shadow:0 1px 8px #f4d28d4a,0 0 16px #f4d28d48!important;
+}
+#bu35-family.bu-fw-gathering .bu35-card{
+  border-color:#e4c083a8!important;
+  background:
+    radial-gradient(ellipse at 93% -9%,#d0a55b24,transparent 51%),
+    radial-gradient(ellipse at 8% 100%,#33687526,transparent 56%),
+    repeating-linear-gradient(90deg,transparent 0 14px,#a9e2cf03 15px 16px),
+    linear-gradient(152deg,#154251 0%,#082e3b 48%,#072532 100%)!important;
+  box-shadow:
+    inset 0 1px 0 #ffedbd28,
+    inset 0 0 0 1px #f7d79b12,
+    inset 0 -20px 31px #001b2836,
+    0 9px 21px #0009,
+    0 0 0 1px #926d3430!important;
+}
+#bu35-family.bu-fw-gathering .bu35-card::before{
+  content:"";position:absolute;inset:5px;
+  border:1px solid #e8c78525;border-radius:12px;pointer-events:none;
+}
+#bu35-family.bu-fw-gathering .bu35-card>.bu35-label:first-child{
+  color:#ffe0a0!important;
+  text-shadow:0 1px 4px #0007;
+}
+/* Important layout fix: the +/- buttons no longer touch the name fields.
+   The 6-player layout still fits the phone because V1 recovered ample space. */
+#bu35-family.bu-fw-gathering .bu35-countbox{
+  top:8px!important;
+}
+#bu35-family.bu-fw-gathering .bu35-people{
+  margin:15px 0 9px!important;
+}
+#bu35-family.bu-fw-gathering .bu35-countbox button{
+  background:linear-gradient(155deg,#285968 0%,#123d4a 52%,#062b38 100%)!important;
+  border-color:#e0c28c!important;
+  box-shadow:inset 0 1px 0 #ffebbb4a,inset 0 -3px 6px #0004,0 3px 7px #0008!important;
+  text-shadow:0 1px 3px #000b!important;
+}
+#bu35-family.bu-fw-gathering .bu35-people input{
+  border-color:#c7ae81cf!important;
+  background:linear-gradient(170deg,#071d29 0%,#082d39 100%)!important;
+  box-shadow:inset 0 2px 6px #0008,inset 0 1px 0 #f2d5a013!important;
+}
+#bu35-family.bu-fw-gathering .bu35-people input:focus{
+  border-color:#ffdf9d!important;
+  box-shadow:inset 0 2px 7px #0008,0 0 0 2px #fbd58b30!important;
+}
+#bu35-family.bu-fw-gathering .bu-fw-selector{
+  background:linear-gradient(150deg,#1b515d 0%,#0c3441 65%,#082b38 100%)!important;
+  border-color:#d8b880!important;
+  box-shadow:inset 0 1px 0 #fff4c238,inset 0 -2px 5px #0004,0 3px 7px #0007!important;
+}
+#bu35-family.bu-fw-gathering .bu35-label{
+  color:#f8d99d!important;
+}
+#bu35-family.bu-fw-gathering .bu35-pills button:not(.active){
+  border-color:#c2a77d99!important;
+  background:linear-gradient(165deg,#1b4e5a 0%,#0d3543 70%,#082d3c 100%)!important;
+  box-shadow:inset 0 1px 0 #fff5,inset 0 -2px 5px #0005,0 2px 5px #0005!important;
+}
+#bu35-family.bu-fw-gathering .bu35-pills button.active{
+  background:linear-gradient(175deg,#fff0bd 0%,#f6d88d 31%,#daae5d 80%,#c49349 100%)!important;
+  border-color:#fff3cd!important;
+  box-shadow:inset 0 2px 0 #fff6ce,inset 0 -3px 5px #ac782c55,
+    0 2px 8px #0009,0 0 0 1px #e6b86555!important;
+  text-shadow:0 1px #fff9!important;
+}
+#bu35-family.bu-fw-gathering details.bu35-note{
+  border-color:#d1b37a80!important;
+  background:linear-gradient(145deg,#0a3441,#082a37 82%)!important;
+  box-shadow:inset 0 1px #fbe4ab16!important;
+}
+#bu35-family.bu-fw-gathering details.bu35-note summary{
+  color:#f6d9a0!important;
+}
+#bu35-family.bu-fw-gathering #bu35-start{
+  border-color:#fff4c6!important;
+  background:linear-gradient(175deg,#fff2c3 0%,#ffe3a0 35%,#e2b767 68%,#bd8e45 100%)!important;
+  box-shadow:inset 0 2px 0 #fff5cf,inset 0 -4px 7px #a4722f7d,
+    0 5px 12px #000c,0 0 0 1px #ebc27763!important;
+  letter-spacing:.005em!important;
+}
+#bu35-family.bu-fw-gathering #bu35-start:active,
+#bu35-family.bu-fw-gathering .bu35-countbox button:active,
+#bu35-family.bu-fw-gathering .bu35-pills button:active,
+#bu35-family.bu-fw-gathering .bu-fw-selector:active{
+  transform:translateY(2px)!important;
+  box-shadow:inset 0 3px 9px #0008,0 1px 2px #0004!important;
+}
+@media(max-height:750px){
+  #bu35-family.bu-fw-gathering .bu35-people{margin-top:12px!important;margin-bottom:7px!important}
+}
