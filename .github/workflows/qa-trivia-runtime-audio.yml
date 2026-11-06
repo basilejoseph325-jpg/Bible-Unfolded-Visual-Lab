@@ -42,7 +42,7 @@ jobs:
                   audioContext:typeof audioContext,
                   sfxOn:typeof sfxOn==='undefined'?'undefined':sfxOn,
                   sfxVolume:typeof sfxVolume==='undefined'?'undefined':sfxVolume,
-                  facade:!!f,
+                  facade:typeof BUStage16TriviaLifecycle,
                   wrongScript:!!document.getElementById('bu-trivia-wrong-tone-v1'),
                   wrongScriptUrl:document.getElementById('bu-trivia-wrong-tone-v1')?.src,
                   loader:!!document.querySelector('script[src*="journey-progress-caption.js"]'),
@@ -63,7 +63,30 @@ jobs:
               });
               console.log('DIRECT_WRONG_TONE',JSON.stringify(tones));
               if(!tones.calls)throw new Error('Wrong tone did not create oscillators in a real browser');
-              console.log('PASS runtime script installed, two-note cue invoked using browser WebAudio');
+              const clickProbe=await page.evaluate(()=>{
+                const facade=BUStage16TriviaLifecycle;
+                const topicKeys=facade.getTopics();
+                const topics=Array.isArray(topicKeys)?topicKeys.slice(0,6):Object.keys(topicKeys||{}).slice(0,6);
+                const start=facade.getStart();
+                let error;
+                try{start('quick','all')}catch(e){error=String(e)}
+                const quiz=facade.getQuiz();
+                const q=quiz?.items?.[quiz.step];
+                if(!q)return {started:false,error,topics,quizType:typeof quiz};
+                const wrong=Array.from({length:q.choices.length},(_,i)=>i).find(i=>i!==q.correct);
+                const elem=document.querySelector('#bu34-trivia [data-answer="'+wrong+'"]');
+                const orig=window.AudioContext.prototype.createOscillator;
+                let oscillatorCalls=0;
+                window.AudioContext.prototype.createOscillator=function(...args){oscillatorCalls++;return orig.apply(this,args)};
+                try{
+                  if(elem)elem.click();else facade.getChoose()(wrong);
+                  return {started:true,wrong,correct:q.correct,domButton:!!elem,oscillatorCalls,afterAnswered:quiz.answered,wrongCount:quiz.bu383State?.[quiz.step]?.wrong??null,topics};
+                }finally{window.AudioContext.prototype.createOscillator=orig}
+              });
+              console.log('ACTUAL_TRIVIA_WRONG_CLICK',JSON.stringify(clickProbe));
+              if(!clickProbe.started||clickProbe.oscillatorCalls<2)throw new Error('Real wrong-answer click did not invoke two oscillator notes');
+              console.log('PASS real Trivia controller wrong-answer click generates two-note Web Audio');
+
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
