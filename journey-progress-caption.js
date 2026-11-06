@@ -148,3 +148,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    moved to existing Menu > How to Play. No Family Worship game logic changes. */
 (()=>{if(document.getElementById('bu-fw-gathering-css-v1'))return;const l=document.createElement('link');l.id='bu-fw-gathering-css-v1';l.rel='stylesheet';l.href='family-worship-gathering-v1.css?v=20261106-compact-gathering-v1';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bu-fw-gathering-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-gathering-js-v1';s.src='family-worship-gathering-v1.js?v=20261106-compact-gathering-v1';s.defer=true;document.head.appendChild(s)})();
+
+/* VISUAL LAB ONLY — Family Worship outer polish V2: pressed gold controls,
+   softly engraved card/hero edges and clear separation below +/- player count.
+   Keeps all V1 setup geometry and picker interiors unchanged. */
+(()=>{if(document.getElementById('bu-fw-outer-v2-css'))return;const l=document.createElement('link');l.id='bu-fw-outer-v2-css';l.rel='stylesheet';l.href='family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2';document.head.appendChild(l)})();
