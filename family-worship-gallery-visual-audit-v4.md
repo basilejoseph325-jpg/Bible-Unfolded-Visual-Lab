@@ -24,13 +24,13 @@
 
 Top-aligned focal crop implemented in `family-worship-gallery-crop-v4.css`. This helps where source has headroom. If the actual original artwork itself lacks the person's head, a replacement image is required; CSS cannot invent missing pixels.
 
-## Mismatched/duplicated scene replacements — NOT resolved by cropping
+## Mismatched/duplicated scene replacements — source improvements vs still pending
 - **Cain and Abel** — shares Eden's paradise image. Needs a depiction of Cain and Abel.
 - **Tower of Babel** — shares Eden's paradise image. Needs city/tower construction.
 - **Baby Moses** — shows the Red Sea crossing. Needs infant Moses in a basket by the Nile.
-- **Peter & Early Disciples** — currently shares **Jesus’ Resurrection**'s image (of the resurrected man); keep Jesus' Resurrection's approved relevant scene.
-- **Paul & Timothy** — shares Pentecost's picture. Needs distinct Paul and Timothy scene.
-- **Jesus’ Illustrations** — shares Jesus’ Ministry's picture. Needs distinct teaching/illustration scene.
+- **Peter & Early Disciples** — initial Lazarus/resurrection duplicate replaced with its own first-century good-news illustration asset (v4). **Needs user visual approval**.
+- **Paul & Timothy** — initial Pentecost duplicate replaced with its own Second Timothy-themed image (v4). **Needs user visual approval**.
+- **Jesus’ Illustrations** — the parable/illustration scene is retained; **Jesus’ Ministry** now uses a different Messiah-themed image (v4). **Needs user visual approval**.
 - **Elijah / Elisha** — identical fiery-chariot illustration. Requires distinct Elisha scene.
 - **Samuel** — uses same David/Goliath photo as **David**, additionally found in the duplicate audit.
 - **Future Promises / Bible Prophecy** — shares the same photo; consider separate art once priority issues complete.
@@ -39,4 +39,4 @@ Top-aligned focal crop implemented in `family-worship-gallery-crop-v4.css`. This
 - **Model Prayer**: current head/crop accepted.
 - **Jesus’ Early Life**: current reused photograph and crop accepted.
 
-**Do not replace an incorrect Bible scene with another misleading one.** Replacements must be independently appropriate before promotion. Current V4 crop-only patch does not claim to resolve these.
+**Do not replace an incorrect Bible scene with another misleading one.** Replacements must be independently appropriate before promotion. Current V4 patch makes 18 crop adjustments and replaces three duplicate source references, but it does not claim to resolve the incorrect-event art without proper scene-specific images.
