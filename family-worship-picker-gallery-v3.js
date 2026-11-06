@@ -2,7 +2,7 @@
  * Based on the earlier Trivia Together cinematic custom selectors.
  * Not a replacement of setup/page handlers: this only decorates the existing
  * #bu-fw-picker-layer after Family Worship's native-backed picker opens.
- * Photographs are isolated COPIES under family-worship-menu-art/v1/.
+ * Photographs are isolated COPIES under family-worship-menu-art/v1/ or /v4/.
  * Original Word Challenges/Scholar Research/Bible Book art is never edited.
  * Approved V2 exterior remains frozen. */
 (()=>{'use strict';
@@ -33,8 +33,8 @@
   "Jesus’ Early Life": "family-worship-menu-art/v1/topic-22-jesus-early-life.webp",
   "Jesus’ Illustrations": "family-worship-menu-art/v1/topic-23-jesus-illustrations.webp",
   "Jesus’ Miracles": "family-worship-menu-art/v1/topic-24-jesus-miracles.webp",
-  "Peter & Early Disciples": "family-worship-menu-art/v1/topic-25-peter-early-disciples.webp",
-  "Paul & Timothy": "family-worship-menu-art/v1/topic-26-paul-timothy.webp",
+  "Peter & Early Disciples": "family-worship-menu-art/v4/topic-25-peter-early-disciples.webp",
+  "Paul & Timothy": "family-worship-menu-art/v4/topic-26-paul-timothy.webp",
   "Samuel": "family-worship-menu-art/v1/topic-27-samuel.webp",
   "Jonah": "family-worship-menu-art/v1/topic-28-jonah.webp",
   "Nehemiah": "family-worship-menu-art/v1/topic-29-nehemiah.webp",
@@ -46,7 +46,7 @@
   "Jesus’ Resurrection": "family-worship-menu-art/v1/topic-35-jesus-resurrection.webp",
   "Future Promises": "family-worship-menu-art/v1/topic-36-future-promises.webp",
   "Jehovah’s Qualities": "family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp",
-  "Jesus’ Ministry": "family-worship-menu-art/v1/topic-38-jesus-ministry.webp",
+  "Jesus’ Ministry": "family-worship-menu-art/v4/topic-38-jesus-ministry.webp",
   "Kingdom & Armageddon": "family-worship-menu-art/v1/topic-39-kingdom-armageddon.webp",
   "Bible Prophecy": "family-worship-menu-art/v1/topic-40-bible-prophecy.webp",
   "Job & Integrity": "family-worship-menu-art/v1/topic-41-job-integrity.webp",
