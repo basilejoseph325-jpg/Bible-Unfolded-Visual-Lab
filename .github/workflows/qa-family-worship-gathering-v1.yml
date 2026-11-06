@@ -1,8 +1,9 @@
-name: QA Family Worship gathering setup Visual Lab
+name: QA Family Worship compact setup and outer finish V2
 on:
   push:
     paths:
       - 'family-worship-gathering-v1.css'
+      - 'family-worship-gathering-outer-v2.css'
       - 'family-worship-gathering-v1.js'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-family-worship-gathering-v1.yml'
@@ -23,6 +24,7 @@ jobs:
           assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
           assert 'family-worship-gathering-v1.js?v=20261106-compact-gathering-v1' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
+          assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
           print('PASS: standalone Visual Lab Family Worship setup, approved V5 sound still loaded')
           PY
       - name: Real mobile Chromium layout, native settings and custom menus
@@ -73,6 +75,8 @@ jobs:
                   body:rect('#bu35-body'),header:rect('#bu35-family .bu35-top'),
                   viewport:window.innerHeight,bodyClient:body.clientHeight,bodyScroll:body.scrollHeight,
                   beginVisible:rect('#bu35-start')?.bottom<=window.innerHeight+1,
+                  playerNameGap:(()=>{const n=document.querySelector('.bu35-people input')?.getBoundingClientRect(),controls=document.querySelector('.bu35-countbox')?.getBoundingClientRect();return n&&controls?Math.round(n.top-controls.bottom):null})(),
+                  exteriorLoaded:!!document.getElementById('bu-fw-outer-v2-css')&&getComputedStyle(document.querySelector('.bu35-card')).boxShadow.includes('rgba'),
                   selectedTime:document.querySelector('#bu35-time button.active')?.dataset.time,
                   selectedStyle:document.querySelector('#bu35-style button.active')?.dataset.style
                 };
@@ -80,7 +84,7 @@ jobs:
               const first=await inspect();
               console.log('INITIAL_SETUP',JSON.stringify(init));
               console.log('MOBILE_412x915',JSON.stringify(first));
-              if(!first.beginVisible||first.triggerCount!==2||first.hasParagraph||first.heroParagraph||!first.menuHelp)
+              if(!first.beginVisible||first.triggerCount!==2||first.hasParagraph||first.heroParagraph||!first.menuHelp||first.playerNameGap<8||!first.exteriorLoaded)
                 throw Error('Setup exceeds mobile viewport or instructional copy/custom selectors did not move');
               // The game can show a daily reward reminder over every other screen
               // on a fresh test browser; dismiss it before testing actual taps.
@@ -136,8 +140,23 @@ jobs:
               await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
               await new Promise(r=>setTimeout(r,240));
               const smaller=await inspect();console.log('MOBILE_390x844',JSON.stringify(smaller));
-              if(!smaller.beginVisible)throw Error('Begin Family Worship is below the 390x844 mobile viewport');
-              console.log('PASS compact Family Worship on phone: custom native-backed selectors, no setup instructions, menu help, original time/style controls, visible Begin button');
+              if(!smaller.beginVisible||smaller.playerNameGap<8)
+                throw Error('Begin button or +/- player-name clearance broken at 390x844');
+              // Adding players must not push Begin off-screen, even at maximum 6.
+              await page.evaluate(()=>{
+                for(let n=0;n<3;n++)document.querySelector('#bu35-plus')?.click();
+              });
+              await new Promise(r=>setTimeout(r,550));
+              const six=await inspect();console.log('MOBILE_390x844_SIX',JSON.stringify(six));
+              if(six.people!==6||six.playerNameGap<8||!six.beginVisible||six.bodyScroll>six.bodyClient+1)
+                throw Error('Six players caused overflow, button collision or broken native count');
+              // Removing players also preserves the compact visual geometry.
+              await page.evaluate(()=>document.querySelector('#bu35-minus')?.click());
+              await new Promise(r=>setTimeout(r,150));
+              const five=await inspect();console.log('MOBILE_FIVE',JSON.stringify(five));
+              if(five.people!==5||!five.beginVisible||five.playerNameGap<8)
+                throw Error('Minus button or player layout broken');
+              console.log('PASS V2: visible Begin for 2–6 players, gap below +/- buttons, native selections, custom menus and menu Help');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
