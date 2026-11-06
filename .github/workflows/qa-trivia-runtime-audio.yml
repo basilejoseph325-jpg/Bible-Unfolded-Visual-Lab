@@ -1,8 +1,10 @@
-name: QA Trivia runtime wrong-answer audio in browser
+name: QA Trivia real-browser correct and wrong feedback, balanced volume
 on:
   push:
     paths:
       - '.github/workflows/qa-trivia-runtime-audio.yml'
+      - 'trivia-wrong-tone-repair-v1.js'
+      - 'journey-progress-caption.js'
 permissions: {contents: read}
 jobs:
   inspect:
@@ -85,7 +87,54 @@ jobs:
               });
               console.log('ACTUAL_TRIVIA_WRONG_CLICK',JSON.stringify(clickProbe));
               if(!clickProbe.started||clickProbe.oscillatorCalls<2)throw new Error('Real wrong-answer click did not invoke two oscillator notes');
-              console.log('PASS real Trivia controller wrong-answer click generates two-note Web Audio');
+              const correctProbe=await page.evaluate(()=>{
+                const facade=BUStage16TriviaLifecycle,quiz=facade.getQuiz(),q=quiz?.items?.[quiz.step];
+                if(!q)return {started:false};
+                const element=document.querySelector('#bu34-trivia [data-answer="'+q.correct+'"]');
+                const orig=window.AudioContext.prototype.createOscillator;
+                let oscillatorCalls=0;
+                window.AudioContext.prototype.createOscillator=function(...args){oscillatorCalls++;return orig.apply(this,args)};
+                try{
+                  if(element)element.click();else facade.getChoose()(q.correct);
+                  return {started:true,domButton:!!element,oscillatorCalls,afterAnswered:quiz.answered,score:quiz.score};
+                }finally{window.AudioContext.prototype.createOscillator=orig}
+              });
+              console.log('ACTUAL_TRIVIA_CORRECT_CLICK',JSON.stringify(correctProbe));
+              if(!correctProbe.started||correctProbe.oscillatorCalls!==3||!correctProbe.afterAnswered)
+                throw new Error('Real correct-answer click must trigger 3 notes and complete the question');
+              const volumeProbe=await page.evaluate(()=>{
+                const orig=window.AudioContext.prototype.createOscillator;
+                const origGain=window.AudioContext.prototype.createGain;
+                const oldSetting=sfxVolume,oldEnabled=sfxOn;
+                let notes=0,peaks=[];
+                window.AudioContext.prototype.createOscillator=function(...args){notes++;return orig.apply(this,args)};
+                window.AudioContext.prototype.createGain=function(...args){
+                  const gain=origGain.apply(this,args),f=gain.gain.exponentialRampToValueAtTime.bind(gain.gain);
+                  gain.gain.exponentialRampToValueAtTime=(v,t)=>{if(v>.001)peaks.push(v);return f(v,t)};
+                  return gain;
+                };
+                function pair(volume,on){
+                  sfxVolume=volume;sfxOn=on;const start=notes,at=peaks.length;
+                  playChime();bu3846WrongTone();
+                  return {notes:notes-start,positive:peaks[at],negative:peaks[at+3]};
+                }
+                try{
+                  return {low:pair(20,true),high:pair(65,true),muted:pair(0,true),off:pair(65,false)};
+                }finally{
+                  sfxVolume=oldSetting;sfxOn=oldEnabled;
+                  window.AudioContext.prototype.createGain=origGain;
+                  window.AudioContext.prototype.createOscillator=orig;
+                }
+              });
+              console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
+              if(volumeProbe.low.notes!==5||volumeProbe.high.notes!==5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
+                throw new Error('Effects volume/mute did not control both chimes');
+              if(!(volumeProbe.low.positive>.035&&volumeProbe.low.negative>.035&&
+                   volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
+                throw new Error('Both chimes must be audible at 20% and scale with volume slider');
+              if(!(volumeProbe.low.negative/volumeProbe.low.positive>.9&&volumeProbe.high.negative/volumeProbe.high.positive>.9))
+                throw new Error('Positive and negative chimes are not balanced');
+              console.log('PASS browser Trivia wrong and correct answer clicks, louder balanced peaks, working slider & mute');
 
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
