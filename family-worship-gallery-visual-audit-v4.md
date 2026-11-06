@@ -40,3 +40,16 @@ Top-aligned focal crop implemented in `family-worship-gallery-crop-v4.css`. This
 - **Jesus’ Early Life**: current reused photograph and crop accepted.
 
 **Do not replace an incorrect Bible scene with another misleading one.** Replacements must be independently appropriate before promotion. Current V4 patch makes 18 crop adjustments and replaces three duplicate source references, but it does not claim to resolve the incorrect-event art without proper scene-specific images.
+
+## V5 existing-art audit — November 6, 2026
+
+Visually inspected labeled contact sheets containing 48 repository-original illustrations from the Bible Books, Story Adventure, and topic galleries (not merely filenames). Also compared both Visual Lab and live Story-Trails image inventories.
+
+- **Jesus’ Ministry — sourced and deployed to Visual Lab:** Original `06_the_messiah_v2.webp` clearly depicts Jesus actively teaching a crowd. An independent copy is saved at `family-worship-menu-art/v5/topic-38-jesus-ministry.webp`; only Family Worship's image mapping was updated.
+- **Elijah vs Elisha — not yet solved:** `bible-book-art/12_2_kings.webp` shows the fiery chariot and is suitable for Elijah. No dedicated clear illustration of Elisha found. Do not reuse the Elijah scene; create Elisha at the Jordan River with Elijah's mantle (2 Kings 2:13–14).
+- **Samuel — not yet solved:** `bible-book-art/09_1_samuel.webp` shows David and Goliath, not Samuel. No unambiguously Samuel-specific scene exists in the repository's available art. Create young Samuel at Shiloh, with Eli in the background (1 Samuel 3).
+- **Tower of Babel — not yet solved:** Genesis art and its Family Worship copy depict Eden/paradise. Other building scenes are from Jerusalem rebuilding, not Babel. Create an unmistakable ancient unfinished tower under construction with people carrying bricks and scaffolds (Genesis 11).
+- **Artwork safety:** Do not alter/repoint shared original image files. Each final new scene will use its own dedicated filename under Family Worship's isolated image directory.
+- **User approved exterior and previous accepted cards remain frozen**. Avoid presenting composite menu mockups as replacement image assets; each image needs to be a standalone cinematic card image without captions/UI baked in.
+
+No incorrect or generic substitute has been deployed for the three unsolved subjects.
