@@ -1,0 +1,70 @@
+name: QA Trivia runtime wrong-answer audio in browser
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-trivia-runtime-audio.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Boot local Visual Lab and inspect actual Chromium runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v google-chrome || command -v chromium || true
+          mkdir -p /tmp/bu-qa
+          npm install --prefix /tmp/bu-qa --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/bu-server.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-qa/node_modules/puppeteer-core');
+          const {execSync}=require('child_process');
+          (async()=>{
+            let browser;
+            try{
+              const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+              const page=await browser.newPage();
+              page.on('pageerror',e=>console.log('PAGEERROR',e.message.slice(0,500)));
+              page.on('console',msg=>{if(msg.type()==='error')console.log('CONSOLE_ERROR',msg.text().slice(0,500))});
+              await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await new Promise(r=>setTimeout(r,4500));
+              const status=await page.evaluate(()=>{
+                const f=window.BUStage16TriviaLifecycle;
+                return {
+                  page:location.href,
+                  repair:window.BU_TRIVIA_WRONG_TONE_REPAIR_V1||null,
+                  fn:typeof bu3846WrongTone,
+                  fnSource:typeof bu3846WrongTone==='function'?String(bu3846WrongTone).slice(0,250):'none',
+                  audioContext:typeof audioContext,
+                  sfxOn:typeof sfxOn==='undefined'?'undefined':sfxOn,
+                  sfxVolume:typeof sfxVolume==='undefined'?'undefined':sfxVolume,
+                  facade:!!f,
+                  wrongScript:!!document.getElementById('bu-trivia-wrong-tone-v1'),
+                  wrongScriptUrl:document.getElementById('bu-trivia-wrong-tone-v1')?.src,
+                  loader:!!document.querySelector('script[src*="journey-progress-caption.js"]'),
+                  bodyReady:!!document.querySelector('#bu34-trivia'),
+                  beginReady:!!document.getElementById('begin')
+                };
+              });
+              console.log('RUNTIME_STATUS',JSON.stringify(status));
+              if(!status.repair)throw new Error('Repair was not installed in real browser runtime');
+              const tones=await page.evaluate(async()=>{
+                const orig=window.AudioContext?.prototype?.createOscillator;
+                let calls=0;
+                if(orig)window.AudioContext.prototype.createOscillator=function(...a){calls++;return orig.apply(this,a)};
+                try{
+                  await new Promise(resolve=>{const btn=document.createElement('button');btn.textContent='test';btn.onclick=()=>{bu3846WrongTone();resolve()};document.body.appendChild(btn);btn.click();btn.remove()});
+                  return {calls,contextState:typeof context!=='undefined'?context?.state:'missing'}
+                }finally{if(orig)window.AudioContext.prototype.createOscillator=orig}
+              });
+              console.log('DIRECT_WRONG_TONE',JSON.stringify(tones));
+              if(!tones.calls)throw new Error('Wrong tone did not create oscillators in a real browser');
+              console.log('PASS runtime script installed, two-note cue invoked using browser WebAudio');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
