@@ -82,6 +82,15 @@ jobs:
               console.log('MOBILE_412x915',JSON.stringify(first));
               if(!first.beginVisible||first.triggerCount!==2||first.hasParagraph||first.heroParagraph||!first.menuHelp)
                 throw Error('Setup exceeds mobile viewport or instructional copy/custom selectors did not move');
+              // The game can show a daily reward reminder over every other screen
+              // on a fresh test browser; dismiss it before testing actual taps.
+              const reminder=await page.evaluate(()=>{
+                const d=document.querySelector('.daily-dialog');
+                const visible=!!(d&&d.getClientRects().length&&getComputedStyle(d).visibility!=='hidden');
+                if(visible)document.querySelector('#daily-close')?.click();
+                return {visible,dismissed:visible};
+              });
+              console.log('DAILY_REMINDER',JSON.stringify(reminder));
               // Native-backed level picker, use true UI click.
               const targetInfo=await page.evaluate(()=>{
                 const el=document.querySelector('.bu-fw-level .bu-fw-selector');
