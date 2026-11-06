@@ -1,0 +1,120 @@
+name: QA Family Worship gathering setup Visual Lab
+on:
+  push:
+    paths:
+      - 'family-worship-gathering-v1.css'
+      - 'family-worship-gathering-v1.js'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/qa-family-worship-gathering-v1.yml'
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and isolated script loader
+        run: |
+          node --check family-worship-gathering-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
+          assert 'family-worship-gathering-v1.js?v=20261106-compact-gathering-v1' in loader
+          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
+          print('PASS: standalone Visual Lab Family Worship setup, approved V5 sound still loaded')
+          PY
+      - name: Real mobile Chromium layout, native settings and custom menus
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/fw-test
+          npm install --prefix /tmp/fw-test --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/fw-server.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/fw-test/node_modules/puppeteer-core');
+          const {execSync}=require('child_process');
+          (async()=>{
+            let browser;
+            try{
+              const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              page.setDefaultTimeout(18000);
+              await page.setViewport({width:412,height:915,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.on('pageerror',e=>console.log('PAGEERROR',e.message.slice(0,220)));
+              page.on('console',m=>{if(m.type()==='error')console.log('CONSOLE_ERROR',m.text().slice(0,160))});
+              await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await new Promise(r=>setTimeout(r,3500));
+              const init=await page.evaluate(()=>{
+                bu35Open('hub');
+                document.querySelector('#bu35-new')?.click();
+                return {view:bu35View,quick:bu35Setup.quick,rootVisible:!document.querySelector('#bu35-family').hidden};
+              });
+              await page.waitForSelector('#bu35-family.bu-fw-gathering .bu-fw-selection-row',{timeout:20000});
+              const inspect=()=>page.evaluate(()=>{
+                const body=document.getElementById('bu35-body');
+                const rect=(sel)=>{const e=document.querySelector(sel);if(!e)return null;const r=e.getBoundingClientRect();return {y:Math.round(r.y),height:Math.round(r.height),bottom:Math.round(r.bottom),width:Math.round(r.width)}};
+                return {
+                  view:typeof bu35View==='undefined'?null:bu35View,
+                  hasParagraph:!!body.querySelector('.bu3826-level-wrap .bu35-muted'),
+                  heroParagraph:!!body.querySelector('.bu35-hero p'),
+                  menuHelp:!!document.querySelector('#help-dialog #bu-fw-help'),
+                  helpText:document.querySelector('#help-dialog #bu-fw-help')?.innerText.slice(0,280),
+                  nativeTopic:document.querySelector('#bu35-topic')?.value,
+                  nativeLevel:document.querySelector('#bu3826-level')?.value,
+                  triggerCount:body.querySelectorAll('.bu-fw-selector').length,
+                  timeButtons:body.querySelectorAll('#bu35-time [data-time]').length,
+                  people:body.querySelectorAll('.bu35-people input').length,
+                  begin:rect('#bu35-start'),hero:rect('#bu35-body .bu35-hero'),
+                  card:rect('#bu35-body .bu35-card'),
+                  body:rect('#bu35-body'),header:rect('#bu35-family .bu35-top'),
+                  viewport:window.innerHeight,bodyClient:body.clientHeight,bodyScroll:body.scrollHeight,
+                  beginVisible:rect('#bu35-start')?.bottom<=window.innerHeight+1,
+                  selectedTime:document.querySelector('#bu35-time button.active')?.dataset.time,
+                  selectedStyle:document.querySelector('#bu35-style button.active')?.dataset.style
+                };
+              });
+              const first=await inspect();
+              console.log('INITIAL_SETUP',JSON.stringify(init));
+              console.log('MOBILE_412x915',JSON.stringify(first));
+              if(!first.beginVisible||first.triggerCount!==2||first.hasParagraph||first.heroParagraph||!first.menuHelp)
+                throw Error('Setup exceeds mobile viewport or instructional copy/custom selectors did not move');
+              // Native-backed level picker, use true UI click.
+              await page.click('.bu-fw-level .bu-fw-selector');
+              await page.waitForSelector('#bu-fw-picker-layer');
+              const levels=await page.$$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.map(b=>b.textContent.trim()));
+              console.log('LEVEL_CHOICES',JSON.stringify(levels));
+              if(levels.length<4)throw Error('No custom level options');
+              await page.evaluate(()=>document.querySelector('#bu-fw-picker-layer .bu-fw-picker-option:last-child').click());
+              let after=await inspect();
+              if(!after.nativeLevel||after.triggerCount!==2)throw Error('Native level control was lost');
+              // Native topic picker.
+              await page.click('.bu-fw-topic .bu-fw-selector');
+              await page.waitForSelector('#bu-fw-picker-layer');
+              const count=await page.$$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.length);
+              console.log('TOPIC_CHOICES',count);
+              if(count<5)throw Error('No custom Bible topics');
+              await page.keyboard.press('Escape');
+              // Re-render tests: time and style button should preserve personal names and selectors.
+              await page.evaluate(()=>{
+                document.querySelector('#bu35-time [data-time="30"]')?.click();
+                document.querySelector('#bu35-style [data-style="friendly"]')?.click();
+              });
+              await new Promise(r=>setTimeout(r,550));
+              after=await inspect();
+              console.log('AFTER_NATIVE_OPTIONS',JSON.stringify(after));
+              if(after.selectedTime!=='30'||after.selectedStyle!=='friendly'||after.triggerCount!==2)
+                throw Error('Session time/style or selector re-render broken');
+              // Narrow phone: make sure Begin stays above fold at 390x844.
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await new Promise(r=>setTimeout(r,240));
+              const smaller=await inspect();console.log('MOBILE_390x844',JSON.stringify(smaller));
+              if(!smaller.beginVisible)throw Error('Begin Family Worship is below the 390x844 mobile viewport');
+              console.log('PASS compact Family Worship on phone: custom native-backed selectors, no setup instructions, menu help, original time/style controls, visible Begin button');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
