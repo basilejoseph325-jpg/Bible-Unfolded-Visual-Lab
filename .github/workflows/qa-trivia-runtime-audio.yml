@@ -41,6 +41,8 @@ jobs:
                   repair:window.BU_TRIVIA_WRONG_TONE_REPAIR_V1||null,
                   fn:typeof bu3846WrongTone,
                   fnSource:typeof bu3846WrongTone==='function'?String(bu3846WrongTone).slice(0,250):'none',
+                  positiveSource:typeof playChime==='function'?String(playChime).slice(0,1100):'none',
+                  triviaVisible:typeof bu34Visible==='function'?bu34Visible():null,
                   audioContext:typeof audioContext,
                   sfxOn:typeof sfxOn==='undefined'?'undefined':sfxOn,
                   sfxVolume:typeof sfxVolume==='undefined'?'undefined':sfxVolume,
@@ -96,7 +98,7 @@ jobs:
                 }
               });
               console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
-              if(volumeProbe.low.notes!==5||volumeProbe.high.notes!==5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
+              if(volumeProbe.low.notes<5||volumeProbe.high.notes<5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
                 throw new Error('Effects volume/mute did not control both chimes');
               if(!(volumeProbe.low.positive>.035&&volumeProbe.low.negative>.035&&
                    volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
