@@ -1,4 +1,4 @@
-name: QA Trivia existing wrong-answer two-note audio restoration
+name: QA Trivia balanced louder correct and wrong answer audio
 on:
   push:
     paths:
@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Check syntax, old sound path and zero changes to approved sinking effect
+      - name: Verify audio syntax and established Trivia artwork and tactile press stay intact
         shell: bash
         run: |
           set -euo pipefail
@@ -24,43 +24,55 @@ jobs:
           s=Path('trivia-wrong-tone-repair-v1.js').read_text()
           loader=Path('journey-progress-caption.js').read_text()
           press=Path('trivia-stone-press-v1.js').read_text()
-          assert 'bu3846WrongTone=restoredTriviaWrongTone' in s
-          assert 'audioContext()' in s and '[392,329.63]' in s
-          assert 'Number(sfxVolume)<=0' in s and '!sfxOn' in s
-          assert 'playChime' not in s.replace('playChime,','')
-          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-original-soft-cue-v1' in loader
+          assert 'playChime=function balancedTriviaCorrectTone' in s
+          assert 'bu3846WrongTone=function balancedTriviaWrongTone' in s
+          assert '[392,493.88,587.33]' in s and '[392,329.63]' in s
+          assert "typeof bu34Visible==='function'" in s
+          assert 'audioContext()' in s and '!sfxOn' in s
+          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-balanced-feedback-v2' in loader
           assert 'trivia-stone-press-v1.js?v=20261106-pressed-feedback-v1' in loader
           assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in loader
           assert "const selector='#bu34-trivia" in press
-          print('PASS: isolated legacy Trivia tone repair and original stone press retained')
+          print('PASS: V2 cues, SFX controls and unchanged stone press loader')
           PY
-      - name: Simulate SFX toggle, audio context initialization and soft descending notes
+      - name: Simulate loudness, balance, slider mute, Effects mute and non-Trivia success
         shell: bash
         run: |
           node <<'JS'
           const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
           const code=fs.readFileSync('trivia-wrong-tone-repair-v1.js','utf8');
-          const played=[],peaks=[];let initialized=0,originalCalled=0;
+          const played=[],peaks=[];let originalCorrect=0,originalWrong=0;
           const ac={
             state:'running',currentTime:10,destination:{},
-            createOscillator(){const osc={type:null,frequency:{setValueAtTime(f){osc.frequencyHz=f}},
-              connect(){},start(t){played.push({hz:osc.frequencyHz,at:t})},stop(){},disconnect(){}};return osc;},
-            createGain(){return{gain:{setValueAtTime(){},exponentialRampToValueAtTime(v){peaks.push(v)}},connect(){},disconnect(){}}}
+            createOscillator(){const osc={frequency:{setValueAtTime(f){osc.hz=f}},connect(){},start(){played.push(osc.hz)},stop(){},disconnect(){}};return osc},
+            createGain(){return {gain:{setValueAtTime(){},exponentialRampToValueAtTime(v){if(v>.001)peaks.push(v)}},connect(){},disconnect(){}}}
           };
           const ctx={window:{},document:{hidden:false,readyState:'complete',addEventListener(){}},
             sfxOn:true,sfxVolume:65,
-            bu3846WrongTone(){originalCalled++},
-            audioContext(){initialized++;return ac},
+            bu34Visible(){return true},
+            bu3846WrongTone(){originalWrong++},
+            playChime(){originalCorrect++},
+            audioContext(){return ac},
             setTimeout(){}};
           vm.runInNewContext(code,ctx);
+          assert.equal(ctx.window.BU_TRIVIA_FEEDBACK_AUDIO_V2.version,'2026-11-06-balanced-v2');
+          ctx.playChime();
+          assert.deepEqual(played.slice(0,3),[392,493.88,587.33]);
+          const positive=peaks[0];assert(positive>.09&&positive<.10);
           ctx.bu3846WrongTone();
-          assert.equal(initialized,1);
-          assert.equal(originalCalled,0);
-          assert.equal(played.length,2);
-          assert.deepEqual(played.map(x=>x.hz),[392,329.63]);
-          assert(peaks.some(v=>v>.04 && v<.075),'Wrong cue too quiet or too loud');
-          ctx.sfxOn=false;ctx.bu3846WrongTone();assert.equal(played.length,2);
-          ctx.sfxOn=true;ctx.sfxVolume=0;ctx.bu3846WrongTone();assert.equal(played.length,2);
-          ctx.sfxVolume=65;ctx.document.hidden=true;ctx.bu3846WrongTone();assert.equal(played.length,2);
-          console.log('PASS: same original two notes, no duplicate native tone, Effects/volume honored');
+          assert.deepEqual(played.slice(3,5),[392,329.63]);
+          const negative=peaks[3];assert(negative>.085&&negative<.095);
+          assert(negative/positive>.90&&negative/positive<1.1);
+          assert.equal(originalCorrect,0);assert.equal(originalWrong,0);
+          const before=played.length;
+          ctx.sfxVolume=0;ctx.playChime();ctx.bu3846WrongTone();assert.equal(played.length,before);
+          ctx.sfxVolume=65;ctx.sfxOn=false;ctx.playChime();ctx.bu3846WrongTone();assert.equal(played.length,before);
+          ctx.sfxOn=true;ctx.sfxVolume=20;ctx.playChime();ctx.bu3846WrongTone();
+          assert.equal(played.length,before+5);
+          const lowPositive=peaks[5],lowNegative=peaks[8];
+          assert(lowPositive<positive&&lowPositive>.035);
+          assert(lowNegative<negative&&lowNegative>.035);
+          ctx.bu34Visible=()=>false;ctx.playChime();
+          assert.equal(originalCorrect,1);
+          console.log('PASS: positive 3 notes and negative 2 notes balanced; SFX slider and mute work; other modes unchanged');
           JS
