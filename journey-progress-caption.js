@@ -137,7 +137,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{if(document.getElementById('bu-trivia-stone-press-js-v1'))return;const s=document.createElement('script');s.id='bu-trivia-stone-press-js-v1';s.src='trivia-stone-press-v1.js?v=20261106-pressed-feedback-v1';s.defer=true;document.head.appendChild(s)})();
 
 
-/* VISUAL LAB ONLY — repair silent pre-existing Trivia wrong-answer cue.
-   Uses existing success-chime AudioContext setup and original descending
-   392/329.63Hz sine notes with audible but gentle volume. No second SFX. */
-(()=>{if(document.getElementById('bu-trivia-wrong-tone-v1'))return;const s=document.createElement('script');s.id='bu-trivia-wrong-tone-v1';s.src='trivia-wrong-tone-repair-v1.js?v=20261106-original-soft-cue-v1';s.defer=true;document.head.appendChild(s)})();
+/* VISUAL LAB ONLY — balance positive and negative Trivia chimes at louder levels.
+   Uses shared AudioContext, original rising success and descending incorrect
+   notes with increased balanced volume. Existing Effects control retained. */
+(()=>{if(document.getElementById('bu-trivia-wrong-tone-v1'))return;const s=document.createElement('script');s.id='bu-trivia-wrong-tone-v1';s.src='trivia-wrong-tone-repair-v1.js?v=20261106-balanced-feedback-v2';s.defer=true;document.head.appendChild(s)})();
