@@ -160,7 +160,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    menu style; all 42 topic + 4 level images are private immutable copies
    under family-worship-menu-art/v1 (no other mode's assets modified). */
 (()=>{if(document.getElementById('bu-fw-gallery-v3-css'))return;const l=document.createElement('link');l.id='bu-fw-gallery-v3-css';l.rel='stylesheet';l.href='family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-fw-gallery-v3-js'))return;const s=document.createElement('script');s.id='bu-fw-gallery-v3-js';s.src='family-worship-picker-gallery-v3.js?v=20261106-cropped-gallery-art-v4';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-fw-gallery-v3-js'))return;const s=document.createElement('script');s.id='bu-fw-gallery-v3-js';s.src='family-worship-picker-gallery-v3.js?v=20261106-ministry-scene-v5';s.defer=true;document.head.appendChild(s)})();
 
 /* VISUAL LAB ONLY — Family Worship headroom correction V4.
    Affects only 18 specifically reported topic-card image focal points;
