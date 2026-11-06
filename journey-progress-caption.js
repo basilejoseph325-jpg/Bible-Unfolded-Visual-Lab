@@ -137,7 +137,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{if(document.getElementById('bu-trivia-stone-press-js-v1'))return;const s=document.createElement('script');s.id='bu-trivia-stone-press-js-v1';s.src='trivia-stone-press-v1.js?v=20261106-pressed-feedback-v1';s.defer=true;document.head.appendChild(s)})();
 
 
-/* VISUAL LAB ONLY — keep approved positive sound and make negative Trivia cue audible on phones.
+/* VISUAL LAB ONLY — keep the approved positive chime and strengthen the negative two-note cue on phone speakers.
    Uses shared AudioContext, original rising success and descending incorrect
    notes with increased balanced volume. Existing Effects control retained. */
-(()=>{if(document.getElementById('bu-trivia-wrong-tone-v1'))return;const s=document.createElement('script');s.id='bu-trivia-wrong-tone-v1';s.src='trivia-wrong-tone-repair-v1.js?v=20261106-phone-speaker-negative-v4';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-trivia-wrong-tone-v1'))return;const s=document.createElement('script');s.id='bu-trivia-wrong-tone-v1';s.src='trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5';s.defer=true;document.head.appendChild(s)})();
