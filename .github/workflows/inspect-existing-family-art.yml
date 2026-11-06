@@ -1,0 +1,97 @@
+name: Visual Lab inspect existing art for Family Worship scene corrections
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-existing-family-art.yml'
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Make read-only labeled contact sheets of existing art (no original edits)
+        run: |
+          python -m pip install --quiet pillow
+          python - <<'PY'
+          from PIL import Image, ImageOps, ImageDraw, ImageFont
+          from pathlib import Path
+          import io,base64
+          groups={
+            'biblical_book_and_story_art':[
+              'bible-book-art/01_genesis.webp',
+              'bible-book-art/09_1_samuel.webp',
+              'bible-book-art/10_2_samuel.webp',
+              'bible-book-art/11_1_kings.webp',
+              'bible-book-art/12_2_kings.webp',
+              'bible-book-art/13_1_chronicles.webp',
+              'bible-book-art/14_2_chronicles.webp',
+              'bible-book-art/23_isaiah.webp',
+              'bible-book-art/40_matthew.webp',
+              'bible-book-art/41_mark.webp',
+              'bible-book-art/42_luke.webp',
+              'bible-book-art/43_john.webp',
+              'bible-book-art/44_acts.webp',
+              'bible-book-art/54_1_timothy.webp',
+              'bible-book-art/55_2_timothy.webp',
+              'bible-book-art/07_judges.webp',
+              'bible-book-art/08_ruth.webp',
+              'bible-book-art/16_nehemiah.webp',
+              'bible-book-art/38_zechariah.webp',
+              'bible-book-art/39_malachi.webp',
+              'bible-book-art/06_joshua.webp',
+              'bible-book-art/04_numbers.webp',
+              'bible-book-art/15_ezra.webp',
+              'bible-book-art/26_ezekiel.webp'
+            ],
+            'historical_and_journey_art':[
+              '01-in-the-beginning.jpg',
+              '01_the_beginning_v2.webp',
+              '02_faith_promises_v2.webp',
+              '04-courage-and-kindness.jpg',
+              '04_judges_kings_v2.webp',
+              '05-journeys-and-turning-points.jpg',
+              '05_exile_return_v2.webp',
+              '06_the_messiah_v2.webp',
+              '07_good_news_spreads_v2.webp',
+              '08-prophets-and-surprises.jpg',
+              '10-what-jesus-taught.jpg',
+              '11-the-first-century-journey.jpg',
+              '12-ancient-messages.jpg',
+              '13-abraham-promises-and-places.jpg',
+              'journey-art/01_the_beginning.webp',
+              'journey-art/02_faith_promises.webp',
+              'journey-art/04_judges_kings.webp',
+              'journey-art/05_exile_return.webp',
+              'journey-art/06_the_messiah.webp',
+              'journey-art/07_good_news_spreads.webp',
+              'scholar-research-assets/hero.webp',
+              'scholar-research-assets/witness-history.webp',
+              'scholar-research-assets/heroes-of-courage.webp',
+              'scholar-research-assets/courage-and-faith.webp'
+            ]
+          }
+          for title, files in groups.items():
+            cw,ch=264,170
+            w,h=6*cw,4*ch
+            sheet=Image.new('RGB',(w,h),'#152631')
+            d=ImageDraw.Draw(sheet)
+            for i,name in enumerate(files):
+              p=Path(name)
+              if not p.exists():print('MISSING',name);continue
+              img=Image.open(p).convert('RGB')
+              img.thumbnail((cw-12,ch-35))
+              x=(i%6)*cw;y=(i//6)*ch
+              d.rectangle((x,y,x+cw-1,y+ch-1),outline='#bca67f',width=1)
+              xx=x+6+(cw-12-img.width)//2
+              yy=y+5+(ch-35-img.height)//2
+              sheet.paste(img,(xx,yy))
+              txt=name.replace('bible-book-art/','book/').replace('journey-art/','journey/').replace('scholar-research-assets/','scholar/')
+              if len(txt)>32:txt=txt[:30]+'..'
+              d.text((x+6,y+ch-27),txt,fill='#fff0ba')
+            b=io.BytesIO();sheet.save(b,format='JPEG',quality=72,optimize=True)
+            encoded=base64.b64encode(b.getvalue()).decode()
+            print('CONTACTSHEET',title,'BASE64_BEGIN',encoded,'BASE64_END')
+            print('CONTACTSHEET_SIZE',title,len(encoded))
+          PY
