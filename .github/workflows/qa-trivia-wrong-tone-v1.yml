@@ -1,4 +1,4 @@
-name: QA Trivia louder correct and wrong feedback (original chime preserved)
+name: QA Trivia phone-audible negative tone with preserved correct chime
 on:
   push:
     paths:
@@ -29,7 +29,7 @@ jobs:
           assert 'sfxVolume=Math.min(100,originalSetting*1.5)' in s
           assert 'bu3846WrongTone=function balancedTriviaWrongTone' in s
           assert '[392,329.63]' in s
-          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-preserved-chime-louder-v3' in loader
+          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-phone-speaker-negative-v4' in loader
           assert 'trivia-stone-press-v1.js?v=20261106-pressed-feedback-v1' in loader
           assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in loader
           assert "const selector='#bu34-trivia" in press
@@ -54,20 +54,20 @@ jobs:
             playChime(){oldCorrect++;correctVolumes.push(ctx.sfxVolume)},
             audioContext(){return ac},setTimeout(){}};
           vm.runInNewContext(fs.readFileSync('trivia-wrong-tone-repair-v1.js','utf8'),ctx);
-          assert.equal(ctx.window.BU_TRIVIA_FEEDBACK_AUDIO_V2.version,'2026-11-06-balanced-v3');
+          assert.equal(ctx.window.BU_TRIVIA_FEEDBACK_AUDIO_V2.version,'2026-11-06-phone-audible-v4');
           ctx.playChime();
           assert.equal(oldCorrect,1);assert.equal(correctVolumes[0],97.5);
           assert.equal(ctx.sfxVolume,65,'global SFX slider setting was not restored');
           ctx.bu3846WrongTone();
-          assert.deepEqual(played,[392,329.63]);
-          assert(peaks[0]>.11&&peaks[0]<.13,'Negative cue is still too quiet');
+          assert.deepEqual(played,[392,784,329.63,659.26]);
+          assert(peaks[0]>.35&&peaks[0]<.40,'Negative cue is still too quiet');
           ctx.sfxVolume=20;ctx.playChime();ctx.bu3846WrongTone();
-          assert.equal(correctVolumes[1],30);assert.equal(played.length,4);
-          assert(peaks[2]>.05&&peaks[2]<peaks[0]);
+          assert.equal(correctVolumes[1],30);assert.equal(played.length,8);
+          assert(peaks[4]>.20&&peaks[4]<peaks[0]);
           ctx.sfxOn=false;ctx.playChime();ctx.bu3846WrongTone();
-          assert.equal(played.length,4);
+          assert.equal(played.length,8);
           ctx.sfxOn=true;ctx.sfxVolume=0;ctx.playChime();ctx.bu3846WrongTone();
-          assert.equal(played.length,4);
+          assert.equal(played.length,8);
           ctx.sfxVolume=65;playing=false;ctx.playChime();
           assert.equal(correctVolumes[4],65,'Non-Trivia correct chime volume was altered');
           console.log('PASS: approved positive melody called with 1.5x temporary gain, negative louder, original setting restored, mute and other modes respected');
