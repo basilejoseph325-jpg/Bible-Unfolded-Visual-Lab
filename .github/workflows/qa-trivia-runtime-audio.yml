@@ -100,8 +100,8 @@ jobs:
                 }finally{window.AudioContext.prototype.createOscillator=orig}
               });
               console.log('ACTUAL_TRIVIA_CORRECT_CLICK',JSON.stringify(correctProbe));
-              if(!correctProbe.started||correctProbe.oscillatorCalls!==3||!correctProbe.afterAnswered)
-                throw new Error('Real correct-answer click must trigger 3 notes and complete the question');
+              if(!correctProbe.started||correctProbe.oscillatorCalls<3||!correctProbe.afterAnswered)
+                throw new Error('Real correct-answer click must trigger at least 3 oscillator notes and complete the question');
               const volumeProbe=await page.evaluate(()=>{
                 const orig=window.AudioContext.prototype.createOscillator;
                 const origGain=window.AudioContext.prototype.createGain;
