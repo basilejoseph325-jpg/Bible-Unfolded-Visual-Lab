@@ -11,24 +11,26 @@ jobs:
     timeout-minutes: 3
     steps:
       - uses: actions/checkout@v4
-      - name: Find current Trivia click handler, sound branching and global sound adapter
+      - name: Trace exact v3.8.49 wrong tone, all callers, audio context and wrapper
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),Path('premium-sfx.js'),Path('trivia-stone-press-v1.js')]
+          files=[Path('index.html'),Path('bible_unfolded_core_part5.js'),Path('premium-sfx.js'),Path('trivia-stone-press-v1.js')]
+          patterns=['function bu3846WrongTone','bu3846WrongTone(', 'function bu34Choose(', 'bu34Choose=function', 'bu34Choose = function', 'function bu34Next(', 'window.BUQuestionFeedbackOverlay=', 'BUQuestionFeedbackOverlay=','let context=', 'var context=', 'const context=', 'function getAudioContext', 'function playCorrect','function successSound']
           for p in files:
             if not p.exists():continue
             s=p.read_text(encoding='utf8',errors='replace')
             print('FILE',p,len(s),flush=True)
-            for key in ['bu34-answer','bu34Choose','bu34Answer','bu34Try','bu34Pick','bu34Tap','bu34Render','bu34Submit','bu34-question','bu65-sfx','wrongSound','soundWrong','playWrong','sfxWrong','triviaWrong','correctSound']:
-              indices=[m.start() for m in re.finditer(re.escape(key),s,re.I)]
-              if not indices:continue
-              print('TERM',key,'COUNT',len(indices),flush=True)
-              for at in indices[:5]:
-                chunk=s[max(0,at-700):min(len(s),at+1100)]
-                chunk=re.sub(r'base64,[A-Za-z0-9+/=]{100,}','base64,[omitted audio/photo]',chunk)
-                print('AT',at,repr(chunk)[:1950],flush=True)
-            print('END FILE',p,flush=True)
+            for pat in patterns:
+              hits=[m.start() for m in re.finditer(re.escape(pat),s)]
+              if not hits:continue
+              print('PATTERN',repr(pat),'MATCHES',len(hits),flush=True)
+              for at in hits[:4]:
+                start=max(0,at-450);end=min(len(s),at+5100)
+                excerpt=s[start:end]
+                excerpt=re.sub(r'base64,[A-Za-z0-9+/=]{120,}','base64,[omitted]',excerpt)
+                print('AT',at,'TEXT',repr(excerpt)[:6000],flush=True)
+          print('END FILE',p,flush=True)
           PY
