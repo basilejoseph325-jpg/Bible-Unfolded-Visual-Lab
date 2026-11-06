@@ -1,0 +1,144 @@
+name: QA Family Worship V3 isolated photographic picker galleries
+on:
+  push:
+    paths:
+      - 'family-worship-picker-gallery-v3.js'
+      - 'family-worship-picker-gallery-v3.css'
+      - 'family-worship-menu-art/**'
+      - 'journey-progress-caption.js'
+      - '.github/workflows/qa-family-worship-picker-gallery-v3.yml'
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify 46 isolated artwork copies and JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check family-worship-picker-gallery-v3.js
+          node --check family-worship-gathering-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          d=Path('family-worship-menu-art/v1')
+          files=sorted(x for x in d.iterdir() if x.suffix in ('.jpg','.webp'))
+          assert len(files)==46,f'expected 42 topic + four level image copies, found {len(files)}'
+          assert len([x for x in files if x.name.startswith('topic-')])==42
+          assert len([x for x in files if x.name.startswith('level-')])==4
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'family-worship-picker-gallery-v3.js?v=20261106-topic-level-gallery-v3' in loader
+          assert 'family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3' in loader
+          assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
+          assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
+          assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
+          print('PASS: 46 private image file paths, frozen V2 exterior, unchanged approved Trivia audio')
+          PY
+      - name: Real mobile Chrome topic and level menu interactions
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-fw-gallery --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/bu-fw-gallery-http.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-fw-gallery/node_modules/puppeteer-core');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              const exe=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({executablePath:exe,headless:true,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.setDefaultTimeout(17000);
+              page.on('pageerror',err=>console.log('PAGEERROR',err.message.slice(0,300)));
+              page.on('console',msg=>{if(msg.type()==='error')console.log('CONSOLE_ERROR',msg.text().slice(0,250))});
+              await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await new Promise(r=>setTimeout(r,2300));
+              await page.evaluate(()=>{bu35Open('hub');document.getElementById('bu35-new').click();document.getElementById('daily-close')?.click()});
+              await page.waitForSelector('#bu35-family.bu-fw-gathering #bu35-start');
+              await page.click('.bu-fw-topic .bu-fw-selector');
+              await page.waitForSelector('#bu-fw-picker-layer[data-bu-fw-gallery="topic"] .bu-fw-gallery-card');
+              let topic=await page.evaluate(()=>{
+                const options=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')];
+                const noah=options.find(el=>el.textContent.includes('Noah and the Ark'));
+                const photos=options.map(el=>el.dataset.buFwArt).filter(Boolean);
+                return {
+                  count:options.length,photoCount:photos.length,uniquePaths:new Set(photos).size,
+                  allPrivate:photos.every(x=>x.startsWith('family-worship-menu-art/v1/')),
+                  noahArt:noah?.dataset.buFwArt,
+                  searchVisible:!!document.querySelector('#bu-fw-picker-layer .bu-fw-picker-search'),
+                  picked:document.querySelector('#bu35-topic')?.value,
+                  dialogHeight:document.querySelector('.bu-fw-picker-dialog')?.getBoundingClientRect().height,
+                  viewport:innerHeight,
+                  noahLegacyClass:!!noah?.classList.contains('bu-word-challenge-card')
+                };
+              });
+              console.log('TOPIC_GALLERY',JSON.stringify(topic));
+              if(topic.count!==42||topic.photoCount!==42||topic.uniquePaths!==42||!topic.allPrivate||!topic.noahArt?.includes('topic-09')||!topic.searchVisible)
+                throw Error('Photo picker missing topic images, isolation or search');
+              const fail=await page.evaluate(async()=>{
+                const paths=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')].map(x=>x.dataset.buFwArt);
+                const errors=[];
+                for(const path of paths){const response=await fetch(path,{method:'HEAD'});if(!response.ok)errors.push({path,status:response.status})}
+                return errors;
+              });
+              console.log('TOPIC_IMAGE_FETCH_ERRORS',JSON.stringify(fail));
+              if(fail.length)throw Error('Isolated topic image file missing');
+              // Scroll to Noah, ensure the isolated Noah image is rendered above the legacy background.
+              await page.evaluate(()=>{
+                const el=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')].find(x=>x.textContent.includes('Noah and the Ark'));
+                el.scrollIntoView({block:'center'});
+              });
+              await new Promise(r=>setTimeout(r,180));
+              const noah=await page.evaluate(()=>{
+                const el=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')].find(x=>x.textContent.includes('Noah and the Ark'));
+                const image=el?.querySelector('.bu-fw-gallery-photo');
+                return {photo: getComputedStyle(image).backgroundImage,backgroundWidth:image?.getBoundingClientRect().width,
+                  title:el?.querySelector('.bu-fw-gallery-label')?.textContent,legacy:el?.classList.contains('bu-word-challenge-card')};
+              });
+              console.log('NOAH_PHOTO',JSON.stringify(noah));
+              if(!noah.photo.includes('topic-09-noah-and-the-ark.jpg')||noah.backgroundWidth<100||noah.legacy)
+                throw Error('Existing Noah card conflicted with isolated V3 photo');
+              // Searching and changing the native topic must work.
+              await page.evaluate(()=>{
+                const input=document.querySelector('#bu-fw-picker-layer .bu-fw-picker-search');
+                input.value='Daniel';input.dispatchEvent(new Event('input',{bubbles:true}));
+              });
+              await page.waitForFunction(()=>document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option').length===1);
+              await page.waitForSelector('#bu-fw-picker-layer .bu-fw-gallery-card[data-bu-fw-art]');
+              await page.click('#bu-fw-picker-layer .bu-fw-picker-option');
+              const choice=await page.evaluate(()=>({topic:document.querySelector('#bu35-topic')?.selectedOptions?.[0]?.textContent.trim(),modalOpen:!!document.getElementById('bu-fw-picker-layer')}));
+              console.log('NATIVE_TOPIC_CHANGE',JSON.stringify(choice));
+              if(choice.topic!=='Daniel'||choice.modalOpen)throw Error('Native topic select interaction broken');
+              // All four difficulty options have independent pictures.
+              await page.click('.bu-fw-level .bu-fw-selector');
+              await page.waitForSelector('#bu-fw-picker-layer[data-bu-fw-gallery="level"] .bu-fw-gallery-card');
+              const levels=await page.evaluate(()=>({
+                labels:[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-gallery-label')].map(x=>x.textContent.trim()),
+                art:[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-gallery-card')].map(x=>x.dataset.buFwArt)
+              }));
+              console.log('LEVEL_GALLERY',JSON.stringify(levels));
+              if(levels.labels.join('|')!=='Beginner|Intermediate|Advanced|Expert'||!levels.art.every(x=>x.startsWith('family-worship-menu-art/v1/level-')))
+                throw Error('Difficulty gallery incomplete');
+              await page.evaluate(()=>document.querySelector('#bu-fw-picker-layer .bu-fw-gallery-card:last-child')?.click());
+              const lvl=await page.evaluate(()=>({difficulty:document.querySelector('#bu3826-level')?.value,btn:!!document.getElementById('bu35-start')}));
+              console.log('NATIVE_LEVEL_CHANGE',JSON.stringify(lvl));
+              if(lvl.difficulty!=='expert')throw Error('Difficulty selection not connected to native settings');
+              // Six-player test, with no scroll or exterior change.
+              await page.evaluate(()=>{for(let i=0;i<4;i++)document.querySelector('#bu35-plus')?.click()});
+              await new Promise(r=>setTimeout(r,250));
+              const six=await page.evaluate(()=>{
+                const body=document.getElementById('bu35-body'),start=document.getElementById('bu35-start'),names=body.querySelectorAll('.bu35-people input');
+                return {people:names.length,scroll:body.scrollHeight-body.clientHeight,startBottom:start.getBoundingClientRect().bottom,viewport:innerHeight,exteriorCss:!!document.getElementById('bu-fw-outer-v2-css')};
+              });
+              console.log('SIX_PLAYER_EXTERIOR',JSON.stringify(six));
+              if(six.people!==6||six.scroll>1||six.startBottom>six.viewport||!six.exteriorCss)throw Error('Frozen exterior no-scroll behavior regressed');
+              console.log('PASS Family Worship V3: 42 private topic photos, 4 level scenes, search, native selection, isolated Noah, six-player no-scroll layout');
+            }catch(err){console.error('FAIL',err.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
