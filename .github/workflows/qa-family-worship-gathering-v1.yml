@@ -142,7 +142,7 @@ jobs:
               await page.click('.bu-fw-topic .bu-fw-selector');
               await page.waitForSelector('#bu-fw-picker-layer');
               const count=await page.$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.length);
-              const topics=await page.$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>a.map(b=>({label:b.innerText.trim(),value:b.getAttribute('data-value')||'',style:b.getAttribute('style')||'',background:getComputedStyle(b).backgroundImage})));
+              const topics=await page.$eval('#bu-fw-picker-layer .bu-fw-picker-option',a=>Array.from(a).map(b=>({label:b.innerText.trim(),value:b.getAttribute('data-value')||'',style:b.getAttribute('style')||'',background:getComputedStyle(b).backgroundImage})));
               console.log('FAMILY_TOPIC_LIST',JSON.stringify(topics));
               console.log('TOPIC_CHOICES',count);
               if(count<5)throw Error('No custom Bible topics');
