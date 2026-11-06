@@ -1,0 +1,30 @@
+/* Family Worship Topic Picker V4 — FIGURE-FIRST REFRAME, Visual Lab only.
+ * Requested by user: restore faces, heads, and Gideon's horn into the visible
+ * card. The original image files and all other modes remain untouched.
+ * In V3 background-size:cover + background-position:center 43% cropped the
+ * upper part of 16:9 sources in these wide 3:1 cards. Top anchoring preserves
+ * the source's upper edge instead of slicing away faces.
+ * This intentionally does NOT mark wrong-topic art as fixed. */
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-02-bible-people-events.jpg"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-03-jesus-his-teachings.jpg"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-05-early-congregation.jpg"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-11-abram-s-journey.jpg"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-14-gideon.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-15-ruth-naomi.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-16-david.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-21-daniel.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-23-jesus-illustrations.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-24-jesus-miracles.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-26-paul-timothy.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-28-jonah.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-32-sermon-on-the-mount.jpg"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-34-pentecost.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-37-jehovah-s-qualities.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-38-jesus-ministry.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-39-kingdom-armageddon.webp"] .bu-fw-gallery-photo,
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-42-christian-living.webp"] .bu-fw-gallery-photo{
+  background-position:center top!important;
+  background-size:cover!important;
+}
+/* Preserve user's specifically accepted framing for Jesus Early Life and Model
+   Prayer, and preserve all topic cards not on the correction list. */
