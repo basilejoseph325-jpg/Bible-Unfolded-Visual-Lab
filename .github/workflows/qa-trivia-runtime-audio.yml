@@ -65,6 +65,42 @@ jobs:
               });
               console.log('DIRECT_WRONG_TONE',JSON.stringify(tones));
               if(!tones.calls)throw new Error('Wrong tone did not create oscillators in a real browser');
+              // Isolate the two sound generators before clicking an answer (avoids
+              // the existing announcer/chime audio that starts after a correct answer).
+              await page.evaluate(()=>BUStage16TriviaLifecycle.getStart()('quick','all'));
+              const volumeProbe=await page.evaluate(()=>{
+                const orig=window.AudioContext.prototype.createOscillator;
+                const frequencies=[];
+                const origGain=window.AudioContext.prototype.createGain;
+                const oldSetting=sfxVolume,oldEnabled=sfxOn;
+                let notes=0,peaks=[];
+                window.AudioContext.prototype.createOscillator=function(...args){notes++;const osc=orig.apply(this,args);const start=osc.start.bind(osc);osc.start=function(...params){frequencies.push(osc.frequency.value);return start(...params)};return osc};
+                window.AudioContext.prototype.createGain=function(...args){
+                  const gain=origGain.apply(this,args),f=gain.gain.exponentialRampToValueAtTime.bind(gain.gain);
+                  gain.gain.exponentialRampToValueAtTime=(v,t)=>{if(v>.001)peaks.push(v);return f(v,t)};
+                  return gain;
+                };
+                function pair(volume,on){
+                  sfxVolume=volume;sfxOn=on;const start=notes,at=peaks.length;
+                  playChime();bu3846WrongTone();
+                  return {notes:notes-start,positive:peaks[at],negative:peaks[at+3],peaks:peaks.slice(at),frequencies:frequencies.slice(fr)};
+                }
+                try{
+                  return {low:pair(20,true),high:pair(65,true),muted:pair(0,true),off:pair(65,false)};
+                }finally{
+                  sfxVolume=oldSetting;sfxOn=oldEnabled;
+                  window.AudioContext.prototype.createGain=origGain;
+                  window.AudioContext.prototype.createOscillator=orig;
+                }
+              });
+              console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
+              if(volumeProbe.low.notes!==5||volumeProbe.high.notes!==5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
+                throw new Error('Effects volume/mute did not control both chimes');
+              if(!(volumeProbe.low.positive>.035&&volumeProbe.low.negative>.035&&
+                   volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
+                throw new Error('Both chimes must be audible at 20% and scale with volume slider');
+              if(!(volumeProbe.low.negative/volumeProbe.low.positive>.9&&volumeProbe.high.negative/volumeProbe.high.positive>.9))
+                throw new Error('Positive and negative chimes are not balanced');
               const clickProbe=await page.evaluate(()=>{
                 const facade=BUStage16TriviaLifecycle;
                 const topicKeys=facade.getTopics();
@@ -102,38 +138,7 @@ jobs:
               console.log('ACTUAL_TRIVIA_CORRECT_CLICK',JSON.stringify(correctProbe));
               if(!correctProbe.started||correctProbe.oscillatorCalls<3||!correctProbe.afterAnswered)
                 throw new Error('Real correct-answer click must trigger at least 3 oscillator notes and complete the question');
-              const volumeProbe=await page.evaluate(()=>{
-                const orig=window.AudioContext.prototype.createOscillator;
-                const origGain=window.AudioContext.prototype.createGain;
-                const oldSetting=sfxVolume,oldEnabled=sfxOn;
-                let notes=0,peaks=[];
-                window.AudioContext.prototype.createOscillator=function(...args){notes++;return orig.apply(this,args)};
-                window.AudioContext.prototype.createGain=function(...args){
-                  const gain=origGain.apply(this,args),f=gain.gain.exponentialRampToValueAtTime.bind(gain.gain);
-                  gain.gain.exponentialRampToValueAtTime=(v,t)=>{if(v>.001)peaks.push(v);return f(v,t)};
-                  return gain;
-                };
-                function pair(volume,on){
-                  sfxVolume=volume;sfxOn=on;const start=notes,at=peaks.length;
-                  playChime();bu3846WrongTone();
-                  return {notes:notes-start,positive:peaks[at],negative:peaks[at+3]};
-                }
-                try{
-                  return {low:pair(20,true),high:pair(65,true),muted:pair(0,true),off:pair(65,false)};
-                }finally{
-                  sfxVolume=oldSetting;sfxOn=oldEnabled;
-                  window.AudioContext.prototype.createGain=origGain;
-                  window.AudioContext.prototype.createOscillator=orig;
-                }
-              });
-              console.log('SLIDER_VOLUME_PROBE',JSON.stringify(volumeProbe));
-              if(volumeProbe.low.notes!==5||volumeProbe.high.notes!==5||volumeProbe.muted.notes!==0||volumeProbe.off.notes!==0)
-                throw new Error('Effects volume/mute did not control both chimes');
-              if(!(volumeProbe.low.positive>.035&&volumeProbe.low.negative>.035&&
-                   volumeProbe.high.positive>volumeProbe.low.positive&&volumeProbe.high.negative>volumeProbe.low.negative))
-                throw new Error('Both chimes must be audible at 20% and scale with volume slider');
-              if(!(volumeProbe.low.negative/volumeProbe.low.positive>.9&&volumeProbe.high.negative/volumeProbe.high.positive>.9))
-                throw new Error('Positive and negative chimes are not balanced');
+
               console.log('PASS browser Trivia wrong and correct answer clicks, louder balanced peaks, working slider & mute');
 
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
