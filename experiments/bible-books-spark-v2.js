@@ -160,7 +160,7 @@ function showFound(word){
       if(solved.size===WORDS.length&&!modal.open){
         const copy=sparkFound?
           'You found all six crossword words and discovered the hidden Scripture Spark. Great exploring!':
-          'You completed all six crossword words with one letter wheel. The optional Scripture Spark is still waiting if you want to look for it.';
+          'You completed all four crossword words with one letter wheel. The optional Scripture Spark is still waiting if you want to look for it.';
         openScroll('complete','Crossword Complete!',copy);
       }
     },380);
