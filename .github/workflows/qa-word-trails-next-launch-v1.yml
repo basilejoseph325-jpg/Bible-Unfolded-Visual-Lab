@@ -1,0 +1,69 @@
+name: QA Word Trails NEXT launcher Visual Lab
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-next-launch-v1.yml'
+      - 'word-trails-next-launcher.js'
+      - 'visual-lab-test-banner.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate route isolation and JavaScript syntax
+        run: |
+          node --check word-trails-next-launcher.js
+          node --check visual-lab-test-banner.js
+          python3 - <<'PY'
+          from pathlib import Path
+          banner=Path('visual-lab-test-banner.js').read_text()
+          launcher=Path('word-trails-next-launcher.js').read_text()
+          assert 'word-trails-next-launcher.js' in banner
+          assert "document.getElementById('cross-pick')" in launcher
+          assert 'word-trails-next-v1.html' in launcher
+          assert 'Show previous Word Trails for comparison' in launcher
+          assert 'wt-next-compare' in launcher
+          assert 'Visual Lab only' in launcher
+          print('PASS launcher does not alter live or main game logic')
+          PY
+      - name: Test Word Trails selector replacement card and old-version toggle
+        run: |
+          npm install --prefix /tmp/bu-next-launch puppeteer-core@24 --no-audit --no-fund --silent
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-next-launch/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict'),{execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,
+                executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              page.on('pageerror',e=>{console.error('PAGE_ERROR',e.message);process.exitCode=1});
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+              await page.setContent('<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body><div id="cross-pick"><div class="mode-scroll"><div id="cross-pack-list" class="cross-pack-list" style="display:flex"><button>Old game</button></div></div></div></body></html>');
+              await page.addScriptTag({path:'word-trails-next-launcher.js'});
+              const first=await page.evaluate(()=>({
+                link:document.querySelector('#wt-next-entry>a')?.getAttribute('href'),
+                title:document.querySelector('.wt-next-title')?.textContent,
+                oldDisplay:getComputedStyle(document.querySelector('.cross-pack-list')).display,
+                cardHeight:document.querySelector('#wt-next-entry>a')?.getBoundingClientRect().height
+              }));
+              console.log('LAUNCHER',JSON.stringify(first));
+              assert.equal(first.link,'experiments/word-trails-next-v1.html');
+              assert.equal(first.oldDisplay,'none');
+              assert(first.cardHeight>=180);
+              await page.click('#wt-next-compare');
+              const second=await page.evaluate(()=>({
+                oldDisplay:getComputedStyle(document.querySelector('.cross-pack-list')).display,
+                button:document.querySelector('#wt-next-compare').textContent
+              }));
+              assert.equal(second.oldDisplay,'flex');
+              assert(second.button.includes('Hide previous'));
+              console.log('PASS Word Trails NEXT default card, safe old-version comparison toggle');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{await browser?.close()}
+          })();
+          JS
