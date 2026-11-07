@@ -16,7 +16,7 @@ jobs:
           import re
           from pathlib import Path
           files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),*sorted(Path('.').glob('*.css')),*sorted(Path('.').glob('*.js'))]
-          pats=['A beginning without a date','Discovery complete!','Next Discovery','bu3857-info','bu3857-modal','discovery-modal','discovery-popup','discovery complete','A World Awakens','story insight','bu3857-note','discovery-card']
+          pats=['function bu3864Modal','bu3864-modal-layer','bu3864-modal','function bu3863Modal','bu3863-dialog-layer','bu3863-dialog','A beginning without a date','Discovery complete!','Next Discovery','bu3857-info','bu3857-modal','discovery-modal','discovery-popup','discovery complete','A World Awakens','story insight','bu3857-note','discovery-card']
           for p in files:
             s=p.read_text(errors='replace')
             relevant=[]
@@ -27,6 +27,6 @@ jobs:
             print('FILE',p,'LEN',len(s))
             for pat,found in relevant:
               print('PATTERN',pat,'COUNT',len(found))
-              for m in found[:4]:
-                print('EXCERPT',pat,'offset',m.start(),s[max(0,m.start()-650):m.end()+950].replace(chr(10),'\\n')[:1750])
+              for m in found[:2]:
+                print('EXCERPT',pat,'offset',m.start(),s[max(0,m.start()-300):m.end()+3400].replace(chr(10),'\\n')[:4100])
           PY
