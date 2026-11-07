@@ -12,7 +12,8 @@ let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
   if(previous?.sound===false){pref.music=false;pref.sfx=false}}
 }catch(_){}
 let ctx=null,master=null,limiter=null,peakGuard=null,noise=null;
-const EFFECTS_MIX_GAIN=11.2; // V3 2.8 -> V4 11.2 (4x additional signal gain). Music unchanged.
+const EFFECTS_MIX_GAIN=11.2; // Original output bus retained; levels are now mastered at the VOICE stage.
+const VOICE_LOUDNESS_BOOST=4.0; // Fourfold increase BEFORE the compressor, not after it.
 let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
@@ -68,7 +69,7 @@ function audio(){
   return ctx;
  }catch(_){return null}
 }
-function vol(g){return g*(pref.sfxVolume/100)}
+function vol(g){return g*(pref.sfxVolume/100)*VOICE_LOUDNESS_BOOST}
 function pluck(f,delay=0,len=.14,gain=.04,shape='sine',to){
  const a=audio();if(!a)return;
  try{
@@ -266,6 +267,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else makeSettings();
 window.BUWTPolish=Object.freeze({
  cue,event,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
+ voiceBoost:()=>VOICE_LOUDNESS_BOOST,
  musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
  motionEnabled:motion,hapticsEnabled:()=>!!pref.haptics&&motion(),haptic,state,
