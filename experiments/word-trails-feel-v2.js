@@ -11,7 +11,9 @@ let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
  else{const previous=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
   if(previous?.sound===false){pref.music=false;pref.sfx=false}}
 }catch(_){}
-let ctx=null,master=null,noise=null;
+let ctx=null,master=null,limiter=null,noise=null;
+const EFFECTS_MIX_GAIN=2.8; // V2 .7 => 4x amplitude; music gain remains unchanged.
+let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
 const safeReduced=()=>!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -39,7 +41,13 @@ function audio(){
  if(!pref.sfx||pref.sfxVolume<=0||!active())return null;
  try{
   if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
-   ctx=new C();master=ctx.createGain();master.gain.value=.7;master.connect(ctx.destination);
+   ctx=new C();master=ctx.createGain();master.gain.value=EFFECTS_MIX_GAIN;
+   // Gentle final-stage peak protection: keep several layered sounds from clipping.
+   limiter=ctx.createDynamicsCompressor();
+   limiter.threshold.value=-8;
+   limiter.knee.value=5;limiter.ratio.value=12;
+   limiter.attack.value=.003;limiter.release.value=.15;
+   master.connect(limiter);limiter.connect(ctx.destination);
   }
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   return ctx;
@@ -86,6 +94,10 @@ function cue(kind){
  // All notes are original, gentle, and intentionally free of knocks/thuds.
  switch(kind){
   case 'touch': air(0,.065,.018,1000);pluck(660,0,.064,.008,'sine',550);break;
+  case 'undo': air(0,.051,.011,820);pluck(545,0,.065,.006,'sine',480);break;
+  case 'wordSettle': pluck(960,0,.12,.007,'sine',840);air(0,.07,.005,1750);break;
+  case 'coinLand': pluck(1100,0,.14,.010,'sine',970);break;
+  case 'levelEnter': pluck(630,0,.14,.017,'sine');pluck(940,.09,.18,.012,'sine');break;
   case 'trace': {
    const freq=720+(gestureTick++%5)*33;
    air(0,.058,.023,1390);pluck(freq,0,.066,.013,'sine',freq*.91);break;
@@ -129,6 +141,10 @@ function coinFlight(origin,count=4){
   ],{duration:650+i*48,delay:i*40,easing:'cubic-bezier(.18,.7,.28,1)'}).onfinish=()=>dot.remove();
   setTimeout(()=>dot.remove(),1150);
  }
+ // The tiny landing note is one quiet accent for the entire coin shower,
+ // not one per flying coin. Never plays when SFX is muted or tab is hidden.
+ const landing=setTimeout(()=>{pendingRewardSounds.delete(landing);cue('coinLand')},790);
+ pendingRewardSounds.add(landing);
  $('points')?.classList.remove('feel-coin-arrive');void $('points')?.offsetWidth;
  $('points')?.classList.add('feel-coin-arrive');
  setTimeout(()=>$('points')?.classList.remove('feel-coin-arrive'),650);
@@ -150,6 +166,9 @@ function label(word){
 function event(name,data={}){
  if(name==='level'){activeCount=0;gestureTick=0;return}
  if(name==='correct'){activeCount++;acclaim(data.word);
+  // A very gentle landing accent after the tile cascade starts.
+  const landing=setTimeout(()=>{pendingRewardSounds.delete(landing);cue('wordSettle')},275);
+  pendingRewardSounds.add(landing);
   if(activeCount===3){haptic([7,24,10])}
   if(data.coins>0)coinFlight(rectMid($('board')),4);
   return;
@@ -220,10 +239,14 @@ function makeSettings(){
  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
  sync();
 }
+document.addEventListener('visibilitychange',()=>{
+ if(document.hidden){for(const pending of pendingRewardSounds)clearTimeout(pending);pendingRewardSounds.clear()}
+});
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',makeSettings,{once:true});
 else makeSettings();
 window.BUWTPolish=Object.freeze({
- cue,event,openSettings:settings,musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
+ cue,event,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
+ musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
  motionEnabled:motion,hapticsEnabled:()=>!!pref.haptics&&motion(),haptic,state,
  bonusPips:(n)=>{const bar=$('bonus-pips');if(!bar)return;
