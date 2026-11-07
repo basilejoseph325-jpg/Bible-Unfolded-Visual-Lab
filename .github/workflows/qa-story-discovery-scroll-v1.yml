@@ -1,0 +1,166 @@
+name: QA Visual Lab Story Adventure discovery scroll V1
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-story-discovery-scroll-v1.yml'
+      - 'story-adventure-discovery-scroll-v1.css'
+      - 'story-adventure-discovery-scroll-v1.js'
+      - 'journey-progress-caption.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify approved scroll reused without editing shared art
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check story-adventure-discovery-scroll-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          scroll=Path('assets/ui/daily-discovery-explanation-scroll-v3.webp')
+          wax=Path('assets/ui/daily-explanation-wax-next-v2.svg')
+          assert scroll.is_file() and scroll.stat().st_size>50000
+          assert wax.is_file() and wax.stat().st_size>500
+          def sha(b):return hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()
+          assert sha(scroll.read_bytes())=='4e25223d5666397a3a9dc9b446e4262d12fc41a2'
+          assert sha(wax.read_bytes())=='103af90347ddb90bcd23cbe0013563373dbc4fde'
+          js=Path('story-adventure-discovery-scroll-v1.js').read_text()
+          css=Path('story-adventure-discovery-scroll-v1.css').read_text()
+          loader=Path('journey-progress-caption.js').read_text()
+          assert 'bu3864-modal-layer' in js and 'bu3863-dialog-layer' in js
+          assert 'daily-discovery-explanation-scroll-v3.webp' in css
+          assert 'daily-explanation-wax-next-v2.svg' in css
+          assert 'story-adventure-discovery-scroll-v1.css?v=20261106-story-answer-parchment-v1' in loader
+          assert 'story-adventure-discovery-scroll-v1.js?v=20261106-story-answer-parchment-v1' in loader
+          assert 'family-worship-picker-gallery-v3.js?v=20261106-cain-abel-v7' in loader
+          print('PASS: original V3 parchment and wax images unchanged; isolated Story answer-only enhancer loaded')
+          PY
+      - name: Mobile Chromium—live Story modal, callbacks, exclusions, overflow
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-story-scroll --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/story-scroll-http.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-story-scroll/node_modules/puppeteer-core');
+          const {execSync}=require('child_process');
+          (async()=>{
+            let browser;
+            try{
+              const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.setDefaultTimeout(18000);
+              page.on('pageerror',e=>console.log('PAGEERROR',e.message.slice(0,240)));
+              await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await new Promise(r=>setTimeout(r,2400));
+              const callable=await page.evaluate(()=>({
+                legacy:typeof bu3864Modal,
+                later:typeof bu3863Modal,
+                css:!!document.getElementById('bu-story-discovery-scroll-css-v1'),
+                js:!!document.getElementById('bu-story-discovery-scroll-js-v1')
+              }));
+              console.log('STORY_FUNCTIONS',JSON.stringify(callable));
+              if(callable.legacy!=='function'||callable.later!=='function'||!callable.css||!callable.js)
+                throw Error('Story modal functions or Visual Lab loader missing');
+              await page.evaluate(()=>{
+                document.querySelector('#daily-close')?.click();
+                window.__storyAdvances=0;
+                document.getElementById('play').hidden=false;
+                bu3864Modal('A beginning without a date',
+                  'Genesis 1:1 describes the heavens and earth already created before the six periods begin. The Bible does not give the age of the universe.',
+                  {reading:true,confirm:'Next Discovery →',onConfirm:()=>window.__storyAdvances++});
+              });
+              await page.waitForSelector('#bu3864-modal-layer.bu-story-discovery-scroll');
+              const details=()=>page.evaluate(()=>{
+                const l=document.getElementById('bu3864-modal-layer'),c=l?.querySelector('.bu3864-modal');
+                const h=c?.querySelector('h2'),b=c?.querySelector('.bu3864-modal-body'),n=c?.querySelector('.gold-button');
+                const r=x=>{const z=x?.getBoundingClientRect();return z?{top:+z.top.toFixed(1),bottom:+z.bottom.toFixed(1),height:+z.height.toFixed(1)}:null};
+                return {card:r(c),title:r(h),body:r(b),action:r(n),
+                  scrollBg:getComputedStyle(c).backgroundImage,
+                  waxBg:getComputedStyle(n).backgroundImage,
+                  actionText:n?.textContent.trim(),
+                  closeHidden:getComputedStyle(c?.querySelector('.secondary-button')).display==='none',
+                  viewport:innerHeight,clickCount:window.__storyAdvances};
+              });
+              let legacy=await details();
+              console.log('STORY_LEGACY',JSON.stringify(legacy));
+              if(!legacy.scrollBg.includes('daily-discovery-explanation-scroll-v3.webp')||
+                !legacy.waxBg.includes('daily-explanation-wax-next-v2.svg')||
+                legacy.actionText!=='Next Discovery'||!legacy.closeHidden||
+                legacy.card.bottom>legacy.viewport||legacy.title.top<legacy.card.top+98||
+                legacy.action.bottom>legacy.card.bottom-45)
+                throw Error('Legacy Story explanation scroll did not fit photograph or had duplicate arrow');
+              const photo=await page.$('#bu3864-modal-layer > .bu3864-modal');
+              if(photo){
+                const b64=(await photo.screenshot({type:'jpeg',quality:55})).toString('base64');
+                for(let i=0;i<b64.length;i+=8500)console.log('STORY_VISUAL_PART',i/8500,b64.slice(i,i+8500));
+              }
+              // Normal Close X must not advance story.
+              await page.click('#bu3864-modal-layer .bu3864-modal-close');
+              const closed=await page.evaluate(()=>({open:!!document.getElementById('bu3864-modal-layer'),count:window.__storyAdvances}));
+              if(closed.open||closed.count!==0)throw Error('Closing the scroll advanced the story');
+              // Long answers must scroll inside parchment with fixed bottom wax.
+              await page.evaluate(()=>{
+                bu3864Modal('Long Story Discovery', 'A long Bible account. '.repeat(200),{confirm:'Next Discovery →',onConfirm:()=>window.__storyAdvances++});
+              });
+              await page.waitForSelector('#bu3864-modal-layer.bu-story-discovery-scroll');
+              const long=await page.evaluate(()=>{
+                const b=document.querySelector('#bu3864-modal-layer .bu3864-modal-body');
+                const c=document.querySelector('#bu3864-modal-layer .bu3864-modal');
+                return {scrollHeight:b.scrollHeight,clientHeight:b.clientHeight,cardHeight:c.getBoundingClientRect().height,
+                  actionBottom:document.querySelector('#bu3864-modal-layer .gold-button').getBoundingClientRect().bottom,
+                  cardBottom:c.getBoundingClientRect().bottom};
+              });
+              console.log('STORY_LONG',JSON.stringify(long));
+              if(long.scrollHeight<=long.clientHeight+25||long.actionBottom>long.cardBottom-45)
+                throw Error('Long answer overflow clipped or moved bottom wax');
+              await page.click('#bu3864-modal-layer .gold-button');
+              if(await page.evaluate(()=>window.__storyAdvances)!==1)throw Error('Original next action handler broken');
+              // Purchase and general info dialogs MUST stay normal boxes.
+              await page.evaluate(()=>bu3864Modal('Use a hint?','Spend 15 Insight Tokens?',{confirm:'Spend 15'}));
+              await page.waitForSelector('#bu3864-modal-layer');
+              const hint=await page.evaluate(()=>({
+                styled:document.querySelector('#bu3864-modal-layer').classList.contains('bu-story-discovery-scroll'),
+                bg:getComputedStyle(document.querySelector('.bu3864-modal')).backgroundImage
+              }));
+              console.log('STORY_HINT_EXCLUDED',JSON.stringify(hint));
+              if(hint.styled||hint.bg.includes('daily-discovery-explanation-scroll-v3.webp'))
+                throw Error('Hint dialogs incorrectly modified');
+              await page.evaluate(()=>{
+                document.getElementById('bu3864-modal-layer')?.querySelector('.bu3864-modal-close')?.click();
+                document.getElementById('bu3857-screen').hidden=false;
+                bu3863Modal('Discovery complete',
+                  'The Bible account teaches a meaningful lesson.',{next:true});
+              });
+              await page.waitForSelector('#bu3863-dialog-layer.bu-story-discovery-scroll');
+              const later=await page.evaluate(()=>{
+                const l=document.querySelector('#bu3863-dialog-layer');
+                const card=l.querySelector('.bu3863-dialog');
+                const n=l.querySelector('.bu3863-dialog-done');
+                return {title:card.querySelector('h2').textContent,
+                  image:getComputedStyle(card).backgroundImage,
+                  wax:getComputedStyle(n).backgroundImage,
+                  text:n.textContent.trim(),height:card.getBoundingClientRect().height,
+                  closePresent:!!l.querySelector('.bu3863-close')};
+              });
+              console.log('STORY_LATER',JSON.stringify(later));
+              if(later.text!=='Next Discovery'||!later.image.includes('daily-discovery-explanation-scroll-v3.webp')||
+                !later.wax.includes('daily-explanation-wax-next-v2.svg')||!later.closePresent)throw Error('Later Story discovery did not receive approved scroll');
+              await page.evaluate(()=>document.querySelector('#bu3863-dialog-layer .bu3863-close').click());
+              await page.evaluate(()=>bu3863Modal('Story context','Regular info only',{next:false}));
+              const regular=await page.evaluate(()=>document.querySelector('#bu3863-dialog-layer')?.classList.contains('bu-story-discovery-scroll'));
+              console.log('STORY_LATER_INFO_EXCLUDED',regular);
+              if(regular)throw Error('Later story context incorrectly skinned');
+              console.log('PASS Story scroll: approved actual art, handlers, no duplicate arrow, 2 engines, exclusions, long-copy overflow, phone geometry');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
