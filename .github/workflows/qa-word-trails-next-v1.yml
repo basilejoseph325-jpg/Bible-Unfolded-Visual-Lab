@@ -119,7 +119,7 @@ jobs:
               await page.click('#spark-next');
               await page.click('#spark');
               await page.waitForSelector('#discovery[open]');
-              const clues=await page.$eval('#spark-list .spark-find',xs=>xs.map(x=>({
+              const clues=await page.$eval('#spark-list',list=>Array.from(list.querySelectorAll('.spark-find')).map(x=>({
                 title:x.querySelector('strong').textContent,
                 hint:x.querySelector('small').textContent
               })));
