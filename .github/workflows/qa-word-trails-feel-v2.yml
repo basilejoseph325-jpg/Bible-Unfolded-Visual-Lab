@@ -114,8 +114,9 @@ jobs:
                 .map(kind=>[kind,window.BUWTPolish.featureBoost(kind)])));
               console.log('INDEPENDENT_FEEDBACK_LEVELS',JSON.stringify(cueMix));
               for(const name of ['touch','trace','undo'])assert.equal(cueMix[name],1,name+' must not be boosted');
-              for(const name of ['correct','bonus','wrong','hint','complete','spark','coinLand','levelEnter'])
-                assert(cueMix[name]>=3,name+' must receive the new strong gain');
+              for(const name of ['correct','bonus','wrong','hint','spark','coinLand','levelEnter'])
+                assert(cueMix[name]>=3,name+' must retain the approved strong gain');
+              assert(cueMix.complete===1.05,'Win chime is intentionally re-mastered for less distortion');
               const measure=async pct=>page.evaluate(async pct=>{
                 const prefs=window.BUWTPolish;
                 const panel=document.querySelector('#wt-feel-settings [data-pref="sfxVolume"]');
