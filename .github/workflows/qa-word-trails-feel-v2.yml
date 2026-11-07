@@ -42,6 +42,11 @@ jobs:
           print("PASS separate quiet gameplay sounds and premium win-only glitter")
           assert "EFFECTS_MIX_GAIN=11.2" in js, "Master gain preserved across the voice normalization change"
           assert "VOICE_LOUDNESS_BOOST=4.0" in js
+          assert "FEATURE_CUE_BOOST=3.25" in js
+          assert "QUIET_CUES=new Set(['touch','trace','undo'])" in js
+          assert "g.gain.exponentialRampToValueAtTime(Math.max(.00007,peak*.81)" in js
+          assert "function celebrateWin()" in js and "function clearWinFX()" in js
+          assert ".wt-win-foil" in css and ".wt-win-glint" in css
           assert "getFloatTimeDomainData" in js and "signalMeter" in js
           assert "wt_home_refresh=" in html, "Reload should return to the test homepage"
           assert "master.gain.value=EFFECTS_MIX_GAIN" in js
@@ -90,7 +95,17 @@ jobs:
               assert.equal(mix/2.8,4,'The protected audio master remains unchanged');
               const voice=await page.evaluate(()=>window.BUWTPolish.voiceBoost());
               console.log('SFX_VOICE_BOOST',JSON.stringify({relativeToPrevious:voice,master:mix}));
-              assert.equal(voice,4,'Individual sound voices must be four times stronger than last version');
+              assert.equal(voice,4,'Individual sound voices must retain previous baseline');
+              const boosts=await page.evaluate(()=>Object.fromEntries(
+                ['touch','trace','undo','correct','bonus','wrong','hint','spark','vault','complete','wordSettle','coinLand','shuffle','levelEnter']
+                 .map(kind=>[kind,window.BUWTPolish.featureBoost(kind)])
+              ));
+              console.log('SELECTIVE_AUDIO_PROFILE',JSON.stringify(boosts));
+              assert.equal(boosts.touch,1);
+              assert.equal(boosts.trace,1);
+              assert.equal(boosts.undo,1);
+              for(const name of ['correct','bonus','wrong','hint','spark','vault','complete','wordSettle','coinLand','shuffle','levelEnter'])
+                assert(boosts[name]>=3,'All reward and gameplay feedback other than taps/swipes must receive major boost: '+name);
               const cueMix=await page.evaluate(()=>Object.fromEntries(
                 ['touch','trace','undo','correct','bonus','wrong','hint','complete','spark','coinLand','levelEnter']
                 .map(kind=>[kind,window.BUWTPolish.featureBoost(kind)])));
@@ -202,6 +217,14 @@ jobs:
               }));
               console.log('NO_MOTION_HINT',JSON.stringify(still));
               assert(still.noMotion&&still.particles===0&&still.hint===1);
+              const noWinFx=await page.evaluate(()=>{
+                const dialog=document.getElementById('finish');
+                dialog.showModal();window.BUWTPolish.celebrateWin();
+                const count=document.querySelector('#finish-fx').children.length;
+                dialog.close();return count;
+              });
+              console.log('REDUCED_MOTION_WIN_EFFECTS',noWinFx);
+              assert.equal(noWinFx,0,'No glitter or confetti may animate with visual effects disabled');
               await page.click('#audio');
               await setting('motion',true);
               await setting('haptics',true);
