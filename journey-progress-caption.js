@@ -174,8 +174,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{if(document.getElementById('bu-story-discovery-scroll-css-v1'))return;const l=document.createElement('link');l.id='bu-story-discovery-scroll-css-v1';l.rel='stylesheet';l.href='story-adventure-discovery-scroll-v1.css?v=20261106-story-answer-parchment-v1';document.head.appendChild(l)})();
 (()=>{if(document.getElementById('bu-story-discovery-scroll-js-v1'))return;const s=document.createElement('script');s.id='bu-story-discovery-scroll-js-v1';s.src='story-adventure-discovery-scroll-v1.js?v=20261106-story-answer-parchment-v1';s.defer=true;document.head.appendChild(s)})();
 
-/* VISUAL LAB ONLY — Family Worship answered Trivia/Lightning explanations.
+/* VISUAL LAB ONLY — Family Worship all four scored answer explanations: Trivia, Lightning, Word Relay and Story Discoveries.
    Existing shared V3 photorealistic scroll and V2 wax art reused read-only.
    No changes to setup screens, other information dialogs, logic, or live game. */
 (()=>{if(document.getElementById('bu-fw-answer-scroll-css-v1'))return;const l=document.createElement('link');l.id='bu-fw-answer-scroll-css-v1';l.rel='stylesheet';l.href='family-worship-answer-scroll-v1.css?v=20261107-family-answer-v1';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-fw-answer-scroll-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-answer-scroll-js-v1';s.src='family-worship-answer-scroll-v1.js?v=20261107-family-answer-v1';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-fw-answer-scroll-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-answer-scroll-js-v1';s.src='family-worship-answer-scroll-v1.js?v=20261107-all-four-answer-modes-v2';s.defer=true;document.head.appendChild(s)})();
