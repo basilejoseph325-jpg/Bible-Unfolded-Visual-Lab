@@ -45,7 +45,7 @@ const LEVELS=[
   words:[['VEILS',2,0,'across'],['LIVES',0,0,'down'],['LIES',0,0,'across'],['SOLE',4,0,'across'],['SOLVE',0,3,'down']],
   bonus:'OLIVE EVILS EVIL OILS VEIL LOVE LIVE VILE VIES ISLE SILO OIL LIE VIE VOLES VOLE'},
  // Progressively larger Wordscapes-style boards: keep tiles chunky until longer answers require more cells.
- {rack:'SAMUEL',size:6,title:'The Prophet and the King',scene:'09_1_samuel.webp',spark:'ELAM',
+ {rack:'SAMUEL',size:6,title:'Samuel & Saul',scene:'09_1_samuel.webp',spark:'ELAM',
   clue:'A son of Shem named among the families after the Flood',reference:'Genesis 10:22',
   url:'https://www.jw.org/en/library/bible/nwt/books/genesis/10/',
   insight:'Genesis 10:22 lists Elam among the sons of Shem, along with Asshur, Arpachshad, Lud, and Aram.',
@@ -59,7 +59,7 @@ const LEVELS=[
     insight:'Samuel poured oil on Saul’s head when Jehovah chose him to lead Israel (1 Samuel 10:1).'}
   ],
   bonus:'AMUSE SAME SEAL MEAL MUSE LAME SEA SUE USE MULES MULE AMUSE MULES'},
- {rack:'GOLIATH',size:7,title:'A Champion From Gath',scene:'09_1_samuel.webp',spark:'LOT',
+ {rack:'GOLIATH',size:7,title:'Goliath',scene:'09_1_samuel.webp',spark:'LOT',
   clue:'Abraham’s nephew who traveled with him',reference:'Genesis 13:5-11',
   url:'https://www.jw.org/en/library/bible/nwt/books/genesis/13/',
   insight:'Lot traveled with Abram and also had flocks and herds. As their households grew, Abram let Lot choose where to live (Genesis 13:5-11).',
@@ -73,7 +73,7 @@ const LEVELS=[
     insight:'The Bible identifies Goliath as a Philistine champion from Gath (1 Samuel 17:4).'}
   ],
   bonus:'GOAT HAIL OATH TOIL GOAL LIGHT ALIGHT LATH HILT HALT GLOAT ALTO HALO'},
- {rack:'ABRAHAM',size:7,title:'The Promise to Abraham',scene:'01_genesis.webp',spark:'MARAH',
+ {rack:'ABRAHAM',size:7,title:'Abraham',scene:'01_genesis.webp',spark:'MARAH',
   clue:'The place where the Israelites found bitter water',reference:'Exodus 15:23-25',
   url:'https://www.jw.org/en/library/bible/nwt/books/exodus/15/',
   insight:'At Marah, the people could not drink the bitter water. Jehovah showed Moses what to do, and the water became sweet (Exodus 15:23-25).',
