@@ -343,3 +343,35 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
 .spark-find-info strong{font:900 13px/1.2 Georgia,serif;letter-spacing:.03em}
 .spark-find-info small{font:500 12px/1.35 Georgia,serif;color:#5e452f}
 #spark-title{max-width:100%;overflow-wrap:anywhere}
+
+
+/* WORD TRAILS NEXT — PROGRESSIVE BOARDS: keep tiles as chunky as viewport permits.
+   5×5 retains the exact approved dimensions; 6×6 and 7×7 scale only when needed.
+   No page scrolling, and never shrink the letter wheel to make the board fit. */
+.board[data-size="6"]{
+ --tile:min(15.5vw,calc((100dvh - var(--header) - var(--play) - var(--footer) - 30px) / 6),67px);
+ --gap:3.5px;
+ grid-template-columns:repeat(6,var(--tile));
+ grid-template-rows:repeat(6,var(--tile));
+}
+.board[data-size="7"]{
+ --tile:min(13.1vw,calc((100dvh - var(--header) - var(--play) - var(--footer) - 32px) / 7),60px);
+ --gap:3px;
+ grid-template-columns:repeat(7,var(--tile));
+ grid-template-rows:repeat(7,var(--tile));
+}
+.board[data-size="6"] .tile{font-size:clamp(21px,6vw,30px)!important;border-radius:8px}
+.board[data-size="7"] .tile{font-size:clamp(19px,5.5vw,27px)!important;border-radius:7px}
+.board .tile.found.bible-found{
+ border-color:#ffdb87!important;
+ box-shadow:inset 0 2px 2px #fff1bd55,0 3px 1px #695321,0 4px 10px #0006,
+  0 0 4px #ffc463aa!important;
+}
+@media(max-height:690px){
+ .board[data-size="6"]{
+  --tile:min(15.5vw,calc((100dvh - var(--header) - var(--play) - var(--footer) - 28px) / 6),67px);
+ }
+ .board[data-size="7"]{
+  --tile:min(13.1vw,calc((100dvh - var(--header) - var(--play) - var(--footer) - 30px) / 7),60px);
+ }
+}
