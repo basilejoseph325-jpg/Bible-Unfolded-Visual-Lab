@@ -200,13 +200,13 @@ function hint(){
   hinted.add(tile.key);drawBoard();
   flash('Letter revealed · −8 test points');
 }
-function reset(){
+function reset(showNotice){
   solved=new Set();bonuses=new Set();sparkFound=false;points=0;hints=3;hinted=new Set();
   letters=shuffleArray([...ALPHABET]);chosen=[];
   el('spark-info').hidden=true;
   if(modal.open)modal.close();
   drawBoard();drawWheel();syncHud();
-  flash('New test round · same six letters');
+  if(showNotice!==false)flash('New test round · same six letters');
 }
 function shuffle(){
   const previous=letters.join('');
@@ -275,5 +275,5 @@ window.addEventListener('keydown',e=>{
   if(e.key==='Enter'&&!modal.open&&document.activeElement===wheel){submit();}
 });
 // Prototype state lives only on this page: no localStorage, no real scoring.
-reset();
+reset(false);
 })();
