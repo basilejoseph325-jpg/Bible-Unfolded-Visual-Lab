@@ -328,7 +328,7 @@ function setScene(){
 }
 function showLevel(n,resume=false){
  if(n<0||n>=LEVELS.length||n>save.unlocked)return;
- if($('finish').open)$('finish').close();
+ if($('finish').open){window.BUWTPolish?.clearWinFX?.();$('finish').close();}
  if($('discovery').open)$('discovery').close();
  if($('map').open)$('map').close();
  index=n;level=LEVELS[index];cells=BOARDS[index];
@@ -345,7 +345,7 @@ function showLevel(n,resume=false){
  $('toast').classList.remove('show');
 }
 function resetLevel(){
- if($('finish').open)$('finish').close();
+ if($('finish').open){window.BUWTPolish?.clearWinFX?.();$('finish').close();}
  save.progress=null;store();showLevel(index,false);
  flash('Level restarted');cue('touch');
 }
@@ -428,9 +428,9 @@ $('audio').addEventListener('click',()=>{if(window.BUWTPolish)window.BUWTPolish.
 $('level-map').addEventListener('click',levelMap);
 $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
- if(index===LEVELS.length-1){$('finish').close();levelMap()}else{showLevel(n);cue('levelEnter')}
+ if(index===LEVELS.length-1){window.BUWTPolish?.clearWinFX?.();$('finish').close();levelMap()}else{showLevel(n);cue('levelEnter')}
 });
-$('stay').addEventListener('click',()=>{if(save.sparks.includes(index)){resetLevel();return} $('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
+$('stay').addEventListener('click',()=>{if(save.sparks.includes(index)){resetLevel();return} window.BUWTPolish?.clearWinFX?.();$('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
 $('spark-next').addEventListener('click',()=>$('discovery').close());
 $('spark-x').addEventListener('click',()=>$('discovery').close());
 $('map-x').addEventListener('click',()=>$('map').close());
