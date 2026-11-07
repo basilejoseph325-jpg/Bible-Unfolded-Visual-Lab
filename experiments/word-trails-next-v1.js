@@ -45,6 +45,42 @@ const LEVELS=[
   words:[['VEILS',2,0,'across'],['LIVES',0,0,'down'],['LIES',0,0,'across'],['SOLE',4,0,'across'],['SOLVE',0,3,'down']],
   bonus:'OLIVE EVILS EVIL OILS VEIL LOVE LIVE VILE VIES ISLE SILO OIL LIE VIE VOLES VOLE'}
 ];
+/* Every level now hides multiple source-verified Bible discoveries.
+   Keep the crossword casual, but offer a meaningful optional Bible-word hunt.
+   Content is limited to NWT 2013 and the exact JW.org verses cited below. */
+const EXTRA_SPARKS=[
+ [{word:'ANT',clue:'A tiny worker held up as a lesson in practical wisdom',reference:'Proverbs 6:6-8',
+  url:'https://www.jw.org/en/library/bible/nwt/books/proverbs/6/',
+  insight:'Proverbs 6:6-8 invites us to observe the ant and learn wisdom from its diligence and preparation.'}],
+ [{word:'REED',clue:'A riverside plant that sheltered the basket holding baby Moses',reference:'Exodus 2:3-5',
+  url:'https://www.jw.org/en/library/bible/nwt/books/exodus/2/',
+  insight:'Exodus 2:3-5 says Moses was placed in a papyrus basket among the reeds by the Nile. Pharaoh’s daughter later found him there.'}],
+ [{word:'SEA',clue:'Jesus spoke to this during a violent storm',reference:'Mark 4:37-39',
+  url:'https://www.jw.org/en/library/bible/nwt/books/mark/4/',
+  insight:'When a storm threatened the boat, Jesus rebuked the wind and commanded the sea to become quiet. A great calm followed (Mark 4:37-39).'}],
+ [{word:'SEAL',clue:'The scroll in Revelation chapter 5 had seven of these',reference:'Revelation 5:1',
+  url:'https://www.jw.org/en/library/bible/nwt/books/revelation/5/',
+  insight:'Revelation 5:1 describes a scroll in the right hand of the One seated on the throne, sealed tight with seven seals.'}],
+ [{word:'ELI',clue:'The high priest who spoke with young Samuel',reference:'1 Samuel 3:8, 9',
+  url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/3/',
+  insight:'When young Samuel heard his name called at night, Eli eventually understood that Jehovah was calling the boy and instructed him how to respond (1 Samuel 3:8, 9).'}],
+ [{word:'SHEAR',clue:'What Nabal’s workers were doing with his sheep when David sent his men',reference:'1 Samuel 25:2-7',
+  url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/',
+  insight:'In 1 Samuel 25:2-7, Nabal was having his sheep sheared. David sent men with a respectful request, but Nabal responded harshly.'}],
+ [{word:'TREE',clue:'Jesus used a fruitless fig one to teach his disciples about faith',reference:'Matthew 21:18-22',
+  url:'https://www.jw.org/en/library/bible/nwt/books/matthew/21/',
+  insight:'Jesus found no fruit on a fig tree, and it withered after he spoke to it. He then taught his disciples about faith (Matthew 21:18-22).'}],
+ [{word:'OIL',clue:'An ingredient in the special holy anointing mixture',reference:'Exodus 30:22-25',
+  url:'https://www.jw.org/en/library/bible/nwt/books/exodus/30/',
+  insight:'Jehovah gave Moses a recipe for holy anointing oil that included olive oil and fine perfumes (Exodus 30:22-25).'},
+  {word:'LOVE',clue:'The quality Jesus said would identify his true disciples',reference:'John 13:34, 35',
+  url:'https://www.jw.org/en/library/bible/nwt/books/john/13/',
+  insight:'Jesus gave his disciples a new commandment to love one another. He said such love would identify his disciples (John 13:34, 35).'}]
+];
+const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
+ {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
+ ...EXTRA_SPARKS[i]
+]);
 const STORAGE='bu-visual-lab-wordtrails-next-v1';
 const $=id=>document.getElementById(id);
 const F=(name,value)=>document.documentElement.style.setProperty(name,value);
@@ -72,7 +108,18 @@ function buildCells(level){
  return map;
 }
 const BOARDS=LEVELS.map(buildCells);
-const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
+BIBLE_SPARKS.forEach((list,i)=>{
+ const rack=LEVELS[i].rack,seen=new Set(),required=new Set(LEVELS[i].words.map(x=>x[0]));
+ if(list.length<2)throw Error('Each Bible level needs at least two finds');
+ for(const item of list){
+  if(!valid(item.word)||!canMake(rack,item.word)||required.has(item.word)||seen.has(item.word))
+   throw Error('Bad or overlapping Bible discovery '+i+':'+item.word);
+  if(!item.url.startsWith('https://www.jw.org/en/library/bible/nwt/'))
+   throw Error('Scripture reference must be JW.org NWT');
+  seen.add(item.word);
+ }
+});
+const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],claimedSparks:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
 function load(){
  try{const o=JSON.parse(localStorage.getItem(STORAGE));if(!o||typeof o!=='object')return DEFAULT();
   const x={...DEFAULT(),...o};
@@ -80,6 +127,15 @@ function load(){
   x.unlocked=Math.max(0,Math.min(LEVELS.length-1,Number(x.unlocked)||0));
   x.coins=Math.max(0,Number(x.coins)||0);x.points=Math.max(0,Number(x.points)||0);
   for(const key of ['completed','sparks','paidWords','paidBonuses','claimedFreeHints'])if(!Array.isArray(x[key]))x[key]=[];
+  if(!Array.isArray(x.claimedSparks))x.claimedSparks=[];
+  // Migration: a completed old single star was the FIRST Bible word in its level.
+  // Keep the original reward and never pay it again.
+  for(const oldIndex of x.sparks){
+   if(Number.isInteger(oldIndex)&&BIBLE_SPARKS[oldIndex]){
+    const key=oldIndex+':'+BIBLE_SPARKS[oldIndex][0].word;
+    if(!x.claimedSparks.includes(key))x.claimedSparks.push(key);
+   }
+  }
   return x;
  }catch(_){return DEFAULT()}
 }
@@ -93,6 +149,10 @@ const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matc
 function store(){
  try{localStorage.setItem(STORAGE,JSON.stringify(save))}catch(_){}
 }
+function sparkKey(i,word){return i+':'+word}
+function sparkClaimed(i,word){return save.claimedSparks.includes(sparkKey(i,word))}
+function sparksFound(i=index){return BIBLE_SPARKS[i].filter(s=>sparkClaimed(i,s.word)).length}
+function sparkTotal(i=index){return BIBLE_SPARKS[i].length}
 function storeProgress(){
  save.progress={level:index,found:[...found],bonuses:[...bonuses],hinted:[...hinted],combo};
  store();
