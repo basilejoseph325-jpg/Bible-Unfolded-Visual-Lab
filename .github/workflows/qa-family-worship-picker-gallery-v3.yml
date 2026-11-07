@@ -1,4 +1,4 @@
-name: QA Family Worship V4 crops and isolated topic scene fixes
+name: QA Family Worship V6 artwork, selectors and no-scroll
 on:
   push:
     paths:
@@ -36,6 +36,15 @@ jobs:
           assert 'family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3' in loader
           assert len(list(Path('family-worship-menu-art/v4').glob('*.webp')))==3
           assert Path('family-worship-menu-art/v5/topic-38-jesus-ministry.webp').exists()
+          v6=Path('family-worship-menu-art/v6')
+          required=('topic-10-tower-of-babel.jpg','topic-19-elisha.jpg','topic-27-samuel.jpg')
+          assert all((v6/name).exists() for name in required), 'new isolated scene missing'
+          image_js=Path('family-worship-picker-gallery-v3.js').read_text()
+          for name in required:
+            assert image_js.count('family-worship-menu-art/v6/'+name)==1, name
+          assert all((v6/name).read_bytes().startswith(bytes([255,216,255])) for name in required), 'invalid jpeg'
+          assert all((v6/name).read_bytes().endswith(bytes([255,217])) for name in required), 'truncated jpeg'
+          print('PASS: all three V6 Babel, Elisha and Samuel isolated photos with correct selectors')
           assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
           assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
@@ -161,7 +170,7 @@ jobs:
               });
               console.log('SIX_PLAYER_EXTERIOR',JSON.stringify(six));
               if(six.people!==6||six.scroll>1||six.startBottom>six.viewport||!six.exteriorCss)throw Error('Frozen exterior no-scroll behavior regressed');
-              console.log('PASS Family Worship V4: 18 top-aligned cards, approved exceptions, three new isolated scene assets, working picker and 6-player no-scroll');
+              console.log('PASS Family Worship V6: three isolated verified scenes, 42 photographic topics, four levels, search, 6-player no-scroll');
             }catch(err){console.error('FAIL',err.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
