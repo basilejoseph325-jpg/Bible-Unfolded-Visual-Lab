@@ -13,7 +13,11 @@ let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
 }catch(_){}
 let ctx=null,master=null,limiter=null,peakGuard=null,signalMeter=null,noise=null;
 const EFFECTS_MIX_GAIN=11.2; // Original output bus retained; levels are now mastered at the VOICE stage.
-const VOICE_LOUDNESS_BOOST=4.0; // Fourfold increase BEFORE the compressor, not after it.
+const VOICE_LOUDNESS_BOOST=4.0; // Retain the approved baseline for tap, swipe, and deselect.
+const FEATURE_CUE_BOOST=3.25; // Extra volume and body ONLY for non-touch feedback.
+const QUIET_CUES=new Set(['touch','trace','undo']);
+let activeCueKind='touch';
+function cueBoost(kind){return QUIET_CUES.has(kind)?1:FEATURE_CUE_BOOST}
 let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
@@ -74,7 +78,7 @@ function audio(){
   return ctx;
  }catch(_){return null}
 }
-function vol(g){return g*(pref.sfxVolume/100)*VOICE_LOUDNESS_BOOST}
+function vol(g){return g*(pref.sfxVolume/100)*VOICE_LOUDNESS_BOOST*cueBoost(activeCueKind)}
 function audioMeter(){
  if(!signalMeter)return {peak:0,rms:0,state:ctx?.state||'uninitialized'};
  const arr=new Float32Array(signalMeter.fftSize);
@@ -88,8 +92,15 @@ function pluck(f,delay=0,len=.14,gain=.04,shape='sine',to){
   const t=a.currentTime+delay,osc=a.createOscillator(),g=a.createGain();
   osc.type=shape;osc.frequency.setValueAtTime(Math.max(f,30),t);
   if(to)osc.frequency.exponentialRampToValueAtTime(Math.max(to,30),t+len);
+  const peak=Math.max(.00007,vol(gain));
   g.gain.setValueAtTime(.00005,t);
-  g.gain.exponentialRampToValueAtTime(Math.max(.00007,vol(gain)),t+.011);
+  g.gain.exponentialRampToValueAtTime(peak,t+.011);
+  if(!QUIET_CUES.has(activeCueKind)){
+   // Bigger perceived loudness: keep a short body on reward chimes instead
+   // of only boosting an inaudible 11ms transient into the peak limiter.
+   g.gain.exponentialRampToValueAtTime(Math.max(.00007,peak*.81),
+     t+Math.min(len*.58,Math.max(.015,len-.025)));
+  }
   g.gain.exponentialRampToValueAtTime(.00005,t+len);
   osc.connect(g);g.connect(master);osc.start(t);osc.stop(t+len+.02);
   osc.onended=()=>{osc.disconnect();g.disconnect()};
@@ -108,8 +119,12 @@ function air(delay=0,duration=.07,gain=.012,freq=1200){
   }
   const source=a.createBufferSource(),filter=a.createBiquadFilter(),g=a.createGain();
   const t=a.currentTime+delay;source.buffer=noise;filter.type='bandpass';filter.frequency.value=freq;filter.Q.value=.47;
+  const peak=Math.max(.00008,vol(gain));
   g.gain.setValueAtTime(.00005,t);
-  g.gain.linearRampToValueAtTime(Math.max(.00008,vol(gain)),t+.012);
+  g.gain.linearRampToValueAtTime(peak,t+.012);
+  if(!QUIET_CUES.has(activeCueKind)){
+   g.gain.exponentialRampToValueAtTime(Math.max(.00008,peak*.72),t+duration*.58);
+  }
   g.gain.exponentialRampToValueAtTime(.00005,t+duration);
   source.connect(filter);filter.connect(g);g.connect(master);source.start(t);source.stop(t+duration+.006);
   source.onended=()=>{source.disconnect();filter.disconnect();g.disconnect()};
@@ -119,8 +134,10 @@ function cue(kind){
  if(!pref.sfx||!active())return;
  const now=performance.now(),gap=kind==='trace'?48:kind==='touch'?54:kind==='wrong'?130:110;
  if(now-(last.get(kind)||-5000)<gap)return;last.set(kind,now);
- // All notes are original, gentle, and intentionally free of knocks/thuds.
- switch(kind){
+ // Retain identical tap, swipe and undo samples/envelopes, while giving
+ // the other existing cues more sustained presence on phone speakers.
+ activeCueKind=kind;
+ try{switch(kind){
   case 'touch': air(0,.065,.018,1000);pluck(660,0,.064,.008,'sine',550);break;
   case 'undo': air(0,.051,.011,820);pluck(545,0,.065,.006,'sine',480);break;
   case 'wordSettle': pluck(960,0,.12,.007,'sine',840);air(0,.07,.005,1750);break;
@@ -142,7 +159,7 @@ function cue(kind){
   case 'complete': [392,523,659,784,1047].forEach((f,i)=>{
    pluck(f,i*.105,.40,.039,'sine');pluck(f*1.5,i*.105,.25,.015,'triangle')
   });air(.33,.24,.022,2300);break;
- }
+ }}finally{activeCueKind='touch';}
 }
 function haptic(pattern){if(!pref.haptics||!motion())return;
  try{navigator.vibrate?.(pattern)}catch(_){}
@@ -279,7 +296,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else makeSettings();
 window.BUWTPolish=Object.freeze({
  cue,event,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
- voiceBoost:()=>VOICE_LOUDNESS_BOOST,audioMeter,
+ voiceBoost:()=>VOICE_LOUDNESS_BOOST,featureBoost:cueBoost,audioMeter,
  musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
  motionEnabled:motion,hapticsEnabled:()=>!!pref.haptics&&motion(),haptic,state,
