@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0c2630">
+<title>Story Crossword • Bible Unfolded Visual Lab</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071d25}
+body{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:#fff2d1}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:focus-visible{outline:3px solid #f8d180;outline-offset:2px}
+#shell{position:relative;width:100%;max-width:540px;height:100vh;height:100dvh;margin:auto;overflow:hidden;
+display:grid;grid-template-rows:clamp(82px,11dvh,104px) minmax(0,1fr) clamp(58px,8dvh,76px) clamp(220px,32dvh,288px) clamp(36px,6dvh,50px);
+background:#0b2734}
+#shell:before{content:"";position:absolute;inset:0;z-index:0;
+background:linear-gradient(180deg,rgba(3,13,20,.53) 0%,rgba(6,21,28,.12) 28%,rgba(7,23,28,.08) 55%,rgba(5,18,23,.46) 100%),url("../bible-book-art/01_genesis.webp") center/cover no-repeat;
+filter:saturate(.98) contrast(1.04)}
+#shell:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+background:radial-gradient(ellipse at 55% 48%,transparent 30%,rgba(0,18,24,.25) 95%)}
+#shell>*{position:relative;z-index:1}
+header{padding:10px 14px 4px;display:grid;grid-template-columns:50px 1fr 58px;gap:5px;align-items:start;
+filter:drop-shadow(0 2px 5px #061a20a8)}
+header .back{display:grid;place-items:center;width:43px;height:43px;background:rgba(8,34,46,.74);
+border:1px solid #cfb781;border-radius:13px;color:#f8deaa;text-decoration:none;font-size:24px;font-weight:bold}
+header .head{text-align:center;min-width:0}
+.head .mode{font-size:10px;letter-spacing:.19em;color:#f4d690;font-weight:850;white-space:nowrap}
+.head h1{margin:3px 0 0;font:700 clamp(21px,6.4vw,28px)/1.06 Georgia,serif;color:#fff0c5;text-shadow:0 2px 4px #000a}
+.head .episode{margin-top:5px;font-size:11px;font-weight:650;letter-spacing:.11em;color:#f4e3bf}
+.head .progress{margin:5px auto 0;display:flex;justify-content:center;gap:5px}
+.progress i{display:block;width:22px;height:3px;border-radius:4px;background:#fff7c04a}
+.progress i.done{background:#e6c47a;box-shadow:0 0 6px #fff0bb8c}
+header .lab{justify-self:end;background:#9c352e;border:1px solid #f0b99a;border-radius:13px;
+padding:6px 8px;line-height:1.08;font-size:10px;font-weight:850;text-align:center;letter-spacing:.06em;color:#fff1d7}
+#board-region{display:flex;justify-content:center;align-items:center;min-height:0;padding:6px 12px}
+#board{--cell:clamp(30px,min(10vw,5.35dvh),50px);
+display:grid;grid-template-columns:repeat(6,var(--cell));grid-template-rows:repeat(8,var(--cell));
+gap:4px;justify-content:center;align-content:center;touch-action:manipulation;filter:drop-shadow(0 4px 6px #0007)}
+.tile{border:2px solid #ead29fbd;border-radius:9px;
+background:linear-gradient(145deg,rgba(7,36,43,.82),rgba(6,31,39,.76));
+color:#fff2c7;font:800 clamp(17px,5.2vw,25px)/1 Georgia,serif;
+text-shadow:0 2px 2px #0009;box-shadow:inset 0 1px 1px #ffffff20,0 3px 2px #0005;
+display:grid;place-items:center;padding:0;position:relative}
+.tile.active{border-color:#ffe8a5;box-shadow:0 0 0 2px #edcf7885,0 0 14px #ffdf8c7a,inset 0 1px #fff7}
+.tile.done{background:linear-gradient(145deg,#edc878,#b98238);color:#182e32;
+border-color:#fff1bd;text-shadow:0 1px #fff1bd6b;box-shadow:0 2px 2px #0004}
+.tile.done.active{box-shadow:0 0 0 2px #fff7d3a8,0 0 10px #e9cf85a6}
+.tile:active{transform:translateY(1px)}
+#clue{align-self:stretch;display:flex;align-items:center;justify-content:center;flex-direction:column;
+gap:3px;margin:0 21px 4px;padding:8px 14px;border-radius:15px;
+background:linear-gradient(140deg,#09252ed4,#0b3441cd);
+border:1px solid #d8bd7c9e;box-shadow:0 6px 14px #0006;text-align:center}
+#clue .category{font-size:10px;letter-spacing:.15em;font-weight:850;color:#e8ce8b}
+#clue .prompt{color:#fff7df;font-size:clamp(12px,3.35vw,15px);font-weight:600;line-height:1.25;max-width:440px}
+#wheel-area{display:flex;justify-content:center;align-items:center;position:relative;touch-action:none}
+#wheel{--wheel:clamp(210px,min(61vw,30dvh),280px);
+position:relative;width:var(--wheel);height:var(--wheel);border-radius:50%;touch-action:none;
+background:radial-gradient(circle at 47% 35%,rgba(18,42,47,.75),rgba(4,17,25,.83));
+border:1px solid #fae8b287;box-shadow:0 8px 30px #0007,inset 0 0 34px #0006;
+-webkit-user-select:none;user-select:none}
+#wheel .letter{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+width:clamp(46px,13.2vw,61px);height:clamp(46px,13.2vw,61px);
+background:transparent;border:0;border-radius:50%;
+font:800 clamp(31px,9vw,43px)/1 system-ui,sans-serif;color:#fffbeb;
+text-shadow:0 3px 4px #0009;display:grid;place-items:center}
+#wheel .letter.selected{color:#172d2b;background:radial-gradient(circle,#f5db9f,#d6ac59);
+box-shadow:0 0 0 2px #fff1b5,0 0 14px #ffdb85a0;text-shadow:none}
+#wheel .letter.excluded{opacity:.36}
+#wheel .letter:active{transform:translate(-50%,-50%) scale(.95)}
+#wheel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:50px;
+height:50px;border-radius:50%;display:grid;place-items:center;
+border:1px solid #f5dba16b;color:#fff0c0;font-size:11px;font-weight:850;letter-spacing:.04em;
+background:rgba(8,26,34,.44);pointer-events:none;text-align:center;line-height:1.14}
+#trace{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+max-width:190px;pointer-events:none;background:#0d303cdb;padding:6px 12px;border-radius:30px;
+color:#ffe4a4;font-weight:850;font-size:17px;letter-spacing:.12em;text-align:center;
+border:1px solid #e6c07994;min-width:84px;opacity:0;transition:opacity .1s;white-space:nowrap}
+#trace.show{opacity:1}
+#extras{position:absolute;inset:0;pointer-events:none}
+.aux{position:absolute;bottom:13px;width:51px;height:51px;display:grid;place-items:center;
+border-radius:50%;background:#0d2e3cde;border:2px solid #ecd19c;
+box-shadow:0 4px 12px #0008;color:#ffedc2;pointer-events:auto}
+.aux.left{left:18px;font-size:29px}.aux.right{right:18px;font-size:28px}
+.aux small{position:absolute;bottom:-9px;right:-5px;background:#be783e;border:1px solid #fff3c0;
+border-radius:12px;font-size:10px;padding:2px 5px;color:#fff}
+footer{display:flex;align-items:center;justify-content:space-between;gap:8px;
+padding:2px 16px 9px;font-size:11px;color:#fff0cae8;text-shadow:0 1px 2px #000}
+footer button{border:0;background:transparent;color:#fae4a8;text-decoration:underline;text-underline-offset:3px}
+#notice{position:absolute;left:50%;top:51%;transform:translate(-50%,-50%);z-index:4;
+border:1px solid #fff0bb;padding:9px 15px;border-radius:12px;font-weight:800;font-size:14px;
+text-align:center;background:#173e47e9;color:#ffe0a1;opacity:0;pointer-events:none;
+box-shadow:0 5px 15px #0009;transition:opacity .16s}
+#notice.show{opacity:1}
+dialog{border:0;padding:0;background:transparent;color:#432a19;width:min(99vw,460px);
+height:min(84dvh,665px);max-height:84dvh;overflow:hidden;filter:drop-shadow(0 12px 25px #000b)}
+dialog::backdrop{background:#02151fcf;backdrop-filter:blur(6px)}
+#scroll-art{height:100%;display:flex;flex-direction:column;align-items:stretch;
+padding:clamp(122px,18dvh,153px) clamp(38px,10vw,64px) clamp(99px,14dvh,120px);
+background:url("../assets/ui/daily-discovery-explanation-scroll-v3.webp") center/100% 100% no-repeat;
+position:relative}
+#scroll-art .x{position:absolute;top:clamp(91px,13.5dvh,123px);right:clamp(36px,10vw,60px);
+width:35px;height:35px;border:2px solid #fff0b0;border-radius:50%;
+background:radial-gradient(circle,#e6bc64,#95611f);
+font-size:24px;font-weight:800;color:#fff2c4}
+#scroll-art h2{font:italic 800 clamp(20px,5vw,27px)/1.2 Georgia,serif;
+text-align:center;color:#31572c;margin:0 4px 14px;text-shadow:0 1px #fff2bd}
+#scroll-art p{overflow:auto;flex:1 1 auto;min-height:0;margin:0;
+padding:0 2px;font:italic 500 clamp(15px,3.8vw,17px)/1.55 Georgia,serif;color:#422816}
+#scroll-art .wax{align-self:center;flex:0 0 auto;width:92%;height:58px;min-height:58px;margin-top:10px;
+background:transparent url("../assets/ui/daily-explanation-wax-next-v2.svg") center/100% 100% no-repeat;
+border:0;padding:4px 57px 4px 8px;color:#ffdf91;font:800 clamp(14px,4vw,19px) Georgia,serif;
+text-shadow:0 2px 2px #230909;filter:drop-shadow(0 2px 3px #0006)}
+@media(max-height:690px){
+#shell{grid-template-rows:65px minmax(0,1fr) 54px clamp(180px,28dvh,240px) 30px}
+#board{--cell:clamp(26px,min(9.6vw,4.8dvh),40px)}
+#clue{margin-bottom:1px}
+#scroll-art{padding-top:clamp(90px,16dvh,125px);padding-bottom:clamp(75px,13dvh,105px)}
+#scroll-art .x{top:clamp(70px,12dvh,99px)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<div id="shell">
+  <header>
+    <a href="../index.html" class="back" aria-label="Return to Visual Lab">‹</a>
+    <div class="head"><div class="mode">BIBLE UNFOLDED • STORY ADVENTURE</div><h1>Creation Unfolds</h1>
+    <div class="episode">GENESIS • EPISODE 1</div><div class="progress" id="progress" aria-label="Puzzle progress"></div></div>
+    <div class="lab">TEST<br>CONCEPT</div>
+  </header>
+  <main id="board-region" aria-label="Intersecting Bible word puzzle"><div id="board"></div></main>
+  <div id="clue" aria-live="polite"><div class="category" id="clue-type">WORD 1 OF 4</div>
+    <div class="prompt" id="prompt">Choose the letters to solve the Bible word.</div></div>
+  <section id="wheel-area" aria-label="Letter wheel">
+    <div id="wheel"><div id="wheel-center">TRACE<br>LETTERS</div></div>
+    <div id="extras"><button class="aux left" id="shuffle" type="button" aria-label="Shuffle letters">⇄</button>
+    <button class="aux right" id="hint" type="button" aria-label="Reveal first letter">♧<small>HINT</small></button></div>
+    <output id="trace" aria-live="polite"></output>
+  </section>
+  <footer><span id="solved">0 of 4 Bible words found</span>
+  <button id="restart" type="button">Restart concept</button></footer>
+  <output id="notice" aria-live="polite"></output>
+</div>
+<dialog id="discovery" aria-labelledby="scroll-title">
+  <div id="scroll-art"><button class="x" id="scroll-x" aria-label="Close explanation">×</button>
+    <h2 id="scroll-title"></h2><p id="scroll-body"></p>
+    <button class="wax" id="scroll-next">Next Word</button>
+  </div>
+</dialog>
+<script>
+(function(){
+'use strict';
+var words=[
+ {text:'EARTH',row:0,col:4,dir:'down',clue:'What did Jehovah create along with the heavens? • Genesis 1:1',
+  detail:'Genesis 1:1 states that God created the heavens and the earth. The Bible does not give the age of the universe.'},
+ {text:'LIGHT',row:4,col:1,dir:'across',clue:'What did God command to appear? • Genesis 1:3',
+  detail:'Genesis 1:3 records the command for light to appear. The opening account describes the earth being prepared for life.'},
+ {text:'NIGHT',row:3,col:2,dir:'down',clue:'What name was given to the darkness? • Genesis 1:5',
+  detail:'Genesis 1:5 says that God called the light Day, and the darkness Night. The account repeatedly draws attention to order.'},
+ {text:'WATER',row:7,col:0,dir:'across',clue:'What covered the earth before dry land appeared? • Genesis 1:2, 9',
+  detail:'Genesis 1:2 refers to waters over the earth, and Genesis 1:9 describes those waters being gathered so that dry land could appear.'}
+];
+var done=new Set(),active=0,rack=[],picked=[],drag=false,dragged=false,noticeTimer=null;
+var board=document.getElementById('board'),wheel=document.getElementById('wheel'),trace=document.getElementById('trace');
+var modal=document.getElementById('discovery'),notice=document.getElementById('notice');
+var grid=new Map();
+words.forEach(function(w,i){
+ for(var j=0;j<w.text.length;j++){
+  var r=w.row+(w.dir==='down'?j:0),c=w.col+(w.dir==='across'?j:0),key=r+','+c;
+  if(!grid.has(key))grid.set(key,{r:r,c:c,letter:w.text[j],indices:[i]});
+  else {
+   var old=grid.get(key);
+   if(old.letter!==w.text[j])throw Error('Crossing conflict at '+key);
+   old.indices.push(i);
+  }
+ }
+});
+function msg(s){notice.textContent=s;notice.classList.add('show');clearTimeout(noticeTimer);
+noticeTimer=setTimeout(function(){notice.classList.remove('show')},1350)}
+function mix(src){var a=src.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var temp=a[i];a[i]=a[j];a[j]=temp}return a}
+function startWord(i){if(done.has(i))return;active=i;rack=mix(words[i].text.split(''));picked=[];drawAll()}
+function renderBoard(){
+ board.replaceChildren();
+ grid.forEach(function(cell){
+  var b=document.createElement('button'),revealed=cell.indices.some(function(i){return done.has(i)});
+  b.type='button';b.className='tile'+(revealed?' done':'')+(cell.indices.includes(active)&&!done.has(active)?' active':'');
+  b.style.gridRow=String(cell.r+1);b.style.gridColumn=String(cell.c+1);
+  b.textContent=revealed?cell.letter:'';
+  b.setAttribute('aria-label',(revealed?cell.letter+' — ':'Empty square — ')+'choose '+words[cell.indices.find(function(i){return !done.has(i)})||cell.indices[0]].text);
+  b.addEventListener('click',function(){
+   var next=cell.indices.find(function(i){return !done.has(i)});
+   if(next!==undefined)startWord(next);
+  });board.append(b);
+ });
+ document.getElementById('progress').replaceChildren();
+ words.forEach(function(w,i){var d=document.createElement('i');if(done.has(i))d.className='done';document.getElementById('progress').append(d)});
+ document.getElementById('solved').textContent=done.size+' of '+words.length+' Bible words found';
+}
+function renderWheel(){
+ wheel.querySelectorAll('.letter').forEach(function(el){el.remove()});
+ var n=rack.length,diameter=wheel.getBoundingClientRect().width,radius=diameter*.36;
+ rack.forEach(function(letter,i){
+  var a=-Math.PI/2+2*Math.PI*i/n;
+  var b=document.createElement('button');b.type='button';b.className='letter'+(picked.includes(i)?' selected':'');
+  b.textContent=letter;b.dataset.wheelIndex=String(i);b.setAttribute('aria-label','Letter '+letter);
+  b.style.left='calc(50% + '+Math.round(Math.cos(a)*radius)+'px)';
+  b.style.top='calc(50% + '+Math.round(Math.sin(a)*radius)+'px)';
+  b.addEventListener('click',function(e){if(dragged){e.preventDefault();return}tap(i)});
+  wheel.append(b);
+ });
+}
+function drawAll(){
+ renderBoard();renderWheel();
+ document.getElementById('clue-type').textContent='WORD '+(active+1)+' OF '+words.length+' • '+words[active].dir.toUpperCase();
+ document.getElementById('prompt').textContent=words[active].clue;
+ updateTrace();
+}
+function updateTrace(){
+ var s=picked.map(function(i){return rack[i]}).join('');
+ trace.textContent=s;trace.classList.toggle('show',s.length>0);
+ rack.length&&wheel.querySelectorAll('.letter').forEach(function(b){b.classList.toggle('selected',picked.includes(Number(b.dataset.wheelIndex)))});
+ if(picked.length===rack.length)complete();
+}
+function tap(i){
+ if(picked.includes(i))return;
+ picked.push(i);updateTrace();
+}
+function complete(){
+ var guess=picked.map(function(i){return rack[i]}).join('');
+ if(guess===words[active].text){
+  done.add(active);renderBoard();document.getElementById('scroll-title').textContent=words[active].text;
+  document.getElementById('scroll-body').textContent=words[active].detail;
+  document.getElementById('scroll-next').textContent=done.size===words.length?'Complete Discovery':'Next Word';
+  if(!modal.open)modal.showModal();
+ }else{
+  msg('Try another letter order');
+  picked=[];updateTrace();
+ }
+}
+function dismiss(){
+ if(modal.open)modal.close();
+ if(done.size===words.length){
+  msg('Episode 1 concept complete ✦');
+  document.getElementById('clue-type').textContent='DISCOVERY COMPLETE';
+  document.getElementById('prompt').textContent='Four connected discoveries, one unfolding Bible account.';
+  wheel.querySelectorAll('.letter').forEach(function(b){b.remove()});
+  trace.classList.remove('show');
+  return;
+ }
+ var next=words.findIndex(function(w,i){return !done.has(i)});
+ startWord(next);
+}
+document.getElementById('scroll-next').addEventListener('click',dismiss);
+document.getElementById('scroll-x').addEventListener('click',dismiss);
+modal.addEventListener('cancel',function(e){e.preventDefault();dismiss()});
+document.getElementById('shuffle').addEventListener('click',function(){if(done.size===words.length)return; rack=mix(rack);picked=[];drawAll();});
+document.getElementById('hint').addEventListener('click',function(){
+ if(done.size===words.length)return;
+ var correct=words[active].text[0],arr=rack.slice(),i=arr.indexOf(correct);
+ if(i<0)return;
+ var idx=arr.indexOf(correct);var chosen=[idx];
+ rack=arr;picked=chosen;updateTrace();msg('First letter: '+correct);
+});
+document.getElementById('restart').addEventListener('click',function(){done.clear();active=0;if(modal.open)modal.close();startWord(0);});
+wheel.addEventListener('pointerdown',function(e){
+ var b=e.target.closest('.letter');if(!b||done.size===words.length)return;
+ drag=true;dragged=false;picked=[Number(b.dataset.wheelIndex)];
+ try{wheel.setPointerCapture(e.pointerId)}catch(_){}
+ updateTrace();
+});
+wheel.addEventListener('pointermove',function(e){
+ if(!drag)return;
+ var b=document.elementFromPoint(e.clientX,e.clientY)?.closest('.letter');
+ if(b&&wheel.contains(b)){
+  var i=Number(b.dataset.wheelIndex);
+  if(!picked.includes(i)){picked.push(i);dragged=true;updateTrace();}
+ }
+});
+function release(e){
+ if(!drag)return;
+ drag=false;
+ if(picked.length===1&&!dragged){
+  var first=picked[0];picked=[];tap(first);
+ }
+ if(picked.length<rack.length)updateTrace();
+ if(dragged)setTimeout(function(){dragged=false},60);
+}
+wheel.addEventListener('pointerup',release);
+wheel.addEventListener('pointercancel',release);
+window.addEventListener('resize',renderWheel);
+startWord(0);
+})();
+</script>
+</body>
+</html>
