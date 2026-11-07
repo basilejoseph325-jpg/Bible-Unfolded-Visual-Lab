@@ -26,6 +26,8 @@ jobs:
           assert 'Show previous Word Trails for comparison' in launcher
           assert 'wt-next-compare' in launcher
           assert 'Visual Lab only' in launcher
+          assert "window.BUPremiumSFX?.play?.('navigate')" in launcher
+          assert '235' in launcher, 'Standalone entry must allow menu cue to begin playing'
           print('PASS launcher does not alter live or main game logic')
           PY
       - name: Test Word Trails selector replacement card and old-version toggle
@@ -104,7 +106,15 @@ jobs:
                 document.addEventListener('click',e=>data('document',e),true);
                 document.querySelector('#home-cross').addEventListener('click',e=>data('button',e),true);
               });
-              await page.evaluate(()=>document.querySelector('#home-cross').click());
+              await page.evaluate(()=>{
+                const previous=window.BUPremiumSFX;
+                if(!previous?.play)throw Error('Shared premium navigation SFX missing from Visual Lab');
+                window.BUPremiumSFX={...previous,play:(kind,...args)=>{
+                  sessionStorage.setItem('wt-last-nav-sfx',kind);
+                  return previous.play(kind,...args);
+                }};
+                document.querySelector('#home-cross').click();
+              });
               await new Promise(r=>setTimeout(r,550));
               const homeResult=await page.evaluate(()=>({
                 href:location.href,base:document.baseURI,
@@ -125,6 +135,29 @@ jobs:
               assert(route.url.endsWith('word-trails-next-v1.html'));
               assert.equal(route.tileCount,15);
               assert(route.level.includes('LEVEL 1'),'Homepage should open directly into playable level 1');
+              const clickCue=await page.evaluate(()=>sessionStorage.getItem('wt-last-nav-sfx'));
+              console.log('TRAILS_HOME_NAV_SOUND',clickCue);
+              assert.equal(clickCue,'navigate','Word Trails entrance must play the exact same shared navigation cue as other modes');
+              await page.evaluate(()=>{
+                const key='bu-visual-lab-wordtrails-next-v1';
+                const state=JSON.parse(localStorage.getItem(key));
+                state.level=0;state.progress={level:0,found:['COIN'],bonuses:[],hinted:[],combo:1};
+                localStorage.setItem(key,JSON.stringify(state));
+              });
+              await page.reload({waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForFunction(()=>location.pathname.endsWith('/index.html'),{timeout:15000});
+              await page.waitForSelector('#home #bu-visual-lab-test-banner',{timeout:15000});
+              const refreshed=await page.evaluate(()=>{
+                const x=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
+                return {path:location.pathname,search:location.search,home:!!document.querySelector('#home'),saved:x?.progress?.found};
+              });
+              console.log('WORD_TRAILS_REFRESH_TO_HOME',JSON.stringify(refreshed));
+              assert(refreshed.search.includes('wt_home_refresh='));
+              assert(refreshed.home&&refreshed.saved?.includes('COIN'),'Refresh must return to home and preserve test progress');
+              await page.waitForSelector('#home-cross',{timeout:10000});
+              await page.evaluate(()=>document.querySelector('#home-cross').click());
+              await page.waitForFunction(()=>location.pathname.endsWith('/experiments/word-trails-next-v1.html'),{timeout:15000});
+              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4','Re-entering from homepage must restore puzzle progress');
               await page.goto('http://127.0.0.1:8766/index.html?trails=previous',{waitUntil:'domcontentloaded',timeout:120000});
               await page.waitForSelector('#wt-next-entry',{timeout:60000});
               await page.evaluate(()=>document.querySelector('#home-cross').click());
