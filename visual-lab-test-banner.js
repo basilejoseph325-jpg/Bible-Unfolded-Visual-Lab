@@ -32,4 +32,4 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else install();
 })();
 /* Load new Word Trails selector only within the isolated Visual Lab. */
-(()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=20261107-home-direct-v2';s.defer=true;document.head.appendChild(s)})();
+(()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=20261107-home-nav-sound-v3';s.defer=true;document.head.appendChild(s)})();
