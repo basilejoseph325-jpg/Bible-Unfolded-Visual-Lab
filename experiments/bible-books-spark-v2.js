@@ -6,16 +6,17 @@
 'use strict';
 const ALPHABET='ACTION';
 const WORDS=[
-  // Wordscapes-clean enlarged tiles: 5 columns × 6 rows.
-  // ACTION is the central vertical word; COAT, COIN and TAN cross it.
-  // The single six-letter ACTION wheel remains fixed for the whole puzzle.
-  {text:'ACTION',row:0,col:2,dir:'down'},
-  {text:'COIN',row:3,col:0,dir:'across'},
-  {text:'COAT',row:0,col:0,dir:'across'},
-  {text:'TAN',row:5,col:0,dir:'across'}
+  // Real Wordscapes-scale board: FOUR columns x FOUR rows, not a tall
+  // six-row crossword that forces all tiles small on Samsung's browser.
+  // Every word uses the SAME fixed six-letter ACTION wheel.
+  // COIN crosses COAT + INTO; ACT connects the two vertical words.
+  {text:'COIN',row:0,col:0,dir:'across'},
+  {text:'COAT',row:0,col:0,dir:'down'},
+  {text:'INTO',row:0,col:2,dir:'down'},
+  {text:'ACT',row:2,col:0,dir:'across'}
 ]
 const EXTRAS=new Set([
-  'ACT','ANTIC','ANTI','CAN','CAT','COT','CON','ION','NOT',
+  'ACTION','ANTIC','ANTI','CAN','CAT','COT','CON','ION','NOT',
   'OAT','TONIC','TIN','TON','TACO','ICON','IOTA','CIAO',
   'CANTO','CANT','NIT','TIC','COATI','CATION','ATONIC'
 ]);
@@ -35,7 +36,7 @@ WORDS.forEach((w,wordIndex)=>{
     }else cells.set(key,{key,row,col,letter,words:[wordIndex]});
   }
 });
-if(cells.size!==14)throw Error('Unexpected 5×6 Crossword board size');
+if(cells.size!==11)throw Error('Unexpected 4×4 Crossword board size');
 let letters=[],chosen=[],solved=new Set(),bonuses=new Set(),sparkFound=false;
 let points=0,hints=3,hinted=new Set(),timer=null;
 let dragging=false,dragActive=false,startPos=null,suppressClicksUntil=0,swipePointer=null;
