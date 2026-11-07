@@ -16,7 +16,7 @@
    const isFamily=!!document.querySelector('#bu35-family.bu67-family-play:not([hidden])');
    const phase=document.querySelector('#bu35-family')?.dataset.bu67Phase||'';
    const active=isFamily&&['trivia','lightning'].includes(phase)&&
-     /^Family Worship\s*[·•-]\s*(?:trivia|lightning)\s*$/i.test((head?.textContent||'').trim())&&
+     /^Family Worship\s*[·•-]\s*(?:trivia|lightning)\s*$/i.test((head?.dataset.fwOriginalTitle||head?.textContent||'').trim())&&
      !!body?.querySelector('.bu35-feedback')&&dlg.open;
    if(!active){
      if(dlg.classList.contains(TAG)){
