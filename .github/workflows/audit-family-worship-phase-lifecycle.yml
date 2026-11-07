@@ -16,20 +16,15 @@ jobs:
           from pathlib import Path
           import re
           s=''.join(p.read_text(errors='replace') for p in sorted(Path('.').glob('bible_unfolded_core_part*.js')))
-          names=['bu35Phase','bu35Render','bu35Game','bu35Answer','bu35Start','bu35Next','bu35Evaluate','bu35Complete','bu35Select','bu35Choose','bu35Advance','bu35Finish','bu35View']
-          for name in names:
-              hits=list(re.finditer(r'\b'+name+r'\b',s))
-              print('SYMBOL',name,'COUNT',len(hits))
-              for m in hits[:19]:
-                  i=m.start()
-                  print('SYMHIT',name,i,s[max(0,i-350):i+620].replace(chr(10),'\\n')[:1000])
-          for pat in [r'function\s+bu35\w*\s*\(',r'(?:const|let|var)\s+bu35\w*\s*=']:
-              hits=list(re.finditer(pat,s))
-              print('DEFINITIONS',pat,len(hits))
-              for m in hits[:110]:
-                  print('DEFINITION',m.group(0),'OFFSET',m.start(),s[m.start():m.start()+350].replace(chr(10),'\\n'))
-          for lit in ['Read answer explanation','Read the hint','View full session summary','trivia','lightning','think','story','words','wheel','finish','bu35-feedback','bu3829-tip','bu35-result']:
-              matches=list(re.finditer(re.escape(lit),s,re.I))
-              eligible=[m for m in matches if m.start()>400000]
-              print('CODE_LIT',lit,'COUNT',len(eligible),'FIRST',[(m.start(),s[max(0,m.start()-85):m.start()+140].replace(chr(10),' ')) for m in eligible[:12]])
+          names=['bu35Begin','bu35Phase','bu35NextPhase','bu35AfterTurn','bu35RenderGame','bu35Trivia','bu35BindTrivia','bu35Words','bu35BindWords','bu35Wheel','bu35BindWheel','bu35Think','bu35Finish','bu35BindFinish','bu35Handoff','bu35Reading']
+          for n in names:
+            start=s.find('function '+n+'(')
+            print('=== FUNCTION',n,'START',start,'===')
+            if start<0:continue
+            next_func=re.search(r'\nfunction\s+[A-Za-z_]\w*\s*\(',s[start+1:])
+            end=min(start+1+next_func.start(),start+13000) if next_func else start+13000
+            sample=s[start:end]
+            print('FUNCTION_BODY',n,'LEN',len(sample),sample.replace(chr(10),'\\n')[:11000])
+          start=s.find('function bu35BuildPhases(')
+          print('=== FUNCTION bu35BuildPhases ===',s[start:start+4400].replace(chr(10),'\\n'))
           PY
