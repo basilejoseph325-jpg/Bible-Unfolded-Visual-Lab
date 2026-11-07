@@ -1,0 +1,174 @@
+name: QA Word Trails FEEL LAB v2 controls rewards and phones
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-feel-v2.yml'
+      - 'experiments/word-trails-feel-v2.js'
+      - 'experiments/word-trails-feel-v2.css'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify isolated original sound and visual polish assets
+        run: |
+          node --check experiments/word-trails-feel-v2.js
+          node --check experiments/word-trails-next-v1.js
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('experiments/word-trails-feel-v2.js').read_text()
+          main=Path('experiments/word-trails-next-v1.js').read_text()
+          html=Path('experiments/word-trails-next-v1.html').read_text()
+          css=Path('experiments/word-trails-feel-v2.css').read_text()
+          assert "word-trails-feel-v2.js" in html
+          assert "word-trails-feel-v2.css" in html
+          assert html.index('word-trails-feel-v2.js')<html.index('word-trails-next-v1.js')
+          assert "window.BUWTPolish=Object.freeze(" in js
+          assert 'AudioContext' in js and 'oscillator' not in js.lower() or 'createOscillator' in js
+          assert "satchel:" in main
+          assert "Visual Lab" in js
+          assert "word-trails-next-v1" in html
+          assert "prefers-reduced-motion" in css
+          assert "pointer-events:none" in css
+          print('PASS isolated source and original synthesis; no copied commercial sound effects')
+          PY
+      - name: Verify independent settings, coin travel, reward satchel, replay, reduced motion
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-feel-v2 puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8876 --bind 127.0.0.1 >/tmp/bu-feel-v2-http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-feel-v2/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+              const page=await browser.newPage();
+              const errors=[];page.on('pageerror',e=>errors.push(e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8876/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const $=async sel=>page.$eval(sel,el=>el.textContent);
+              const check=await page.evaluate(()=>({
+                api:!!window.BUWTPolish,settings:!!document.querySelector('#wt-feel-settings'),
+                motion:document.querySelector('#app').dataset.motion,
+                coin:document.querySelector('#points').textContent,
+                tiles:document.querySelectorAll('.tile').length,
+                sounds:window.BUWTPolish?.state()
+              }));
+              console.log('START',JSON.stringify(check));
+              assert(check.api&&check.settings&&check.coin==='60'&&check.tiles===15);
+              assert.equal(check.motion,'on');
+              assert(check.sounds.music&&check.sounds.sfx&&check.sounds.motion);
+              await page.click('#audio');
+              await page.waitForSelector('#wt-feel-settings[open]');
+              const panel=await page.evaluate(()=>({
+                options:[...document.querySelectorAll('#wt-feel-settings [data-pref]')].map(x=>x.dataset.pref),
+                sample:[...document.querySelectorAll('#wt-feel-settings [data-demo]')].map(x=>x.dataset.demo)
+              }));
+              console.log('SOUND_PANEL',JSON.stringify(panel));
+              assert.deepEqual(panel.options,['music','musicVolume','sfx','sfxVolume','motion','haptics']);
+              assert.deepEqual(panel.sample,['trace','correct','bonus','complete']);
+              const setting=async(name,value)=>page.evaluate(({name,value})=>{
+                const el=document.querySelector('#wt-feel-settings [data-pref="'+name+'"]');
+                if(!el)throw Error('Control missing '+name);
+                if(el.type==='checkbox')el.checked=value;else el.value=value;
+                el.dispatchEvent(new Event('change',{bubbles:true}));
+              },{name,value});
+              await setting('music',false);
+              assert((await page.evaluate(()=>window.BUWTPolish.state())).sfx===true);
+              assert((await page.evaluate(()=>window.BUWTPolish.state())).music===false);
+              await setting('sfx',false);
+              await setting('music',true);
+              assert((await page.evaluate(()=>window.BUWTPolish.state())).sfx===false);
+              assert((await page.evaluate(()=>window.BUWTPolish.state())).music===true);
+              await setting('sfx',true);
+              await setting('sfxVolume',55);
+              await setting('musicVolume',45);
+              await page.click('#wt-feel-settings [data-demo="correct"]');
+              await page.click('#feel-done');
+              assert(!(await page.evaluate(()=>document.getElementById('wt-feel-settings').open)));
+              const play=async word=>page.evaluate(w=>{
+                for(const ch of w){
+                  const b=[...document.querySelectorAll('.wheel-letter')].find(x=>x.textContent===ch&&!x.classList.contains('selected'));
+                  if(!b)throw Error('Missing '+ch+' for '+w);
+                  b.click();
+                }
+                document.querySelector('#submit').click();
+              },word);
+              await play('CAT');
+              assert.equal(await $('#points'),'62');
+              assert.equal(await $('#bonus-count'),'1');
+              let coins=await page.$$eval('#wt-feel-layer .feel-coin',els=>els.length);
+              console.log('COIN_PARTICLES_AFTER_BONUS',coins);
+              assert(coins>0,'Reward coins must visibly fly to HUD');
+              await play('ACT');
+              assert.equal(await $('#points'),'64');
+              await play('TAN');
+              assert.equal(await $('#points'),'74','Three bonus words should pay 3×2 plus one +8 satchel');
+              assert.equal(await $('#bonus-count'),'3');
+              assert.equal(await page.$eval('#bonus-pips',el=>el.dataset.fill),'3');
+              let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
+              assert(saved.paidBonuses.includes('satchel:0'));
+              console.log('SATCHEL',JSON.stringify({coins:saved.coins,bonuses:saved.paidBonuses}));
+              await page.reload({waitUntil:'networkidle0'});
+              assert.equal(await $('#bonus-count'),'3');
+              let pref=await page.evaluate(()=>window.BUWTPolish.state());
+              assert(pref.music&&pref.sfx&&pref.sfxVolume===55&&pref.musicVolume===45);
+              await page.click('#audio');
+              await setting('motion',false);
+              await setting('haptics',false);
+              await page.click('#feel-done');
+              await new Promise(r=>setTimeout(r,1200));
+              await page.click('#hint');
+              const still=await page.evaluate(()=>({
+                noMotion:document.documentElement.classList.contains('wt-feel-no-motion'),
+                particles:document.querySelectorAll('#particles .particle,#wt-feel-layer .feel-coin').length,
+                hint:document.querySelectorAll('.tile.hinted').length
+              }));
+              console.log('NO_MOTION_HINT',JSON.stringify(still));
+              assert(still.noMotion&&still.particles===0&&still.hint===1);
+              await page.click('#audio');
+              await setting('motion',true);
+              await setting('haptics',true);
+              await page.click('#feel-done');
+              await page.click('#level-map');
+              await page.click('#reset-level');
+              assert.equal(await $('#bonus-count'),'0');
+              const before=Number(await $('#points'));
+              await play('CAT');await play('ACT');await play('TAN');
+              const after=Number(await $('#points'));
+              console.log('REPLAY_SATCHEL',JSON.stringify({before,after}));
+              assert.equal(after,before,'All bonus and satchel coins must pay only once per level');
+              saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
+              assert.equal(saved.paidBonuses.filter(x=>x==='satchel:0').length,1);
+              await page.click('#audio');
+              const dialogBox=await page.$eval('#wt-feel-settings',el=>({height:el.getBoundingClientRect().height,window:innerHeight}));
+              assert(dialogBox.height<=dialogBox.window);
+              await page.click('#feel-done');
+              for(const [width,height] of [[390,844],[412,744],[360,740],[375,667]]){
+                await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await new Promise(r=>setTimeout(r,120));
+                const g=await page.evaluate(()=>{
+                  const tile=document.querySelector('.tile').getBoundingClientRect(),
+                  b=document.querySelector('#board').getBoundingClientRect(),
+                  w=document.querySelector('#wheel').getBoundingClientRect();
+                  return {tile:tile.width,boardBottom:b.bottom,wheelTop:w.top,wheelBottom:w.bottom,
+                    overflow:document.body.scrollHeight-innerHeight,window:innerHeight};
+                });
+                console.log('PHONE_'+width+'x'+height,JSON.stringify(g));
+                assert(g.tile>=60&&g.boardBottom<g.wheelTop&&g.wheelBottom<=g.window+1&&g.overflow<=1);
+              }
+              assert.equal(errors.length,0,'Page errors: '+errors.join(' | '));
+              console.log('PASS FEEL LAB v2: independent settings, bonus coins, repeat-safe satchel, animation toggles, Android browser geometry');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
