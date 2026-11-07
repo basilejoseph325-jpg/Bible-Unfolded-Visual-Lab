@@ -17,7 +17,12 @@ const VOICE_LOUDNESS_BOOST=4.0; // Retain the approved baseline for tap, swipe, 
 const FEATURE_CUE_BOOST=3.25; // Extra volume and body ONLY for non-touch feedback.
 const QUIET_CUES=new Set(['touch','trace','undo']);
 let activeCueKind='touch';
-function cueBoost(kind){return QUIET_CUES.has(kind)?1:FEATURE_CUE_BOOST}
+function cueBoost(kind){
+ if(QUIET_CUES.has(kind))return 1;
+ // Victory used ten long overlapping oscillators at 3.25× and sounded
+ // compressed/fuzzy on Samsung despite not seeming loud. Re-master it alone.
+ return kind==='complete'?1.05:FEATURE_CUE_BOOST;
+}
 let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
@@ -156,9 +161,14 @@ function cue(kind){
    pluck(587,0,.16,.030,'triangle');pluck(740,.065,.22,.032,'sine');
    pluck(880,.14,.27,.039,'sine');pluck(1760,.15,.12,.008,'sine');air(.035,.11,.017,1400);break;
   case 'spark': [523,659,784,988,1175].forEach((f,i)=>{pluck(f,.09*i,.39,.033,'sine');pluck(f*2,.09*i,.23,.009,'sine')});air(.1,.24,.015,1850);break;
-  case 'complete': [392,523,659,784,1047].forEach((f,i)=>{
-   pluck(f,i*.105,.40,.039,'sine');pluck(f*1.5,i*.105,.25,.015,'triangle')
-  });air(.33,.24,.022,2300);break;
+  case 'complete':
+   // Clean celebratory arpeggio, not a stack of ten hot overlapping notes.
+   // Let the notes speak with space; keep this bus below the limiter's harsh zone.
+   [392,523,659,784,1047].forEach((f,i)=>
+    pluck(f,i*.13,i===4?.47:.22,i===4?.022:.017,'sine'));
+   pluck(1568,.59,.17,.007,'sine');
+   air(.33,.15,.007,2100);
+   break;
  }}finally{activeCueKind='touch';}
 }
 function haptic(pattern){if(!pref.haptics||!motion())return;
