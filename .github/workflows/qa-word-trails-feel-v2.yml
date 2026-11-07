@@ -34,7 +34,9 @@ jobs:
           assert "word-trails-next-v1" in html
           assert "prefers-reduced-motion" in css
           assert "pointer-events:none" in css
-          assert "FEATURE_CUE_BOOST=3.25" in js, "Reward cues need their own higher-loudness mix"
+          assert "FEATURE_CUE_BOOST=3.25" in js
+          assert "return kind==='complete'?1.05:FEATURE_CUE_BOOST" in js
+          assert "pluck(1568,.59,.17,.007,'sine')" in js, "Reward cues need their own higher-loudness mix"
           assert "const QUIET_CUES=new Set(['touch','trace','undo'])" in js, "Preserve swipe/tap/undo"
           assert "function celebrateWin()" in js and "winConfetti(stage,58)" in js and "winGlitter(stage,27)" in js
           assert 'id="finish-fx"' in html and "finish-fx" in css
@@ -104,8 +106,9 @@ jobs:
               assert.equal(boosts.touch,1);
               assert.equal(boosts.trace,1);
               assert.equal(boosts.undo,1);
-              for(const name of ['correct','bonus','wrong','hint','spark','vault','complete','wordSettle','coinLand','shuffle','levelEnter'])
-                assert(boosts[name]>=3,'All reward and gameplay feedback other than taps/swipes must receive major boost: '+name);
+              for(const name of ['correct','bonus','wrong','hint','spark','vault','wordSettle','coinLand','shuffle','levelEnter'])
+                assert(boosts[name]>=3,'Approved game feedback must retain full volume: '+name);
+              assert(boosts.complete<=1.2&&boosts.complete>=.7,'Only the victory cue should be remastered down to avoid fuzziness');
               const cueMix=await page.evaluate(()=>Object.fromEntries(
                 ['touch','trace','undo','correct','bonus','wrong','hint','complete','spark','coinLand','levelEnter']
                 .map(kind=>[kind,window.BUWTPolish.featureBoost(kind)])));
