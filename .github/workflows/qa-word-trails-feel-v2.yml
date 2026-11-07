@@ -34,7 +34,10 @@ jobs:
           assert "word-trails-next-v1" in html
           assert "prefers-reduced-motion" in css
           assert "pointer-events:none" in css
-          assert "EFFECTS_MIX_GAIN=11.2" in js, "New SFX must be 4x previous 2.8 master gain"
+          assert "EFFECTS_MIX_GAIN=11.2" in js, "Master gain preserved across the voice normalization change"
+          assert "VOICE_LOUDNESS_BOOST=4.0" in js
+          assert "getFloatTimeDomainData" in js and "signalMeter" in js
+          assert "wt_home_refresh=" in html, "Reload should return to the test homepage"
           assert "master.gain.value=EFFECTS_MIX_GAIN" in js
           assert "createDynamicsCompressor()" in js
           assert "createWaveShaper()" in js and "peakGuard.curve=curve" in js, "Layered notes need a soft peak ceiling"
@@ -78,7 +81,25 @@ jobs:
               assert(check.sounds.music&&check.sounds.sfx&&check.sounds.motion);
               const mix=await page.evaluate(()=>window.BUWTPolish.mixGain());
               console.log('ANOTHER_FOUR_X_SFX_MASTER',JSON.stringify({before:2.8,after:mix,ratio:mix/2.8}));
-              assert.equal(mix/2.8,4,'Audio effects bus must gain four times above the previous version');
+              assert.equal(mix/2.8,4,'The protected audio master remains unchanged');
+              const voice=await page.evaluate(()=>window.BUWTPolish.voiceBoost());
+              console.log('SFX_VOICE_BOOST',JSON.stringify({relativeToPrevious:voice,master:mix}));
+              assert.equal(voice,4,'Individual sound voices must be four times stronger than last version');
+              const measure=async pct=>page.evaluate(async pct=>{
+                const prefs=window.BUWTPolish;
+                const panel=document.querySelector('#wt-feel-settings [data-pref="sfxVolume"]');
+                // This test uses the settings screen once it is opened below; here the volume
+                // is changed via that exact same input and its real change handler.
+                panel.value=String(pct);panel.dispatchEvent(new Event('change',{bubbles:true}));
+                prefs.cue('touch');
+                let peak=0,rms=0,state='unknown';
+                for(let i=0;i<22;i++){
+                  await new Promise(r=>setTimeout(r,12));
+                  const x=prefs.audioMeter();
+                  peak=Math.max(peak,x.peak);rms=Math.max(rms,x.rms);state=x.state;
+                }
+                return {peak,rms,state,volume:pct};
+              },pct);
               await page.evaluate(()=>{
                 const cues=['touch','undo','trace','wordSettle','coinLand','levelEnter'];
                 for(const cue of cues)window.BUWTPolish.cue(cue);
@@ -95,6 +116,11 @@ jobs:
               console.log('SOUND_PANEL',JSON.stringify(panel));
               assert.deepEqual(panel.options,['music','musicVolume','sfx','sfxVolume','motion','haptics']);
               assert.deepEqual(panel.sample,['trace','correct','bonus','complete']);
+              const quiet=await measure(25),loud=await measure(100);
+              console.log('REAL_AUDIO_OUTPUT',JSON.stringify({quiet,loud,ratio:loud.peak/(quiet.peak||0.00001)}));
+              assert.equal(loud.state,'running','AudioContext must really run when playing sound effects');
+              assert(loud.peak>.045,'Audio output meter must detect audible signal, not just updated gain variables');
+              assert(loud.peak>quiet.peak*1.2,'SFX slider at 100% must produce stronger output than 25%');
               const setting=async(name,value)=>page.evaluate(({name,value})=>{
                 const el=document.querySelector('#wt-feel-settings [data-pref="'+name+'"]');
                 if(!el)throw Error('Control missing '+name);
