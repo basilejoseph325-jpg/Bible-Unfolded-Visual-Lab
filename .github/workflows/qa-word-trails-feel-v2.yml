@@ -34,6 +34,12 @@ jobs:
           assert "word-trails-next-v1" in html
           assert "prefers-reduced-motion" in css
           assert "pointer-events:none" in css
+          assert "EFFECTS_MIX_GAIN=2.8" in js, "New SFX must be 4x original 0.7 master gain"
+          assert "master.gain.value=EFFECTS_MIX_GAIN" in js
+          assert "createDynamicsCompressor()" in js
+          assert "case 'wordSettle'" in js and "case 'coinLand'" in js
+          assert "case 'undo'" in js and "case 'levelEnter'" in js
+          assert "cue('levelEnter')" in main
           print('PASS isolated source and original synthesis; no copied commercial sound effects')
           PY
       - name: Verify independent settings, coin travel, reward satchel, replay, reduced motion
@@ -67,6 +73,13 @@ jobs:
               assert(check.api&&check.settings&&check.coin==='60'&&check.tiles===15);
               assert.equal(check.motion,'on');
               assert(check.sounds.music&&check.sounds.sfx&&check.sounds.motion);
+              const mix=await page.evaluate(()=>window.BUWTPolish.mixGain());
+              console.log('FOUR_X_SFX_MASTER',JSON.stringify({before:0.7,after:mix,ratio:mix/0.7}));
+              assert.equal(mix/0.7,4,'Audio effects bus must be four times the previous gain');
+              await page.evaluate(()=>{
+                const cues=['touch','undo','trace','wordSettle','coinLand','levelEnter'];
+                for(const cue of cues)window.BUWTPolish.cue(cue);
+              });
               await page.click('#audio');
               await page.waitForSelector('#wt-feel-settings[open]');
               const settingsShot=(await page.screenshot({type:'jpeg',quality:56})).toString('base64');
@@ -106,6 +119,12 @@ jobs:
                 }
                 document.querySelector('#submit').click();
               },word);
+              await page.evaluate(()=>{
+                const b=[...document.querySelectorAll('.wheel-letter')].find(x=>x.textContent==='C');
+                b.click();
+                b.click(); // Selecting then deselecting plays the new soft undo.
+              });
+              assert.equal(await page.$eval('#preview',e=>e.textContent),'','Letter undo must clear selection');
               await play('CAT');
               assert.equal(await $('#points'),'62');
               assert.equal(await $('#bonus-count'),'1');
