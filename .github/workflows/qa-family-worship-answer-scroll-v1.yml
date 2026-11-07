@@ -79,13 +79,15 @@ jobs:
                 return {open:d.open,title:d.querySelector('.bu67-dialog-head strong').textContent,
                   scrollImage:getComputedStyle(d).backgroundImage,waxImage:getComputedStyle(wax).backgroundImage,
                   realText:b.textContent,scrollHeight:b.scrollHeight,clientHeight:b.clientHeight,
-                  dialog:r(d),body:r(b),wax:r(wax),view:innerHeight,x:!!d.querySelector('.bu67-dialog-x')};
+                  dialog:r(d),body:r(b),wax:r(wax),view:innerHeight,x:!!d.querySelector('.bu67-dialog-x'),xBox:r(d.querySelector('.bu67-dialog-x')),titleBox:r(d.querySelector('.bu67-dialog-head strong'))};
               });
               console.log('TRIVIA_SCROLL',JSON.stringify(one));
               if(!one.open||one.title!=='Answer Explanation'||!one.realText.includes('Genesis')||
                  !one.scrollImage.includes('daily-discovery-explanation-scroll-v3.webp')||
                  !one.waxImage.includes('daily-explanation-wax-next-v2.svg')||
-                 !one.x||one.dialog.bottom>one.view||one.wax.bottom>one.dialog.bottom-60)
+                 !one.x||one.dialog.bottom>one.view||one.wax.bottom>one.dialog.bottom-60||
+                 one.xBox.top>one.titleBox.top+45||one.xBox.top<one.titleBox.top-25||
+                 one.xBox.bottom>one.body.top+35)
                  throw Error('Triva answer scroll missing approved visuals or clipping');
               const shot=await page.$('#bu67-modal');
               const b64=(await shot.screenshot({type:'jpeg',quality:55})).toString('base64');
