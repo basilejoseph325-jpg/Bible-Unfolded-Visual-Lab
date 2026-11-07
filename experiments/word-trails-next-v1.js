@@ -233,7 +233,8 @@ function finishWord(word){
  found.add(word);combo++;
  const reward=wordPaid(word)?10:0;
  if(reward)save.points+=reward;
- const comboReward=combo===3?5:0;if(comboReward)save.coins+=comboReward;
+ let comboReward=0;const comboTag='combo:'+index;
+ if(combo===3&&!save.paidWords.includes(comboTag)){save.paidWords.push(comboTag);save.coins+=5;comboReward=5;}
  drawBoard(word);storeProgress();
  const tile=[...board.querySelectorAll('.tile.new')][Math.floor([...board.querySelectorAll('.tile.new')].length/2)];
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
