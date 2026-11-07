@@ -315,6 +315,7 @@ function completeLevel(){
  $('next-level').textContent=index===LEVELS.length-1?'Explore Level Map':'Next Level';
  $('stay').textContent=save.sparks.includes(index)?'Replay this level':'Keep exploring';
  $('finish').showModal();
+ window.BUWTPolish?.celebrateWin?.();
 }
 function setScene(){
  const url='../bible-book-art/'+level.scene;F('--scene','url("'+url+'")');
