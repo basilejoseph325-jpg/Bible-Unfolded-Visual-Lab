@@ -6,7 +6,11 @@
 (()=>{'use strict';
 const KEY='bu-wt-next-feel-v2';
 const DEF={music:true,sfx:true,motion:true,haptics:true,musicVolume:75,sfxVolume:75};
-let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));if(s&&typeof s==='object')pref={...DEF,...s}}catch(_){}
+let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
+ if(s&&typeof s==='object')pref={...DEF,...s};
+ else{const previous=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
+  if(previous?.sound===false){pref.music=false;pref.sfx=false}}
+}catch(_){}
 let ctx=null,master=null,noise=null;
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
