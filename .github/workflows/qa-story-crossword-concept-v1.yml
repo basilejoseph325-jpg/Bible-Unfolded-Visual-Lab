@@ -120,7 +120,31 @@ jobs:
               const reset=await page.evaluate(()=>({count:document.getElementById('solved').textContent,empty:document.querySelectorAll('#board .tile.done').length,letters:document.querySelectorAll('#wheel .letter').length}));
               console.log('RESET',JSON.stringify(reset));
               assert(reset.count.startsWith('0 of 4')&&reset.empty===0&&reset.letters===5);
-              console.log('PASS standalone Story Crossword: all 4 Bible words, crossings, tap input, shuffle, hint, real scroll, next, completion, reset, no-scroll 390x844');
+              // Exercise the actual swipe-gesture code rather than only the
+              // easier tap-to-connect method.
+              const swipe=await page.evaluate(()=>{
+                const wheel=document.getElementById('wheel');
+                const buttons=[...wheel.querySelectorAll('.letter')];
+                const points=[...'EARTH'].map(ch=>{
+                  const el=buttons.find(x=>x.textContent===ch);
+                  if(!el)throw Error('Missing swipe letter '+ch);
+                  const b=el.getBoundingClientRect();
+                  return {el,x:b.left+b.width/2,y:b.top+b.height/2};
+                });
+                const ev=(type,p)=>new PointerEvent(type,{
+                  bubbles:true,pointerId:173,pointerType:'touch',isPrimary:true,
+                  clientX:p.x,clientY:p.y
+                });
+                points[0].el.dispatchEvent(ev('pointerdown',points[0]));
+                for(let i=1;i<points.length;i++)wheel.dispatchEvent(ev('pointermove',points[i]));
+                wheel.dispatchEvent(ev('pointerup',points[points.length-1]));
+                return {open:document.getElementById('discovery').open,
+                  title:document.getElementById('scroll-title').textContent,
+                  remaining:document.getElementById('solved').textContent};
+              });
+              console.log('SWIPE_GESTURE',JSON.stringify(swipe));
+              assert(swipe.open&&swipe.title==='EARTH'&&swipe.remaining.startsWith('1 of 4'),'Swipe selection failed');
+              console.log('PASS standalone Story Crossword: all 4 Bible words, crossings, swipe and tap, shuffle, hint, real scroll, next, completion, reset, no-scroll 390x844');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
