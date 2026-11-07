@@ -304,7 +304,9 @@ function completeLevel(){
   save.completed.push(index);save.coins+=reward;
   save.unlocked=Math.min(LEVELS.length-1,Math.max(save.unlocked,index+1));
  }
- save.progress=null;store();ui();cue('complete');haptic([20,40,30]);confetti();
+ save.progress=null;store();ui();cue('complete');
+ // Keep the everyday feedback gentle. The level-win celebration gets a distinct cadence.
+ haptic([38,58,36,75,70]);confetti();
  window.BUWTPolish?.event('complete',{level:index,reward});
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
