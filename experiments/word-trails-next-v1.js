@@ -149,12 +149,12 @@ function canMake(rack,word){
  return true;
 }
 function buildCells(level){
- const map=new Map();
+ const map=new Map(),limit=level.size||5;
  for(const [text,r,c,dir] of level.words){
   if(!valid(text)||!canMake(level.rack,text))throw Error('Invalid level word '+text);
   for(let i=0;i<text.length;i++){
    const row=r+(dir==='down'?i:0),col=c+(dir==='across'?i:0),k=row+':'+col;
-   if(row<0||col<0||row>=level.size&&level.size||col>=level.size&&level.size||row>=5&&!level.size||col>=5&&!level.size)throw Error('Outside grid '+text);
+   if(row<0||col<0||row>=limit||col>=limit)throw Error('Outside '+limit+'x'+limit+' grid: '+text);
    if(map.has(k)){
     const p=map.get(k);if(p.letter!==text[i])throw Error('Crossing mismatch '+text);
     p.words.push(text);
@@ -537,7 +537,7 @@ function openSpark(bible=null,newlyFound=false){
    icon.className='spark-find-icon';icon.textContent=got?'★':'☆';
    const body=document.createElement('span');body.className='spark-find-info';
    const header=document.createElement('strong');
-   header.textContent=got?item.word:(item.kind==='board'?'CROSSWORD · '+item.word:'Bible word '+(i+1)+' · HIDDEN');
+   header.textContent=got?item.word:(item.kind==='board'?'BIBLE CROSSWORD · HIDDEN':'Bible word '+(i+1)+' · HIDDEN');
    const text=document.createElement('small');
    text.textContent=got?item.reference:item.clue;
    body.append(header,text);el.append(icon,body);list.append(el);
