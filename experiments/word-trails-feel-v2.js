@@ -242,7 +242,8 @@ let winTimers=[];
 function clearWinFX(){
  for(const handle of winTimers)clearTimeout(handle);
  winTimers=[];
- const stage=$('finish-fx');if(stage)stage.replaceChildren();
+ const stage=$('finish-fx');
+ if(stage){stage.replaceChildren();stage.style.bottom='';}
  $('finish')?.classList.remove('wt-winning');
 }
 function winConfetti(stage,count,phase=0){
@@ -293,6 +294,15 @@ function celebrateWin(){
  clearWinFX();
  const dialog=$('finish'),stage=$('finish-fx');
  if(!motion()||!stage||!dialog?.open)return;
+ // Dynamic clipping: the small-screen victory panel can be taller than
+ // expected. Keep falling foil ABOVE the stats/buttons regardless of height.
+ const d=dialog.getBoundingClientRect();
+ const reward=$('finish-reward')?.closest('.reward-coin')?.getBoundingClientRect();
+ const next=$('next-level')?.getBoundingClientRect();
+ if(reward&&next){
+  const safeEdge=Math.min(reward.bottom+9,next.top-18);
+  stage.style.bottom=Math.max(70,Math.ceil(d.bottom-safeEdge))+'px';
+ }
  dialog.classList.add('wt-winning');
  winConfetti(stage,58);
  winGlitter(stage,27);
