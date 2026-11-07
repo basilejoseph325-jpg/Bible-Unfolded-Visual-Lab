@@ -76,6 +76,24 @@ jobs:
               assert(real.banner&&real.entry&&real.legacyDefaultHidden);
               assert.equal(real.link,'experiments/word-trails-next-v1.html');
               console.log('PASS actual Visual Lab root includes Word Trails NEXT entry and preserved TEST banner');
+
+              const homeCandidates=await page.evaluate(()=>
+                [...document.querySelectorAll('#home button,#home a,#home [role="button"],#home [onclick]')]
+                 .filter(el=>/trail|word/i.test((el.innerText||el.textContent||'').slice(0,110)))
+                 .slice(0,16).map(el=>({
+                   tag:el.tagName,id:el.id,cls:String(el.className).slice(0,110),
+                   text:(el.innerText||el.textContent||'').trim().slice(0,110),
+                   attrs:[...el.attributes].map(x=>x.name+'='+x.value.slice(0,100)).slice(0,9)
+                 }))
+              );
+              console.log('TRAIL_HOME_CANDIDATES',JSON.stringify(homeCandidates));
+              const visible=await page.evaluate(()=>
+                [...document.querySelectorAll('#home button,#home a,#home [role="button"]')]
+                 .filter(el=>/word trails/i.test((el.innerText||el.textContent||'').slice(0,110)))
+                 .filter(el=>{const b=el.getBoundingClientRect();const s=getComputedStyle(el);return b.width>0&&b.height>0&&s.visibility!=='hidden'})
+                 .map(el=>({tag:el.tagName,id:el.id,html:el.outerHTML.slice(0,580)}))
+              );
+              console.log('TRAIL_HOME_VISIBLE',JSON.stringify(visible));
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{await browser?.close()}
           })();
