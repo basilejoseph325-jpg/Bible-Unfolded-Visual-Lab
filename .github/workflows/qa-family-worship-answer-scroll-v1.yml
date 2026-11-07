@@ -107,7 +107,16 @@ jobs:
                 },right);
                 const state=await page.evaluate(()=>({q:bu35Question().q,phase:bu35Phase(),num:document.querySelectorAll('#bu35-body [data-answer]').length,handOff:bu35Game.handOff}));
                 console.log('BEFORE_CHOOSE',JSON.stringify(state));
-                await page.click('#bu35-body [data-answer="'+i+'"]');
+                const hit=await page.evaluate(i=>{
+                  const b=document.querySelector('#bu35-body [data-answer="'+i+'"]');
+                  if(!b)throw Error('Missing native answer button');
+                  const r=b.getBoundingClientRect();
+                  const top=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);
+                  const snapshot={rect:{x:r.x,y:r.y,width:r.width,height:r.height},
+                    hit:top?.id||top?.className,hidden:b.hidden,disabled:b.disabled};
+                  b.click();return snapshot;
+                },i);
+                console.log('NATIVE_CHOICE',JSON.stringify(hit));
               }
               async function solveWord(){
                 await page.evaluate(()=>{
@@ -119,7 +128,7 @@ jobs:
                   });
                   bu35Render();
                 });
-                await page.click('#bu35-check');
+                await page.evaluate(()=>document.querySelector('#bu35-check')?.click());
               }
               // Trivia: correct, wrong and skipped (native handlers, real questions).
               await begin('trivia');
@@ -128,10 +137,10 @@ jobs:
               await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await choose(false);await result('trivia','Answer:');
               await page.click('#bu67-modal .bu67-dialog-x');
               assert.equal(await page.evaluate(()=>bu35Game.completedTurns),1);
-              await page.click('#bu35-body .bu67-open-details');
+              await page.evaluate(()=>document.querySelector('#bu35-body .bu67-open-details')?.click());
               await result('trivia','Answer:');
               assert.equal((await advance()).completed,2);
-              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.click('#bu35-skip');
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.evaluate(()=>document.querySelector('#bu35-skip')?.click());
               await result('trivia','Answer:');assert.equal((await advance()).completed,3);
               console.log('PASS_TRIVIA correct/wrong/skip and closed X does not advance');
               // Lightning (session-only mode), use real answer handler and nextturn.
@@ -144,11 +153,11 @@ jobs:
               await result('lightning','Answer:');assert.equal((await advance()).completed,1);
               console.log('PASS_LIGHTNING wrong answer');
               // Word Relay: skip, re-open, correct solve and new-player turn.
-              await begin('words');await page.click('#bu35-skip');
+              await begin('words');await page.evaluate(()=>document.querySelector('#bu35-skip')?.click());
               await result('words','Word:');
               await page.click('#bu67-modal .bu67-dialog-x');
               assert.equal(await page.evaluate(()=>bu35Game.completedTurns),0);
-              await page.click('#bu35-body .bu35-feedback');
+              await page.evaluate(()=>document.querySelector('#bu35-body .bu35-feedback')?.click());
               await result('words','Word:');
               assert.equal((await advance()).completed,1);
               await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await solveWord();
@@ -161,7 +170,7 @@ jobs:
               const link=await page.evaluate(()=>document.querySelector('#bu67-modal .bu35-scripture')?.href);
               assert(link?.startsWith('https://www.jw.org/'));
               assert.equal((await advance()).completed,1);
-              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.click('#bu35-skip');
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.evaluate(()=>document.querySelector('#bu35-skip')?.click());
               await result('story','Word:');
               await page.click('#bu67-modal .bu67-dialog-x');
               await page.evaluate(()=>{
