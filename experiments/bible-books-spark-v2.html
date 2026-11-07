@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#092b34">
+<title>Genesis — Bible Books V2 Clean Crossword</title>
+<link rel="stylesheet" href="bible-books-spark-v2.css?v=20261107-clean-v2">
+<script src="bible-books-spark-v2.js?v=20261107-clean-v2" defer></script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
+    <div class="heading">
+      <h1>Genesis</h1>
+      <span>LEVEL 1 • BIBLE BOOKS</span>
+    </div>
+    <div class="top-actions">
+      <div class="points" aria-label="Test points">✦ <strong id="points">0</strong></div>
+      <button id="reset" type="button" aria-label="Restart this test puzzle" title="Restart test">↻</button>
+    </div>
+  </header>
+  <main class="board-region" aria-label="Four connected crossword words">
+    <div class="board-meta">
+      <span id="solved-count" aria-label="Words solved">0 / 4</span>
+      <span class="test-caption">TEST V2</span>
+    </div>
+    <div id="board" class="board" aria-label="5 by 6 crossword puzzle"></div>
+    <button type="button" id="spark" class="spark-button" aria-label="A hidden Scripture Spark word is available" aria-expanded="false">
+      <span class="star" aria-hidden="true">★</span>
+      <span class="spark-label">SCRIPTURE<br>SPARK</span>
+    </button>
+    <output id="toast" role="status" aria-live="polite"></output>
+  </main>
+  <section class="play-region" aria-label="One permanent letter wheel for all puzzle words">
+    <div id="wheel" class="wheel">
+      <svg id="selection-lines" class="selection-lines" aria-hidden="true"></svg>
+      <button id="submit" type="button" class="wheel-center" aria-label="Submit selected letters">
+        <span class="submit-icon">✓</span><span class="submit-text">ENTER</span>
+      </button>
+      <output id="preview" class="preview" aria-live="polite"></output>
+    </div>
+    <button type="button" id="shuffle" class="side-control shuffle" aria-label="Shuffle letters">⇄</button>
+    <button type="button" id="hint" class="side-control hint" aria-label="Reveal one letter">
+      <img src="../assets/ui/daily-gold-hint-v3.svg" alt="">
+      <span id="hints-left">3</span>
+    </button>
+  </section>
+  <footer class="bottom">
+    <span>✦ BONUS WORDS <strong id="bonus-count">0</strong></span>
+    <span>WORDSCAPES-STYLE TEST • NO SAVED POINTS</span>
+  </footer>
+  <aside id="spark-info" class="spark-info" hidden>
+    <strong>✦ Scripture Spark</strong>
+    <p>There is a Bible name hidden in these letters. It’s worth 25 test points and a brief Genesis discovery, but you can finish the crossword without finding it.</p>
+    <button id="spark-dismiss" type="button">Got it</button>
+  </aside>
+</div>
+<dialog id="scroll" aria-labelledby="scroll-heading">
+  <div class="scroll-art">
+    <button type="button" id="scroll-x" class="scroll-x" aria-label="Close scroll">×</button>
+    <span id="scroll-tag" class="scroll-tag">SCRIPTURE SPARK</span>
+    <h2 id="scroll-heading"></h2>
+    <div class="scroll-body">
+      <p id="scroll-text"></p>
+      <a id="scroll-scripture" href="https://www.jw.org/en/library/bible/nwt/books/genesis/4/" target="_blank" rel="noopener noreferrer">Read Genesis 4:1, 2 on JW.org ↗</a>
+    </div>
+    <button type="button" id="scroll-next" class="scroll-next">Keep Playing</button>
+  </div>
+</dialog>
+</body>
+</html>
