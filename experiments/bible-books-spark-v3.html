@@ -13,6 +13,10 @@
   <header class="topbar">
     <div class="header-left">
     <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
+    <button type="button" id="spark" class="spark-button" aria-label="A hidden Scripture Spark word is available" aria-expanded="false">
+      <span class="star" aria-hidden="true">★</span>
+      <span class="spark-label">SCRIPTURE<br>SPARK</span>
+    </button>
     </div>
     <div class="heading">
       <h1>Genesis</h1>
@@ -25,10 +29,6 @@
   </header>
   <main class="board-region" aria-label="Four connected crossword words">
     <div id="board" class="board" aria-label="Four column by four row crossword puzzle"></div>
-    <button type="button" id="spark" class="spark-button" aria-label="A hidden Scripture Spark word is available" aria-expanded="false">
-      <span class="star" aria-hidden="true">★</span>
-      <span class="spark-label">SCRIPTURE<br>SPARK</span>
-    </button>
     <output id="toast" role="status" aria-live="polite"></output>
   </main>
   <section class="play-region" aria-label="One permanent letter wheel for all puzzle words">
