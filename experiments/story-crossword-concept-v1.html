@@ -263,28 +263,31 @@ document.getElementById('hint').addEventListener('click',function(){
  rack=arr;picked=chosen;updateTrace();msg('First letter: '+correct);
 });
 document.getElementById('restart').addEventListener('click',function(){done.clear();active=0;if(modal.open)modal.close();startWord(0);});
+var pointerStart=null;
 wheel.addEventListener('pointerdown',function(e){
  var b=e.target.closest('.letter');if(!b||done.size===words.length)return;
- drag=true;dragged=false;picked=[Number(b.dataset.wheelIndex)];
+ drag=true;dragged=false;
+ pointerStart={index:Number(b.dataset.wheelIndex),x:e.clientX,y:e.clientY};
  try{wheel.setPointerCapture(e.pointerId)}catch(_){}
- updateTrace();
 });
 wheel.addEventListener('pointermove',function(e){
- if(!drag)return;
+ if(!drag||!pointerStart)return;
+ if(!dragged&&Math.hypot(e.clientX-pointerStart.x,e.clientY-pointerStart.y)>9){
+  dragged=true;picked=[pointerStart.index];updateTrace();
+ }
+ if(!dragged)return;
  var b=document.elementFromPoint(e.clientX,e.clientY)?.closest('.letter');
  if(b&&wheel.contains(b)){
   var i=Number(b.dataset.wheelIndex);
-  if(!picked.includes(i)){picked.push(i);dragged=true;updateTrace();}
+  if(!picked.includes(i)){picked.push(i);updateTrace();}
  }
 });
 function release(e){
  if(!drag)return;
- drag=false;
- if(picked.length===1&&!dragged){
-  var first=picked[0];picked=[];tap(first);
- }
- if(picked.length<rack.length)updateTrace();
- if(dragged)setTimeout(function(){dragged=false},60);
+ drag=false;pointerStart=null;
+ // A simple tap is handled by the button's click handler and retains the
+ // previously tapped letters; dragging creates a fresh single gesture.
+ if(dragged)setTimeout(function(){dragged=false},80);
 }
 wheel.addEventListener('pointerup',release);
 wheel.addEventListener('pointercancel',release);
