@@ -31,3 +31,5 @@ function install(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
 else install();
 })();
+/* Load new Word Trails selector only within the isolated Visual Lab. */
+(()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=20261107-next1';s.defer=true;document.head.appendChild(s)})();
