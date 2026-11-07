@@ -26,7 +26,7 @@
   <header class="topbar">
     <div class="header-left">
       <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
-      <button type="button" id="spark" class="spark-button" aria-label="Optional Bible discovery" title="Scripture Spark"><span class="star" aria-hidden="true">★</span></button>
+      <button type="button" id="spark" class="spark-button" aria-label="Bible word hunt" title="Find Bible words"><span class="star" aria-hidden="true">★</span><span id="spark-progress" class="spark-progress" aria-hidden="true">0/2</span></button>
     </div>
     <div class="heading">
       <h1>Word Trails</h1>
@@ -68,6 +68,7 @@
     <h2 id="spark-title">★ Scripture Spark</h2>
     <div class="scroll-body">
       <p id="spark-text"></p>
+      <div id="spark-list" class="spark-list" aria-label="Bible word clues" hidden></div>
       <a id="spark-link" target="_blank" rel="noopener noreferrer" href="https://www.jw.org/" hidden>Read on JW.org ↗</a>
     </div>
     <button id="spark-next" type="button" class="scroll-next">Keep Playing</button>
