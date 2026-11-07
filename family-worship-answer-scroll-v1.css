@@ -1,0 +1,144 @@
+/* VISUAL LAB ONLY — Family Worship answer scroll V1.
+ * Native dialog remains functional. Approved photo and wax are referenced
+ * read-only; other uses of bu67-modal retain their original styling. */
+#bu67-modal.bu-fw-answer-scroll{
+ box-sizing:border-box!important;
+ position:fixed!important;
+ width:min(99vw,480px)!important;
+ max-width:min(99vw,480px)!important;
+ height:min(85dvh,690px)!important;
+ min-height:0!important;
+ max-height:min(85dvh,690px)!important;
+ margin:auto!important;
+ padding:clamp(125px,18dvh,153px) clamp(38px,10vw,64px) clamp(108px,14dvh,132px)!important;
+ display:flex!important;
+ flex-direction:column!important;
+ align-items:stretch!important;
+ justify-content:flex-start!important;
+ gap:0!important;
+ border:0!important;
+ border-radius:0!important;
+ overflow:hidden!important;
+ background:#d8ae71 url('assets/ui/daily-discovery-explanation-scroll-v3.webp') center / 100% 100% no-repeat!important;
+ color:#422816!important;
+ box-shadow:0 13px 35px #0009!important;
+ animation:bu-fw-answer-unfurl .22s ease-out both;
+}
+#bu67-modal.bu-fw-answer-scroll::backdrop{
+ background:rgba(0,18,25,.80)!important;
+ backdrop-filter:blur(6px)!important;
+ -webkit-backdrop-filter:blur(6px)!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu67-dialog-head{
+ display:flex!important;flex:0 0 auto!important;gap:0!important;
+ justify-content:center!important;align-items:flex-start!important;
+ padding:0!important;margin:0 0 10px!important;border:0!important;
+ background:transparent!important;min-height:0!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu67-dialog-head strong{
+ margin:0 12px!important;padding:0!important;
+ flex:1!important;min-width:0!important;
+ text-align:center!important;
+ color:#31572c!important;
+ font:italic 700 clamp(20px,5.1vw,27px)/1.13 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+ text-shadow:0 1px #fff1c1,0 2px 2px #44270e2b!important;
+ overflow-wrap:anywhere!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu67-dialog-head .bu67-dialog-x{
+ position:absolute!important;
+ top:clamp(95px,13.9dvh,122px)!important;
+ right:clamp(38px,10vw,61px)!important;
+ z-index:3!important;
+ display:grid!important;place-items:center!important;
+ width:36px!important;height:36px!important;min-width:36px!important;min-height:36px!important;
+ margin:0!important;padding:0!important;
+ border:2px solid #fff0b0!important;border-radius:50%!important;
+ background:radial-gradient(circle at 34% 20%,#e6bc64,#95611f 83%)!important;
+ color:#fff2c4!important;
+ font:700 24px/1 system-ui!important;
+ box-shadow:0 3px 8px #362015b0,inset 0 1px #ffe39b!important;
+}
+#bu67-modal.bu-fw-answer-scroll > .bu67-dialog-body{
+ box-sizing:border-box!important;
+ flex:1 1 auto!important;min-height:0!important;
+ width:100%!important;max-height:none!important;
+ margin:0!important;padding:0 3px!important;
+ overflow-y:auto!important;overflow-x:hidden!important;
+ overscroll-behavior:contain!important;
+ -webkit-overflow-scrolling:touch!important;
+ scrollbar-width:thin!important;scrollbar-color:#9d703b transparent!important;
+ background:transparent!important;
+ color:#422816!important;
+ font:italic 500 clamp(14px,3.85vw,17px)/1.48 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+ text-shadow:0 1px #fff5d435!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu35-feedback{
+ display:block!important;
+ border:0!important;border-radius:0!important;
+ padding:0!important;margin:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+ color:#422816!important;
+ font:inherit!important;line-height:inherit!important;
+ overflow-wrap:break-word!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu35-feedback b{
+ color:#31572c!important;
+ font:italic 700 clamp(17px,4.4vw,21px)/1.2 Georgia,serif!important;
+ margin:0 0 9px!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu35-feedback a,
+#bu67-modal.bu-fw-answer-scroll .bu35-scripture{
+ color:#613e1f!important;text-decoration:underline!important;
+ text-underline-offset:2px!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu-fw-answer-scroll-actions{
+ flex:0 0 auto!important;display:flex!important;
+ justify-content:center!important;
+ box-sizing:border-box!important;
+ margin:11px 0 0!important;padding:0!important;
+ width:100%!important;min-height:57px!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu-fw-answer-scroll-return{
+ box-sizing:border-box!important;
+ flex:0 0 89%!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-width:0!important;width:89%!important;
+ min-height:57px!important;max-height:65px!important;
+ margin:0 auto!important;padding:6px 59px 7px 12px!important;
+ border:0!important;border-radius:0!important;
+ background:transparent url('assets/ui/daily-explanation-wax-next-v2.svg') center/100% 100% no-repeat!important;
+ box-shadow:none!important;
+ color:#f9d887!important;
+ text-align:center!important;
+ font:800 clamp(14px,4.05vw,19px)/1.1 "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+ text-shadow:0 2px 2px #220707ee,0 -1px 1px #fff6ca59!important;
+ filter:drop-shadow(0 2px 3px #30130a8a)!important;
+ cursor:pointer!important;
+}
+#bu67-modal.bu-fw-answer-scroll .bu-fw-answer-scroll-return:active{
+ transform:translateY(2px) scale(.988)!important;
+}
+#bu67-modal.bu-fw-answer-scroll :is(.bu-fw-answer-scroll-return,.bu67-dialog-x):focus-visible{
+ outline:3px solid #fff6c2!important;outline-offset:2px!important;
+}
+@keyframes bu-fw-answer-unfurl{
+ from{opacity:0;transform:translateY(-7px) scale(.99)}
+ to{opacity:1;transform:none}
+}
+@media(max-height:650px){
+ #bu67-modal.bu-fw-answer-scroll{
+   padding-top:clamp(83px,16.2dvh,115px)!important;
+   padding-bottom:clamp(77px,13dvh,100px)!important;
+ }
+ #bu67-modal.bu-fw-answer-scroll .bu67-dialog-head .bu67-dialog-x{
+   top:clamp(66px,12dvh,92px)!important;
+ }
+}
+@media(max-width:350px){
+ #bu67-modal.bu-fw-answer-scroll{padding-left:33px!important;padding-right:33px!important}
+ #bu67-modal.bu-fw-answer-scroll .bu-fw-answer-scroll-return{font-size:13px!important;padding-right:49px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ #bu67-modal.bu-fw-answer-scroll{animation:none!important}
+}
