@@ -25,19 +25,22 @@ jobs:
           css=Path('experiments/word-trails-next-v1.css').read_text()
           assert "bu-visual-lab-wordtrails-next-v1" in js
           assert "Word Trails NEXT" in html
-          assert len(re.findall("rack:'",js))==8
+          assert len(re.findall("rack:'",js))==11
           assert "live-game scores" in js
           assert "localStorage.setItem(STORAGE" in js
           assert "word-trails-next-v1.js" in html and "word-trails-next-v1.css" in html
           for file in (
             'bible-book-art/01_genesis.webp','bible-book-art/16_nehemiah.webp',
             'bible-book-art/08_ruth.webp','bible-book-art/44_acts.webp',
-            'bible-book-art/42_luke.webp','bible-wordtrails-theme.mp3',
+            'bible-book-art/42_luke.webp','bible-book-art/09_1_samuel.webp','bible-wordtrails-theme.mp3',
             'assets/ui/story-gold-shuffle-v1.svg','assets/ui/daily-gold-hint-v3.svg',
             'assets/ui/daily-discovery-explanation-scroll-v3.webp',
             'assets/ui/daily-explanation-wax-next-v2.svg'):
             assert Path(file).is_file(),file
           assert "repeat(5,var(--tile))" in css
+          assert 'repeat(6,var(--tile))' in css and 'repeat(7,var(--tile))' in css
+          assert 'level.size||5' in js
+          assert 'bibleBoard:[' in js and 'boardBible:[]' in js
           assert 'id="finish-fx"' in html, 'Victory-only effects must live inside dialog'
           assert "celebrateWin" in js, 'Completion must trigger the new visible celebration'
           print('PASS isolated source; 8 level packs; old music, scroll and icons present')
@@ -205,7 +208,8 @@ jobs:
               const bibleWords=[
                 ['EDEN','REED'],['RAVEN','SEA'],['ANGEL','SEAL'],
                 ['ISRAEL','ELI'],['ASHER','SHEAR'],['PETER','TREE'],
-                ['OLIVES','OIL','LOVE']
+                ['OLIVES','OIL','LOVE'],
+                ['ELAM','SEA'],['LOT','GOAT'],['MARAH','BAR']
               ];
               const packs=[
                 ['DINER','RIDE','DINE','DIRE'],
@@ -214,16 +218,19 @@ jobs:
                 ['ARISE','AISLE','LASER','REAL','SAIL'],
                 ['HEARD','HARE','SHARE','DARE'],
                 ['PEAT','TAPER','TEAR','TRAP','RATE'],
-                ['VEILS','LIVES','LIES','SOLE','SOLVE']
+                ['VEILS','LIVES','LIES','SOLE','SOLVE'],
+                ['SAMUEL','SAUL','MALE','SUM','MULE'],
+                ['GATH','GOLIATH','GLOAT','TAIL','ALTO','HALO'],
+                ['ABRAHAM','ABRAM','HAM','ARM','RAM']
               ];
-              for(let l=1;l<8;l++){
+              for(let l=1;l<11;l++){
                 const s=await geometry();
                 console.log('LEVEL_'+(l+1)+'_START',JSON.stringify({
                   level:s.level,tiles:s.count,tileSize:s.tile,background:s.background,progress:s.progress
                 }));
                 assert(s.level.includes('LEVEL '+(l+1)),s.level);
-                assert(s.count>=13 && s.count<=19);
-                assert(s.tile>=64);
+                assert(s.count>=13 && s.count<=34);
+                assert(s.tile>=(l<=7?64:l===8?50:40));
                 assert(s.boardBottom<s.wheelTop&&s.wheelBottom<s.appBottom);
                 const rack=await page.$eval('#wheel',wheel=>Array.from(wheel.querySelectorAll('.wheel-letter')).map(x=>x.textContent).sort().join(''));
                 assert.equal(rack.length,6);
@@ -239,21 +246,22 @@ jobs:
                 for(const word of packs[l-1])await play(word);
                 await page.waitForSelector('#finish[open]',{timeout:10000});
                 assert.equal(await page.$eval('#solved-count',e=>e.textContent),packs[l-1].length+' / '+packs[l-1].length);
-                if(l===7)break;
+                if(l===10)break;
                 await page.click('#next-level');
               }
               await page.click('#next-level');
               await page.waitForSelector('#map[open]');
               const buttons=await page.$$eval('.map-level',els=>els.map(el=>({disabled:el.disabled,complete:el.classList.contains('complete')})));
-              assert.equal(buttons.length,8);
-              assert(buttons.every(x=>!x.disabled&&x.complete),'All eight levels must unlock and complete');
+              assert.equal(buttons.length,11);
+              assert(buttons.every(x=>!x.disabled&&x.complete),'All eleven levels must unlock and complete');
               const store=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),savedKey);
-              assert.equal(store.completed.length,8);
-              assert.equal(store.unlocked,7);
-              assert.equal(store.claimedSparks.length,17,'All 17 Bible words should persist across eight levels');
-              console.log('EIGHT_LEVELS_PASS',JSON.stringify({
+              assert.equal(store.completed.length,11);
+              assert.equal(store.unlocked,10);
+              assert.equal(store.claimedSparks.length,23,'All 23 hidden Bible words should persist');
+              assert.equal(store.boardBible.length,8,'Eight Bible answers must be discovered within crossword boards');
+              console.log('ELEVEN_LEVELS_PASS',JSON.stringify({
                 completed:store.completed,coins:store.coins,points:store.points,
-                bibleDiscoveries:store.claimedSparks.length
+                hiddenBible:store.claimedSparks.length,boardBible:store.boardBible.length
               }));
               await page.click('#map-x');
               await page.click('#level-map');
