@@ -150,7 +150,7 @@ function label(word){
 function event(name,data={}){
  if(name==='level'){activeCount=0;gestureTick=0;return}
  if(name==='correct'){activeCount++;acclaim(data.word);
-  if(activeCount===3){label('GREAT STREAK!');haptic([7,24,10])}
+  if(activeCount===3){haptic([7,24,10])}
   if(data.coins>0)coinFlight(rectMid($('board')),4);
   return;
  }
@@ -159,8 +159,8 @@ function event(name,data={}){
   const pip=$('bonus-pips');if(pip){pip.classList.remove('feel-pips-pop');void pip.offsetWidth;pip.classList.add('feel-pips-pop')}
   return;
  }
- if(name==='vault'){cue('vault');label('SATCHEL BONUS!');coinFlight(rectMid($('bonus-count')),6);haptic([7,25,12]);return}
- if(name==='spark'){coinFlight(rectMid($('spark')),6);label('BIBLE DISCOVERY!');return}
+ if(name==='vault'){cue('vault');coinFlight(rectMid($('bonus-count')),6);haptic([7,25,12]);return}
+ if(name==='spark'){coinFlight(rectMid($('spark')),6);return}
  if(name==='hint'){acclaim();return}
  if(name==='wrong'){activeCount=0;return}
  if(name==='complete'){activeCount=0;return}
