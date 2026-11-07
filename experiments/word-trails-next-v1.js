@@ -43,7 +43,56 @@ const LEVELS=[
   clue:'The mount where Jesus went to pray with disciples nearby',reference:'Luke 22:39',url:'https://www.jw.org/en/library/bible/nwt/books/luke/22/',
   insight:'Luke 22:39 describes Jesus going, as was his custom, to the Mount of Olives, with his disciples following him.',
   words:[['VEILS',2,0,'across'],['LIVES',0,0,'down'],['LIES',0,0,'across'],['SOLE',4,0,'across'],['SOLVE',0,3,'down']],
-  bonus:'OLIVE EVILS EVIL OILS VEIL LOVE LIVE VILE VIES ISLE SILO OIL LIE VIE VOLES VOLE'}
+  bonus:'OLIVE EVILS EVIL OILS VEIL LOVE LIVE VILE VIES ISLE SILO OIL LIE VIE VOLES VOLE'},
+ // Progressively larger Wordscapes-style boards: keep tiles chunky until longer answers require more cells.
+ {rack:'SAMUEL',size:6,title:'The Prophet and the King',scene:'09_1_samuel.webp',spark:'ELAM',
+  clue:'A son of Shem named among the families after the Flood',reference:'Genesis 10:22',
+  url:'https://www.jw.org/en/library/bible/nwt/books/genesis/10/',
+  insight:'Genesis 10:22 lists Elam among the sons of Shem, along with Asshur, Arpachshad, Lud, and Aram.',
+  words:[['SAMUEL',0,2,'down'],['SAUL',3,0,'across'],['MALE',1,1,'across'],['SUM',3,0,'down'],['MULE',5,0,'across']],
+  bibleBoard:[
+   {word:'SAMUEL',clue:'The boy who responded when Jehovah called his name',reference:'1 Samuel 3:4-10',
+    url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/3/',
+    insight:'Young Samuel responded when Jehovah called him, and Eli helped Samuel understand how to answer (1 Samuel 3:4-10).'},
+   {word:'SAUL',clue:'The man Samuel anointed to lead Israel',reference:'1 Samuel 10:1',
+    url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/10/',
+    insight:'Samuel poured oil on Saul’s head when Jehovah chose him to lead Israel (1 Samuel 10:1).'}
+  ],
+  bonus:'AMUSE SAME SEAL MEAL MUSE LAME SEA SUE USE MULES MULE AMUSE MULES'},
+ {rack:'GOLIATH',size:7,title:'A Champion From Gath',scene:'09_1_samuel.webp',spark:'LOT',
+  clue:'Abraham’s nephew who traveled with him',reference:'Genesis 13:5-11',
+  url:'https://www.jw.org/en/library/bible/nwt/books/genesis/13/',
+  insight:'Lot traveled with Abram and also had flocks and herds. As their households grew, Abram let Lot choose where to live (Genesis 13:5-11).',
+  words:[['GATH',1,4,'down'],['GOLIATH',2,0,'across'],['GLOAT',2,0,'down'],['TAIL',6,0,'across'],['ALTO',1,2,'down'],['HALO',2,6,'down']],
+  bibleBoard:[
+   {word:'GOLIATH',clue:'Philistine champion who challenged Israel',reference:'1 Samuel 17:4',
+    url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/',
+    insight:'Goliath was the Philistine champion who faced Israel’s army; 1 Samuel 17:4 introduces him by name.'},
+   {word:'GATH',clue:'The city Goliath came from',reference:'1 Samuel 17:4',
+    url:'https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/',
+    insight:'The Bible identifies Goliath as a Philistine champion from Gath (1 Samuel 17:4).'}
+  ],
+  bonus:'GOAT HAIL OATH TOIL GOAL LIGHT ALIGHT LATH HILT HALT GLOAT ALTO HALO'},
+ {rack:'ABRAHAM',size:7,title:'The Promise to Abraham',scene:'01_genesis.webp',spark:'MARAH',
+  clue:'The place where the Israelites found bitter water',reference:'Exodus 15:23-25',
+  url:'https://www.jw.org/en/library/bible/nwt/books/exodus/15/',
+  insight:'At Marah, the people could not drink the bitter water. Jehovah showed Moses what to do, and the water became sweet (Exodus 15:23-25).',
+  words:[['ABRAHAM',0,3,'down'],['ABRAM',2,1,'across'],['HAM',4,3,'across'],['ARM',0,3,'across'],['RAM',6,1,'across']],
+  bibleBoard:[
+   {word:'ABRAHAM',clue:'The name Jehovah gave Abram as part of his covenant',reference:'Genesis 17:5',
+    url:'https://www.jw.org/en/library/bible/nwt/books/genesis/17/',
+    insight:'Jehovah renamed Abram Abraham and spoke about making him a father of many nations (Genesis 17:5).'},
+   {word:'ABRAM',clue:'Abraham’s earlier name',reference:'Genesis 17:5',
+    url:'https://www.jw.org/en/library/bible/nwt/books/genesis/17/',
+    insight:'Genesis 17:5 explicitly records the change from Abram to Abraham.'},
+   {word:'HAM',clue:'One of Noah’s three sons',reference:'Genesis 9:18',
+    url:'https://www.jw.org/en/library/bible/nwt/books/genesis/9/',
+    insight:'Ham was one of Noah’s sons who came out of the ark along with Shem and Japheth (Genesis 9:18).'},
+   {word:'RAM',clue:'The animal Abraham later found caught in a thicket',reference:'Genesis 22:13',
+    url:'https://www.jw.org/en/library/bible/nwt/books/genesis/22/',
+    insight:'Abraham found a ram caught in a thicket and offered it instead of Isaac (Genesis 22:13).'}
+  ],
+  bonus:'HARM BAR MAR BRA MARAH ABRAM HAM ARM RAM'}
 ];
 /* Every level now hides multiple source-verified Bible discoveries.
    Keep the crossword casual, but offer a meaningful optional Bible-word hunt.
@@ -75,7 +124,16 @@ const EXTRA_SPARKS=[
   insight:'Jehovah gave Moses a recipe for holy anointing oil that included olive oil and fine perfumes (Exodus 30:22-25).'},
   {word:'LOVE',clue:'The quality Jesus said would identify his true disciples',reference:'John 13:34, 35',
   url:'https://www.jw.org/en/library/bible/nwt/books/john/13/',
-  insight:'Jesus gave his disciples a new commandment to love one another. He said such love would identify his disciples (John 13:34, 35).'}]
+  insight:'Jesus gave his disciples a new commandment to love one another. He said such love would identify his disciples (John 13:34, 35).'}],
+ [{word:'SEA',clue:'Jehovah made a path through it for Israel in Moses’ day',reference:'Exodus 14:21, 22',
+   url:'https://www.jw.org/en/library/bible/nwt/books/exodus/14/',
+   insight:'Jehovah used a strong east wind to divide the sea, allowing the Israelites to cross on dry ground (Exodus 14:21, 22).'}],
+ [{word:'GOAT',clue:'This animal was included in offerings on the Day of Atonement',reference:'Leviticus 16:5',
+   url:'https://www.jw.org/en/library/bible/nwt/books/leviticus/16/',
+   insight:'The congregation of Israel provided two young male goats as a sin offering for the Day of Atonement (Leviticus 16:5).'}],
+ [{word:'BAR',clue:'Samson carried this along with the city gates of Gaza',reference:'Judges 16:3',
+   url:'https://www.jw.org/en/library/bible/nwt/books/judges/16/',
+   insight:'Samson removed the doors and posts of Gaza’s city gate, along with the bar, and carried them away (Judges 16:3).'}]
 ];
 const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
  {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
