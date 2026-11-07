@@ -196,7 +196,7 @@ jobs:
               assert(await page.evaluate(()=>!!document.querySelector('#bu35-family .bu35-rank')));
               assert(!await page.evaluate(()=>document.getElementById('bu67-modal')?.open));
               await page.evaluate(()=>bu35Open('setup'));
-              assert(await page.evaluate(()=>document.getElementById('bu35-family')?.classList.contains('bu-fw-gathering')));
+              await page.waitForFunction(()=>document.getElementById('bu35-family')?.classList.contains('bu-fw-gathering'));
               console.log('PASS_UNSCORED wheel/discussion/results remain unchanged; setup frozen');
               console.log('PASS ALL FOUR FAMILY WORSHIP ANSWER MODES WITH REAL INTERACTION AND NEXT TURN');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
