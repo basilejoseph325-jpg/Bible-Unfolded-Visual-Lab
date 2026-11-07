@@ -1,0 +1,176 @@
+/* Word Trails NEXT / FEEL LAB v2 — isolated Visual Lab.
+   Calm by default; decorative feedback stays pointer-events:none. */
+#app[data-feel="v2"] .tile{transition:filter .14s ease,box-shadow .14s ease,transform .14s ease;
+ will-change:auto}
+#app[data-feel="v2"] .tile.new{
+ animation:feel-tile-rise .39s var(--stagger,0ms) cubic-bezier(.16,.8,.24,1.12) backwards
+}
+@keyframes feel-tile-rise{
+ 0%{opacity:.35;transform:translateY(7px) scale(.86);filter:brightness(2.1)}
+ 65%{opacity:1;transform:translateY(-2px) scale(1.045);filter:brightness(1.24)}
+ 100%{opacity:1;transform:none;filter:brightness(1)}
+}
+#app[data-feel="v2"] .wheel-letter{
+ transition:color .11s ease,box-shadow .11s ease,background-color .11s ease,
+ filter .11s ease;
+}
+#app[data-feel="v2"] .wheel-letter.selected{
+ background:radial-gradient(circle at 35% 28%,#fff6d0,#e9bf6d 68%,#aa7a3b)!important;
+ color:#123e42!important;
+ border:1px solid #fff4c0!important;
+ box-shadow:0 0 0 3px #ffe5a66d,0 0 17px #fbe7ad82,inset 0 1px 2px #fff7b6!important;
+ filter:drop-shadow(0 1px 2px #0009);
+}
+#app[data-feel="v2"] .wheel-letter:not(.selected):active{filter:brightness(1.35)}
+#app[data-feel="v2"] .selection-lines polyline{
+ stroke:#ffe3a7b8;stroke-width:10;filter:drop-shadow(0 0 3px #fff4b56b)
+}
+#app[data-feel="v2"] .feel-progress-beat{
+ animation:feel-progress-shine .48s ease-out both;
+}
+@keyframes feel-progress-shine{
+ 0%,100%{filter:none}
+ 30%{filter:brightness(1.6) drop-shadow(0 0 6px #ffe6a9)}
+}
+#app[data-feel="v2"] .feel-board-beat{animation:feel-board-glow .39s ease-out}
+@keyframes feel-board-glow{0%,100%{filter:drop-shadow(0 3px 5px #0006)}
+ 52%{filter:drop-shadow(0 0 7px #e8f9d3c0) drop-shadow(0 4px 5px #0006)}}
+#app[data-feel="v2"] .feel-coin-arrive{
+ animation:feel-counter-bloom .60s ease-out both;
+}
+@keyframes feel-counter-bloom{0%,100%{filter:none}40%{filter:brightness(1.45) drop-shadow(0 0 8px #ffe5a2)}}
+#app[data-feel="v2"] .wt-feel-layer{
+ position:absolute;inset:0;z-index:11;pointer-events:none;overflow:hidden;
+}
+#app[data-feel="v2"] .feel-coin{
+ display:block;position:absolute;width:21px;height:21px;line-height:21px;
+ font-size:20px;text-align:center;font-style:normal;
+ color:#ffeab2;text-shadow:0 0 7px #fff3cf,0 2px 3px #79461b;
+ will-change:transform,opacity;pointer-events:none;
+}
+#app[data-feel="v2"] .feel-callout{
+ position:absolute;top:31%;left:50%;transform:translate(-50%,7px) scale(.88);
+ opacity:0;font:900 clamp(17px,4.7vw,24px)/1.1 Georgia,serif;
+ white-space:nowrap;color:#fff2ca;letter-spacing:.045em;
+ text-shadow:0 2px 4px #0b2930,0 0 12px #d9b967a6;
+ background:linear-gradient(105deg,transparent,#0a3540aa 20%,#0a3540aa 80%,transparent);
+ padding:7px 22px;pointer-events:none;
+}
+#app[data-feel="v2"] .feel-callout.reveal{animation:feel-callout .92s ease-out both}
+@keyframes feel-callout{
+ 0%{opacity:0;transform:translate(-50%,10px) scale(.88)}
+ 20%{opacity:1;transform:translate(-50%,-5px) scale(1.04)}
+ 75%{opacity:1;transform:translate(-50%,-7px)}
+ 100%{opacity:0;transform:translate(-50%,-15px)}
+}
+#app[data-feel="v2"] .feel-bonus-pips{
+ display:inline-flex;gap:3px;align-items:center;margin-left:5px;vertical-align:middle;
+ pointer-events:none;
+}
+#app[data-feel="v2"] .feel-bonus-pips i{
+ width:6px;height:6px;border-radius:50%;
+ background:#526865;border:1px solid #e6c47a88;box-shadow:0 1px 2px #0007;
+}
+#app[data-feel="v2"] .feel-bonus-pips i.on{
+ background:#ffe4a0;box-shadow:0 0 5px #ffe9b2;
+}
+#app[data-feel="v2"] .feel-pips-pop{animation:feel-pips-raise .35s ease-out}
+@keyframes feel-pips-raise{0%{transform:scale(.8)}55%{transform:scale(1.27)}100%{transform:scale(1)}}
+#app[data-feel="v2"] .victory-star{
+ animation:feel-victory-glow 2.65s ease-in-out infinite;
+}
+@keyframes feel-victory-glow{0%,100%{transform:scale(.97);filter:brightness(.9)}
+ 50%{transform:scale(1.08);filter:brightness(1.18)}}
+/* Settings modal reuses our bronze / deep-teal visual language. */
+#wt-feel-settings{width:min(92vw,390px);max-height:88dvh;height:auto;border:0;padding:0;
+ background:transparent;color:#ffedcf;overflow:visible;filter:drop-shadow(0 10px 26px #0008)}
+#wt-feel-settings::backdrop{background:#041720d9;backdrop-filter:blur(5px)}
+#wt-feel-settings .feel-settings-panel{
+ border:2px solid #e3bf7f;border-radius:19px;
+ background:linear-gradient(153deg,#1a4c53 0%,#0b3440 56%,#092b39 100%);
+ box-shadow:inset 0 0 0 3px #e4c58b23,0 5px 20px #0008;
+ padding:15px 17px 17px;max-height:85dvh;overflow-y:auto;
+ overscroll-behavior:contain;box-sizing:border-box;
+}
+#wt-feel-settings .feel-settings-heading{
+ display:flex;align-items:center;justify-content:space-between;
+}
+#wt-feel-settings .feel-kicker{font:850 9px/1.2 system-ui,sans-serif;letter-spacing:.15em;color:#e8d3a4}
+#wt-feel-settings #feel-close{
+ border:1px solid #e4c68f96;background:#092e37d9;color:#ffe7be;
+ border-radius:50%;width:34px;height:34px;font-size:25px;
+ line-height:1;display:grid;place-items:center
+}
+#wt-feel-settings h2{font:800 27px Georgia,serif;text-align:center;margin:0 0 4px;color:#ffe6ad}
+#wt-feel-settings .feel-settings-panel>p{
+ text-align:center;color:#e8dcc4;font-size:12px;line-height:1.35;margin:0 0 12px;
+}
+#wt-feel-settings .feel-toggle{
+ min-height:49px;padding:8px 3px;display:flex;justify-content:space-between;align-items:center;
+ gap:9px;border-top:1px solid #ffe5af2c;
+}
+#wt-feel-settings .feel-toggle span{display:flex;flex-direction:column;gap:3px;}
+#wt-feel-settings .feel-toggle strong{font-size:14px;color:#fff1cf}
+#wt-feel-settings .feel-toggle small{font-size:11px;color:#d4dacd;line-height:1.25}
+#wt-feel-settings input[type="checkbox"]{
+ appearance:none;position:relative;flex:0 0 45px;width:45px;height:26px;
+ border:1px solid #f1d69c8a;border-radius:20px;background:#394f52;
+ box-shadow:inset 0 2px 5px #0004;cursor:pointer
+}
+#wt-feel-settings input[type="checkbox"]:before{
+ content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;
+ border-radius:50%;background:#dce2d9;box-shadow:0 1px 2px #0005;
+ transition:transform .15s ease;
+}
+#wt-feel-settings input[type="checkbox"]:checked{background:linear-gradient(#c49748,#a87836)}
+#wt-feel-settings input[type="checkbox"]:checked:before{transform:translateX(19px);background:#fff1c2}
+#wt-feel-settings .feel-slider{
+ display:block;color:#f0d7ac;font-size:11px;line-height:1.2;padding:1px 3px 11px;
+}
+#wt-feel-settings .feel-slider span{float:right;font-variant-numeric:tabular-nums}
+#wt-feel-settings input[type="range"]{
+ display:block;width:100%;height:21px;margin:5px 0 0;accent-color:#ffd17c;
+}
+#wt-feel-settings .feel-demo{
+ border-top:1px solid #ffe5af3d;padding:11px 2px 7px;
+}
+#wt-feel-settings .feel-demo>span{
+ display:block;text-align:center;font-size:11px;font-weight:800;color:#f6d9a5;margin-bottom:8px;
+}
+#wt-feel-settings .feel-demo>div{display:flex;gap:6px}
+#wt-feel-settings .feel-demo button{
+ flex:1;min-height:35px;padding:4px 2px;border:1px solid #e8d19c8c;border-radius:8px;
+ background:#1b4b50;color:#ffe9bc;font:700 11px system-ui,sans-serif
+}
+#wt-feel-settings .feel-demo button:active{transform:translateY(1px);filter:brightness(1.2)}
+#wt-feel-settings .feel-done{
+ width:100%;min-height:42px;margin-top:9px;border:1.5px solid #ffebc7;border-radius:10px;
+ background:linear-gradient(#ffe5a9,#c6954b);color:#1a3540;font:900 14px system-ui,sans-serif
+}
+#wt-feel-settings button:focus-visible,#wt-feel-settings input:focus-visible{
+ outline:3px solid #ffe3a7;outline-offset:2px;
+}
+.wt-feel-no-motion #app .tile.new,
+.wt-feel-no-motion #app .feel-board-beat,
+.wt-feel-no-motion #app .feel-progress-beat,
+.wt-feel-no-motion #app .feel-pips-pop,
+.wt-feel-no-motion #app .feel-coin-arrive,
+.wt-feel-no-motion #app .victory-star,
+.wt-feel-no-motion #app .confetti,
+.wt-feel-no-motion #app .particle,
+.wt-feel-no-motion #app .feel-callout,
+.wt-feel-no-motion #app .wiggle{
+ animation:none!important;transition:none!important;
+}
+@media(max-height:690px){
+ #wt-feel-settings .feel-settings-panel{padding:10px 13px 12px;max-height:82dvh}
+ #wt-feel-settings h2{font-size:23px}
+ #wt-feel-settings .feel-toggle{min-height:43px;padding:6px 2px}
+ #wt-feel-settings .feel-slider{padding-bottom:6px}
+ #wt-feel-settings .feel-demo{padding-top:7px}
+}
+@media(prefers-reduced-motion:reduce){
+ #app[data-feel="v2"] .feel-callout,
+ #app[data-feel="v2"] .tile.new{animation:none!important}
+ #wt-feel-settings *{transition:none!important}
+}
