@@ -166,6 +166,10 @@ jobs:
               assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
               assert((await page.$eval('#finish-words',e=>e.textContent)).includes('1 bonus word'));
               await page.click('#next-level');
+              await page.waitForFunction(()=>{
+                const dialog=document.querySelector('#finish'),effects=document.querySelector('#finish-fx');
+                return !dialog.open&&effects.children.length===0;
+              },{timeout:5000});
               assert.equal(await page.$eval('#finish-fx',e=>e.children.length),0,'Victory glitter must be cleared when leaving screen');
               const packs=[
                 ['DINER','RIDE','DINE','DIRE'],
