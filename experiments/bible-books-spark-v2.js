@@ -6,13 +6,13 @@
 'use strict';
 const ALPHABET='ACTION';
 const WORDS=[
-  // One fixed ACTION wheel, 5 rows × 6 columns and four true crossings.
-  // First row: COIN's C. Row 2: ACTION meets COIN and COAT.
-  // Bottom TAN intersects COAT. No extra letters are ever supplied.
-  {text:'ACTION',row:1,col:0,dir:'across'},
-  {text:'COIN',row:0,col:4,dir:'down'},
-  {text:'COAT',row:1,col:1,dir:'down'},
-  {text:'TAN',row:4,col:1,dir:'across'}
+  // Wordscapes-clean enlarged tiles: 5 columns × 6 rows.
+  // ACTION is the central vertical word; COAT, COIN and TAN cross it.
+  // The single six-letter ACTION wheel remains fixed for the whole puzzle.
+  {text:'ACTION',row:0,col:2,dir:'down'},
+  {text:'COIN',row:3,col:0,dir:'across'},
+  {text:'COAT',row:0,col:0,dir:'across'},
+  {text:'TAN',row:5,col:0,dir:'across'}
 ]
 const EXTRAS=new Set([
   'ACT','ANTIC','ANTI','CAN','CAT','COT','CON','ION','NOT',
