@@ -1,0 +1,194 @@
+name: QA Bible Books Scripture Sparks standalone Genesis test
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-bible-books-spark-v1.yml'
+      - 'experiments/bible-books-spark-v1.html'
+      - 'experiments/bible-books-spark-v1.css'
+      - 'experiments/bible-books-spark-v1.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify isolated new prototype and unchanged shared art
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/bible-books-spark-v1.js
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          for name,hash in {
+            'assets/ui/daily-discovery-explanation-scroll-v3.webp':'4e25223d5666397a3a9dc9b446e4262d12fc41a2',
+            'assets/ui/daily-explanation-wax-next-v2.svg':'103af90347ddb90bcd23cbe0013563373dbc4fde'
+          }.items():
+            data=Path(name).read_bytes()
+            digest=hashlib.sha1(b'blob '+str(len(data)).encode()+bytes([0])+data).hexdigest()
+            assert digest==hash,(name,digest)
+          for name in ('experiments/bible-books-spark-v1.html','experiments/bible-books-spark-v1.css','experiments/bible-books-spark-v1.js','bible-book-art/01_genesis.webp'):
+            assert Path(name).stat().st_size>1000,name
+          js=Path('experiments/bible-books-spark-v1.js').read_text()
+          assert 'localStorage' in js and 'no localStorage' in js and '.setItem' not in js
+          assert "const SPARK='CAIN'" in js
+          assert "const ALPHABET='ACTION'" in js
+          assert "https://www.jw.org/en/library/bible/nwt/books/genesis/4/" in js
+          print('PASS isolated test-only source, original art SHA and Genesis scripture link')
+          PY
+      - name: Play shared-wheel crossword, find optional Bible star, validate responsive phone
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bible-spark-qa --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/bible-spark-http.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/bible-spark-qa/node_modules/puppeteer-core');
+          const {execSync}=require('node:child_process');
+          const assert=require('node:assert/strict');
+          (async()=>{
+            let browser;
+            try{
+              const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.setDefaultTimeout(15000);
+              page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+              await page.goto('http://127.0.0.1:8765/experiments/bible-books-spark-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const inspect=async()=>page.evaluate(()=>{
+                const b=document.getElementById('board').getBoundingClientRect();
+                const w=document.getElementById('wheel').getBoundingClientRect();
+                const a=document.getElementById('app').getBoundingClientRect();
+                return {boardTiles:document.querySelectorAll('.tile').length,
+                  letters:[...document.querySelectorAll('.wheel-letter')].map(x=>x.textContent).sort().join(''),
+                  progress:document.getElementById('solved-count').textContent,
+                  points:document.getElementById('points').textContent,
+                  bonuses:document.getElementById('bonus-count').textContent,
+                  spark:document.getElementById('spark').className,
+                  bottom:w.bottom,boardBottom:b.bottom,wheelTop:w.top,appBottom:a.bottom,
+                  overflow:{body:document.body.scrollHeight-innerHeight,app:document.getElementById('app').scrollHeight-innerHeight},
+                  art:getComputedStyle(document.getElementById('app'),'::before').backgroundImage};
+              });
+              const initial=await inspect();
+              console.log('INITIAL',JSON.stringify(initial));
+              assert.equal(initial.boardTiles,21);
+              assert.equal(initial.letters,'ACINOT');
+              assert.equal(initial.progress,'0 / 6');
+              assert(initial.art.includes('01_genesis.webp'));
+              assert(initial.boardBottom<initial.wheelTop);
+              assert(initial.bottom<initial.appBottom);
+              assert(initial.overflow.body<=1&&initial.overflow.app<=1);
+              const image=(await page.screenshot({type:'jpeg',quality:42})).toString('base64');
+              for(let i=0;i<image.length;i+=9000)console.log('SPARK_TEST_SHOT',i/9000,image.slice(i,i+9000));
+              const play=async(word)=>{
+                for(const ch of word){
+                  await page.evaluate(ch=>{
+                    const b=[...document.querySelectorAll('.wheel-letter')].find(x=>
+                      x.textContent===ch&&!x.classList.contains('selected'));
+                    if(!b)throw Error('Letter '+ch+' not available');
+                    b.click();
+                  },ch);
+                }
+                await page.evaluate(()=>document.getElementById('submit').click());
+              };
+              await page.click('#spark');
+              const info=await page.evaluate(()=>({
+                open:!document.getElementById('spark-info').hidden,
+                copy:document.getElementById('spark-info').textContent,
+                nameExposed:document.getElementById('spark-info').textContent.includes('CAIN')
+              }));
+              console.log('OPTIONAL_HINT',JSON.stringify(info));
+              assert(info.open&&!info.nameExposed&&info.copy.includes('optional'));
+              await page.click('#spark-dismiss');
+              await play('CAT');
+              let state=await inspect();
+              console.log('BONUS_WORD',JSON.stringify(state));
+              assert.equal(state.bonuses,'1');assert.equal(state.points,'3');assert.equal(state.progress,'0 / 6');
+              await play('CAT');
+              state=await inspect();
+              assert.equal(state.bonuses,'1');assert.equal(state.points,'3');
+              await play('CAIN');
+              await page.waitForSelector('#scroll[open]');
+              const scroll=await page.evaluate(()=>({
+                tag:document.getElementById('scroll-tag').textContent,
+                title:document.getElementById('scroll-heading').textContent,
+                href:document.getElementById('scroll-scripture').href,
+                body:document.getElementById('scroll-text').textContent,
+                image:getComputedStyle(document.querySelector('.scroll-art')).backgroundImage,
+                wax:getComputedStyle(document.getElementById('scroll-next')).backgroundImage,
+                label:document.getElementById('scroll-next').textContent,
+                progress:document.getElementById('solved-count').textContent
+              }));
+              console.log('SCRIPTURE_SPARK',JSON.stringify(scroll));
+              assert(scroll.title.includes('CAIN')&&scroll.body.includes('Abel'));
+              assert(scroll.href==='https://www.jw.org/en/library/bible/nwt/books/genesis/4/');
+              assert(scroll.image.includes('daily-discovery-explanation-scroll-v3.webp'));
+              assert(scroll.wax.includes('daily-explanation-wax-next-v2.svg'));
+              assert.equal(scroll.progress,'0 / 6');
+              assert.equal((await inspect()).points,'28');
+              await page.click('#scroll-next');
+              assert(!await page.evaluate(()=>document.getElementById('scroll').open));
+              await page.click('#shuffle');
+              state=await inspect();
+              assert.equal(state.letters,'ACINOT');
+              assert.equal(state.points,'28');
+              await page.click('#hint');
+              state=await inspect();
+              assert.equal(state.points,'20');
+              assert(await page.evaluate(()=>document.querySelectorAll('.tile.hinted').length)===1);
+              for(const word of ['ANT','COIN','COAT','INTO','TONIC','ACTION']){
+                await play(word);
+                state=await inspect();
+                console.log('FOUND_'+word,JSON.stringify({progress:state.progress,letterWheel:state.letters,points:state.points}));
+                assert.equal(state.letters,'ACINOT','Wheel letters must never be replaced');
+              }
+              await page.waitForSelector('#scroll[open]');
+              const complete=await page.evaluate(()=>({
+                title:document.getElementById('scroll-heading').textContent,
+                revealed:document.querySelectorAll('.tile.found').length,
+                total:document.getElementById('solved-count').textContent,
+                sparkClaimed:document.getElementById('spark').classList.contains('claimed'),
+                points:document.getElementById('points').textContent
+              }));
+              console.log('COMPLETE',JSON.stringify(complete));
+              assert(complete.title==='Crossword Complete!');
+              assert.equal(complete.revealed,21);
+              assert.equal(complete.total,'6 / 6');
+              assert(complete.sparkClaimed);
+              assert.equal(complete.points,'80');
+              await page.click('#scroll-next');
+              await page.click('#reset');
+              assert.equal((await inspect()).progress,'0 / 6');
+              // The Bible bonus is optional: the whole crossword must be
+              // finishable with never spelling CAIN.
+              for(const word of ['ACTION','COAT','TONIC','INTO','COIN','ANT'])await play(word);
+              await page.waitForSelector('#scroll[open]');
+              const optional=await page.evaluate(()=>({
+                solved:document.getElementById('solved-count').textContent,
+                sparkClaimed:document.getElementById('spark').classList.contains('claimed'),
+                text:document.getElementById('scroll-text').textContent
+              }));
+              console.log('FINISH_WITHOUT_SPARK',JSON.stringify(optional));
+              assert.equal(optional.solved,'6 / 6');
+              assert.equal(optional.sparkClaimed,false);
+              assert(optional.text.includes('optional Scripture Spark'));
+              await page.click('#scroll-next');
+              await play('CAIN');
+              assert(await page.evaluate(()=>document.getElementById('scroll').open));
+              console.log('PASS Genesis single wheel all six crossings, regular bonus, optional CAIN, authentic NWT scroll, hint/shuffle, no saving');
+              for(const [width,height] of [[360,740],[375,667]]){
+                await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await new Promise(r=>setTimeout(r,120));
+                const g=await inspect();
+                console.log('PHONE_'+width+'x'+height,JSON.stringify(g));
+                assert(g.overflow.body<=1&&g.overflow.app<=1);
+                assert(g.boardBottom<g.wheelTop);
+                assert(g.bottom<=g.appBottom+1);
+              }
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
