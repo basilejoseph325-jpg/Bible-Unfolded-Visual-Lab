@@ -1,0 +1,209 @@
+/* VISUAL LAB ONLY — Story Adventure post-question discovery parchment V1.
+ * Uses locked photorealistic V3 explanation scroll and real V2 wax button.
+ * Only tagged Legacy/Later Story Adventure answer-result dialogs are changed.
+ * Leaves hints/scripture/story-read/confirmation modal styles, state and
+ * existing onClick handlers untouched. */
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll{
+  box-sizing:border-box!important;
+  z-index:360!important;
+  padding:8px 4px max(8px,env(safe-area-inset-bottom))!important;
+  background:rgba(0,18,25,.80)!important;
+  backdrop-filter:blur(6px)!important;
+  -webkit-backdrop-filter:blur(6px)!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal,.bu3863-dialog){
+  box-sizing:border-box!important;
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:flex-start!important;
+  align-items:stretch!important;
+  width:min(99vw,480px)!important;
+  height:min(85dvh,690px)!important;
+  min-height:0!important;
+  max-height:min(85dvh,690px)!important;
+  margin:0 auto!important;
+  gap:0!important;
+  padding:clamp(125px,18dvh,153px) clamp(38px,10vw,64px)
+          clamp(108px,14dvh,132px)!important;
+  overflow:hidden!important;
+  border:0!important;
+  border-radius:0!important;
+  background-color:#d8ae71!important;
+  background-image:url('assets/ui/daily-discovery-explanation-scroll-v3.webp')!important;
+  background-size:100% 100%!important;
+  background-position:center!important;
+  background-repeat:no-repeat!important;
+  box-shadow:0 13px 35px rgba(0,0,0,.43)!important;
+  color:#422816!important;
+  animation:bu-story-discovery-unfurl .22s ease-out both!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal,.bu3863-dialog) > h2{
+  box-sizing:border-box!important;
+  z-index:1!important;
+  position:relative!important;
+  flex:0 0 auto!important;
+  margin:0 14px 9px!important;
+  padding:0 0 1px!important;
+  color:#31572c!important;
+  text-align:center!important;
+  overflow-wrap:anywhere!important;
+  max-height:5.2em!important;
+  overflow-y:auto!important;
+  font:italic 700 clamp(20px,5.05vw,27px)/1.13
+     "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  text-shadow:0 1px #fff1c1,0 2px 2px rgba(68,39,14,.17)!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-body,.bu3863-dialog-body){
+  box-sizing:border-box!important;
+  position:relative!important;
+  z-index:1!important;
+  display:block!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0 3px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  -webkit-overflow-scrolling:touch!important;
+  scrollbar-width:thin!important;
+  scrollbar-color:#9d703b transparent!important;
+  background:transparent!important;
+  color:#422816!important;
+  font:italic 500 clamp(14px,3.85vw,17px)/1.48
+    "Palatino Linotype","Book Antiqua","Iowan Old Style",Baskerville,Georgia,serif!important;
+  letter-spacing:.008em!important;
+  text-shadow:0 1px rgba(255,245,212,.23)!important;
+  overflow-wrap:break-word!important;
+  white-space:pre-wrap!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-body,.bu3863-dialog-body) a{
+  color:#613e1f!important;
+  text-decoration:underline!important;
+  text-underline-offset:2px!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-close,.bu3863-close){
+  box-sizing:border-box!important;
+  display:grid!important;
+  place-items:center!important;
+  position:absolute!important;
+  z-index:4!important;
+  top:clamp(95px,13.9dvh,122px)!important;
+  right:clamp(38px,10vw,61px)!important;
+  width:36px!important;
+  height:36px!important;
+  min-height:36px!important;
+  margin:0!important;
+  padding:0!important;
+  border:2px solid #fff0b0!important;
+  border-radius:50%!important;
+  background:radial-gradient(circle at 34% 20%,#e6bc64,#95611f 83%)!important;
+  color:#fff2c4!important;
+  box-shadow:0 3px 8px #362015b0,inset 0 1px #ffe39b!important;
+  font:700 24px/1 system-ui,-apple-system,sans-serif!important;
+}
+/* Story Adventure newer episodes already have a kicker; hide it on the paper
+   so the title stays below the top wooden roller. */
+#bu3863-dialog-layer.bu-story-discovery-scroll .bu3863-dialog-kicker{
+  display:none!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-actions,.bu3863-dialog-actions){
+  box-sizing:border-box!important;
+  position:relative!important;
+  z-index:1!important;
+  flex:0 0 auto!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  width:100%!important;
+  margin:11px 0 0!important;
+  padding:0!important;
+  border:0!important;
+  background:transparent!important;
+}
+/* Redundant Close button is suppressed in post-answer layout only: the native
+   X remains, fully wired to the original Close handler. */
+#bu3864-modal-layer.bu-story-discovery-scroll .bu3864-modal-actions .secondary-button{
+  display:none!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-actions,.bu3863-dialog-actions) > .gold-button{
+  box-sizing:border-box!important;
+  position:relative!important;
+  z-index:1!important;
+  flex:0 0 89%!important;
+  align-self:center!important;
+  width:89%!important;
+  height:auto!important;
+  min-height:57px!important;
+  max-height:65px!important;
+  margin:0 auto!important;
+  padding:6px 57px 7px 12px!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent url('assets/ui/daily-explanation-wax-next-v2.svg')
+    center / 100% 100% no-repeat!important;
+  box-shadow:none!important;
+  color:#f9d887!important;
+  text-align:center!important;
+  font:800 clamp(14px,4.05vw,19px)/1.1
+    "Palatino Linotype","Book Antiqua",Georgia,serif!important;
+  letter-spacing:.02em!important;
+  text-shadow:0 2px 2px rgba(34,7,7,.94),0 -1px 1px rgba(255,246,202,.35)!important;
+  filter:drop-shadow(0 2px 3px rgba(48,19,10,.54))!important;
+  transition:filter .18s ease-out,transform .14s ease-out!important;
+  cursor:pointer!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-actions,.bu3863-dialog-actions) > .gold-button:active{
+  transform:translateY(2px) scale(.988)!important;
+  filter:drop-shadow(0 1px 1px rgba(45,13,7,.7)) brightness(1.05)!important;
+}
+:is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+:is(.bu3864-modal-close,.bu3863-close,.gold-button):focus-visible{
+  outline:3px solid #fff6c2!important;
+  outline-offset:2px!important;
+}
+@keyframes bu-story-discovery-unfurl{
+  from{opacity:0;transform:translateY(-7px) scale(.99)}
+  to{opacity:1;transform:none}
+}
+@media(max-height:650px){
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal,.bu3863-dialog){
+    padding-top:clamp(83px,16.2dvh,115px)!important;
+    padding-bottom:clamp(77px,13dvh,100px)!important;
+  }
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal-close,.bu3863-close){
+    top:clamp(66px,12dvh,92px)!important;
+  }
+}
+@media(max-width:350px){
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal,.bu3863-dialog){
+    padding-right:33px!important;
+    padding-left:33px!important;
+  }
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal-actions,.bu3863-dialog-actions) > .gold-button{
+    font-size:13px!important;padding-right:49px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal,.bu3863-dialog){animation:none!important;}
+  :is(#bu3864-modal-layer,#bu3863-dialog-layer).bu-story-discovery-scroll
+  :is(.bu3864-modal-actions,.bu3863-dialog-actions) > .gold-button{
+    transition:none!important;
+  }
+}
