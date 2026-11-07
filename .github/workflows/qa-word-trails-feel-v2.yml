@@ -34,6 +34,12 @@ jobs:
           assert "word-trails-next-v1" in html
           assert "prefers-reduced-motion" in css
           assert "pointer-events:none" in css
+          assert "FEATURE_CUE_BOOST=3.25" in js, "Reward cues need their own higher-loudness mix"
+          assert "const QUIET_CUES=new Set(['touch','trace','undo'])" in js, "Preserve swipe/tap/undo"
+          assert "function celebrateWin()" in js and "winConfetti(stage,58)" in js and "winGlitter(stage,27)" in js
+          assert 'id="finish-fx"' in html and "finish-fx" in css
+          assert "window.BUWTPolish?.celebrateWin?.()" in main
+          print("PASS separate quiet gameplay sounds and premium win-only glitter")
           assert "EFFECTS_MIX_GAIN=11.2" in js, "Master gain preserved across the voice normalization change"
           assert "VOICE_LOUDNESS_BOOST=4.0" in js
           assert "getFloatTimeDomainData" in js and "signalMeter" in js
@@ -85,6 +91,13 @@ jobs:
               const voice=await page.evaluate(()=>window.BUWTPolish.voiceBoost());
               console.log('SFX_VOICE_BOOST',JSON.stringify({relativeToPrevious:voice,master:mix}));
               assert.equal(voice,4,'Individual sound voices must be four times stronger than last version');
+              const cueMix=await page.evaluate(()=>Object.fromEntries(
+                ['touch','trace','undo','correct','bonus','wrong','hint','complete','spark','coinLand','levelEnter']
+                .map(kind=>[kind,window.BUWTPolish.featureBoost(kind)])));
+              console.log('INDEPENDENT_FEEDBACK_LEVELS',JSON.stringify(cueMix));
+              for(const name of ['touch','trace','undo'])assert.equal(cueMix[name],1,name+' must not be boosted');
+              for(const name of ['correct','bonus','wrong','hint','complete','spark','coinLand','levelEnter'])
+                assert(cueMix[name]>=3,name+' must receive the new strong gain');
               const measure=async pct=>page.evaluate(async pct=>{
                 const prefs=window.BUWTPolish;
                 const panel=document.querySelector('#wt-feel-settings [data-pref="sfxVolume"]');
@@ -220,6 +233,39 @@ jobs:
                 console.log('PHONE_'+width+'x'+height,JSON.stringify(g));
                 assert(g.tile>=60&&g.boardBottom<g.wheelTop&&g.wheelBottom<=g.window+1&&g.overflow<=1);
               }
+              // A winning puzzle must render gold confetti and glitter in the DIALOG,
+              // not behind the dimmed page. These decorations must not intercept taps.
+              for(const word of ['ANTIC','TACO','TONIC','COIN'])await play(word);
+              await page.waitForSelector('#finish[open]',{timeout:12000});
+              const fx=await page.evaluate(()=>({
+                panel:document.querySelector('#finish').open,
+                layer:document.querySelector('#finish-fx')?.parentElement?.id,
+                glints:document.querySelectorAll('#finish-fx .wt-win-glint').length,
+                foils:document.querySelectorAll('#finish-fx .wt-win-foil').length,
+                touch:getComputedStyle(document.querySelector('#finish-fx')).pointerEvents,
+                winning:document.querySelector('#finish').classList.contains('wt-winning')
+              }));
+              console.log('PREMIUM_WIN_FX',JSON.stringify(fx));
+              assert(fx.panel&&fx.layer==='finish'&&fx.winning,'Gold celebration must be in the victory dialog');
+              assert(fx.glints>=27&&fx.foils>=58,'First premium glitter/confetti wave must appear');
+              assert.equal(fx.touch,'none','Decorations must never block the Next Level button');
+              await page.click('#next-level');
+              await page.click('#audio');
+              await setting('motion',false);
+              await page.click('#feel-done');
+              for(const word of ['DINER','RIDE','DINE','DIRE'])await play(word);
+              await page.waitForSelector('#finish[open]',{timeout:12000});
+              const reduced=await page.evaluate(()=>({
+                glints:document.querySelectorAll('#finish-fx .wt-win-glint').length,
+                foils:document.querySelectorAll('#finish-fx .wt-win-foil').length,
+                className:document.querySelector('#finish').className
+              }));
+              console.log('WIN_FX_OFF',JSON.stringify(reduced));
+              assert(reduced.glints===0&&reduced.foils===0,'Motion disabled must suppress decorative particles');
+              await page.click('#next-level');
+              await page.click('#audio');
+              await setting('motion',true);
+              await page.click('#feel-done');
               await page.evaluate(()=>{
                 localStorage.removeItem('bu-wt-next-feel-v2');
                 localStorage.setItem('bu-visual-lab-wordtrails-next-v1',JSON.stringify({sound:false}));
