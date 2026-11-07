@@ -48,7 +48,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #ffe7a6;outline-offset:2p
 #solved-count{font-size:inherit;font-weight:900;font-variant-numeric:tabular-nums;
  background:none;color:#ffe1a6;padding:0;border:0;border-radius:0}
 .test-caption{font-size:9px;letter-spacing:.1em;color:#f7e8c7b0;font-weight:850}
-.spark-button{position:absolute;z-index:3;top:8px;right:17px;width:49px;height:49px;display:grid;place-items:center;
+.spark-button{position:absolute;z-index:3;top:0px;right:17px;width:49px;height:49px;display:grid;place-items:center;
  background:#142d35a6;border:1px solid #f7d997a6;border-radius:50%;box-shadow:0 3px 9px #0005;color:#ffdc73}
 .spark-button .star{font-size:33px;line-height:1;animation:star-glow 4.8s ease-in-out infinite;filter:drop-shadow(0 0 4px #f4cb6b99)}
 @keyframes star-glow{0%,54%,100%{transform:scale(1);filter:drop-shadow(0 0 2px #e9b45b8a)}
@@ -131,7 +131,7 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  .board{--tile:min(19.3vw,10.2dvh,76px);--gap:4px}
  .wheel{--diameter:min(78vw,37dvh,294px)}
  .side-control{bottom:14px;width:48px;height:48px}
- .spark-button{top:4px;width:42px;height:42px}
+ .spark-button{top:0px;width:42px;height:42px}
  .spark-button .star{font-size:27px}
  .scroll-art{padding-top:clamp(90px,15.5dvh,118px);padding-bottom:clamp(79px,13dvh,100px)}
  .scroll-x{top:clamp(68px,12dvh,91px)}
