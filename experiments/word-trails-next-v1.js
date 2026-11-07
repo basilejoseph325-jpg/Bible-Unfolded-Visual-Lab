@@ -287,7 +287,7 @@ function completeLevel(){
  save.progress=null;store();ui();cue('complete');haptic([20,40,30]);confetti();
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
- $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus words';
+ $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
  $('finish-spark').textContent=save.sparks.includes(index)?'★ Scripture Spark discovered':'☆ Optional Scripture Spark still hidden';
  $('next-level').textContent=index===LEVELS.length-1?'Explore Level Map':'Next Level';
  $('stay').textContent=save.sparks.includes(index)?'Replay this level':'Keep exploring';
@@ -402,7 +402,7 @@ $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
  if(index===LEVELS.length-1){$('finish').close();levelMap()}else showLevel(n);
 });
-$('stay').addEventListener('click',()=>{$('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
+$('stay').addEventListener('click',()=>{if(save.sparks.includes(index)){resetLevel();return} $('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
 $('spark-next').addEventListener('click',()=>$('discovery').close());
 $('spark-x').addEventListener('click',()=>$('discovery').close());
 $('map-x').addEventListener('click',()=>$('map').close());
