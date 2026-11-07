@@ -181,9 +181,10 @@
    No assets, no layout shifts, no buttons covered. */
 #finish .finish-panel{z-index:1}
 #finish .finish-fx{
- position:absolute;inset:-14px;z-index:3;overflow:hidden;
- border-radius:24px;pointer-events:none;user-select:none;
+ position:absolute;inset:-14px -14px 142px;z-index:3;overflow:hidden;
+ border-radius:24px 24px 7px 7px;pointer-events:none;user-select:none;
  contain:paint;isolation:isolate;
+ /* Keep champagne confetti in the star/reward area, never over the CTA text. */
 }
 #finish .wt-win-foil{
  position:absolute;top:-25px;display:block;opacity:0;
