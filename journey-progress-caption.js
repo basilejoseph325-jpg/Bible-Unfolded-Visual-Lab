@@ -166,3 +166,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Affects only 18 specifically reported topic-card image focal points;
    incorrect/duplicated source-art replacements are separately tracked. */
 (()=>{if(document.getElementById('bu-fw-gallery-crop-v4-css'))return;const l=document.createElement('link');l.id='bu-fw-gallery-crop-v4-css';l.rel='stylesheet';l.href='family-worship-gallery-crop-v4.css?v=20261106-headroom-cain-v7';document.head.appendChild(l)})();
+
+/* VISUAL LAB ONLY — Story Adventure post-answer scroll (both original and
+   later episode engines). Approved Daily V3 parchment & V2 wax artwork
+   reused unmodified; native close, progression, rewards, sounds unchanged.
+   No hint, scripture, story-reading or other-mode modal changes. */
+(()=>{if(document.getElementById('bu-story-discovery-scroll-css-v1'))return;const l=document.createElement('link');l.id='bu-story-discovery-scroll-css-v1';l.rel='stylesheet';l.href='story-adventure-discovery-scroll-v1.css?v=20261106-story-answer-parchment-v1';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-story-discovery-scroll-js-v1'))return;const s=document.createElement('script');s.id='bu-story-discovery-scroll-js-v1';s.src='story-adventure-discovery-scroll-v1.js?v=20261106-story-answer-parchment-v1';s.defer=true;document.head.appendChild(s)})();
