@@ -1,0 +1,128 @@
+name: QA Family Worship answer explanation scroll (Visual Lab only)
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-family-worship-answer-scroll-v1.yml'
+      - 'family-worship-answer-scroll-v1.css'
+      - 'family-worship-answer-scroll-v1.js'
+      - 'journey-progress-caption.js'
+permissions: {contents: read}
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 11
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check isolated files and exact approved shared assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check family-worship-answer-scroll-v1.js
+          node --check journey-progress-caption.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib
+          files={'assets/ui/daily-discovery-explanation-scroll-v3.webp':'4e25223d5666397a3a9dc9b446e4262d12fc41a2',
+                 'assets/ui/daily-explanation-wax-next-v2.svg':'103af90347ddb90bcd23cbe0013563373dbc4fde'}
+          for filename,expected in files.items():
+              b=Path(filename).read_bytes()
+              assert hashlib.sha1(b'blob '+str(len(b)).encode()+bytes([0])+b).hexdigest()==expected,filename
+          loader=Path('journey-progress-caption.js').read_text()
+          for file in ('family-worship-answer-scroll-v1.css','family-worship-answer-scroll-v1.js'):
+              assert loader.count(file)==1,file
+          assert 'family-worship-picker-gallery-v3.js' in loader
+          js=Path('family-worship-answer-scroll-v1.js').read_text()
+          assert 'trivia' in js and 'lightning' in js and '.bu35-feedback' in js
+          print('PASS: original scroll, wax, Family Worship setup and isolated answer-only loader')
+          PY
+      - name: Mobile Chromium: Trivia, Lightning, X, return wax, long text and hint exclusions
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/fw-answer-v1 --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/fw-answer-http.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/fw-answer-v1/node_modules/puppeteer-core');
+          const {execSync}=require('child_process');
+          (async()=>{
+            let browser;
+            try{
+              const exe=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath:exe,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.setDefaultTimeout(17000);
+              page.on('pageerror',err=>console.log('PAGE_ERROR',err.message.slice(0,250)));
+              await page.goto('http://127.0.0.1:8765/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await new Promise(r=>setTimeout(r,2400));
+              const boot=await page.evaluate(()=>({
+                fn:typeof window.bu67Modal,
+                css:!!document.getElementById('bu-fw-answer-scroll-css-v1'),
+                js:!!document.getElementById('bu-fw-answer-scroll-js-v1'),
+                originalFamilySetup:!!document.getElementById('bu-fw-gallery-v3-js')
+              }));
+              console.log('BOOT',JSON.stringify(boot));
+              if(boot.fn!=='function'||!boot.css||!boot.js||!boot.originalFamilySetup)throw Error('Native modal or approved modules missing');
+              await page.evaluate(()=>{
+                const root=document.getElementById('bu35-family');
+                root.hidden=false;root.classList.add('bu67-family-play');root.dataset.bu67Phase='trivia';
+                const feedback=document.createElement('div');
+                feedback.className='bu35-feedback';
+                feedback.innerHTML='<b>Correct!</b>Genesis describes the heavens and the earth. Scripture: Genesis 1:1.';
+                window.bu67Modal('Family Worship · trivia',[feedback]);
+              });
+              await page.waitForSelector('#bu67-modal.bu-fw-answer-scroll');
+              const one=await page.evaluate(()=>{
+                const d=document.getElementById('bu67-modal'),b=d.querySelector('.bu67-dialog-body'),wax=d.querySelector('.bu-fw-answer-scroll-return');
+                const r=x=>{const z=x.getBoundingClientRect();return {top:+z.top.toFixed(2),bottom:+z.bottom.toFixed(2),height:+z.height.toFixed(2)}};
+                return {open:d.open,title:d.querySelector('.bu67-dialog-head strong').textContent,
+                  scrollImage:getComputedStyle(d).backgroundImage,waxImage:getComputedStyle(wax).backgroundImage,
+                  realText:b.textContent,scrollHeight:b.scrollHeight,clientHeight:b.clientHeight,
+                  dialog:r(d),body:r(b),wax:r(wax),view:innerHeight,x:!!d.querySelector('.bu67-dialog-x')};
+              });
+              console.log('TRIVIA_SCROLL',JSON.stringify(one));
+              if(!one.open||one.title!=='Answer Explanation'||!one.realText.includes('Genesis')||
+                 !one.scrollImage.includes('daily-discovery-explanation-scroll-v3.webp')||
+                 !one.waxImage.includes('daily-explanation-wax-next-v2.svg')||
+                 !one.x||one.dialog.bottom>one.view||one.wax.bottom>one.dialog.bottom-60)
+                 throw Error('Triva answer scroll missing approved visuals or clipping');
+              const shot=await page.$('#bu67-modal');
+              const b64=(await shot.screenshot({type:'jpeg',quality:55})).toString('base64');
+              for(let i=0;i<b64.length;i+=8000)console.log('FW_SCROLL_SHOT',i/8000,b64.slice(i,i+8000));
+              await page.click('#bu67-modal .bu-fw-answer-scroll-return');
+              if(await page.evaluate(()=>document.getElementById('bu67-modal').open))throw Error('Wax return did not close native answer popup');
+              await page.evaluate(()=>{
+                const root=document.getElementById('bu35-family');root.dataset.bu67Phase='lightning';
+                const el=document.createElement('div');el.className='bu35-feedback';
+                el.textContent='Answer revealed. '+('The explanation is available for family discussion. '.repeat(100));
+                window.bu67Modal('Family Worship · lightning',[el]);
+              });
+              await page.waitForSelector('#bu67-modal.bu-fw-answer-scroll');
+              const long=await page.evaluate(()=>{
+                const d=document.getElementById('bu67-modal'),b=d.querySelector('.bu67-dialog-body');
+                return {scroll:b.scrollHeight,client:b.clientHeight,bottom:d.querySelector('.bu-fw-answer-scroll-return').getBoundingClientRect().bottom,edge:d.getBoundingClientRect().bottom};
+              });
+              console.log('LIGHTNING_LONG',JSON.stringify(long));
+              if(long.scroll<=long.client+50||long.bottom>long.edge-60)throw Error('Long Family Worship answer overflows parchment');
+              await page.click('#bu67-modal .bu67-dialog-x');
+              await page.evaluate(()=>window.bu67Modal('Full question','This is not an answer.'));
+              const utility=await page.evaluate(()=>{
+                const d=document.getElementById('bu67-modal');
+                return {styled:d.classList.contains('bu-fw-answer-scroll'),image:getComputedStyle(d).backgroundImage, wax:!!d.querySelector('.bu-fw-answer-scroll-return')};
+              });
+              console.log('UTILITY_EXCLUDED',JSON.stringify(utility));
+              if(utility.styled||utility.wax||utility.image.includes('daily-discovery-explanation-scroll-v3.webp'))throw Error('Non-answer Family Worship utility popup incorrectly skinned');
+              await page.click('#bu67-modal .bu67-dialog-x');
+              await page.evaluate(()=>{
+                const root=document.getElementById('bu35-family');root.dataset.bu67Phase='think';
+                window.bu67Modal('Family Worship · think','Discussion guidance');
+              });
+              const discussion=await page.evaluate(()=>document.getElementById('bu67-modal').classList.contains('bu-fw-answer-scroll'));
+              console.log('DISCUSSION_EXCLUDED',discussion);
+              if(discussion)throw Error('Discussion guidance got answer scroll');
+              console.log('PASS Family Worship scroll V1 mobile: Trivia, Lightning, X/wax close, long text, utility exclusion, original DOM');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
