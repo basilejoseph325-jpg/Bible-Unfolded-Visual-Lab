@@ -104,11 +104,21 @@ jobs:
               assert(initial.bottom<initial.appBottom);
               assert(initial.overflow.body<=1&&initial.overflow.app<=1);
               const star=await page.evaluate(()=>{
-                const b=document.getElementById('spark').getBoundingClientRect();
-                return {width:b.width,height:b.height,initialHelpOpen:!document.getElementById('spark-info').hidden};
+                const el=document.getElementById('spark');
+                const b=el.getBoundingClientRect();
+                const t=document.querySelector('.board .tile').getBoundingClientRect();
+                const header=document.querySelector('.topbar').getBoundingClientRect();
+                const title=document.querySelector('.heading').getBoundingClientRect();
+                return {width:b.width,height:b.height,bottom:b.bottom,
+                  boardTop:t.top,headerBottom:header.bottom,insideHeader:!!el.closest('.header-left'),
+                  noTitleOverlap:b.right<title.left,
+                  initialHelpOpen:!document.getElementById('spark-info').hidden};
               });
-              assert(star.width<=53&&star.height<=53&&!star.initialHelpOpen,
-                'Scripture Spark should be a compact optional corner icon');
+              console.log('STAR_CLEARANCE',JSON.stringify(star));
+              assert(star.width<=40&&star.height<=40&&!star.initialHelpOpen,
+                'Scripture Spark must be a small accessible icon');
+              assert(star.insideHeader&&star.bottom<star.boardTop&&star.noTitleOverlap,
+                'Scripture Spark must never overlap the enlarged crossword tiles or Genesis title');
               const hintIcon=await page.evaluate(()=>{
                 const svg=document.querySelector('#hint svg');
                 const box=svg?.getBoundingClientRect();
