@@ -38,6 +38,8 @@ jobs:
             'assets/ui/daily-explanation-wax-next-v2.svg'):
             assert Path(file).is_file(),file
           assert "repeat(5,var(--tile))" in css
+          assert 'id="finish-fx"' in html, 'Victory-only effects must live inside dialog'
+          assert "celebrateWin" in js, 'Completion must trigger the new visible celebration'
           print('PASS isolated source; 8 level packs; old music, scroll and icons present')
           PY
       - name: Real phone browser — solve 8 levels, rewards, optional discovery, layout and input
@@ -132,6 +134,24 @@ jobs:
               assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4','In-progress state must restore when returning to Word Trails');
               for(const word of ['TACO','TONIC','COIN'])await play(word);
               await page.waitForSelector('#finish[open]');
+              const fxAtWin=await page.evaluate(()=>{
+                const dialog=document.querySelector('#finish'),layer=document.querySelector('#finish-fx');
+                return {stars:layer.querySelectorAll('.wt-win-glint').length,
+                  foil:layer.querySelectorAll('.wt-win-foil').length,
+                  interactive:getComputedStyle(layer).pointerEvents,
+                  insideDialog:dialog.contains(layer),
+                  open:dialog.open};
+              });
+              console.log('VISIBLE_GOLD_WIN_FX',JSON.stringify(fxAtWin));
+              assert(fxAtWin.insideDialog&&fxAtWin.open&&fxAtWin.interactive==='none');
+              assert(fxAtWin.stars>=27&&fxAtWin.foil>=58,'The win panel must receive glitter and confetti');
+              await new Promise(r=>setTimeout(r,930));
+              const secondWave=await page.$eval('#finish-fx',el=>({
+                stars:el.querySelectorAll('.wt-win-glint').length,
+                foil:el.querySelectorAll('.wt-win-foil').length
+              }));
+              console.log('SECOND_WIN_SPARKLE_WAVE',JSON.stringify(secondWave));
+              assert(secondWave.stars>fxAtWin.stars&&secondWave.foil>fxAtWin.foil,'Luxury win screen must include a second restrained wave');
               let state=await page.evaluate(()=>({
                 title:document.querySelector('#finish-level').textContent,
                 reward:document.querySelector('#finish-reward').textContent,
@@ -146,6 +166,7 @@ jobs:
               assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
               assert((await page.$eval('#finish-words',e=>e.textContent)).includes('1 bonus word'));
               await page.click('#next-level');
+              assert.equal(await page.$eval('#finish-fx',e=>e.children.length),0,'Victory glitter must be cleared when leaving screen');
               const packs=[
                 ['DINER','RIDE','DINE','DIRE'],
                 ['RAVE','SEAR','NEAR','VASE'],
