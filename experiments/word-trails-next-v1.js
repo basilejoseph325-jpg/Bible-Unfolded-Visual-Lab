@@ -98,13 +98,13 @@ function storeProgress(){
  store();
 }
 function soundReady(){
- if(!save.sound)return null;
+ if(window.BUWTPolish?!window.BUWTPolish.musicEnabled():!save.sound)return null;
  try{
   if(!ctx){const A=window.AudioContext||window.webkitAudioContext;if(!A)return null;ctx=new A();}
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   if(!music){
    music=new Audio('../bible-wordtrails-theme.mp3');
-   music.loop=true;music.preload='none';music.volume=.11;music.playsInline=true;
+   music.loop=true;music.preload='none';music.volume=window.BUWTPolish?Math.max(0,.15*window.BUWTPolish.musicVolume()/100):.11;music.playsInline=true;
   }
   if(!unlockedSound){unlockedSound=true;music.play().catch(()=>{});}
   return ctx;
@@ -120,6 +120,7 @@ function tone(freq,when,dur,vol=.04,type='sine',endFreq){
  osc.connect(g);g.connect(a.destination);osc.start(t);osc.stop(t+dur+.012);
 }
 function cue(kind){
+ if(window.BUWTPolish){window.BUWTPolish.cue(kind);return;}
  if(!save.sound)return;
  if(kind==='touch'){tone(680,0,.075,.009,'sine',440);return}
  if(kind==='trace'){tone(860,0,.082,.014,'sine',680);return}
@@ -130,8 +131,9 @@ function cue(kind){
  if(kind==='correct'){[660,840,1050].forEach((f,i)=>tone(f,i*.064,.22,.037,'sine'));tone(525,.05,.17,.015,'triangle');return}
  if(kind==='complete'){[440,550,660,880,1047].forEach((f,i)=>{tone(f,i*.10,.35,.053,'sine');tone(f*2,i*.10,.25,.015,'sine')});}
 }
-function haptic(ms){try{if(!reducedMotion&&navigator.vibrate)navigator.vibrate(ms)}catch(_){}}
-function startMusicFromGesture(){if(save.sound)soundReady()}
+function haptic(ms){if(window.BUWTPolish){window.BUWTPolish.haptic(ms);return;}
+ try{if(!reducedMotion&&navigator.vibrate)navigator.vibrate(ms)}catch(_){}}
+function startMusicFromGesture(){if(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound)soundReady()}
 window.addEventListener('pointerdown',startMusicFromGesture,{capture:true});
 window.addEventListener('keydown',startMusicFromGesture,{capture:true});
 function shuffleArray(a){
@@ -144,15 +146,18 @@ function ui(){
  $('points').textContent=String(save.coins);
  $('solved-count').textContent=found.size+' / '+level.words.length;
  $('bonus-count').textContent=bonuses.size;
+ window.BUWTPolish?.bonusPips(bonuses.size>=3?3:bonuses.size);
  $('combo').textContent=combo>1?combo+'× COMBO':'';
  $('progress-fill').style.width=(found.size/level.words.length*100)+'%';
  $('hint-cost').textContent=save.claimedFreeHints.includes(index)?'15':'FREE';
  $('hint').disabled=found.size===level.words.length||(save.claimedFreeHints.includes(index)&&save.coins<15);
  $('spark').classList.toggle('claimed',save.sparks.includes(index));
  $('spark').setAttribute('aria-label',save.sparks.includes(index)?'Scripture Spark found':'Optional Scripture Spark Bible discovery');
- $('audio').textContent=save.sound?'♫':'♪';
+ if(window.BUWTPolish){$('audio').textContent='♫';$('audio').setAttribute('aria-label','Sound and effects settings');
+ $('audio').setAttribute('aria-pressed','false')}
+ else{$('audio').textContent=save.sound?'♫':'♪';
  $('audio').setAttribute('aria-label',save.sound?'Mute music and sounds':'Enable music and sounds');
- $('audio').setAttribute('aria-pressed',String(save.sound));
+ $('audio').setAttribute('aria-pressed',String(save.sound));}
  $('level-map').textContent=(index+1)+' / '+LEVELS.length;
 }
 function flash(msg){
@@ -160,7 +165,7 @@ function flash(msg){
  clearTimeout(timer);timer=setTimeout(()=>toast.classList.remove('show'),1450);
 }
 function burst(x,y,kind='gold'){
- if(reducedMotion)return;
+ if(reducedMotion||(window.BUWTPolish&&!window.BUWTPolish.motionEnabled()))return;
  const layer=$('particles'),colors=kind==='green'?['#9be0b1','#e2ffe4','#8bc8a0']:['#ffeab0','#fff5d2','#e8b65f'];
  for(let i=0;i<13;i++){
   const e=document.createElement('span'),angle=(i*137.5)*Math.PI/180,d=26+((i*19)%65);
@@ -171,7 +176,7 @@ function burst(x,y,kind='gold'){
  }
 }
 function confetti(){
- if(reducedMotion)return;
+ if(reducedMotion||(window.BUWTPolish&&!window.BUWTPolish.motionEnabled()))return;
  const layer=$('particles'),r=$('app').getBoundingClientRect();
  for(let i=0;i<44;i++){
   const e=document.createElement('span');e.className='confetti';
@@ -184,10 +189,12 @@ function confetti(){
 }
 function drawBoard(word){
  const fragment=document.createDocumentFragment();
+ let revealedIndex=0;
  for(const cell of cells.values()){
   const tile=document.createElement('div'),revealed=cell.words.some(w=>found.has(w)),hint=hinted.has(cell.key);
   tile.className='tile'+(revealed?' found':'')+(hint&&!revealed?' hinted':'');
-  if(word&&cell.words.includes(word))tile.classList.add('new');
+  if(word&&cell.words.includes(word)){tile.classList.add('new');
+   tile.style.setProperty('--stagger',(revealedIndex++*48)+'ms');}
   tile.style.gridRow=cell.row+1;tile.style.gridColumn=cell.col+1;
   tile.dataset.pos=cell.key;tile.textContent=revealed||hint?cell.letter:'';
   tile.setAttribute('aria-label',(revealed||hint?'Letter '+cell.letter:'Hidden letter')+', row '+(cell.row+1)+', column '+(cell.col+1));
@@ -236,6 +243,7 @@ function finishWord(word){
  let comboReward=0;const comboTag='combo:'+index;
  if(combo===3&&!save.paidWords.includes(comboTag)){save.paidWords.push(comboTag);save.coins+=5;comboReward=5;}
  drawBoard(word);storeProgress();
+ window.BUWTPolish?.event('correct',{word,combo,coins:comboReward});
  const tile=[...board.querySelectorAll('.tile.new')][Math.floor([...board.querySelectorAll('.tile.new')].length/2)];
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
  flash('✦ '+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
@@ -249,11 +257,12 @@ function submit(){
  if(locked)return;
  if(!chosen.length){flash('Connect letters to make a word');return}
  const word=chosen.map(i=>letters[i]).join('');clear();
- if(word.length<3){cue('wrong');flash('Try three or more letters');return}
+ if(word.length<3){cue('wrong');window.BUWTPolish?.event('wrong');flash('Try three or more letters');return}
  if(!canMake(level.rack,word)){cue('wrong');return}
  if(word===level.spark){
   if(save.sparks.includes(index)){flash('Scripture Spark already found ★');return}
   save.sparks.push(index);save.coins+=25;ui();storeProgress();
+  window.BUWTPolish?.event('spark',{word});
   cue('spark');haptic([16,28,16]);
   const r=$('spark').getBoundingClientRect(),a=$('app').getBoundingClientRect();
   burst(r.left-a.left+r.width/2,r.top-a.top+r.height/2);
@@ -267,14 +276,23 @@ function submit(){
  if(bank.has(word)){
   if(bonuses.has(word)){flash('Bonus already collected');cue('touch');return}
   bonuses.add(word);combo++;
-  const key=index+'|'+word;
-  if(!save.paidBonuses.includes(key)){save.paidBonuses.push(key);save.coins+=2}
-  ui();storeProgress();flash('✦ BONUS WORD! '+word+'  +2 COINS');cue('bonus');haptic(8);
+  const key=index+'|'+word,paid=!save.paidBonuses.includes(key);
+  if(paid){save.paidBonuses.push(key);save.coins+=2}
+  // Three unique bonuses fill a small satchel. This milestone pays only once per level.
+  const vaultKey='satchel:'+index;
+  const vault=bonuses.size>=3&&!save.paidBonuses.includes(vaultKey);
+  if(vault){save.paidBonuses.push(vaultKey);save.coins+=8}
+  ui();storeProgress();
+  window.BUWTPolish?.event('bonus',{word,count:bonuses.size,coins:paid?2:0});
+  if(vault){window.BUWTPolish?.event('vault',{coins:8});cue('vault')}
+  else cue('bonus');
+  flash(vault?'✦ SATCHEL FULL!  +8 EXTRA COINS':('✦ BONUS WORD! '+word+(paid?'  +2 COINS':'  · FOUND')));
+  haptic(8);
   const x=$('bonus-count').getBoundingClientRect(),a=$('app').getBoundingClientRect();
   burst(x.left-a.left+x.width/2,x.top-a.top+x.height/2);
   return;
  }
- combo=0;ui();cue('wrong');flash('Keep exploring those letters');
+ combo=0;ui();cue('wrong');window.BUWTPolish?.event('wrong');flash('Keep exploring those letters');
  wheel.classList.remove('wiggle');void wheel.offsetWidth;wheel.classList.add('wiggle');
 }
 function completeLevel(){
@@ -286,6 +304,7 @@ function completeLevel(){
   save.unlocked=Math.min(LEVELS.length-1,Math.max(save.unlocked,index+1));
  }
  save.progress=null;store();ui();cue('complete');haptic([20,40,30]);confetti();
+ window.BUWTPolish?.event('complete',{level:index,reward});
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
  $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
@@ -315,6 +334,7 @@ function showLevel(n,resume=false){
  letters=shuffleArray([...level.rack]);
  completionShown=found.size===level.words.length;locked=false;
  drawBoard();drawWheel();
+ window.BUWTPolish?.event('level',{level:index,title:level.title});
  $('toast').classList.remove('show');
 }
 function resetLevel(){
@@ -338,7 +358,7 @@ function hint(){
  unseen.sort((a,b)=>b.words.length-a.words.length||a.row-b.row);
  const cell=unseen[0];hinted.add(cell.key);
  if(isFree)save.claimedFreeHints.push(index);else save.coins-=15;
- drawBoard();storeProgress();cue('hint');
+ drawBoard();storeProgress();cue('hint');window.BUWTPolish?.event('hint',{free:isFree});
  flash((isFree?'Free hint':'15 coins')+' · '+cell.letter+' revealed');
  const b=board.querySelector('[data-pos="'+cell.key+'"]').getBoundingClientRect(),app=$('app').getBoundingClientRect();
  burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2);
@@ -397,7 +417,7 @@ $('submit').addEventListener('click',()=>{cue('touch');submit()});
 $('shuffle').addEventListener('click',shuffle);
 $('hint').addEventListener('click',hint);
 $('spark').addEventListener('click',()=>{cue('touch');openSpark(save.sparks.includes(index))});
-$('audio').addEventListener('click',toggleSound);
+$('audio').addEventListener('click',()=>{if(window.BUWTPolish)window.BUWTPolish.openSettings();else toggleSound()});
 $('level-map').addEventListener('click',levelMap);
 $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
@@ -416,7 +436,13 @@ window.addEventListener('keydown',e=>{
  if(e.key==='Enter'&&!($('finish').open||$('map').open||$('discovery').open)){submit()}
 });
 window.addEventListener('resize',()=>{drawWheel()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)music?.pause();else if(unlockedSound&&save.sound)music?.play().catch(()=>{})});
+window.addEventListener('bu-wt-audio-change',()=>{
+ if(!window.BUWTPolish)return;
+ if(!window.BUWTPolish.musicEnabled()){music?.pause();return}
+ if(music)music.volume=.15*window.BUWTPolish.musicVolume()/100;
+ unlockedSound=false;soundReady();
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)music?.pause();else if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))music?.play().catch(()=>{})});
 window.addEventListener('pagehide',()=>music?.pause());
 showLevel(index,true);
 })();
