@@ -234,6 +234,75 @@ function event(name,data={}){
  if(name==='wrong'){activeCount=0;return}
  if(name==='complete'){activeCount=0;return}
 }
+/* Posh victory sparkle show — rendered INSIDE the top-layer dialog.
+   This avoids the old confetti appearing behind the victory modal.
+   Decorative elements never intercept touches, use only transform/opacity,
+   and are completely skipped when visual effects or reduced motion are off. */
+let winTimers=[];
+function clearWinFX(){
+ for(const handle of winTimers)clearTimeout(handle);
+ winTimers=[];
+ const stage=$('finish-fx');if(stage)stage.replaceChildren();
+ $('finish')?.classList.remove('wt-winning');
+}
+function winConfetti(stage,count,phase=0){
+ const colors=['#f5cb74','#fff1c6','#cf9544','#d9e9bd','#ffe1a6'];
+ const frag=document.createDocumentFragment();
+ for(let i=0;i<count;i++){
+  const n=document.createElement('i');
+  n.className='wt-win-foil';
+  const seed=(i*73+phase*41)%101;
+  const x=6+((i*47+phase*29)%89);
+  const drift=((i*31+phase*17)%135)-68;
+  const duration=2100+(i*37)%920;
+  const delay=(i*79)%500+(phase?130:0);
+  n.style.left=x+'%';
+  n.style.setProperty('--wt-drift',drift+'px');
+  n.style.setProperty('--wt-turn',(i%2?1:-1)*(380+(seed%260))+'deg');
+  n.style.setProperty('--wt-delay',delay+'ms');
+  n.style.setProperty('--wt-duration',duration+'ms');
+  n.style.setProperty('--wt-tilt',(i*17)%70-35+'deg');
+  n.style.background=colors[(i+phase)%colors.length];
+  n.style.width=(3+(seed%3))+'px';
+  n.style.height=(8+(seed%8))+'px';
+  frag.append(n);
+ }
+ stage.appendChild(frag);
+}
+function winGlitter(stage,count,phase=0){
+ const frag=document.createDocumentFragment();
+ for(let i=0;i<count;i++){
+  const n=document.createElement('i');
+  n.className='wt-win-glint';
+  n.textContent=i%5===0?'✧':'✦';
+  const angle=((i*137.508+phase*22)%360)*Math.PI/180;
+  const radius=55+(i*43)%145;
+  n.style.left='50%';n.style.top='20%';
+  n.style.fontSize=(10+(i*7)%12)+'px';
+  n.style.setProperty('--wt-x',(Math.cos(angle)*radius)+'px');
+  n.style.setProperty('--wt-y',(Math.sin(angle)*radius*.70)+'px');
+  n.style.setProperty('--wt-delay',((i*41)%330+(phase?370:0))+'ms');
+  n.style.setProperty('--wt-duration',(990+(i*53)%730)+'ms');
+  frag.append(n);
+ }
+ stage.appendChild(frag);
+}
+function celebrateWin(){
+ clearWinFX();
+ const dialog=$('finish'),stage=$('finish-fx');
+ if(!motion()||!stage||!dialog?.open)return;
+ dialog.classList.add('wt-winning');
+ winConfetti(stage,58);
+ winGlitter(stage,27);
+ const second=setTimeout(()=>{
+  if(dialog.open&&motion()){
+   winConfetti(stage,25,1);
+   winGlitter(stage,14,1);
+  }
+ },780);winTimers.push(second);
+ const cleanup=setTimeout(()=>{stage.replaceChildren();winTimers=[]},4300);
+ winTimers.push(cleanup);
+}
 function state(){return {...pref}}
 function change(name,value){
  if(!Object.prototype.hasOwnProperty.call(DEF,name))return;
@@ -287,6 +356,7 @@ function makeSettings(){
   const demo=e.target.closest('[data-demo]');if(demo)cue(demo.dataset.demo);
  });
  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close()});
+ $('finish')?.addEventListener('close',clearWinFX);
  sync();
 }
 document.addEventListener('visibilitychange',()=>{
@@ -295,7 +365,7 @@ document.addEventListener('visibilitychange',()=>{
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',makeSettings,{once:true});
 else makeSettings();
 window.BUWTPolish=Object.freeze({
- cue,event,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
+ cue,event,celebrateWin,clearWinFX,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
  voiceBoost:()=>VOICE_LOUDNESS_BOOST,featureBoost:cueBoost,audioMeter,
  musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
