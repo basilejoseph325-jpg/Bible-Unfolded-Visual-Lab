@@ -1,0 +1,188 @@
+name: QA Word Trails NEXT multi-level Visual Lab
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-next-v1.yml'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-next-v1.css'
+      - 'experiments/word-trails-next-v1.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate isolated source, art, words and browser assets
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-next-v1.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('experiments/word-trails-next-v1.html').read_text()
+          js=Path('experiments/word-trails-next-v1.js').read_text()
+          css=Path('experiments/word-trails-next-v1.css').read_text()
+          assert "bu-visual-lab-wordtrails-next-v1" in js
+          assert "Word Trails NEXT" in html
+          assert len(re.findall("rack:'",js))==8
+          assert "live-game scores" in js
+          assert "localStorage.setItem(STORAGE" in js
+          assert "word-trails-next-v1.js" in html and "word-trails-next-v1.css" in html
+          for file in (
+            'bible-book-art/01_genesis.webp','bible-book-art/16_nehemiah.webp',
+            'bible-book-art/08_ruth.webp','bible-book-art/44_acts.webp',
+            'bible-book-art/42_luke.webp','bible-wordtrails-theme.mp3',
+            'assets/ui/story-gold-shuffle-v1.svg','assets/ui/daily-gold-hint-v3.svg',
+            'assets/ui/daily-discovery-explanation-scroll-v3.webp',
+            'assets/ui/daily-explanation-wax-next-v2.svg'):
+            assert Path(file).is_file(),file
+          assert "repeat(5,var(--tile))" in css
+          print('PASS isolated source; 8 level packs; old music, scroll and icons present')
+          PY
+      - name: Real phone browser — solve 8 levels, rewards, optional discovery, layout and input
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-next-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/bu-next-http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-next-qa/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({
+                executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                headless:true,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']
+              });
+              const page=await browser.newPage();
+              page.setDefaultTimeout(15000);
+              const errors=[];page.on('pageerror',e=>errors.push(e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8765/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const geometry=()=>page.evaluate(()=>{
+                const a=document.querySelector('#app').getBoundingClientRect(),
+                b=document.querySelector('#board').getBoundingClientRect(),
+                w=document.querySelector('#wheel').getBoundingClientRect(),
+                t=document.querySelector('.tile').getBoundingClientRect();
+                return {tile:t.width,tileHeight:t.height,count:document.querySelectorAll('.tile').length,
+                  wheel:w.width,boardBottom:b.bottom,wheelTop:w.top,wheelBottom:w.bottom,
+                  appBottom:a.bottom,overflowBody:document.body.scrollHeight-innerHeight,
+                  overflowApp:document.querySelector('#app').scrollHeight-innerHeight,
+                  progress:document.querySelector('#solved-count').textContent,
+                  level:document.querySelector('#level-label').textContent,
+                  coins:document.querySelector('#points').textContent,
+                  background:getComputedStyle(document.querySelector('#app'),'::before').backgroundImage};
+              });
+              const initial=await geometry();
+              console.log('INITIAL',JSON.stringify(initial));
+              assert.equal(initial.progress,'0 / 4');
+              assert.equal(initial.count,15);
+              assert(initial.tile>=64&&initial.wheel>=260);
+              assert(initial.boardBottom<initial.wheelTop,'Board must not overlap wheel');
+              assert(initial.wheelBottom<initial.appBottom,'Wheel must fit');
+              assert(initial.overflowBody<=1&&initial.overflowApp<=1,'No gameplay scrolling');
+              assert(initial.background.includes('01_genesis.webp'));
+              const savedKey='bu-visual-lab-wordtrails-next-v1';
+              const play=async(word)=>{
+                await page.evaluate(w=>{
+                  for(const ch of w){
+                    const b=[...document.querySelectorAll('.wheel-letter')].find(
+                      el=>el.textContent===ch&&!el.classList.contains('selected'));
+                    if(!b)throw Error('Missing wheel letter '+ch+' in '+w);
+                    b.click();
+                  }
+                  document.querySelector('#submit').click();
+                },word);
+              };
+              await play('CAT');
+              const afterBonus=await page.evaluate(()=>({
+                bonus:document.querySelector('#bonus-count').textContent,
+                coins:Number(document.querySelector('#points').textContent)
+              }));
+              assert.equal(afterBonus.bonus,'1');
+              assert.equal(afterBonus.coins,62);
+              await play('CAT');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),62,'Bonus must not award twice');
+              await play('CAIN');
+              await page.waitForSelector('#discovery[open]');
+              assert((await page.$eval('#spark-text',e=>e.textContent)).includes('Abel'));
+              assert((await page.$eval('#spark-link',e=>e.href)).endsWith('/genesis/4/'));
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),87);
+              await page.click('#spark-next');
+              await page.click('#hint');
+              const hinted=await page.$eval('#hint-cost',e=>e.textContent);
+              assert.equal(hinted,'15','First hint should be free');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),87);
+              await page.click('#hint');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),72,'Second hint should cost 15');
+              await play('ANTIC');
+              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4');
+              await page.reload({waitUntil:'networkidle0'});
+              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4','In-progress state must restore');
+              for(const word of ['TACO','TONIC','COIN'])await play(word);
+              await page.waitForSelector('#finish[open]');
+              let state=await page.evaluate(()=>({
+                title:document.querySelector('#finish-level').textContent,
+                reward:document.querySelector('#finish-reward').textContent,
+                progress:document.querySelector('#solved-count').textContent,
+                stars:document.querySelector('#finish-spark').textContent
+              }));
+              console.log('LEVEL_1_COMPLETE',JSON.stringify(state));
+              assert.equal(state.progress,'4 / 4');
+              assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
+              await page.click('#next-level');
+              const packs=[
+                ['DINER','RIDE','DINE','DIRE'],
+                ['RAVE','SEAR','NEAR','VASE'],
+                ['LANE','GLEAN','SALE','SANE','SANG'],
+                ['ARISE','AISLE','LASER','REAL','SAIL'],
+                ['HEARD','HARE','SHARE','DARE'],
+                ['PEAT','TAPER','TEAR','TRAP','RATE'],
+                ['VEILS','LIVES','LIES','SOLE','SOLVE']
+              ];
+              for(let l=1;l<8;l++){
+                const s=await geometry();
+                console.log('LEVEL_'+(l+1)+'_START',JSON.stringify({
+                  level:s.level,tiles:s.count,tileSize:s.tile,background:s.background,progress:s.progress
+                }));
+                assert(s.level.includes('LEVEL '+(l+1)),s.level);
+                assert(s.count>=13 && s.count<=19);
+                assert(s.tile>=64);
+                assert(s.boardBottom<s.wheelTop&&s.wheelBottom<s.appBottom);
+                const rack=await page.$$eval('.wheel-letter',els=>els.map(x=>x.textContent).sort().join(''));
+                assert.equal(rack.length,6);
+                for(const word of packs[l-1])await play(word);
+                await page.waitForSelector('#finish[open]',{timeout:10000});
+                assert.equal(await page.$eval('#solved-count',e=>e.textContent),packs[l-1].length+' / '+packs[l-1].length);
+                if(l===7)break;
+                await page.click('#next-level');
+              }
+              await page.click('#next-level');
+              await page.waitForSelector('#map[open]');
+              const buttons=await page.$$eval('.map-level',els=>els.map(el=>({disabled:el.disabled,complete:el.classList.contains('complete')})));
+              assert.equal(buttons.length,8);
+              assert(buttons.every(x=>!x.disabled&&x.complete),'All eight levels must unlock and complete');
+              const store=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),savedKey);
+              assert.equal(store.completed.length,8);
+              assert.equal(store.unlocked,7);
+              assert.equal(store.sparks.length,1);
+              console.log('EIGHT_LEVELS_PASS',JSON.stringify({completed:store.completed,coins:store.coins,points:store.points,stars:store.sparks}));
+              await page.click('#map-x');
+              for(const [width,height] of [[390,844],[412,744],[360,740],[375,667]]){
+                await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await new Promise(r=>setTimeout(r,110));
+                const g=await geometry();
+                console.log('PHONE_'+width+'x'+height,JSON.stringify(g));
+                assert(g.tile>=60&&Math.abs(g.tile-g.tileHeight)<3);
+                assert(g.boardBottom<g.wheelTop&&g.wheelBottom<=g.appBottom+1);
+                assert(g.overflowBody<=1&&g.overflowApp<=1);
+              }
+              assert.equal(errors.length,0,'No page errors: '+errors.join(', '));
+              console.log('PASS Word Trails NEXT — 8 levels, full rewards, Bible Spark, no scroll, saved state, phone layouts');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
