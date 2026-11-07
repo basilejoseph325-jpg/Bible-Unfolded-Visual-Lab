@@ -14,7 +14,7 @@ Adapt successful *word-puzzle feedback patterns* (not proprietary assets, source
 ## Implemented in Visual Lab
 - **Independent preferences:** music, SFX, visual effects, haptics and individual music/SFX levels. Default on; existing mute is preserved during V1->V2 migration. Preferences stored in a test-only localStorage key.
 - **Original synthesized audio cues:** soft touch and trace, mellow error tone, answer chime, distinct coin reward, hint, optional Scripture Spark, satchel reward and completion fanfare. **No copyrighted Wordscapes sound assets.** No knock or thud per letter.
-- **Visual microfeedback:** enhanced selected-letter glow, softly lit trace, staggered green tile reveal, progress/board accent, lightweight flying coins to HUD, and restrained one-time streak banner rather than constantly flashing success text.
+- **Visual microfeedback:** enhanced selected-letter glow, softly lit trace, staggered green tile reveal, progress/board accent, lightweight flying coins to HUD, and a compact streak indicator rather than constantly flashing duplicate congratulatory messages.
 - **Bonus satchel:** three unique bonus words fill a three-dot meter, awarding **8 additional test coins once per level**. Replays cannot earn those coins again.
 - **Accessibility/performance:** animation preference plus system reduced-motion support, pointer-events:none on decorative layers, no gameplay-page scrolling, no interaction overlay on the wheel.
 - **Original Bible identity:** one optional Scripture Spark per puzzle with curated scripture references linking only to JW.org, plus the existing eight-level progression.
