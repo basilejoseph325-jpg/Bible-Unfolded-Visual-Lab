@@ -1,0 +1,127 @@
+name: QA standalone Story Crossword playable concept
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-story-crossword-concept-v1.yml'
+      - 'experiments/story-crossword-concept-v1.html'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Standalone concept script integrity and original game untouched
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,hashlib
+          s=Path('experiments/story-crossword-concept-v1.html').read_text()
+          assert len(re.findall(r"text:'(EARTH|LIGHT|NIGHT|WATER)'",s))==4
+          assert 'bible-book-art/01_genesis.webp' in s
+          assert 'daily-discovery-explanation-scroll-v3.webp' in s
+          assert 'daily-explanation-wax-next-v2.svg' in s
+          assert 'bu35Render' not in s and 'localStorage' not in s
+          for name in ('bible-book-art/01_genesis.webp','assets/ui/daily-discovery-explanation-scroll-v3.webp','assets/ui/daily-explanation-wax-next-v2.svg'):
+              assert Path(name).stat().st_size>2000
+          print('PASS: standalone concept, existing art, no original game state changes')
+          PY
+      - name: Play real four-word Bible crossword on mobile and inspect no-scroll layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/story-cross-v1 --no-audit --no-fund --silent puppeteer-core@24
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/story-cross-http.log 2>&1 &
+          sleep 2
+          node <<'JS'
+          const puppeteer=require('/tmp/story-cross-v1/node_modules/puppeteer-core');
+          const {execSync}=require('node:child_process');
+          const assert=require('node:assert/strict');
+          (async()=>{
+            let browser;
+            try{
+              const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+              browser=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              page.setDefaultTimeout(15000);
+              page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+              await page.goto('http://127.0.0.1:8765/experiments/story-crossword-concept-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const initial=await page.evaluate(()=>{
+                const shell=document.getElementById('shell'),board=document.getElementById('board'),wheel=document.getElementById('wheel');
+                const sr=x=>{const r=x.getBoundingClientRect();return {top:r.top,bottom:r.bottom,left:r.left,right:r.right}};
+                return {title:document.querySelector('h1').textContent,tiles:board.children.length,
+                  rack:[...wheel.querySelectorAll('.letter')].map(x=>x.textContent).sort().join(''),
+                  clue:document.getElementById('prompt').textContent,
+                  wheel:sr(wheel),board:sr(board),shell:sr(shell),
+                  scroll:{body:document.body.scrollHeight-innerHeight,app:shell.scrollHeight-shell.clientHeight},
+                  art:getComputedStyle(shell,'::before').backgroundImage,
+                  conceptTag:document.querySelector('.lab')?.innerText,
+                  progress:document.getElementById('solved').textContent};
+              });
+              console.log('INITIAL_GEOMETRY',JSON.stringify(initial));
+              assert.equal(initial.tiles,17);
+              assert.equal(initial.rack,'AEHRT');
+              assert(initial.clue.includes('Genesis 1:1'));
+              assert(initial.art.includes('01_genesis.webp'));
+              assert(initial.conceptTag.includes('TEST'));
+              assert(initial.board.top>initial.shell.top);
+              assert(initial.board.bottom<initial.wheel.top);
+              assert(initial.wheel.bottom<initial.shell.bottom);
+              assert(initial.scroll.body<=1&&initial.scroll.app<=1);
+              const screenshot=(await page.screenshot({type:'jpeg',quality:48})).toString('base64');
+              for(let i=0;i<screenshot.length;i+=9000)console.log('CROSSWORD_SHOT',i/9000,screenshot.slice(i,i+9000));
+              const before=await page.evaluate(()=>[...document.querySelectorAll('#wheel .letter')].map(x=>x.textContent).sort().join(''));
+              await page.click('#shuffle');
+              const after=await page.evaluate(()=>[...document.querySelectorAll('#wheel .letter')].map(x=>x.textContent).sort().join(''));
+              assert.equal(before,after);
+              await page.click('#hint');
+              const hint=await page.evaluate(()=>({shown:document.getElementById('trace').textContent,selected:document.querySelectorAll('#wheel .selected').length}));
+              assert.equal(hint.shown,'E');
+              assert.equal(hint.selected,1);
+              await page.click('#shuffle'); // Clear hint selection, preserve letters.
+              for(const word of ['EARTH','LIGHT','NIGHT','WATER']){
+                for(const letter of word){
+                  await page.evaluate(letter=>{
+                    const el=[...document.querySelectorAll('#wheel .letter')].find(x=>x.textContent===letter&&!x.classList.contains('selected'));
+                    if(!el)throw Error('Letter missing '+letter);
+                    el.click();
+                  },letter);
+                }
+                await page.waitForSelector('#discovery[open]');
+                const state=await page.evaluate(()=>({
+                  title:document.getElementById('scroll-title').textContent,
+                  scroll:document.getElementById('scroll-body').textContent,
+                  found:document.getElementById('solved').textContent,
+                  next:document.getElementById('scroll-next').textContent,
+                  img:getComputedStyle(document.getElementById('scroll-art')).backgroundImage,
+                  wax:getComputedStyle(document.getElementById('scroll-next')).backgroundImage
+                }));
+                console.log('SOLVED_'+word,JSON.stringify(state));
+                assert.equal(state.title,word);
+                assert(state.scroll.includes('Genesis 1:'));
+                assert(state.img.includes('daily-discovery-explanation-scroll-v3.webp'));
+                assert(state.wax.includes('daily-explanation-wax-next-v2.svg'));
+                await page.click('#scroll-next');
+              }
+              const complete=await page.evaluate(()=>({
+                done:document.getElementById('clue-type').textContent,
+                found:document.getElementById('solved').textContent,
+                filled:[...document.querySelectorAll('#board .tile.done')].length,
+                dialogOpen:document.getElementById('discovery').open
+              }));
+              console.log('COMPLETE',JSON.stringify(complete));
+              assert.equal(complete.done,'DISCOVERY COMPLETE');
+              assert.equal(complete.filled,17);
+              assert.equal(complete.dialogOpen,false);
+              await page.click('#restart');
+              const reset=await page.evaluate(()=>({count:document.getElementById('solved').textContent,empty:document.querySelectorAll('#board .tile.done').length,letters:document.querySelectorAll('#wheel .letter').length}));
+              console.log('RESET',JSON.stringify(reset));
+              assert(reset.count.startsWith('0 of 4')&&reset.empty===0&&reset.letters===5);
+              console.log('PASS standalone Story Crossword: all 4 Bible words, crossings, tap input, shuffle, hint, real scroll, next, completion, reset, no-scroll 390x844');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{if(browser)await browser.close()}
+          })();
+          JS
