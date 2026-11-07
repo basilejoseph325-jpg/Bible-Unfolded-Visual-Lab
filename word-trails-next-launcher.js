@@ -42,12 +42,21 @@ function install(){
    for A/B comparison, but this never runs in the live repository. */
 function routeHomeCard(){
  if(new URLSearchParams(window.location.search).get('trails')==='previous')return;
+ let navigating=false;
  window.addEventListener('click',event=>{
   const button=event.target?.closest?.('#home #home-cross');
   if(!button)return;
   event.preventDefault();
   event.stopImmediatePropagation();
-  window.location.assign(PATH);
+  if(navigating)return;
+  navigating=true;
+  // Match the shared menu-enter sound used by the other Bible Unfolded modes.
+  // Our capture-phase route previously stopped the original home button handler,
+  // which accidentally removed its normal audible navigation feedback.
+  try{window.BUPremiumSFX?.play?.('navigate')}catch(_){}
+  // Word Trails is a separate HTML document; allow the navigation sample to
+  // actually start playing before unloading the original game document.
+  window.setTimeout(()=>window.location.assign(PATH),235);
  },true);
 }
 routeHomeCard();
