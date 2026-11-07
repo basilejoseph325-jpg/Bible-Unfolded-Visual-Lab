@@ -117,12 +117,34 @@ jobs:
               assert((await page.$eval('#spark-link',e=>e.href)).endsWith('/genesis/4/'));
               assert.equal(Number(await page.$eval('#points',e=>e.textContent)),87);
               await page.click('#spark-next');
+              await page.click('#spark');
+              await page.waitForSelector('#discovery[open]');
+              const clues=await page.$eval('#spark-list .spark-find',xs=>xs.map(x=>({
+                title:x.querySelector('strong').textContent,
+                hint:x.querySelector('small').textContent
+              })));
+              console.log('MULTI_BIBLE_CLUES',JSON.stringify(clues));
+              assert.equal(clues.length,2);
+              assert(clues.some(x=>x.title==='CAIN'));
+              assert(clues.some(x=>x.hint.includes('tiny worker')));
+              await page.click('#spark-x');
+              await play('ANT');
+              await page.waitForSelector('#discovery[open]');
+              assert((await page.$eval('#spark-text',e=>e.textContent)).includes('Proverbs 6'));
+              assert((await page.$eval('#spark-link',e=>e.href)).endsWith('/proverbs/6/'));
+              assert.equal(await page.$eval('#spark-progress',e=>e.textContent),'2/2');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),112);
+              await play('ANT').catch(()=>{}); // modal shields ordinary user input; no repeat award
+              await page.click('#spark-next');
+              await play('ANT');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),112,
+                'Previously claimed Bible word must never pay again');
               await page.click('#hint');
               const hinted=await page.$eval('#hint-cost',e=>e.textContent);
               assert.equal(hinted,'15','First hint should be free');
-              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),87);
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),112);
               await page.click('#hint');
-              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),72,'Second hint should cost 15');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),97,'Second hint should cost 15');
               await play('ANTIC');
               assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4');
               // Refreshing a standalone Word Trails screen now intentionally
@@ -173,7 +195,7 @@ jobs:
               for(let i=0;i<finishShot.length;i+=7800)
                 console.log('WTNEXT_FINISH_SHOT_'+(i/7800)+' '+finishShot.slice(i,i+7800));
               assert.equal(state.progress,'4 / 4');
-              assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
+              assert(state.title.includes('1 COMPLETE')&&state.stars.includes('2 / 2 Bible discoveries'));
               assert((await page.$eval('#finish-words',e=>e.textContent)).includes('1 bonus word'));
               await page.click('#next-level');
               await page.waitForFunction(()=>{
@@ -181,6 +203,11 @@ jobs:
                 return !dialog.open&&effects.children.length===0;
               },{timeout:5000});
               assert.equal(await page.$eval('#finish-fx',e=>e.children.length),0,'Victory glitter must be cleared when leaving screen');
+              const bibleWords=[
+                ['EDEN','REED'],['RAVEN','SEA'],['ANGEL','SEAL'],
+                ['ISRAEL','ELI'],['ASHER','SHEAR'],['PETER','TREE'],
+                ['OLIVES','OIL','LOVE']
+              ];
               const packs=[
                 ['DINER','RIDE','DINE','DIRE'],
                 ['RAVE','SEAR','NEAR','VASE'],
@@ -199,8 +226,17 @@ jobs:
                 assert(s.count>=13 && s.count<=19);
                 assert(s.tile>=64);
                 assert(s.boardBottom<s.wheelTop&&s.wheelBottom<s.appBottom);
-                const rack=await page.$$eval('.wheel-letter',els=>els.map(x=>x.textContent).sort().join(''));
+                const rack=await page.$eval('.wheel-letter',els=>els.map(x=>x.textContent).sort().join(''));
                 assert.equal(rack.length,6);
+                for(const word of bibleWords[l-1]){
+                  await play(word);
+                  await page.waitForSelector('#discovery[open]');
+                  assert((await page.$eval('#spark-title',e=>e.textContent)).includes(word));
+                  assert((await page.$eval('#spark-link',e=>e.href)).includes('jw.org/en/library/bible/nwt/books/'));
+                  await page.click('#spark-next');
+                }
+                assert.equal(await page.$eval('#spark-progress',el=>el.textContent),
+                  bibleWords[l-1].length+'/'+bibleWords[l-1].length);
                 for(const word of packs[l-1])await play(word);
                 await page.waitForSelector('#finish[open]',{timeout:10000});
                 assert.equal(await page.$eval('#solved-count',e=>e.textContent),packs[l-1].length+' / '+packs[l-1].length);
@@ -215,8 +251,11 @@ jobs:
               const store=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),savedKey);
               assert.equal(store.completed.length,8);
               assert.equal(store.unlocked,7);
-              assert.equal(store.sparks.length,1);
-              console.log('EIGHT_LEVELS_PASS',JSON.stringify({completed:store.completed,coins:store.coins,points:store.points,stars:store.sparks}));
+              assert.equal(store.claimedSparks.length,17,'All 17 Bible words should persist across eight levels');
+              console.log('EIGHT_LEVELS_PASS',JSON.stringify({
+                completed:store.completed,coins:store.coins,points:store.points,
+                bibleDiscoveries:store.claimedSparks.length
+              }));
               await page.click('#map-x');
               await page.click('#level-map');
               await page.click('.map-level');
