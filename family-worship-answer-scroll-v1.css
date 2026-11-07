@@ -32,6 +32,7 @@
 #bu67-modal.bu-fw-answer-scroll .bu67-dialog-head{
  display:flex!important;flex:0 0 auto!important;gap:0!important;
  justify-content:center!important;align-items:flex-start!important;
+ position:static!important; /* absolute X must anchor to the whole scroll, not the header */
  padding:0!important;margin:0 0 10px!important;border:0!important;
  background:transparent!important;min-height:0!important;
 }
@@ -46,7 +47,7 @@
 }
 #bu67-modal.bu-fw-answer-scroll .bu67-dialog-head .bu67-dialog-x{
  position:absolute!important;
- top:clamp(95px,13.9dvh,122px)!important;
+ top:clamp(138px,18dvh,155px)!important;
  right:clamp(38px,10vw,61px)!important;
  z-index:3!important;
  display:grid!important;place-items:center!important;
@@ -132,7 +133,7 @@
    padding-bottom:clamp(77px,13dvh,100px)!important;
  }
  #bu67-modal.bu-fw-answer-scroll .bu67-dialog-head .bu67-dialog-x{
-   top:clamp(66px,12dvh,92px)!important;
+   top:clamp(98px,17dvh,123px)!important;
  }
 }
 @media(max-width:350px){
