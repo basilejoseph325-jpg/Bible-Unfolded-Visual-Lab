@@ -18,12 +18,12 @@ jobs:
           s=Path('index.html').read_text(errors='replace')
           names=['bu35Phase','bu35Render','bu35Game','bu35Answer','bu35Start','bu35Next','bu35Evaluate','bu35Complete','bu35Select','bu35Choose','bu35Advance','bu35Finish','bu35View']
           for name in names:
-              hits=list(re.finditer(r'\\b'+name+r'\\b',s))
+              hits=list(re.finditer(r'\b'+name+r'\b',s))
               print('SYMBOL',name,'COUNT',len(hits))
               for m in hits[:19]:
                   i=m.start()
                   print('SYMHIT',name,i,s[max(0,i-350):i+620].replace(chr(10),'\\n')[:1000])
-          for pat in [r'function\\s+bu35\\w*\\s*\\(',r'(?:const|let|var)\\s+bu35\\w*\\s*=']:
+          for pat in [r'function\s+bu35\w*\s*\(',r'(?:const|let|var)\s+bu35\w*\s*=']:
               hits=list(re.finditer(pat,s))
               print('DEFINITIONS',pat,len(hits))
               for m in hits[:110]:
