@@ -94,6 +94,32 @@ jobs:
                  .map(el=>({tag:el.tagName,id:el.id,html:el.outerHTML.slice(0,580)}))
               );
               console.log('TRAIL_HOME_VISIBLE',JSON.stringify(visible));
+
+              assert(visible.some(x=>x.id==='home-cross'),'Homepage must expose its normal Bible Word Trails card');
+              await page.click('#home-cross');
+              await page.waitForFunction(()=>location.pathname.endsWith('/experiments/word-trails-next-v1.html'),{timeout:15000});
+              const route=await page.evaluate(()=>({
+                url:location.pathname,title:document.title,
+                level:document.getElementById('level-label')?.textContent,
+                tileCount:document.querySelectorAll('.board .tile').length,
+                preserved:document.querySelector('.lab-tag')?.textContent
+              }));
+              console.log('TRAIL_HOME_DIRECT_ROUTE',JSON.stringify(route));
+              assert(route.url.endsWith('word-trails-next-v1.html'));
+              assert.equal(route.tileCount,15);
+              assert(route.level.includes('LEVEL 1'),'Homepage should open directly into playable level 1');
+              await page.goto('http://127.0.0.1:8766/index.html?trails=previous',{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForSelector('#wt-next-entry',{timeout:60000});
+              await page.click('#home-cross');
+              const legacy=await page.evaluate(()=>({
+                pathname:location.pathname,
+                panel:!!document.getElementById('cross-pick'),
+                entry:!!document.getElementById('wt-next-entry')
+              }));
+              console.log('LEGACY_COMPARISON_ROUTE',JSON.stringify(legacy));
+              assert(legacy.pathname.endsWith('/index.html'),'Explicit previous-version URL must preserve original selector');
+              assert(legacy.panel&&legacy.entry);
+              console.log('PASS homepage Trails routes straight to NEXT, optional old comparison preserved');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{await browser?.close()}
           })();
