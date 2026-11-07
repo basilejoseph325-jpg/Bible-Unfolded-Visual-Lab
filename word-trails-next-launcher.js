@@ -37,6 +37,20 @@ function install(){
  });
  return true;
 }
+/* Home card should open the new crossword directly in Visual Lab.
+   A deliberate ?trails=previous URL keeps the original test selector available
+   for A/B comparison, but this never runs in the live repository. */
+function routeHomeCard(){
+ if(new URLSearchParams(window.location.search).get('trails')==='previous')return;
+ window.addEventListener('click',event=>{
+  const button=event.target?.closest?.('#home #home-cross');
+  if(!button)return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  window.location.assign(PATH);
+ },true);
+}
+routeHomeCard();
 function start(){
  if(install())return;
  const observer=new MutationObserver(()=>{if(install())observer.disconnect()});
