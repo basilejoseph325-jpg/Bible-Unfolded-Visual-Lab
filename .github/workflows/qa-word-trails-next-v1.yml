@@ -225,7 +225,7 @@ jobs:
                 assert(s.count>=13 && s.count<=19);
                 assert(s.tile>=64);
                 assert(s.boardBottom<s.wheelTop&&s.wheelBottom<s.appBottom);
-                const rack=await page.$eval('.wheel-letter',els=>els.map(x=>x.textContent).sort().join(''));
+                const rack=await page.$eval('#wheel',wheel=>Array.from(wheel.querySelectorAll('.wheel-letter')).map(x=>x.textContent).sort().join(''));
                 assert.equal(rack.length,6);
                 for(const word of bibleWords[l-1]){
                   await play(word);
