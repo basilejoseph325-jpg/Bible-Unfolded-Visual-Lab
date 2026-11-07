@@ -211,8 +211,10 @@ function ui(){
  $('progress-fill').style.width=(found.size/level.words.length*100)+'%';
  $('hint-cost').textContent=save.claimedFreeHints.includes(index)?'15':'FREE';
  $('hint').disabled=found.size===level.words.length||(save.claimedFreeHints.includes(index)&&save.coins<15);
- $('spark').classList.toggle('claimed',save.sparks.includes(index));
- $('spark').setAttribute('aria-label',save.sparks.includes(index)?'Scripture Spark found':'Optional Scripture Spark Bible discovery');
+ const sparkCount=sparksFound(),sparkMax=sparkTotal();
+ $('spark').classList.toggle('claimed',sparkCount===sparkMax);
+ $('spark').setAttribute('aria-label','Bible words found '+sparkCount+' of '+sparkMax+'. Open clues and discoveries');
+ $('spark-progress').textContent=sparkCount+'/'+sparkMax;
  if(window.BUWTPolish){$('audio').textContent='♫';$('audio').setAttribute('aria-label','Sound and effects settings');
  $('audio').setAttribute('aria-pressed','false')}
  else{$('audio').textContent=save.sound?'♫':'♪';
@@ -320,14 +322,18 @@ function submit(){
  const word=chosen.map(i=>letters[i]).join('');clear();
  if(word.length<3){cue('wrong');window.BUWTPolish?.event('wrong');flash('Try three or more letters');return}
  if(!canMake(level.rack,word)){cue('wrong');return}
- if(word===level.spark){
-  if(save.sparks.includes(index)){flash('Scripture Spark already found ★');return}
-  save.sparks.push(index);save.coins+=25;ui();storeProgress();
+ const bible=BIBLE_SPARKS[index].find(s=>s.word===word);
+ if(bible){
+  if(sparkClaimed(index,word)){flash('Bible word already discovered ★');cue('touch');return}
+  save.claimedSparks.push(sparkKey(index,word));
+  // The first discovery remains compatible with the former one-star save.
+  if(word===level.spark&&!save.sparks.includes(index))save.sparks.push(index);
+  save.coins+=25;ui();storeProgress();
   window.BUWTPolish?.event('spark',{word});
   cue('spark');haptic([16,28,16]);
   const r=$('spark').getBoundingClientRect(),a=$('app').getBoundingClientRect();
   burst(r.left-a.left+r.width/2,r.top-a.top+r.height/2);
-  openSpark(true);return;
+  openSpark(bible,true);return;
  }
  if(level.words.some(w=>w[0]===word)){
   if(found.has(word)){flash('Already on the board');cue('touch');return}
@@ -374,9 +380,9 @@ function completeLevel(){
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
  $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
- $('finish-spark').textContent=save.sparks.includes(index)?'★ Scripture Spark discovered':'☆ Optional Scripture Spark still hidden';
+ $('finish-spark').textContent='★ '+sparksFound()+' / '+sparkTotal()+' Bible discoveries collected';
  $('next-level').textContent=index===LEVELS.length-1?'Explore Level Map':'Next Level';
- $('stay').textContent=save.sparks.includes(index)?'Replay this level':'Keep exploring';
+ $('stay').textContent=sparksFound()===sparkTotal()?'Replay this level':'Find more Bible words';
  $('finish').showModal();
  window.BUWTPolish?.celebrateWin?.();
 }
@@ -430,13 +436,34 @@ function hint(){
  const b=board.querySelector('[data-pos="'+cell.key+'"]').getBoundingClientRect(),app=$('app').getBoundingClientRect();
  burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2);
 }
-function openSpark(foundIt){
- $('spark-title').textContent=foundIt?'★ '+level.spark:'★ SCRIPTURE SPARK';
- $('spark-text').textContent=foundIt?level.insight:'A bonus Bible word is hidden in this level: '+level.clue+'. It is optional, and you can finish the crossword without it.';
- $('spark-link').hidden=!foundIt;
- $('spark-link').href=level.url;
- $('spark-link').textContent='Read '+level.reference+' on JW.org ↗';
- $('spark-next').textContent='Keep Playing';
+function openSpark(bible=null,newlyFound=false){
+ const menu=!bible,list=$('spark-list'),link=$('spark-link');
+ list.hidden=!menu;list.replaceChildren();
+ if(menu){
+  const have=sparksFound(),total=sparkTotal();
+  $('spark-title').textContent='★ BIBLE WORD HUNT';
+  $('spark-text').textContent='Find '+total+' hidden Bible words using this level’s letter wheel. Each reveals a Scripture discovery and earns 25 test coins. '+have+' of '+total+' discovered.';
+  link.hidden=true;
+  for(const [i,item] of BIBLE_SPARKS[index].entries()){
+   const got=sparkClaimed(index,item.word);
+   const el=document.createElement(got?'button':'div');
+   el.className='spark-find'+(got?' unlocked':'');
+   if(got){el.type='button';el.addEventListener('click',()=>openSpark(item,false))}
+   const icon=document.createElement('span');
+   icon.className='spark-find-icon';icon.textContent=got?'★':'☆';
+   const body=document.createElement('span');body.className='spark-find-info';
+   const header=document.createElement('strong');
+   header.textContent=got?item.word:'Bible word '+(i+1)+' · HIDDEN';
+   const text=document.createElement('small');
+   text.textContent=got?item.reference:item.clue;
+   body.append(header,text);el.append(icon,body);list.append(el);
+  }
+ }else{
+  $('spark-title').textContent='★ '+bible.word;
+  $('spark-text').textContent=(newlyFound?'Bible discovery unlocked · +25 test coins. ':'')+bible.insight;
+  link.hidden=false;link.href=bible.url;link.textContent='Read '+bible.reference+' on JW.org ↗';
+ }
+ $('spark-next').textContent=menu?'Back to Puzzle':'Keep Playing';
  if(!$('discovery').open)$('discovery').showModal();
 }
 function toggleSound(){
@@ -450,7 +477,7 @@ function levelMap(){
   const b=document.createElement('button'),unlocked=i<=save.unlocked;
   b.type='button';b.className='map-level'+(i===index?' here':'')+(save.completed.includes(i)?' complete':'');
   b.disabled=!unlocked;
-  b.innerHTML='<span>'+(unlocked?i+1:'🔒')+'</span><strong>'+lev.title+'</strong><small>'+(save.sparks.includes(i)?'★ Spark':save.completed.includes(i)?'✓ Complete':unlocked?'Play':'Locked')+'</small>';
+  b.innerHTML='<span>'+(unlocked?i+1:'🔒')+'</span><strong>'+lev.title+'</strong><small>'+(unlocked?'★ '+sparksFound(i)+'/'+sparkTotal(i)+' Bible finds':'Locked')+'</small>';
   b.addEventListener('click',()=>{showLevel(i);cue('levelEnter');$('map').close()});
   $('map-list').append(b);
  });$('map').showModal();
@@ -483,14 +510,18 @@ wheel.addEventListener('pointercancel',e=>{if(e.pointerId===pointer){dragging=fa
 $('submit').addEventListener('click',()=>{cue('touch');submit()});
 $('shuffle').addEventListener('click',shuffle);
 $('hint').addEventListener('click',hint);
-$('spark').addEventListener('click',()=>{cue('touch');openSpark(save.sparks.includes(index))});
+$('spark').addEventListener('click',()=>{cue('touch');openSpark()});
 $('audio').addEventListener('click',()=>{if(window.BUWTPolish)window.BUWTPolish.openSettings();else toggleSound()});
 $('level-map').addEventListener('click',levelMap);
 $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
  if(index===LEVELS.length-1){window.BUWTPolish?.clearWinFX?.();$('finish').close();levelMap()}else{showLevel(n);cue('levelEnter')}
 });
-$('stay').addEventListener('click',()=>{if(save.sparks.includes(index)){resetLevel();return} window.BUWTPolish?.clearWinFX?.();$('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
+$('stay').addEventListener('click',()=>{
+ if(sparksFound()===sparkTotal()){resetLevel();return}
+ window.BUWTPolish?.clearWinFX?.();$('finish').close();locked=false;
+ completionShown=false;flash('Find the remaining Bible words ★');
+});
 $('spark-next').addEventListener('click',()=>$('discovery').close());
 $('spark-x').addEventListener('click',()=>$('discovery').close());
 $('map-x').addEventListener('click',()=>$('map').close());
