@@ -96,8 +96,25 @@ jobs:
               console.log('TRAIL_HOME_VISIBLE',JSON.stringify(visible));
 
               assert(visible.some(x=>x.id==='home-cross'),'Homepage must expose its normal Bible Word Trails card');
+              await page.evaluate(()=>{
+                window.__wtHomeProbe=[];
+                const data=(scope,e)=>window.__wtHomeProbe.push({scope,target:e.target?.id,phase:e.eventPhase,
+                  path:e.composedPath().slice(0,4).map(x=>x?.id||x?.nodeName)});
+                window.addEventListener('click',e=>data('window',e),true);
+                document.addEventListener('click',e=>data('document',e),true);
+                document.querySelector('#home-cross').addEventListener('click',e=>data('button',e),true);
+              });
               await page.click('#home-cross');
-              await page.waitForFunction(()=>location.pathname.endsWith('/experiments/word-trails-next-v1.html'),{timeout:15000});
+              await new Promise(r=>setTimeout(r,550));
+              const homeResult=await page.evaluate(()=>({
+                href:location.href,base:document.baseURI,
+                script:document.querySelector('script[src*="word-trails-next-launcher"]')?.src,
+                home:!!document.querySelector('#home #home-cross'),
+                visiblePage:[...document.querySelectorAll('section')].filter(s=>getComputedStyle(s).display!=='none').slice(0,10).map(s=>s.id),
+                probe:window.__wtHomeProbe||[]
+              }));
+              console.log('POST_TRAILS_HOME_CLICK',JSON.stringify(homeResult));
+              await page.waitForFunction(()=>location.pathname.endsWith('/experiments/word-trails-next-v1.html'),{timeout:5000});
               const route=await page.evaluate(()=>({
                 url:location.pathname,title:document.title,
                 level:document.getElementById('level-label')?.textContent,
