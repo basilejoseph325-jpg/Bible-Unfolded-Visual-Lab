@@ -16,7 +16,7 @@
   "Early Congregation": "family-worship-menu-art/v1/topic-05-early-congregation.jpg",
   "Creation": "family-worship-menu-art/v1/topic-06-creation.jpg",
   "Eden": "family-worship-menu-art/v1/topic-07-eden.webp",
-  "Cain and Abel": "family-worship-menu-art/v1/topic-08-cain-and-abel.webp",
+  "Cain and Abel": "family-worship-menu-art/v7/topic-08-cain-and-abel.jpg",
   "Noah and the Ark": "family-worship-menu-art/v1/topic-09-noah-and-the-ark.jpg",
   "The Tower of Babel": "family-worship-menu-art/v6/topic-10-tower-of-babel.jpg",
   "Abram’s Journey": "family-worship-menu-art/v1/topic-11-abram-s-journey.jpg",

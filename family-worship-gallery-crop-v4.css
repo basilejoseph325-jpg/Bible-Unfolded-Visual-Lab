@@ -28,3 +28,9 @@
 }
 /* Preserve user's specifically accepted framing for Jesus Early Life and Model
    Prayer, and preserve all topic cards not on the correction list. */
+
+
+/* V7 — Cain and Abel: retain BOTH brothers' heads in this ultra-wide card. */
+#bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-08-cain-and-abel.jpg"] .bu-fw-gallery-photo{
+  background-position:center top!important;
+}
