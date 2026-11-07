@@ -15,7 +15,7 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-          s=Path('index.html').read_text(errors='replace')
+          s=''.join(p.read_text(errors='replace') for p in sorted(Path('.').glob('bible_unfolded_core_part*.js')))
           names=['bu35Phase','bu35Render','bu35Game','bu35Answer','bu35Start','bu35Next','bu35Evaluate','bu35Complete','bu35Select','bu35Choose','bu35Advance','bu35Finish','bu35View']
           for name in names:
               hits=list(re.finditer(r'\b'+name+r'\b',s))
