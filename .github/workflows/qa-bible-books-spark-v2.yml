@@ -79,21 +79,23 @@ jobs:
               });
               const initial=await inspect();
               console.log('INITIAL',JSON.stringify(initial));
-              assert.equal(initial.boardTiles,14);
+              assert.equal(initial.boardTiles,11);
               const coordinates=await page.evaluate(()=>[...document.querySelectorAll('.tile')].map(t=>({
                 row:Number(t.style.gridRow),column:Number(t.style.gridColumn),text:t.textContent
               })));
-              assert(coordinates.every(t=>t.row>=1&&t.row<=6&&t.column>=1&&t.column<=5),
-                'Crossword must occupy a 5-column, 6-row frame without overflow');
-              assert(coordinates.some(t=>t.row===6)&&coordinates.some(t=>t.column===4),
+              assert(coordinates.every(t=>t.row>=1&&t.row<=4&&t.column>=1&&t.column<=4),
+                'Crossword must fit the true 4-by-4 frame without overflow');
+              assert(coordinates.some(t=>t.row===4)&&coordinates.some(t=>t.column===4),
                 'Crossword must use vertical stage and horizontal intersections');
-              assert(initial.tileSize.width>=62 && initial.tileSize.height>=62,
-                'V2 enlarged grid must reach 62px+ tiles on 390x844, comparable to reference');
-              assert(initial.tileSize.width>=53*1.17,'Tiles should be at least 17% larger than the previous 53px size');
+              assert(initial.tileSize.width>=74 && initial.tileSize.height>=74,
+                'New tiles must measure at least 74 CSS pixels at 390x844, visibly closer to Wordscapes');
+              assert(initial.tileSize.width>=53*1.37,'Tiles should be at least 37% larger than the screenshot-sized 53px blocks');
+              assert(initial.tileSize.width/390>=0.19,
+                'Tile must occupy at least 19% of screen width on a 390px phone');
               assert(initial.wheelWidth>=290,'V2 wheel should be visually dominant on 390x844 phone');
               assert(initial.headerHeight<=75,'V2 top header is too tall');
-              assert(initial.boardWidth>=330 && initial.boardWidth<=350,
-                '5-column board must be centered with large, square tiles');
+              assert(initial.boardWidth>=310 && initial.boardWidth<=340,
+                '4-column board must use large, square tiles');
               assert(Math.abs(initial.tileSize.width-initial.tileSize.height)<3);
               assert.equal(initial.letters,'ACINOT');
               assert.equal(initial.progress,'0 / 4');
@@ -175,7 +177,7 @@ jobs:
               state=await inspect();
               assert.equal(state.points,'20');
               assert(await page.evaluate(()=>document.querySelectorAll('.tile.hinted').length)===1);
-              for(const word of ['TAN','COIN','COAT','ACTION']){
+              for(const word of ['ACT','COIN','COAT','INTO']){
                 await play(word);
                 state=await inspect();
                 console.log('FOUND_'+word,JSON.stringify({progress:state.progress,letterWheel:state.letters,points:state.points}));
@@ -191,7 +193,7 @@ jobs:
               }));
               console.log('COMPLETE',JSON.stringify(complete));
               assert(complete.title==='Crossword Complete!');
-              assert.equal(complete.revealed,14);
+              assert.equal(complete.revealed,11);
               assert.equal(complete.total,'4 / 4');
               assert(complete.sparkClaimed);
               assert.equal(complete.points,'60');
@@ -200,7 +202,7 @@ jobs:
               assert.equal((await inspect()).progress,'0 / 4');
               // The Bible bonus is optional: the whole crossword must be
               // finishable with never spelling CAIN.
-              for(const word of ['ACTION','COAT','COIN','TAN'])await play(word);
+              for(const word of ['COIN','COAT','INTO','ACT'])await play(word);
               await page.waitForSelector('#scroll[open]');
               const optional=await page.evaluate(()=>({
                 solved:document.getElementById('solved-count').textContent,
@@ -216,11 +218,11 @@ jobs:
               assert(await page.evaluate(()=>document.getElementById('scroll').open));
               await page.click('#scroll-next');
               await page.click('#reset');
-              // Trace ACTION as one continuous finger swipe to confirm
+              // Trace COIN as one continuous finger swipe to confirm
               // authentic Wordscapes-style input works with the fixed wheel.
               const gesture=await page.evaluate(()=>{
                 const wheel=document.getElementById('wheel'),buttons=[...wheel.querySelectorAll('.wheel-letter')];
-                const points=[...'ACTION'].map(ch=>{
+                const points=[...'COIN'].map(ch=>{
                   const letter=buttons.find(x=>x.textContent===ch);
                   if(!letter)throw Error('Wheel letter missing '+ch);
                   const b=letter.getBoundingClientRect();
@@ -241,10 +243,10 @@ jobs:
               console.log('SWIPE_ACTION',JSON.stringify(gesture));
               assert.equal(gesture.progress,'1 / 4');
               assert.equal(gesture.wheelLetters,'ACINOT');
-              assert.equal(gesture.boardLetters,6);
+              assert.equal(gesture.boardLetters,4);
               assert.equal(gesture.open,false);
               console.log('PASS Genesis V2 fixed wheel, four crossword answers, swipe and tap, normal bonus, optional CAIN, authentic NWT scroll, hint/shuffle, no saving');
-              for(const [width,height] of [[360,740],[375,667]]){
+              for(const [width,height] of [[412,744],[360,740],[375,667]]){
                 await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
                 await new Promise(r=>setTimeout(r,120));
                 const g=await inspect();
@@ -252,7 +254,7 @@ jobs:
                 assert(g.overflow.body<=1&&g.overflow.app<=1);
                 assert(g.boardBottom<g.wheelTop);
                 assert(g.bottom<=g.appBottom+1);
-                assert(g.tileSize.width>=45&&Math.abs(g.tileSize.width-g.tileSize.height)<3,
+                assert(g.tileSize.width>=60&&Math.abs(g.tileSize.width-g.tileSize.height)<3,
                   'Small screens should retain visible, square tile blocks');
               }
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
