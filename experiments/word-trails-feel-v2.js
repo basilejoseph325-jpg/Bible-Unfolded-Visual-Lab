@@ -11,8 +11,8 @@ let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
  else{const previous=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
   if(previous?.sound===false){pref.music=false;pref.sfx=false}}
 }catch(_){}
-let ctx=null,master=null,limiter=null,noise=null;
-const EFFECTS_MIX_GAIN=2.8; // V2 .7 => 4x amplitude; music gain remains unchanged.
+let ctx=null,master=null,limiter=null,peakGuard=null,noise=null;
+const EFFECTS_MIX_GAIN=11.2; // V3 2.8 -> V4 11.2 (4x additional signal gain). Music unchanged.
 let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
@@ -42,14 +42,27 @@ function audio(){
  try{
   if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
    ctx=new C();master=ctx.createGain();master.gain.value=EFFECTS_MIX_GAIN;
-   // Gentle final-stage peak protection: keep several layered sounds from clipping.
+   // Original notes stay unchanged. Only the entire SFX bus is amplified.
+   // Dynamics compression and a soft peak ceiling protect overlapping chimes.
+   let tail=master;
    try{
     limiter=ctx.createDynamicsCompressor();
-    limiter.threshold.value=-8;
-    limiter.knee.value=5;limiter.ratio.value=12;
-    limiter.attack.value=.003;limiter.release.value=.15;
-    master.connect(limiter);limiter.connect(ctx.destination);
-   }catch(_){master.connect(ctx.destination)} // Safe fallback on older browsers.
+    limiter.threshold.value=-4;limiter.knee.value=3;
+    limiter.ratio.value=18;limiter.attack.value=.002;limiter.release.value=.12;
+    tail.connect(limiter);tail=limiter;
+   }catch(_){}
+   try{
+    peakGuard=ctx.createWaveShaper();
+    const count=16385, curve=new Float32Array(count),knee=.78,headroom=.19;
+    for(let i=0;i<count;i++){
+     const x=2*i/(count-1)-1,ax=Math.abs(x);
+     const y=ax<=knee?ax:knee+headroom*Math.tanh((ax-knee)/headroom);
+     curve[i]=Math.sign(x)*y;
+    }
+    peakGuard.curve=curve;peakGuard.oversample='2x';
+    tail.connect(peakGuard);tail=peakGuard;
+   }catch(_){}
+   tail.connect(ctx.destination);
   }
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   return ctx;
