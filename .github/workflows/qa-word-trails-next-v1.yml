@@ -139,6 +139,7 @@ jobs:
                 console.log('WTNEXT_FINISH_SHOT_'+(i/7800)+' '+finishShot.slice(i,i+7800));
               assert.equal(state.progress,'4 / 4');
               assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
+              assert((await page.$eval('#finish-words',e=>e.textContent)).includes('1 bonus word'));
               await page.click('#next-level');
               const packs=[
                 ['DINER','RIDE','DINE','DIRE'],
@@ -179,6 +180,16 @@ jobs:
               await page.click('#map-x');
               await page.click('#level-map');
               await page.click('.map-level');
+              const coinsBeforeReplay=Number(await page.$eval('#points',e=>e.textContent));
+              for(const word of ['ANTIC','TACO','TONIC','COIN'])await play(word);
+              await page.waitForSelector('#finish[open]');
+              assert.equal(await page.$eval('#stay',e=>e.textContent),'Replay this level');
+              assert.equal(await page.$eval('#finish-reward',e=>e.textContent),'Replay complete');
+              await page.click('#stay');
+              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'0 / 4','Replay button must reset the board');
+              assert.equal(Number(await page.$eval('#points',e=>e.textContent)),coinsBeforeReplay,
+                'Replaying must not pay out level or combo rewards a second time');
+              console.log('REPLAY_PASS',JSON.stringify({coinsBeforeReplay,coinsAfterReplay:Number(await page.$eval('#points',e=>e.textContent))}));
               await page.click('#level-map');
               await page.click('#reset-level');
               const swipe=await page.evaluate(()=>{
