@@ -31,6 +31,7 @@ jobs:
       - name: Test Word Trails selector replacement card and old-version toggle
         run: |
           npm install --prefix /tmp/bu-next-launch puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8766 --bind 127.0.0.1 >/tmp/bu-next-visual-root.log 2>&1 &
           node <<'JS'
           const puppeteer=require('/tmp/bu-next-launch/node_modules/puppeteer-core');
           const assert=require('node:assert/strict'),{execSync}=require('node:child_process');
@@ -63,6 +64,18 @@ jobs:
               assert.equal(second.oldDisplay,'flex');
               assert(second.button.includes('Hide previous'));
               console.log('PASS Word Trails NEXT default card, safe old-version comparison toggle');
+              await page.goto('http://127.0.0.1:8766/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForSelector('#wt-next-entry',{timeout:60000});
+              const real=await page.evaluate(()=>({
+                banner:!!document.querySelector('#home #bu-visual-lab-test-banner'),
+                entry:!!document.querySelector('#cross-pick #wt-next-entry'),
+                link:document.querySelector('#wt-next-entry>a')?.getAttribute('href'),
+                legacyDefaultHidden:!document.querySelector('#cross-pick').classList.contains('wt-next-compare')
+              }));
+              console.log('REAL_VISUAL_LAB',JSON.stringify(real));
+              assert(real.banner&&real.entry&&real.legacyDefaultHidden);
+              assert.equal(real.link,'experiments/word-trails-next-v1.html');
+              console.log('PASS actual Visual Lab root includes Word Trails NEXT entry and preserved TEST banner');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{await browser?.close()}
           })();
