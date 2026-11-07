@@ -26,7 +26,7 @@ function install(){
  section.innerHTML='<a href="'+PATH+'" aria-label="Play the new eight-level Word Trails test">'+
  '<span class="wt-next-kicker">VISUAL LAB · NEW GAMEPLAY TEST</span>'+
  '<strong class="wt-next-title">Word Trails NEXT</strong>'+
- '<span class="wt-next-copy">8 connected crossword levels · chunky tiles · Bible discoveries · bonus rewards · new sounds</span>'+
+ '<span class="wt-next-copy">11 crossword levels · bigger Bible puzzles · Scripture words · rewards · original sounds</span>'+
  '<span class="wt-next-go">PLAY THE NEW VERSION →</span></a>'+
  '<button type="button" id="wt-next-compare" aria-expanded="false">Show previous Word Trails for comparison</button>';
  scroll.prepend(section);
