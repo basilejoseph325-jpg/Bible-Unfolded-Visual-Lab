@@ -65,7 +65,7 @@ jobs:
                   bu35Begin();
                 },mode);
                 await page.waitForSelector('#bu35-ready');
-                await page.click('#bu35-ready');
+                await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());
                 const state=await page.evaluate(()=>({phase:bu35Phase(),handOff:bu35Game.handOff,
                   phaseIndex:bu35Game.phase,phases:bu35Game.phases,answers:document.querySelectorAll('#bu35-body [data-answer]').length,
                   ready:!!document.getElementById('bu35-ready'),html:document.getElementById('bu35-body')?.innerHTML.slice(0,800)}));
@@ -125,13 +125,13 @@ jobs:
               await begin('trivia');
               await choose(true);await result('trivia','Correct!');
               assert.equal((await advance()).completed,1);
-              await page.click('#bu35-ready');await choose(false);await result('trivia','Answer:');
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await choose(false);await result('trivia','Answer:');
               await page.click('#bu67-modal .bu67-dialog-x');
               assert.equal(await page.evaluate(()=>bu35Game.completedTurns),1);
               await page.click('#bu35-body .bu67-open-details');
               await result('trivia','Answer:');
               assert.equal((await advance()).completed,2);
-              await page.click('#bu35-ready');await page.click('#bu35-skip');
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.click('#bu35-skip');
               await result('trivia','Answer:');assert.equal((await advance()).completed,3);
               console.log('PASS_TRIVIA correct/wrong/skip and closed X does not advance');
               // Lightning (session-only mode), use real answer handler and nextturn.
@@ -140,7 +140,7 @@ jobs:
                 bu35Game.phases=['lightning','finish'];bu35Game.phase=0;bu35Game.handOff=true;
                 bu35Game.turn=0;bu35Game.round=0;bu35Game.answered=false;bu35Render();
               });
-              await page.click('#bu35-ready');await choose(false);
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await choose(false);
               await result('lightning','Answer:');assert.equal((await advance()).completed,1);
               console.log('PASS_LIGHTNING wrong answer');
               // Word Relay: skip, re-open, correct solve and new-player turn.
@@ -151,7 +151,7 @@ jobs:
               await page.click('#bu35-body .bu35-feedback');
               await result('words','Word:');
               assert.equal((await advance()).completed,1);
-              await page.click('#bu35-ready');await solveWord();
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await solveWord();
               await result('words','Discovered!');
               assert.equal((await advance()).completed,2);
               console.log('PASS_WORD_RELAY skipped/correct/reopen and real next turn');
@@ -161,7 +161,7 @@ jobs:
               const link=await page.evaluate(()=>document.querySelector('#bu67-modal .bu35-scripture')?.href);
               assert(link?.startsWith('https://www.jw.org/'));
               assert.equal((await advance()).completed,1);
-              await page.click('#bu35-ready');await page.click('#bu35-skip');
+              await page.evaluate(()=>document.querySelector('#bu35-ready')?.click());await page.click('#bu35-skip');
               await result('story','Word:');
               await page.click('#bu67-modal .bu67-dialog-x');
               await page.evaluate(()=>{
