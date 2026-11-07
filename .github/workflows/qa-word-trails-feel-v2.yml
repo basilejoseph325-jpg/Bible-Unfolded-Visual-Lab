@@ -172,7 +172,7 @@ jobs:
               const gameplayShot=(await page.screenshot({type:'jpeg',quality:55})).toString('base64');
               for(let i=0;i<gameplayShot.length;i+=8000)
                 console.log('FEEL_GAME_SHOT_'+(i/8000)+' '+gameplayShot.slice(i,i+8000));
-              await page.reload({waitUntil:'networkidle0'});
+              await page.goto('http://127.0.0.1:8876/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0'});
               assert.equal(await $('#bonus-count'),'3');
               let pref=await page.evaluate(()=>window.BUWTPolish.state());
               assert(pref.music&&pref.sfx&&pref.sfxVolume===55&&pref.musicVolume===45);
@@ -224,7 +224,7 @@ jobs:
                 localStorage.removeItem('bu-wt-next-feel-v2');
                 localStorage.setItem('bu-visual-lab-wordtrails-next-v1',JSON.stringify({sound:false}));
               });
-              await page.reload({waitUntil:'networkidle0'});
+              await page.goto('http://127.0.0.1:8876/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0'});
               const migrated=await page.evaluate(()=>window.BUWTPolish.state());
               console.log('LEGACY_MUTE_MIGRATION',JSON.stringify(migrated));
               assert(migrated.music===false&&migrated.sfx===false,'Old mute must remain muted after V2 settings migration');
