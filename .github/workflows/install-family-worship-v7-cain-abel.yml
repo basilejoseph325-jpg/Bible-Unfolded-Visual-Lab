@@ -1,0 +1,79 @@
+name: Install isolated Cain and Abel Family Worship V7 image
+on:
+  push:
+    paths:
+      - 'topic-08-cain-and-abel.jpg'
+permissions:
+  contents: write
+concurrency:
+  group: family-worship-v7-cain-abel
+  cancel-in-progress: false
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Checkout Visual Lab main
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate and install standalone image into private Family Worship assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --quiet pillow
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          import shutil
+          upload=Path('topic-08-cain-and-abel.jpg')
+          dest=Path('family-worship-menu-art/v7/topic-08-cain-and-abel.jpg')
+          assert upload.is_file(), 'Expected the exact uploaded JPG at repository root'
+          assert 40000<upload.stat().st_size<2000000, 'Unexpected JPG file size'
+          with Image.open(upload) as img:
+            img.verify()
+          with Image.open(upload) as img:
+            assert img.format=='JPEG'
+            assert img.width>=900 and img.height>=500, 'Not a sufficiently detailed standalone landscape JPG'
+            print('Verified standalone Cain and Abel art',img.size)
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          shutil.copyfile(upload,dest)
+          js=Path('family-worship-picker-gallery-v3.js')
+          s=js.read_text()
+          old='"Cain and Abel": "family-worship-menu-art/v1/topic-08-cain-and-abel.webp"'
+          new='"Cain and Abel": "family-worship-menu-art/v7/topic-08-cain-and-abel.jpg"'
+          assert s.count(old)==1 or s.count(new)==1, 'Expected original Cain and Abel menu mapping missing'
+          js.write_text(s.replace(old,new))
+          crop=Path('family-worship-gallery-crop-v4.css')
+          css=crop.read_text()
+          rule='''
+
+          /* V7 — Cain and Abel: retain BOTH brothers' heads in this ultra-wide card. */
+          #bu-fw-picker-layer.bu-fw-gallery-mode .bu-fw-picker-option.bu-fw-gallery-card[data-bu-fw-art$="topic-08-cain-and-abel.jpg"] .bu-fw-gallery-photo{
+            background-position:center top!important;
+          }
+          '''
+          if 'topic-08-cain-and-abel.jpg' not in css:crop.write_text(css+rule)
+          loader=Path('journey-progress-caption.js')
+          s=loader.read_text()
+          a='family-worship-picker-gallery-v3.js?v=20261106-isolated-art-v6'
+          b='family-worship-picker-gallery-v3.js?v=20261106-cain-abel-v7'
+          assert s.count(a)==1 or s.count(b)==1,'Expected Family Worship gallery loader missing'
+          s=s.replace(a,b)
+          a='family-worship-gallery-crop-v4.css?v=20261106-headroom-audit-v4'
+          b='family-worship-gallery-crop-v4.css?v=20261106-headroom-cain-v7'
+          assert s.count(a)==1 or s.count(b)==1,'Expected Family Worship crop loader missing'
+          loader.write_text(s.replace(a,b))
+          upload.unlink()
+          assert dest.is_file()
+          assert js.read_text().count(new)==1
+          assert crop.read_text().count('topic-08-cain-and-abel.jpg')==1
+          assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader.read_text()
+          print('PASS: one independent Cain and Abel card with original game, exterior and 45 other gallery art assets preserved')
+          PY
+          node --check family-worship-picker-gallery-v3.js
+          node --check journey-progress-caption.js
+          git add -A -- topic-08-cain-and-abel.jpg family-worship-menu-art/v7/topic-08-cain-and-abel.jpg family-worship-picker-gallery-v3.js family-worship-gallery-crop-v4.css journey-progress-caption.js
+          git diff --cached --check
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -m "Visual Lab: install dedicated Cain and Abel scene V7 without altering shared art"
+          git push origin HEAD:main
