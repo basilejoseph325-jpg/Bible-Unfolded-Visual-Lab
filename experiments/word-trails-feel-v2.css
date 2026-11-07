@@ -208,7 +208,7 @@
 }
 @keyframes wt-glitter-flight{
  0%{opacity:0;transform:translate3d(-50%,-50%,0) scale(.32) rotate(-38deg)}
- 26%{opacity:1;transform:translate3d(calc(-50% + var(--wt-x,0px)*.32),calc(-50% + var(--wt-y,0px)*.32),0) scale(1.19) rotate(0)}
+ 26%{opacity:1;transform:translate3d(calc(-50% + var(--wt-xnear,0px)),calc(-50% + var(--wt-ynear,0px)),0) scale(1.19) rotate(0)}
  49%{opacity:.94;filter:brightness(1.26)}
  100%{opacity:0;transform:translate3d(calc(-50% + var(--wt-x,0px)),calc(-50% + var(--wt-y,0px)),0) scale(.22) rotate(160deg)}
 }
