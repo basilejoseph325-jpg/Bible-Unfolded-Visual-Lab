@@ -154,7 +154,7 @@ function buildCells(level){
   if(!valid(text)||!canMake(level.rack,text))throw Error('Invalid level word '+text);
   for(let i=0;i<text.length;i++){
    const row=r+(dir==='down'?i:0),col=c+(dir==='across'?i:0),k=row+':'+col;
-   if(row<0||col<0||row>=5||col>=5)throw Error('Outside 5x5 '+text);
+   if(row<0||col<0||row>=level.size&&level.size||col>=level.size&&level.size||row>=5&&!level.size||col>=5&&!level.size)throw Error('Outside grid '+text);
    if(map.has(k)){
     const p=map.get(k);if(p.letter!==text[i])throw Error('Crossing mismatch '+text);
     p.words.push(text);
@@ -166,6 +166,13 @@ function buildCells(level){
  return map;
 }
 const BOARDS=LEVELS.map(buildCells);
+LEVELS.forEach((lev,i)=>{
+ if(![5,6,7].includes(lev.size||5))throw Error('Unsupported grid size');
+ for(const item of lev.bibleBoard||[]){
+  if(!lev.words.some(x=>x[0]===item.word))throw Error('Bible word must actually appear on crossword '+i+':'+item.word);
+  if(!item.url.startsWith('https://www.jw.org/en/library/bible/nwt/'))throw Error('Board Bible reference must be JW.org NWT');
+ }
+});
 BIBLE_SPARKS.forEach((list,i)=>{
  const rack=LEVELS[i].rack,seen=new Set(),required=new Set(LEVELS[i].words.map(x=>x[0]));
  if(list.length<2)throw Error('Each Bible level needs at least two finds');
@@ -177,7 +184,7 @@ BIBLE_SPARKS.forEach((list,i)=>{
   seen.add(item.word);
  }
 });
-const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],claimedSparks:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
+const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],claimedSparks:[],boardBible:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
 function load(){
  try{const o=JSON.parse(localStorage.getItem(STORAGE));if(!o||typeof o!=='object')return DEFAULT();
   const x={...DEFAULT(),...o};
@@ -186,6 +193,7 @@ function load(){
   x.coins=Math.max(0,Number(x.coins)||0);x.points=Math.max(0,Number(x.points)||0);
   for(const key of ['completed','sparks','paidWords','paidBonuses','claimedFreeHints'])if(!Array.isArray(x[key]))x[key]=[];
   if(!Array.isArray(x.claimedSparks))x.claimedSparks=[];
+  if(!Array.isArray(x.boardBible))x.boardBible=[];
   // Migration: a completed old single star was the FIRST Bible word in its level.
   // Keep the original reward and never pay it again.
   for(const oldIndex of x.sparks){
@@ -209,8 +217,18 @@ function store(){
 }
 function sparkKey(i,word){return i+':'+word}
 function sparkClaimed(i,word){return save.claimedSparks.includes(sparkKey(i,word))}
-function sparksFound(i=index){return BIBLE_SPARKS[i].filter(s=>sparkClaimed(i,s.word)).length}
-function sparkTotal(i=index){return BIBLE_SPARKS[i].length}
+function bibleItems(i=index){
+ return [
+  ...BIBLE_SPARKS[i].map(x=>({...x,kind:'hidden'})),
+  ...(LEVELS[i].bibleBoard||[]).map(x=>({...x,kind:'board'}))
+ ];
+}
+function bibleClaimed(i,item){
+ if(item.kind==='board')return save.boardBible.includes(sparkKey(i,item.word));
+ return sparkClaimed(i,item.word);
+}
+function sparksFound(i=index){return bibleItems(i).filter(item=>bibleClaimed(i,item)).length}
+function sparkTotal(i=index){return bibleItems(i).length}
 function storeProgress(){
  save.progress={level:index,found:[...found],bonuses:[...bonuses],hinted:[...hinted],combo};
  store();
@@ -312,7 +330,8 @@ function drawBoard(word){
  let revealedIndex=0;
  for(const cell of cells.values()){
   const tile=document.createElement('div'),revealed=cell.words.some(w=>found.has(w)),hint=hinted.has(cell.key);
-  tile.className='tile'+(revealed?' found':'')+(hint&&!revealed?' hinted':'');
+  const bibleCell=revealed&&cell.words.some(w=>found.has(w)&&(level.bibleBoard||[]).some(x=>x.word===w));
+  tile.className='tile'+(revealed?' found':'')+(hint&&!revealed?' hinted':'')+(bibleCell?' bible-found':'');
   if(word&&cell.words.includes(word)){tile.classList.add('new');
    tile.style.setProperty('--stagger',(revealedIndex++*48)+'ms');}
   tile.style.gridRow=cell.row+1;tile.style.gridColumn=cell.col+1;
@@ -359,6 +378,11 @@ function clear(){chosen=[];updateSelection()}
 function wordPaid(word){const id=index+'|'+word;if(save.paidWords.includes(id))return false;save.paidWords.push(id);return true}
 function finishWord(word){
  found.add(word);combo++;
+ const bibleAnswer=(level.bibleBoard||[]).find(item=>item.word===word);
+ if(bibleAnswer){
+  const key=sparkKey(index,word);
+  if(!save.boardBible.includes(key))save.boardBible.push(key);
+ }
  const reward=wordPaid(word)?10:0;
  if(reward)save.points+=reward;
  let comboReward=0;const comboTag='combo:'+index;
@@ -367,7 +391,7 @@ function finishWord(word){
  window.BUWTPolish?.event('correct',{word,combo,coins:comboReward});
  const tile=[...board.querySelectorAll('.tile.new')][Math.floor([...board.querySelectorAll('.tile.new')].length/2)];
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
- flash('✦ '+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
+ flash((bibleAnswer?'★ BIBLE WORD · ':'✦ ')+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
  cue('correct');haptic(15);
  if(found.size===level.words.length&&!completionShown){
   completionShown=true;locked=true;
@@ -456,6 +480,7 @@ function showLevel(n,resume=false){
  if($('discovery').open)$('discovery').close();
  if($('map').open)$('map').close();
  index=n;level=LEVELS[index];cells=BOARDS[index];
+ board.dataset.size=String(level.size||5);
  found=new Set();bonuses=new Set();hinted=new Set();combo=0;chosen=[];
  if(resume&&save.progress?.level===index){
   found=new Set(save.progress.found||[]);bonuses=new Set(save.progress.bonuses||[]);
@@ -499,11 +524,12 @@ function openSpark(bible=null,newlyFound=false){
  list.hidden=!menu;list.replaceChildren();
  if(menu){
   const have=sparksFound(),total=sparkTotal();
+  const boardCount=(level.bibleBoard||[]).length;
   $('spark-title').textContent='★ BIBLE WORD HUNT';
-  $('spark-text').textContent='Find '+total+' hidden Bible words using this level’s letter wheel. Each reveals a Scripture discovery and earns 25 test coins. '+have+' of '+total+' discovered.';
+  $('spark-text').textContent=(boardCount?('Discover '+boardCount+' Bible answer'+(boardCount===1?'':'s')+' on the crossword, plus '+BIBLE_SPARKS[index].length+' secret Scripture words. '):('Find '+total+' hidden Scripture words. '))+'Tap a completed discovery to read its Bible connection. '+have+' of '+total+' collected.';
   link.hidden=true;
-  for(const [i,item] of BIBLE_SPARKS[index].entries()){
-   const got=sparkClaimed(index,item.word);
+  for(const [i,item] of bibleItems().entries()){
+   const got=bibleClaimed(index,item);
    const el=document.createElement(got?'button':'div');
    el.className='spark-find'+(got?' unlocked':'');
    if(got){el.type='button';el.addEventListener('click',()=>openSpark(item,false))}
@@ -511,7 +537,7 @@ function openSpark(bible=null,newlyFound=false){
    icon.className='spark-find-icon';icon.textContent=got?'★':'☆';
    const body=document.createElement('span');body.className='spark-find-info';
    const header=document.createElement('strong');
-   header.textContent=got?item.word:'Bible word '+(i+1)+' · HIDDEN';
+   header.textContent=got?item.word:(item.kind==='board'?'CROSSWORD · '+item.word:'Bible word '+(i+1)+' · HIDDEN');
    const text=document.createElement('small');
    text.textContent=got?item.reference:item.clue;
    body.append(header,text);el.append(icon,body);list.append(el);
