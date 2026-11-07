@@ -36,3 +36,14 @@ Adapt successful *word-puzzle feedback patterns* (not proprietary assets, source
 
 ## Release rule
 **Visual Lab approval first.** Only after user approves sound/visual feel and QA passes on Samsung + iPhone should the module be ported into the live repository in a single reviewable change with a rollback.
+
+
+## Feel Lab v3 — Louder mix and moment-to-moment response (Nov 7, 2026)
+- User approved all existing cue designs but reported that they were too quiet even with music turned down and effects at 100%.
+- **SFX master gain increased 4× from 0.7 to 2.8**; the master feeds a gentle dynamics compressor at -8 dB with a narrow knee and high ratio. The boost is to **audio signal amplitude**, not a guaranteed fourfold subjective loudness on every speaker. Music gain is unchanged.
+- Primary touch, trace, correct, bonus, hint, Bible Spark, and finish patterns remain in place, retaining their musical identities.
+- Added tiny original cues for **deselected letters**, **letters settling on the board**, **coins arriving at the HUD**, and **entering another level**.
+- Coin arrival sound is available with visual motion disabled; it plays once per rewarded event, not once per particle. It is suppressed on replay when no reward is paid.
+- All deferred reward cues are canceled when changing level or hiding the page. All are gated by the SFX mute control; the music control remains independent.
+- The audio boost is test-only until a **Samsung Android listening check** establishes comfortable loudness without clipping or irritating layering, followed by an **iPhone Safari comparison**.
+- QA: .github/workflows/qa-word-trails-feel-v2.yml explicitly checks original master 0.7, new master 2.8 (ratio 4), new cue pathways, independent preferences, and old mute migration. .github/workflows/qa-word-trails-next-v1.yml preserves 8-level gameplay and wheel input.
