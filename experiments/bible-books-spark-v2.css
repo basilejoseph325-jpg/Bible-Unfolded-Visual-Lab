@@ -1,4 +1,4 @@
-/* BIBLE BOOKS SPARK V2 — isolated Visual Lab only
+/* BIBLE BOOKS SPARK V2 — isolated Visual Lab only. Wordscapes-size tile refinement.
  * Wordscapes-clean screen: large constant wheel, simple 5x6 tile board,
  * minimal chrome, optional gold scripture star, existing approved scroll.
  * No CSS selectors affect the real game's pages. */
@@ -8,7 +8,7 @@ body{font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color:#fff3
 button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 button:focus-visible,a:focus-visible{outline:3px solid #ffe7a6;outline-offset:2px}
 #app{position:relative;isolation:isolate;width:100%;height:100vh;height:100dvh;max-width:540px;margin:0 auto;overflow:hidden;
- display:grid;grid-template-rows:clamp(62px,8.5dvh,75px) minmax(0,1fr) clamp(245px,39dvh,340px) clamp(28px,4.3dvh,37px);background:#0b2b34}
+ display:grid;grid-template-rows:clamp(60px,7.6dvh,68px) minmax(0,1fr) clamp(245px,39dvh,340px) clamp(25px,3.4dvh,30px);background:#0b2b34}
 #app::before{content:"";position:absolute;z-index:-2;inset:0;background:
  linear-gradient(180deg,#071e2b6e 0%,#0d2e3a23 22%,#142d3024 57%,#071c26ab 100%),
  url("../bible-book-art/01_genesis.webp") center/cover no-repeat;
@@ -31,8 +31,8 @@ button:focus-visible,a:focus-visible{outline:3px solid #ffe7a6;outline-offset:2p
 .points strong{font-variant-numeric:tabular-nums;color:#fff0c3;font-size:16px}
 #reset{display:grid;place-items:center;width:36px;height:36px;border:1px solid #f3d7aa99;
  background:#092e3bb6;color:#ffe6ad;border-radius:50%;font-size:23px}
-.board-region{position:relative;display:flex;justify-content:center;align-items:center;min-height:0;padding:24px 11px 5px}
-.board{--tile:min(13.6vw,7.45dvh,57px);--gap:5px;display:grid;grid-template-columns:repeat(6,var(--tile));grid-template-rows:repeat(5,var(--tile));gap:var(--gap);
+.board-region{position:relative;display:flex;justify-content:center;align-items:center;min-height:0;padding:5px 10px 1px}
+.board{--tile:min(16.6vw,7.6dvh,65px);--gap:4px;display:grid;grid-template-columns:repeat(5,var(--tile));grid-template-rows:repeat(6,var(--tile));gap:var(--gap);
  justify-content:center;align-content:center;filter:drop-shadow(0 4px 5px #0005);touch-action:manipulation}
 .tile{width:100%;height:100%;min-width:0;min-height:0;display:grid;place-items:center;
  border:1.5px solid #ecf3eea8;border-radius:9px;
@@ -127,8 +127,8 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  border:0;padding:5px 55px 6px 8px;color:#ffe19a;font:800 clamp(14px,4vw,19px) Georgia,serif;
  text-shadow:0 2px 2px #250b08;filter:drop-shadow(0 2px 3px #0007)}
 @media(max-height:680px){
- #app{grid-template-rows:61px minmax(0,1fr) clamp(218px,39dvh,260px) 29px}
- .board{--tile:min(13.6vw,7.1dvh,53px);--gap:4px}
+ #app{grid-template-rows:60px minmax(0,1fr) clamp(218px,39dvh,260px) 25px}
+ .board{--tile:min(16.6vw,7.25dvh,63px);--gap:4px}
  .wheel{--diameter:min(78vw,37dvh,294px)}
  .side-control{bottom:14px;width:48px;height:48px}
  .spark-button{top:4px;width:42px;height:42px}
@@ -138,7 +138,7 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
 }
 @media(max-width:350px){
  .topbar{padding-left:7px;padding-right:7px}
- .board{--tile:min(13.1vw,7.1dvh,52px);--gap:4px}
+ .board{--tile:min(16vw,7.25dvh,63px);--gap:4px}
  .side-control{width:44px;height:44px}
  .spark-button{right:7px}
 }
