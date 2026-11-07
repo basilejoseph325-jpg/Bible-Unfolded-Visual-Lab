@@ -66,6 +66,10 @@ jobs:
                 },mode);
                 await page.waitForSelector('#bu35-ready');
                 await page.click('#bu35-ready');
+                const state=await page.evaluate(()=>({phase:bu35Phase(),handOff:bu35Game.handOff,
+                  phaseIndex:bu35Game.phase,phases:bu35Game.phases,answers:document.querySelectorAll('#bu35-body [data-answer]').length,
+                  ready:!!document.getElementById('bu35-ready'),html:document.getElementById('bu35-body')?.innerHTML.slice(0,800)}));
+                console.log('BEGIN_STATE',JSON.stringify(state));
               }
               async function result(phase,needle){
                 await page.waitForSelector('#bu67-modal.bu-fw-answer-scroll .bu-fw-answer-scroll-return');
@@ -101,6 +105,8 @@ jobs:
                   const q=bu35Question();
                   return right?q.correct:(q.correct+1)%q.choices.length;
                 },right);
+                const state=await page.evaluate(()=>({q:bu35Question().q,phase:bu35Phase(),num:document.querySelectorAll('#bu35-body [data-answer]').length,handOff:bu35Game.handOff}));
+                console.log('BEFORE_CHOOSE',JSON.stringify(state));
                 await page.click('#bu35-body [data-answer="'+i+'"]');
               }
               async function solveWord(){
