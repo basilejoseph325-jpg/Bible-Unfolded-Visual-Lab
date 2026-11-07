@@ -91,7 +91,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #ffe7a6;outline-offset:2p
  box-shadow:0 3px 9px #0006}
 .shuffle{left:clamp(5px,3vw,18px);font-size:32px}
 .hint{right:clamp(5px,3vw,18px)}
-.hint img{width:30px;height:30px;object-fit:contain;pointer-events:none}
+.hint svg{width:30px;height:30px;display:block;flex:none;pointer-events:none}
 .hint span{position:absolute;right:-5px;bottom:-7px;background:#b57833;color:#fff5de;
  border:1px solid #ffebbb;border-radius:16px;padding:0 6px;font-size:13px;font-weight:850}
 .side-control:disabled{opacity:.45}
