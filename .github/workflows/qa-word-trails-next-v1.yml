@@ -134,7 +134,6 @@ jobs:
               assert((await page.$eval('#spark-link',e=>e.href)).endsWith('/proverbs/6/'));
               assert.equal(await page.$eval('#spark-progress',e=>e.textContent),'2/2');
               assert.equal(Number(await page.$eval('#points',e=>e.textContent)),112);
-              await play('ANT').catch(()=>{}); // modal shields ordinary user input; no repeat award
               await page.click('#spark-next');
               await play('ANT');
               assert.equal(Number(await page.$eval('#points',e=>e.textContent)),112,
