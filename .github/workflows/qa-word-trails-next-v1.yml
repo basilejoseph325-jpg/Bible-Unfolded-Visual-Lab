@@ -312,8 +312,26 @@ jobs:
                 assert(g.boardBottom<g.wheelTop&&g.wheelBottom<=g.appBottom+1);
                 assert(g.overflowBody<=1&&g.overflowApp<=1);
               }
+              // After the original approved 5x5 phone checks, verify the new 7x7
+              // Bible board on each handset size without altering the letter wheel.
+              await page.click('#level-map');
+              await page.evaluate(()=>document.querySelector('.map-level:last-child').click());
+              assert((await page.$eval('#level-label',e=>e.textContent)).includes('LEVEL 11'));
+              for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
+                await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await new Promise(r=>setTimeout(r,120));
+                const g=await geometry();
+                const boardInfo=await page.$eval('#board',el=>({
+                  size:el.dataset.size,columns:getComputedStyle(el).gridTemplateColumns.split(' ').length
+                }));
+                console.log('PROGRESSIVE_7x7_'+width+'x'+height,JSON.stringify({g,boardInfo}));
+                assert(boardInfo.size==='7'&&boardInfo.columns===7);
+                assert(g.tile>=39&&g.tile<=61,'Seven-column board tiles must remain legible');
+                assert(g.boardBottom<g.wheelTop&&g.wheelBottom<=g.appBottom+1);
+                assert(g.overflowBody<=1&&g.overflowApp<=1,'No page scrolling on expanded board');
+              }
               assert.equal(errors.length,0,'No page errors: '+errors.join(', '));
-              console.log('PASS Word Trails NEXT — 8 levels, full rewards, Bible Spark, no scroll, saved state, phone layouts');
+              console.log('PASS Word Trails NEXT — 11 levels, 6x6/7x7 Bible answers, saved state, no scroll and Android-sized layouts');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
