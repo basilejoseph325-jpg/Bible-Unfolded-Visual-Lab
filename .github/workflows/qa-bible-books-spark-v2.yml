@@ -80,11 +80,20 @@ jobs:
               const initial=await inspect();
               console.log('INITIAL',JSON.stringify(initial));
               assert.equal(initial.boardTiles,14);
-              assert(initial.tileSize.width>=47 && initial.tileSize.height>=47,
-                'V2 crossword tiles must be larger than V1; no thin collapsed lines');
+              const coordinates=await page.evaluate(()=>[...document.querySelectorAll('.tile')].map(t=>({
+                row:Number(t.style.gridRow),column:Number(t.style.gridColumn),text:t.textContent
+              })));
+              assert(coordinates.every(t=>t.row>=1&&t.row<=6&&t.column>=1&&t.column<=5),
+                'Crossword must occupy a 5-column, 6-row frame without overflow');
+              assert(coordinates.some(t=>t.row===6)&&coordinates.some(t=>t.column===4),
+                'Crossword must use vertical stage and horizontal intersections');
+              assert(initial.tileSize.width>=62 && initial.tileSize.height>=62,
+                'V2 enlarged grid must reach 62px+ tiles on 390x844, comparable to reference');
+              assert(initial.tileSize.width>=53*1.17,'Tiles should be at least 17% larger than the previous 53px size');
               assert(initial.wheelWidth>=290,'V2 wheel should be visually dominant on 390x844 phone');
               assert(initial.headerHeight<=75,'V2 top header is too tall');
-              assert(initial.boardWidth>=315,'V2 board is still too narrow');
+              assert(initial.boardWidth>=330 && initial.boardWidth<=350,
+                '5-column board must be centered with large, square tiles');
               assert(Math.abs(initial.tileSize.width-initial.tileSize.height)<3);
               assert.equal(initial.letters,'ACINOT');
               assert.equal(initial.progress,'0 / 4');
@@ -243,6 +252,8 @@ jobs:
                 assert(g.overflow.body<=1&&g.overflow.app<=1);
                 assert(g.boardBottom<g.wheelTop);
                 assert(g.bottom<=g.appBottom+1);
+                assert(g.tileSize.width>=45&&Math.abs(g.tileSize.width-g.tileSize.height)<3,
+                  'Small screens should retain visible, square tile blocks');
               }
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
