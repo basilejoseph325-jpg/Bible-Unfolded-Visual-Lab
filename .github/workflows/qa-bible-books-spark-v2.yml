@@ -98,6 +98,16 @@ jobs:
               });
               assert(star.width<=53&&star.height<=53&&!star.initialHelpOpen,
                 'Scripture Spark should be a compact optional corner icon');
+              const hintIcon=await page.evaluate(()=>{
+                const svg=document.querySelector('#hint svg');
+                const box=svg?.getBoundingClientRect();
+                const bulb=svg?.querySelectorAll('path').length;
+                return {exists:!!svg,rendered:!!box&&box.width>=25&&box.height>=25,paths:bulb||0,
+                  externalBrokenImage:!!document.querySelector('#hint img')};
+              });
+              console.log('HINT_ICON',JSON.stringify(hintIcon));
+              assert(hintIcon.exists&&hintIcon.rendered&&hintIcon.paths>=4&&!hintIcon.externalBrokenImage,
+                'Original premium gold hint SVG must render inline without an external broken image');
               const image=(await page.screenshot({type:'jpeg',quality:42})).toString('base64');
               for(let i=0;i<image.length;i+=9000)console.log('SPARK_TEST_SHOT',i/9000,image.slice(i,i+9000));
               const play=async(word)=>{
