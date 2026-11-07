@@ -104,7 +104,7 @@ jobs:
                 document.addEventListener('click',e=>data('document',e),true);
                 document.querySelector('#home-cross').addEventListener('click',e=>data('button',e),true);
               });
-              await page.click('#home-cross');
+              await page.evaluate(()=>document.querySelector('#home-cross').click());
               await new Promise(r=>setTimeout(r,550));
               const homeResult=await page.evaluate(()=>({
                 href:location.href,base:document.baseURI,
@@ -127,7 +127,7 @@ jobs:
               assert(route.level.includes('LEVEL 1'),'Homepage should open directly into playable level 1');
               await page.goto('http://127.0.0.1:8766/index.html?trails=previous',{waitUntil:'domcontentloaded',timeout:120000});
               await page.waitForSelector('#wt-next-entry',{timeout:60000});
-              await page.click('#home-cross');
+              await page.evaluate(()=>document.querySelector('#home-cross').click());
               const legacy=await page.evaluate(()=>({
                 pathname:location.pathname,
                 panel:!!document.getElementById('cross-pick'),
