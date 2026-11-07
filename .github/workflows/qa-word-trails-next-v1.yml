@@ -171,6 +171,30 @@ jobs:
               assert.equal(store.sparks.length,1);
               console.log('EIGHT_LEVELS_PASS',JSON.stringify({completed:store.completed,coins:store.coins,points:store.points,stars:store.sparks}));
               await page.click('#map-x');
+              await page.click('#level-map');
+              await page.click('.map-level');
+              await page.click('#level-map');
+              await page.click('#reset-level');
+              const swipe=await page.evaluate(()=>{
+                const wheel=document.querySelector('#wheel'),buttons=[...document.querySelectorAll('.wheel-letter')];
+                const points=[...'COIN'].map(ch=>{
+                  const el=buttons.find(x=>x.textContent===ch);
+                  if(!el)throw Error('No button for '+ch);
+                  const r=el.getBoundingClientRect();return {el,x:r.left+r.width/2,y:r.top+r.height/2};
+                });
+                const evt=(type,p)=>new PointerEvent(type,{
+                  bubbles:true,pointerType:'touch',pointerId:891,isPrimary:true,clientX:p.x,clientY:p.y
+                });
+                points[0].el.dispatchEvent(evt('pointerdown',points[0]));
+                for(let i=1;i<points.length;i++)wheel.dispatchEvent(evt('pointermove',points[i]));
+                wheel.dispatchEvent(evt('pointerup',points.at(-1)));
+                return {progress:document.querySelector('#solved-count').textContent,
+                  path:document.querySelector('#selection-lines polyline')?.getAttribute('points')||'',
+                  cells:document.querySelectorAll('.tile.found').length};
+              });
+              console.log('SWIPE_COIN',JSON.stringify(swipe));
+              assert.equal(swipe.progress,'1 / 4','Swipe must submit without Enter button');
+              assert.equal(swipe.cells,4,'Swipe should fill the COIN answer');
               for(const [width,height] of [[390,844],[412,744],[360,740],[375,667]]){
                 await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
                 await new Promise(r=>setTimeout(r,110));
