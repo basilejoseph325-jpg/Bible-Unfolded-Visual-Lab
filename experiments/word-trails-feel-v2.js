@@ -281,6 +281,8 @@ function winGlitter(stage,count,phase=0){
   n.style.fontSize=(10+(i*7)%12)+'px';
   n.style.setProperty('--wt-x',(Math.cos(angle)*radius)+'px');
   n.style.setProperty('--wt-y',(Math.sin(angle)*radius*.70)+'px');
+  n.style.setProperty('--wt-xnear',(Math.cos(angle)*radius*.32)+'px');
+  n.style.setProperty('--wt-ynear',(Math.sin(angle)*radius*.70*.32)+'px');
   n.style.setProperty('--wt-delay',((i*41)%330+(phase?370:0))+'ms');
   n.style.setProperty('--wt-duration',(990+(i*53)%730)+'ms');
   frag.append(n);
