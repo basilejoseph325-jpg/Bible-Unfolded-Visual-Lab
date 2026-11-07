@@ -241,9 +241,14 @@ jobs:
                   assert((await page.$eval('#spark-link',e=>e.href)).includes('jw.org/en/library/bible/nwt/books/'));
                   await page.click('#spark-next');
                 }
+                const boardBibleCount=l===8?2:l===9?2:l===10?4:0;
                 assert.equal(await page.$eval('#spark-progress',el=>el.textContent),
-                  bibleWords[l-1].length+'/'+bibleWords[l-1].length);
+                  bibleWords[l-1].length+'/'+(bibleWords[l-1].length+boardBibleCount),
+                  'Hidden Scripture words must remain separate from Bible words on the board');
                 for(const word of packs[l-1])await play(word);
+                assert.equal(await page.$eval('#spark-progress',el=>el.textContent),
+                  (bibleWords[l-1].length+boardBibleCount)+'/'+(bibleWords[l-1].length+boardBibleCount),
+                  'Bible words entered as crossword answers must unlock their references');
                 await page.waitForSelector('#finish[open]',{timeout:10000});
                 assert.equal(await page.$eval('#solved-count',e=>e.textContent),packs[l-1].length+' / '+packs[l-1].length);
                 if(l===10)break;
