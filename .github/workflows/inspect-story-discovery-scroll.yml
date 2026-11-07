@@ -1,0 +1,32 @@
+name: Inspect Story Adventure discovery modal (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-story-discovery-scroll.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Locate native discovery modal render/handlers and existing styling
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js')),*sorted(Path('.').glob('*.css')),*sorted(Path('.').glob('*.js'))]
+          pats=['A beginning without a date','Discovery complete!','Next Discovery','bu3857-info','bu3857-modal','discovery-modal','discovery-popup','discovery complete','A World Awakens','story insight','bu3857-note','discovery-card']
+          for p in files:
+            s=p.read_text(errors='replace')
+            relevant=[]
+            for pat in pats:
+              found=list(re.finditer(re.escape(pat),s,re.I))
+              if found: relevant.append((pat,found))
+            if not relevant:continue
+            print('FILE',p,'LEN',len(s))
+            for pat,found in relevant:
+              print('PATTERN',pat,'COUNT',len(found))
+              for m in found[:4]:
+                print('EXCERPT',pat,'offset',m.start(),s[max(0,m.start()-650):m.end()+950].replace(chr(10),'\\n')[:1750])
+          PY
