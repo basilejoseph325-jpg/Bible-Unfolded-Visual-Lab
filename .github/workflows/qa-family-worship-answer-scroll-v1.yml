@@ -35,7 +35,7 @@ jobs:
           assert 'trivia' in js and 'lightning' in js and '.bu35-feedback' in js
           print('PASS: original scroll, wax, Family Worship setup and isolated answer-only loader')
           PY
-      - name: Mobile Chromium: Trivia, Lightning, X, return wax, long text and hint exclusions
+      - name: "Mobile Chromium - Trivia, Lightning, X, return wax, long text and exclusions"
         shell: bash
         run: |
           set -euo pipefail
