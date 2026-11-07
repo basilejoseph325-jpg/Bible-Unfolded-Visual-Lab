@@ -78,6 +78,9 @@ jobs:
               });
               const initial=await geometry();
               console.log('INITIAL',JSON.stringify(initial));
+              const screenshot=(await page.screenshot({type:'jpeg',quality:58})).toString('base64');
+              for(let i=0;i<screenshot.length;i+=7800)
+                console.log('WTNEXT_GAME_SHOT_'+(i/7800)+' '+screenshot.slice(i,i+7800));
               assert.equal(initial.progress,'0 / 4');
               assert.equal(initial.count,15);
               assert(initial.tile>=64&&initial.wheel>=260);
@@ -131,6 +134,9 @@ jobs:
                 stars:document.querySelector('#finish-spark').textContent
               }));
               console.log('LEVEL_1_COMPLETE',JSON.stringify(state));
+              const finishShot=(await page.screenshot({type:'jpeg',quality:58})).toString('base64');
+              for(let i=0;i<finishShot.length;i+=7800)
+                console.log('WTNEXT_FINISH_SHOT_'+(i/7800)+' '+finishShot.slice(i,i+7800));
               assert.equal(state.progress,'4 / 4');
               assert(state.title.includes('1 COMPLETE')&&state.stars.includes('discovered'));
               await page.click('#next-level');
