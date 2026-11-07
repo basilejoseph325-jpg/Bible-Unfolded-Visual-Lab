@@ -308,3 +308,7 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  .tile.new,.wiggle,.victory-star,.particle,.confetti{animation:none!important}
  .progress-track i{transition:none}
 }
+
+.progress-line{display:flex;align-items:center;gap:5px;justify-content:center;width:100%;margin-top:3px}
+.progress-line .progress-track{flex:1;width:auto;margin:0}
+.progress-line #solved-count{font-size:9px;color:#ffe4ab;font-weight:900;white-space:nowrap;font-variant-numeric:tabular-nums}
