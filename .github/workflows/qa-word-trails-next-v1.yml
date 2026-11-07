@@ -143,6 +143,16 @@ jobs:
                   open:dialog.open};
               });
               console.log('VISIBLE_GOLD_WIN_FX',JSON.stringify(fxAtWin));
+              const fxBounds=await page.evaluate(()=>{
+                const fx=document.querySelector('#finish-fx'),dialog=document.querySelector('#finish'),button=document.querySelector('#next-level');
+                const a=fx.getBoundingClientRect(),b=button.getBoundingClientRect(),c=dialog.getBoundingClientRect();
+                const s=getComputedStyle(fx);
+                return {effectBottom:a.bottom,buttonTop:b.top,effectHeight:a.height,dialogBottom:c.bottom,
+                  inset:s.inset,overflow:s.overflow,clip:s.clipPath,position:s.position};
+              });
+              console.log('WIN_FX_CLIPPING_BOUNDS',JSON.stringify(fxBounds));
+              assert(fxBounds.effectBottom<=fxBounds.buttonTop,
+                'Victory confetti must end above the Next Level button so its label stays readable');
               assert(fxAtWin.insideDialog&&fxAtWin.open&&fxAtWin.interactive==='none');
               assert(fxAtWin.stars>=27&&fxAtWin.foil>=58,'The win panel must receive glitter and confetti');
               await new Promise(r=>setTimeout(r,930));
