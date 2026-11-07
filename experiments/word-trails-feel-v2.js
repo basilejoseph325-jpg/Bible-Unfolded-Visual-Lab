@@ -11,7 +11,7 @@ let pref={...DEF};try{const s=JSON.parse(localStorage.getItem(KEY));
  else{const previous=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
   if(previous?.sound===false){pref.music=false;pref.sfx=false}}
 }catch(_){}
-let ctx=null,master=null,limiter=null,peakGuard=null,noise=null;
+let ctx=null,master=null,limiter=null,peakGuard=null,signalMeter=null,noise=null;
 const EFFECTS_MIX_GAIN=11.2; // Original output bus retained; levels are now mastered at the VOICE stage.
 const VOICE_LOUDNESS_BOOST=4.0; // Fourfold increase BEFORE the compressor, not after it.
 let pendingRewardSounds=new Set();
@@ -63,13 +63,25 @@ function audio(){
     peakGuard.curve=curve;peakGuard.oversample='2x';
     tail.connect(peakGuard);tail=peakGuard;
    }catch(_){}
-   tail.connect(ctx.destination);
+   // Lightweight output meter lets our phone-browser QA verify audible signal,
+   // rather than trusting a gain-number change alone.
+   try{
+    signalMeter=ctx.createAnalyser();signalMeter.fftSize=1024;
+    tail.connect(signalMeter);signalMeter.connect(ctx.destination);
+   }catch(_){tail.connect(ctx.destination)}
   }
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   return ctx;
  }catch(_){return null}
 }
 function vol(g){return g*(pref.sfxVolume/100)*VOICE_LOUDNESS_BOOST}
+function audioMeter(){
+ if(!signalMeter)return {peak:0,rms:0,state:ctx?.state||'uninitialized'};
+ const arr=new Float32Array(signalMeter.fftSize);
+ try{signalMeter.getFloatTimeDomainData(arr)}catch(_){return {peak:0,rms:0,state:ctx?.state||'unavailable'}}
+ let peak=0,sum=0;for(const n of arr){const a=Math.abs(n);peak=Math.max(peak,a);sum+=n*n}
+ return {peak,rms:Math.sqrt(sum/arr.length),state:ctx?.state||'unavailable'};
+}
 function pluck(f,delay=0,len=.14,gain=.04,shape='sine',to){
  const a=audio();if(!a)return;
  try{
@@ -267,7 +279,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else makeSettings();
 window.BUWTPolish=Object.freeze({
  cue,event,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
- voiceBoost:()=>VOICE_LOUDNESS_BOOST,
+ voiceBoost:()=>VOICE_LOUDNESS_BOOST,audioMeter,
  musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
  motionEnabled:motion,hapticsEnabled:()=>!!pref.haptics&&motion(),haptic,state,
