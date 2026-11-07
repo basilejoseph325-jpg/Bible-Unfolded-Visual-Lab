@@ -69,6 +69,9 @@ jobs:
               assert(check.sounds.music&&check.sounds.sfx&&check.sounds.motion);
               await page.click('#audio');
               await page.waitForSelector('#wt-feel-settings[open]');
+              const settingsShot=(await page.screenshot({type:'jpeg',quality:56})).toString('base64');
+              for(let i=0;i<settingsShot.length;i+=8000)
+                console.log('FEEL_SETTINGS_SHOT_'+(i/8000)+' '+settingsShot.slice(i,i+8000));
               const panel=await page.evaluate(()=>({
                 options:[...document.querySelectorAll('#wt-feel-settings [data-pref]')].map(x=>x.dataset.pref),
                 sample:[...document.querySelectorAll('#wt-feel-settings [data-demo]')].map(x=>x.dataset.demo)
@@ -118,6 +121,9 @@ jobs:
               let saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
               assert(saved.paidBonuses.includes('satchel:0'));
               console.log('SATCHEL',JSON.stringify({coins:saved.coins,bonuses:saved.paidBonuses}));
+              const gameplayShot=(await page.screenshot({type:'jpeg',quality:55})).toString('base64');
+              for(let i=0;i<gameplayShot.length;i+=8000)
+                console.log('FEEL_GAME_SHOT_'+(i/8000)+' '+gameplayShot.slice(i,i+8000));
               await page.reload({waitUntil:'networkidle0'});
               assert.equal(await $('#bonus-count'),'3');
               let pref=await page.evaluate(()=>window.BUWTPolish.state());
@@ -166,6 +172,14 @@ jobs:
                 console.log('PHONE_'+width+'x'+height,JSON.stringify(g));
                 assert(g.tile>=60&&g.boardBottom<g.wheelTop&&g.wheelBottom<=g.window+1&&g.overflow<=1);
               }
+              await page.evaluate(()=>{
+                localStorage.removeItem('bu-wt-next-feel-v2');
+                localStorage.setItem('bu-visual-lab-wordtrails-next-v1',JSON.stringify({sound:false}));
+              });
+              await page.reload({waitUntil:'networkidle0'});
+              const migrated=await page.evaluate(()=>window.BUWTPolish.state());
+              console.log('LEGACY_MUTE_MIGRATION',JSON.stringify(migrated));
+              assert(migrated.music===false&&migrated.sfx===false,'Old mute must remain muted after V2 settings migration');
               assert.equal(errors.length,0,'Page errors: '+errors.join(' | '));
               console.log('PASS FEEL LAB v2: independent settings, bonus coins, repeat-safe satchel, animation toggles, Android browser geometry');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
