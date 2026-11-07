@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#092b34">
+<title>Genesis — Bible Books V4 Five-by-Five Chunky Crossword</title>
+<link rel="stylesheet" href="bible-books-spark-v4.css?v=20261107-chunky5x5-v4">
+<script src="bible-books-spark-v4.js?v=20261107-chunky5x5-v4" defer></script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="header-left">
+    <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
+    <button type="button" id="spark" class="spark-button" aria-label="A hidden Scripture Spark word is available" aria-expanded="false">
+      <span class="star" aria-hidden="true">★</span>
+      <span class="spark-label">SCRIPTURE<br>SPARK</span>
+    </button>
+    </div>
+    <div class="heading">
+      <h1>Genesis</h1>
+      <span>LEVEL 1 · <strong id="solved-count" aria-label="Words solved">0 / 4</strong></span>
+    </div>
+    <div class="top-actions">
+      <div class="points" aria-label="Test points">✦ <strong id="points">0</strong></div>
+      <button id="reset" type="button" aria-label="Restart this test puzzle" title="Restart test">↻</button>
+    </div>
+  </header>
+  <main class="board-region" aria-label="Four connected crossword words">
+    <div id="board" class="board" aria-label="Five column by five row crossword puzzle"></div>
+    <output id="toast" role="status" aria-live="polite"></output>
+  </main>
+  <section class="play-region" aria-label="One permanent letter wheel for all puzzle words">
+    <div id="wheel" class="wheel">
+      <svg id="selection-lines" class="selection-lines" aria-hidden="true"></svg>
+      <button id="submit" type="button" class="wheel-center" aria-label="Submit selected letters">
+        <span class="submit-icon">✓</span><span class="submit-text">ENTER</span>
+      </button>
+      <output id="preview" class="preview" aria-live="polite"></output>
+    </div>
+    <button type="button" id="shuffle" class="side-control shuffle" aria-label="Shuffle letters">⇄</button>
+    <button type="button" id="hint" class="side-control hint" aria-label="Reveal one letter">
+      <svg aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none"><defs><linearGradient id="metal" x1="0" y1="0" x2=".82" y2="1"><stop offset="0" stop-color="#fff7cc"/><stop offset=".18" stop-color="#ffe9a3"/><stop offset=".41" stop-color="#b97625"/><stop offset=".60" stop-color="#ffdd75"/><stop offset=".82" stop-color="#d79b3a"/><stop offset="1" stop-color="#fff0b4"/></linearGradient><linearGradient id="edge" x1="0" y1="0" x2="0.7" y2="1"><stop stop-color="#fff6be"/><stop offset=".52" stop-color="#e7b451"/><stop offset="1" stop-color="#986021"/></linearGradient><filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="1.3"/></filter><filter id="shadow" x="-40%" y="-40%" width="180%" height="180%"><feDropShadow dx="0" dy="1.5" stdDeviation="1.1" flood-color="#020f1b" flood-opacity=".83"/></filter></defs>
+<g opacity=".29" filter="url(#glow)" stroke="#ffd86f" stroke-width="4.5"><path d="M20 41.2c-.8-5.3-8.6-9-8.6-19.1a20.6 20.6 0 0 1 41.2 0c0 10.1-7.8 13.8-8.6 19.1"/></g>
+<g stroke-linecap="round" stroke-linejoin="round" filter="url(#shadow)">
+<path d="M20 41.2c-.8-5.3-8.6-9-8.6-19.1a20.6 20.6 0 0 1 41.2 0c0 10.1-7.8 13.8-8.6 19.1" transform="translate(0 2)" stroke="url(#metal)" stroke-width="3.15" fill="#613e13" fill-opacity=".26"/>
+<path d="M22.2 39.8c-.9-6.3-7.6-10.1-7.6-17.8a17.4 17.4 0 0 1 34.8 0c0 7.7-6.7 11.5-7.6 17.8" stroke="#fff0ab" stroke-width="1.3" opacity=".83"/>
+<path d="M23.2 44.2h17.6M23.8 49h16.4M26.6 53.8h10.8M29 57.2h6" stroke="url(#metal)" stroke-width="3.2"/>
+<path d="M29 39.5V29.1l-5.2-5.3M35 39.5V29.1l5.2-5.3M29 29.1l3 3.3 3-3.3" stroke="url(#edge)" stroke-width="2.1"/>
+<path d="M32 1.8v5.1M9.9 7.8l4 4M54.1 7.8l-4 4M1.5 27h6M62.5 27h-6M9.2 46.6l4.5-3.4M54.8 46.6l-4.5-3.4" stroke="url(#metal)" stroke-width="2.55"/>
+<path d="M22 15.5c2.8-3.3 6.2-4.3 10-4.4" stroke="#fff8d8" stroke-width="1.7" opacity=".9"/>
+</g></svg>
+      <span id="hints-left">3</span>
+    </button>
+  </section>
+  <footer class="bottom">
+    <span>✦ BONUS WORDS <strong id="bonus-count">0</strong></span>
+    <span>5×5 CHUNKY TEST • NO SAVED POINTS</span>
+  </footer>
+  <aside id="spark-info" class="spark-info" hidden>
+    <strong>✦ Scripture Spark</strong>
+    <p>There is a Bible name hidden in these letters. This optional discovery earns 25 test points and a brief Genesis insight, but you can finish the crossword without finding it.</p>
+    <button id="spark-dismiss" type="button">Got it</button>
+  </aside>
+</div>
+<dialog id="scroll" aria-labelledby="scroll-heading">
+  <div class="scroll-art">
+    <button type="button" id="scroll-x" class="scroll-x" aria-label="Close scroll">×</button>
+    <span id="scroll-tag" class="scroll-tag">SCRIPTURE SPARK</span>
+    <h2 id="scroll-heading"></h2>
+    <div class="scroll-body">
+      <p id="scroll-text"></p>
+      <a id="scroll-scripture" href="https://www.jw.org/en/library/bible/nwt/books/genesis/4/" target="_blank" rel="noopener noreferrer">Read Genesis 4:1, 2 on JW.org ↗</a>
+    </div>
+    <button type="button" id="scroll-next" class="scroll-next">Keep Playing</button>
+  </div>
+</dialog>
+</body>
+</html>
