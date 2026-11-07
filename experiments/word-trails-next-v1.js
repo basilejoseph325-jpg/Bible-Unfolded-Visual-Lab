@@ -215,7 +215,8 @@ function drawWheel(){
   b.textContent=letters[i];b.setAttribute('aria-label','Letter '+letters[i]);
   b.style.left=pos[i].x+'px';b.style.top=pos[i].y+'px';
   b.addEventListener('click',()=>{
-   if(performance.now()<suppressClickUntil||locked)return;cue('touch');tap(i);
+   if(performance.now()<suppressClickUntil||locked)return;
+   cue(chosen.includes(i)?'undo':'touch');tap(i);
   });wheel.appendChild(b);
  }
  updateSelection();
@@ -384,7 +385,7 @@ function levelMap(){
   b.type='button';b.className='map-level'+(i===index?' here':'')+(save.completed.includes(i)?' complete':'');
   b.disabled=!unlocked;
   b.innerHTML='<span>'+(unlocked?i+1:'🔒')+'</span><strong>'+lev.title+'</strong><small>'+(save.sparks.includes(i)?'★ Spark':save.completed.includes(i)?'✓ Complete':unlocked?'Play':'Locked')+'</small>';
-  b.addEventListener('click',()=>{cue('touch');showLevel(i);$('map').close()});
+  b.addEventListener('click',()=>{showLevel(i);cue('levelEnter');$('map').close()});
   $('map-list').append(b);
  });$('map').showModal();
 }
@@ -421,7 +422,7 @@ $('audio').addEventListener('click',()=>{if(window.BUWTPolish)window.BUWTPolish.
 $('level-map').addEventListener('click',levelMap);
 $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
- if(index===LEVELS.length-1){$('finish').close();levelMap()}else showLevel(n);
+ if(index===LEVELS.length-1){$('finish').close();levelMap()}else{showLevel(n);cue('levelEnter')}
 });
 $('stay').addEventListener('click',()=>{if(save.sparks.includes(index)){resetLevel();return} $('finish').close();locked=false;completionShown=false;flash('Keep exploring for a bonus word')});
 $('spark-next').addEventListener('click',()=>$('discovery').close());
