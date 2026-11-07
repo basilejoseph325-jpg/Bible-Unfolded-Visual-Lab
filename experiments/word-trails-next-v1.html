@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#092b34">
+<meta name="description" content="Bible Unfolded Visual Lab — next-generation Word Trails puzzle preview.">
+<title>Word Trails NEXT • Bible Unfolded Visual Lab</title>
+<link rel="stylesheet" href="word-trails-next-v1.css?v=20261107-launch-1">
+<script src="word-trails-next-v1.js?v=20261107-launch-1" defer></script>
+</head>
+<body>
+<div id="app">
+  <header class="topbar">
+    <div class="header-left">
+      <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
+      <button type="button" id="spark" class="spark-button" aria-label="Optional Bible discovery" title="Scripture Spark"><span class="star" aria-hidden="true">★</span></button>
+    </div>
+    <div class="heading">
+      <h1>Word Trails</h1>
+      <span><b id="scene-title">The Beginning</b> · <b id="level-label">LEVEL 1 / 8</b></span>
+      <div class="progress-track" aria-hidden="true"><i id="progress-fill"></i></div>
+    </div>
+    <div class="top-actions">
+      <div class="points" title="Test coins — separate from live game"><span>✦</span><strong id="points">60</strong></div>
+      <button id="audio" type="button" aria-label="Mute music and sounds" aria-pressed="true">♫</button>
+    </div>
+  </header>
+  <main class="board-region" aria-label="Connected five by five word crossword">
+    <div id="board" class="board" aria-label="Find words by tracing the letter wheel"></div>
+    <output id="toast" role="status" aria-live="polite"></output>
+  </main>
+  <section class="play-region" aria-label="Swipe or tap letters to form words">
+    <div class="wheel" id="wheel">
+      <svg class="selection-lines" id="selection-lines" aria-hidden="true"></svg>
+      <button id="submit" type="button" class="wheel-center" aria-label="Submit selected letters"><span class="submit-icon">✓</span><span class="submit-text">ENTER</span></button>
+      <output id="preview" class="preview" aria-live="polite"></output>
+    </div>
+    <button type="button" id="shuffle" class="side-control shuffle" aria-label="Shuffle letters"><img src="../assets/ui/story-gold-shuffle-v1.svg" alt=""></button>
+    <button type="button" id="hint" class="side-control hint" aria-label="Reveal a letter">
+      <img src="../assets/ui/daily-gold-hint-v3.svg" alt=""><span id="hint-cost">FREE</span>
+    </button>
+    <div class="combo" id="combo" aria-live="polite"></div>
+  </section>
+  <footer class="bottom">
+    <span>✦ BONUS <strong id="bonus-count">0</strong></span>
+    <button type="button" id="level-map" aria-label="Open unlocked levels">1 / 8</button>
+    <span class="lab-tag">NEXT · TEST</span>
+  </footer>
+  <div id="particles" class="particles" aria-hidden="true"></div>
+</div>
+<dialog id="discovery" aria-labelledby="spark-title">
+  <div class="scroll-art">
+    <button type="button" id="spark-x" class="scroll-x" aria-label="Close Bible discovery">×</button>
+    <span class="scroll-tag">A BIBLE DISCOVERY</span>
+    <h2 id="spark-title">★ Scripture Spark</h2>
+    <div class="scroll-body">
+      <p id="spark-text"></p>
+      <a id="spark-link" target="_blank" rel="noopener noreferrer" href="https://www.jw.org/" hidden>Read on JW.org ↗</a>
+    </div>
+    <button id="spark-next" type="button" class="scroll-next">Keep Playing</button>
+  </div>
+</dialog>
+<dialog id="finish" aria-labelledby="finish-level">
+  <div class="finish-panel">
+    <div class="finish-small">BIBLE UNFOLDED · WORD TRAILS</div>
+    <div class="victory-star" aria-hidden="true">✦</div>
+    <h2 id="finish-level">LEVEL COMPLETE!</h2>
+    <p class="victory-intro">Every word brings a new discovery.</p>
+    <div class="reward-coin" aria-label="Level reward"><span>✦</span><strong id="finish-reward">+20 TEST COINS</strong></div>
+    <div class="finish-stats" id="finish-words"></div>
+    <p class="finish-spark" id="finish-spark"></p>
+    <button type="button" class="primary-action" id="next-level">Next Level</button>
+    <button type="button" class="secondary-action" id="stay">Keep exploring</button>
+  </div>
+</dialog>
+<dialog id="map" aria-labelledby="map-title">
+  <div class="map-panel">
+    <button type="button" id="map-x" class="map-x" aria-label="Close level map">×</button>
+    <div class="finish-small">VISUAL LAB ONLY</div>
+    <h2 id="map-title">Your Word Journey</h2>
+    <p>Levels unlock in order. Your test coins, words, and discoveries stay separate from the live game.</p>
+    <div id="map-list" class="map-list"></div>
+    <div class="map-actions">
+      <button type="button" id="reset-level">↻ Restart current puzzle</button>
+      <button type="button" id="reset-test">Reset all test progress</button>
+    </div>
+  </div>
+</dialog>
+</body>
+</html>
