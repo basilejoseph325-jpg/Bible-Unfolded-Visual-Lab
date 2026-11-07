@@ -1,8 +1,7 @@
 name: Read-only audit Family Worship answer and results UI
 on:
   push:
-    paths:
-      - '.github/workflows/audit-family-worship-results.yml'
+    paths: ['.github/workflows/audit-family-worship-results.yml']
 permissions: {contents: read}
 jobs:
   inspect:
@@ -10,28 +9,27 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Inspect Family Worship actual question/result DOM and next handlers
+      - name: Examine Family Worship result lifecycle and existing details modal
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
           s=Path('index.html').read_text(errors='replace')
-          pats=['function bu35','function bu3826','bu35-answer','bu35-correct','bu35-feedback','bu35-result','bu35-explain','bu35-next','bu35-modal','bu35-reveal','bu35-quiz','bu35-question','bu35-summary','bu35-finish','family worship','Family Worship']
-          for p in pats:
-            found=list(re.finditer(re.escape(p),s,re.I))
-            print('MATCH',p,'COUNT',len(found))
-            for m in found[:12]:
-              if p.lower() in ('family worship','function bu35'): continue
-              print('SPOT',p,m.start(),s[max(0,m.start()-270):m.end()+560].replace(chr(10),'\\n')[:900])
-          print('--- FUNCTIONS mentioning Family Worship / bu35 ---')
-          allfunc=list(re.finditer(r'function\\s+(bu35\\w*|bu3826\\w*)\\s*\\(',s))
-          print('FUNCTION_COUNT',len(allfunc))
-          for m in allfunc[:100]:print('FUNCTION',m.group(1),'AT',m.start(),s[m.start():m.start()+125].replace(chr(10),' '))
-          print('--- OUTPUT TARGETS ---')
-          pats=['bu35-question','bu35-answer','bu35-feedback','bu35-result','bu35-next','bu35-modal','bu35-body','bu35-summary','bu35-reveal','bu35-start','bu35-explanation']
-          for p in pats:
-            ms=list(re.finditer(re.escape(p),s,re.I))
-            if ms:
-              print('TARGET',p,'COUNT',len(ms))
-              for m in ms[-7:]: print('NEAR',p,'OFFSET',m.start(),s[max(0,m.start()-900):m.end()+1300].replace(chr(10),'\\n')[:2280])
+          terms=['function bu35Render(', 'bu35Render=', 'bu35Render =', 'function bu35Choose', 'function bu35Answer','function bu35Next', 'function familyInfo(', 'function modal(', 'bu67-dialog', 'bu67-open-details', 'function bu35Finish', 'bu35-feedback','bu35-result','bu35-recap','bu35-phase']
+          for q in terms:
+            offsets=[]
+            pos=-1
+            while True:
+              pos=s.find(q,pos+1)
+              if pos<0:break
+              offsets.append(pos)
+            print('TERM',q,'COUNT',len(offsets),'OFFSETS',offsets[:22])
+            # Only code fragments near end for functions and result state.
+            for n,i in enumerate(offsets):
+              if q=='bu35-feedback' and i<1000000:continue
+              if q in ('bu67-dialog','bu67-open-details') and i<1000000:continue
+              if q=='bu35-result' and i<1000000:continue
+              if q=='bu35-phase' and i<1000000:continue
+              if n>=4:break
+              start=max(0,i-400)
+              print('DETAIL',q,n,s[start:i+6800].replace(chr(10),'\\n')[:7200])
           PY
