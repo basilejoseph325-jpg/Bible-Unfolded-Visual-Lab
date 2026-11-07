@@ -80,7 +80,7 @@
    }
    const button=footer.querySelector('button');
    const label=(next.textContent||'Continue').replace(/\s*[→›➜]\s*$/u,'').trim();
-   button.textContent=label;
+   if(button.textContent!==label)button.textContent=label;
    button.setAttribute('aria-label',label+' Family Worship');
    // The original nextturn button is still connected and owns all turn,
    // save, reward, score, and phase-advancement behavior.
