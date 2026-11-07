@@ -233,7 +233,7 @@ jobs:
                 assert(s.tile>=(l<=7?64:l===8?50:40));
                 assert(s.boardBottom<s.wheelTop&&s.wheelBottom<s.appBottom);
                 const rack=await page.$eval('#wheel',wheel=>Array.from(wheel.querySelectorAll('.wheel-letter')).map(x=>x.textContent).sort().join(''));
-                assert.equal(rack.length,6);
+                assert.equal(rack.length,l<=8?6:7,'Wheel must adapt to six or seven available letters');
                 for(const word of bibleWords[l-1]){
                   await play(word);
                   await page.waitForSelector('#discovery[open]');
