@@ -306,7 +306,10 @@ function completeLevel(){
  }
  save.progress=null;store();ui();cue('complete');
  // Keep the everyday feedback gentle. The level-win celebration gets a distinct cadence.
- haptic([38,58,36,75,70]);confetti();
+ haptic([38,58,36,75,70]);
+ // Standalone V5 celebration is inside the top-layer dialog; avoid wasting
+ // behind-dialog confetti and keep the old burst only as a safe fallback.
+ if(!window.BUWTPolish?.celebrateWin)confetti();
  window.BUWTPolish?.event('complete',{level:index,reward});
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
