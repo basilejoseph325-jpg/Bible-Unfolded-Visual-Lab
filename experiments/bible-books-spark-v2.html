@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#092b34">
 <title>Genesis — Bible Books V2 Clean Crossword</title>
-<link rel="stylesheet" href="bible-books-spark-v2.css?v=20261107-clean-v2">
-<script src="bible-books-spark-v2.js?v=20261107-clean-v2" defer></script>
+<link rel="stylesheet" href="bible-books-spark-v2.css?v=20261107-large-tiles-v2b">
+<script src="bible-books-spark-v2.js?v=20261107-large-tiles-v2b" defer></script>
 </head>
 <body>
 <div id="app">
@@ -14,7 +14,7 @@
     <a class="back" href="../index.html" aria-label="Back to Visual Lab">‹</a>
     <div class="heading">
       <h1>Genesis</h1>
-      <span>LEVEL 1 • BIBLE BOOKS</span>
+      <span>BIBLE BOOKS · LEVEL 1 · <strong id="solved-count" aria-label="Words solved">0 / 4</strong></span>
     </div>
     <div class="top-actions">
       <div class="points" aria-label="Test points">✦ <strong id="points">0</strong></div>
@@ -22,11 +22,7 @@
     </div>
   </header>
   <main class="board-region" aria-label="Four connected crossword words">
-    <div class="board-meta">
-      <span id="solved-count" aria-label="Words solved">0 / 4</span>
-      <span class="test-caption">TEST V2</span>
-    </div>
-    <div id="board" class="board" aria-label="5 by 6 crossword puzzle"></div>
+    <div id="board" class="board" aria-label="5-column by 6-row crossword puzzle"></div>
     <button type="button" id="spark" class="spark-button" aria-label="A hidden Scripture Spark word is available" aria-expanded="false">
       <span class="star" aria-hidden="true">★</span>
       <span class="spark-label">SCRIPTURE<br>SPARK</span>
