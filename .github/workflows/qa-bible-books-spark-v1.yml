@@ -62,7 +62,9 @@ jobs:
                 const b=document.getElementById('board').getBoundingClientRect();
                 const w=document.getElementById('wheel').getBoundingClientRect();
                 const a=document.getElementById('app').getBoundingClientRect();
+                const square=document.querySelector('.tile').getBoundingClientRect();
                 return {boardTiles:document.querySelectorAll('.tile').length,
+                  tileSize:{width:square.width,height:square.height},
                   letters:[...document.querySelectorAll('.wheel-letter')].map(x=>x.textContent).sort().join(''),
                   progress:document.getElementById('solved-count').textContent,
                   points:document.getElementById('points').textContent,
@@ -75,6 +77,9 @@ jobs:
               const initial=await inspect();
               console.log('INITIAL',JSON.stringify(initial));
               assert.equal(initial.boardTiles,21);
+              assert(initial.tileSize.width>25 && initial.tileSize.height>25,
+                'Crossword tiles must be actual squares, not empty lines');
+              assert(Math.abs(initial.tileSize.width-initial.tileSize.height)<3);
               assert.equal(initial.letters,'ACINOT');
               assert.equal(initial.progress,'0 / 6');
               assert(initial.art.includes('01_genesis.webp'));
@@ -178,7 +183,36 @@ jobs:
               await page.click('#scroll-next');
               await play('CAIN');
               assert(await page.evaluate(()=>document.getElementById('scroll').open));
-              console.log('PASS Genesis single wheel all six crossings, regular bonus, optional CAIN, authentic NWT scroll, hint/shuffle, no saving');
+              await page.click('#scroll-next');
+              await page.click('#reset');
+              // Trace ACTION as one continuous finger swipe to confirm
+              // authentic Wordscapes-style input works with the fixed wheel.
+              const gesture=await page.evaluate(()=>{
+                const wheel=document.getElementById('wheel'),buttons=[...wheel.querySelectorAll('.wheel-letter')];
+                const points=[...'ACTION'].map(ch=>{
+                  const letter=buttons.find(x=>x.textContent===ch);
+                  if(!letter)throw Error('Wheel letter missing '+ch);
+                  const b=letter.getBoundingClientRect();
+                  return {letter,x:b.left+b.width/2,y:b.top+b.height/2};
+                });
+                const evt=(type,p)=>new PointerEvent(type,{
+                  bubbles:true,pointerId:891,pointerType:'touch',isPrimary:true,
+                  clientX:p.x,clientY:p.y
+                });
+                points[0].letter.dispatchEvent(evt('pointerdown',points[0]));
+                for(let i=1;i<points.length;i++)wheel.dispatchEvent(evt('pointermove',points[i]));
+                wheel.dispatchEvent(evt('pointerup',points[points.length-1]));
+                return {progress:document.getElementById('solved-count').textContent,
+                  wheelLetters:[...document.querySelectorAll('.wheel-letter')].map(x=>x.textContent).sort().join(''),
+                  boardLetters:document.querySelectorAll('.tile.found').length,
+                  open:document.getElementById('scroll').open};
+              });
+              console.log('SWIPE_ACTION',JSON.stringify(gesture));
+              assert.equal(gesture.progress,'1 / 6');
+              assert.equal(gesture.wheelLetters,'ACINOT');
+              assert.equal(gesture.boardLetters,6);
+              assert.equal(gesture.open,false);
+              console.log('PASS Genesis single wheel all six crossings, swipe and tap, normal bonus, optional CAIN, authentic NWT scroll, hint/shuffle, no saving');
               for(const [width,height] of [[360,740],[375,667]]){
                 await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
                 await new Promise(r=>setTimeout(r,120));
