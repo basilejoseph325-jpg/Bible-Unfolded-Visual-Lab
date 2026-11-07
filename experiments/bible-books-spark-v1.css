@@ -29,7 +29,7 @@ box-shadow:0 3px 9px #0007}
 .board-region{display:flex;align-items:center;justify-content:center;min-height:0;position:relative;padding:5px 8px 3px}
 .board{--tile:min(10.6vw,4.82dvh,44px);display:grid;grid-template-columns:repeat(6,var(--tile));grid-template-rows:repeat(7,var(--tile));
 gap:5px;align-items:center;justify-content:center;filter:drop-shadow(0 4px 6px #000a);touch-action:manipulation}
-.tile{border:2px solid #eed29bdf;border-radius:9px;display:grid;place-items:center;min-width:0;min-height:0;
+.tile{width:100%;height:100%;border:2px solid #eed29bdf;border-radius:9px;display:grid;place-items:center;min-width:0;min-height:0;
 background:linear-gradient(145deg,#15363cde,#07232dbb);color:#ffebc9;
 font:800 clamp(17px,5.1vw,25px)/1.05 Georgia,serif;text-shadow:0 2px #0008;
 box-shadow:inset 0 1px #ffffff2b,0 3px #0006;transition:background .22s,transform .16s,color .2s}
