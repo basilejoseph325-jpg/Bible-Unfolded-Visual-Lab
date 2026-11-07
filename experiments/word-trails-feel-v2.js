@@ -43,11 +43,13 @@ function audio(){
   if(!ctx){const C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
    ctx=new C();master=ctx.createGain();master.gain.value=EFFECTS_MIX_GAIN;
    // Gentle final-stage peak protection: keep several layered sounds from clipping.
-   limiter=ctx.createDynamicsCompressor();
-   limiter.threshold.value=-8;
-   limiter.knee.value=5;limiter.ratio.value=12;
-   limiter.attack.value=.003;limiter.release.value=.15;
-   master.connect(limiter);limiter.connect(ctx.destination);
+   try{
+    limiter=ctx.createDynamicsCompressor();
+    limiter.threshold.value=-8;
+    limiter.knee.value=5;limiter.ratio.value=12;
+    limiter.attack.value=.003;limiter.release.value=.15;
+    master.connect(limiter);limiter.connect(ctx.destination);
+   }catch(_){master.connect(ctx.destination)} // Safe fallback on older browsers.
   }
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   return ctx;
@@ -141,13 +143,14 @@ function coinFlight(origin,count=4){
   ],{duration:650+i*48,delay:i*40,easing:'cubic-bezier(.18,.7,.28,1)'}).onfinish=()=>dot.remove();
   setTimeout(()=>dot.remove(),1150);
  }
- // The tiny landing note is one quiet accent for the entire coin shower,
- // not one per flying coin. Never plays when SFX is muted or tab is hidden.
- const landing=setTimeout(()=>{pendingRewardSounds.delete(landing);cue('coinLand')},790);
- pendingRewardSounds.add(landing);
  $('points')?.classList.remove('feel-coin-arrive');void $('points')?.offsetWidth;
  $('points')?.classList.add('feel-coin-arrive');
  setTimeout(()=>$('points')?.classList.remove('feel-coin-arrive'),650);
+}
+function coinLanding(){
+ // A single coin arrival accent, even if visual effects are switched off.
+ const pending=setTimeout(()=>{pendingRewardSounds.delete(pending);cue('coinLand')},790);
+ pendingRewardSounds.add(pending);
 }
 function acclaim(word){
  if(!motion())return;
@@ -164,22 +167,26 @@ function label(word){
  setTimeout(()=>target.classList.remove('reveal'),920);
 }
 function event(name,data={}){
- if(name==='level'){activeCount=0;gestureTick=0;return}
+ if(name==='level'){
+  activeCount=0;gestureTick=0;
+  for(const pending of pendingRewardSounds)clearTimeout(pending);
+  pendingRewardSounds.clear();return;
+ }
  if(name==='correct'){activeCount++;acclaim(data.word);
   // A very gentle landing accent after the tile cascade starts.
   const landing=setTimeout(()=>{pendingRewardSounds.delete(landing);cue('wordSettle')},275);
   pendingRewardSounds.add(landing);
   if(activeCount===3){haptic([7,24,10])}
-  if(data.coins>0)coinFlight(rectMid($('board')),4);
+  if(data.coins>0){coinFlight(rectMid($('board')),4);coinLanding()}
   return;
  }
  if(name==='bonus'){activeCount++;
-  coinFlight(rectMid($('bonus-count')),4);
+  if(data.coins>0){coinFlight(rectMid($('bonus-count')),4);coinLanding()}
   const pip=$('bonus-pips');if(pip){pip.classList.remove('feel-pips-pop');void pip.offsetWidth;pip.classList.add('feel-pips-pop')}
   return;
  }
- if(name==='vault'){cue('vault');coinFlight(rectMid($('bonus-count')),6);haptic([7,25,12]);return}
- if(name==='spark'){coinFlight(rectMid($('spark')),6);return}
+ if(name==='vault'){cue('vault');coinFlight(rectMid($('bonus-count')),6);coinLanding();haptic([7,25,12]);return}
+ if(name==='spark'){coinFlight(rectMid($('spark')),6);coinLanding();return}
  if(name==='hint'){acclaim();return}
  if(name==='wrong'){activeCount=0;return}
  if(name==='complete'){activeCount=0;return}
