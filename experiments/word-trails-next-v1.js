@@ -397,6 +397,7 @@ function finishWord(word){
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
  flash((bibleAnswer?'★ BIBLE WORD · ':'✦ ')+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
  cue('correct');haptic(15);
+ if(found.size===3||found.size===6)window.BUWTAnnouncer?.play?.('youre_on_a_roll');
  if(found.size===level.words.length&&!completionShown){
   completionShown=true;locked=true;
   setTimeout(()=>completeLevel(),780);
@@ -417,6 +418,7 @@ function submit(){
   save.coins+=25;ui();storeProgress();
   window.BUWTPolish?.event('spark',{word});
   cue('spark');haptic([16,28,16]);
+  window.BUWTAnnouncer?.play?.('another_discovery');
   const r=$('spark').getBoundingClientRect(),a=$('app').getBoundingClientRect();
   burst(r.left-a.left+r.width/2,r.top-a.top+r.height/2);
   openSpark(bible,true);return;
@@ -457,6 +459,7 @@ function completeLevel(){
   save.unlocked=Math.min(LEVELS.length-1,Math.max(save.unlocked,index+1));
  }
  save.progress=null;store();ui();cue('complete');
+ window.BUWTAnnouncer?.play?.('chapter_complete',{milestone:true});
  // Keep the everyday feedback gentle. The level-win celebration gets a distinct cadence.
  haptic([38,58,36,75,70]);
  // Standalone V5 celebration is inside the top-layer dialog; avoid wasting
