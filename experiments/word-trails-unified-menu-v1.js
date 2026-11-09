@@ -100,7 +100,7 @@ function perform(action){
   case 'back':show('menu');break;
   case 'levels':close();$('level-map')?.click();break;
   case 'rewards':show('rewards');break;
-  case 'settings':close();window.BUWTPolish?.openSettings();break;
+  case 'settings':close();if(window.BUWTMainSettings)window.BUWTMainSettings.open();else window.BUWTPolish?.openSettings();break;
   case 'help':show('help');break;
   case 'home':go('');break;
   case 'journey':go('journey');break;
