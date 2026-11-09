@@ -137,14 +137,14 @@ function paintMist(s,t){
   ctx.fillRect(grain.x-q/2,grain.y-q/2,q,q);
  }
  ctx.globalAlpha=1;
- if(!s.history.length&&!s.grains.length)cleanup(s);
+ if(!s.history.length&&!s.grains.length&&!s.down)cleanup(s);
 }
 function tick(t){
  raf=0;
  const s=active||closing;
  if(s?.canvas?.isConnected)paintMist(s,t);
  if(active){paintRibbon()}
- if(active||closing?.canvas?.isConnected)raf=requestAnimationFrame(tick);
+ if((active?.canvas?.isConnected&&(active.history.length||active.grains.length))||closing?.canvas?.isConnected)raf=requestAnimationFrame(tick);
 }
 function schedule(){
  if(!raf)raf=requestAnimationFrame(tick);
@@ -154,7 +154,7 @@ function begin(e){
  const w=wheel();if(!w)return;
  const rect=w.getBoundingClientRect(),touch=e.pointerType==='touch';
  active={id:e.pointerId,wheel:w,x:e.clientX-rect.left,y:e.clientY-rect.top,
-  sx:e.clientX,sy:e.clientY,moved:false,fingerGap:touch?18:0,
+  sx:e.clientX,sy:e.clientY,moved:false,down:true,fingerGap:touch?18:0,
   history:[],grains:[],canvas:null};
  if(motion()){
   const c=document.createElement('canvas');c.className='bu3823-mist';
@@ -177,7 +177,7 @@ function move(e){
 }
 function finish(e,show){
  const s=active;if(!s||e?.pointerId!==s.id)return;
- active=null;closing=s;
+ s.down=false;active=null;closing=s;
  if(show&&s.moved&&motion()){
   for(let i=0;i<7;i++){
    const a=i*2*Math.PI/7,dist=15+i%3*7;
