@@ -1,4 +1,5 @@
 /* Visual Lab QA candidate: 30 Bible levels, milestone prizes and authentic announcer clips.
+   Visual Lab thirty-level regression runner verifies puzzle completion and save persistence.
    LIVE RELEASE BLOCKED until docs/WORD_TRAILS_PRE_LIVE_SHARED_CORE_RELEASE_GATE.md
    is satisfied; TEST gameplay uses its own protected test coins. */
 /* BIBLE UNFOLDED | WORD TRAILS NEXT V1
