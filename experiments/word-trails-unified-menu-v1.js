@@ -124,6 +124,12 @@ function build(){
 }
 function init(){
  build();refresh();
+ const back=document.querySelector('#app .back');
+ if(back)back.addEventListener('click',event=>{
+  const native=nativeShell();if(!native)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  native.close(); // Exit the real native shell; never load another homepage inside the frame.
+ },true);
  const trigger=$('audio');if(trigger){
   trigger.textContent='☰';trigger.title='Bible Unfolded menu';
   trigger.setAttribute('aria-label','Open Bible Unfolded menu');
