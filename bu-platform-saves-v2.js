@@ -39,6 +39,9 @@ function validateTrails(raw){
  for(const k of ['coins','points'])if(!safeNum(s[k]))throw Error('Word Trails TEST '+k+' is invalid.');
  const fields=['completed','sparks','claimedSparks','boardBible','paidWords','paidBonuses','claimedFreeHints'];
  for(const k of fields){
+  // Older Word Trails prototypes did not save every discovery/bonus ledger.
+  // Preserve the original raw save; the current game supplies missing arrays.
+  if(s[k]===undefined)continue;
   if(!Array.isArray(s[k])||s[k].length>6000)throw Error('Word Trails '+k+' is invalid.');
   for(const item of s[k]){
    if(typeof item==='number'){if(!Number.isSafeInteger(item)||item<0||item>29)throw Error('Bad Word Trails '+k+' level.')}
@@ -49,10 +52,11 @@ function validateTrails(raw){
  if(s.progress!==null&&s.progress!==undefined){
   if(!own(s.progress)||!Number.isInteger(s.progress.level)||s.progress.level<0||s.progress.level>29)throw Error('Word Trails in-progress level is invalid.');
   for(const k of ['found','bonuses','hinted']){
+   if(s.progress[k]===undefined)continue;
    if(!Array.isArray(s.progress[k])||s.progress[k].length>120||
       s.progress[k].some(x=>typeof x!=='string'||x.length>40||!/^[A-Z0-9:]+$/i.test(x)))throw Error('Word Trails unfinished '+k+' is invalid.');
   }
-  if(!safeNum(s.progress.combo)||s.progress.combo>1000)throw Error('Word Trails combo is invalid.');
+  if(s.progress.combo!==undefined&&(!safeNum(s.progress.combo)||s.progress.combo>1000))throw Error('Word Trails combo is invalid.');
  }
  return {present:true,level:s.level+1,coins:s.coins,completedCount:new Set(s.completed).size};
 }
