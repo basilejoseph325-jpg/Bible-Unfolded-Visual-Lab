@@ -190,7 +190,7 @@ jobs:
              claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
             await page.click('#next-level');
             await page.waitForSelector('#map[open]');
-            assert.equal(await page.$eval('#map .map-level',e=>e.length),30);
+            assert.equal(await page.evaluate(()=>document.querySelectorAll('#map .map-level').length),30);
             await page.click('#map-x');
             for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
              await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
