@@ -18,7 +18,7 @@ jobs:
           core=Path('bible_unfolded_core_part5.js').read_text()
           m=re.search(r'const BU382_EMBEDDED_VOICES\s*=\s*(\{[\s\S]*?\});',core)
           if not m:raise SystemExit('Original voice clip bank missing. Do not substitute voices.')
-          bank=m.group(1)
+          bank=m.group(1).removesuffix(';')
           clips=re.findall(r'([a-z]+_(?:excellent_thinking|another_discovery|youre_on_a_roll|chapter_complete|beautifully_done))["\']?\s*:',bank)
           print('SOURCE_BANK_BYTES',len(bank),'VOICE_KEYS_FOUND',len(clips))
           assert len(bank)>100000
