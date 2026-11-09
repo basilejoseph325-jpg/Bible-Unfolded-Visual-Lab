@@ -13,7 +13,11 @@ const css=[
  '#cross-pick #wt-next-entry>button{display:block!important;width:100%!important;border:none!important;border-top:1px solid #d2b27260!important;border-radius:0!important;padding:11px!important;background:#113945!important;color:#ead8b1!important;font:750 11px system-ui,sans-serif!important;box-sizing:border-box!important}',
  '#cross-pick:not(.wt-next-compare) .cross-pack-list{display:none!important}',
  '#cross-pick:not(.wt-next-compare) .mode-source{display:none!important}',
- '#cross-pick.wt-next-compare .cross-pack-list{display:flex!important}'
+ '#cross-pick.wt-next-compare .cross-pack-list{display:flex!important}',
+ // Only the home card poster changes: keep title, icon, teal panel, button and gold frame.
+ '#home #home-cross .cinematic-poster.art-cross{position:relative!important;overflow:hidden!important;background-image:linear-gradient(180deg,rgba(2,21,30,.05),rgba(3,22,29,.20)),url("bible-book-art/01_genesis.webp")!important;background-position:center center!important;background-size:cover!important}',
+ '#home #home-cross .cin-cross-letters{display:none!important}',
+ '#home #home-cross .cinematic-poster.art-cross::after{content:"";display:block;position:absolute;inset:0;background:url("assets/ui/word-trails-home-next-crossword-v1.svg?v=nov09-card1") center/100% 100% no-repeat;z-index:2;pointer-events:none}'
 ].join('\n');
 function install(){
  const page=document.getElementById('cross-pick');
