@@ -247,7 +247,7 @@ async function acceptFile(nativeHandler,picker,event){
   const comparison=c?'Current wallet: '+c.insightTokens+' Insight Tokens and '+c.points+' Points. ':'';
   const t=plan.incomingWordTrails;
   const test=t.present?'Imported Word Trails: '+t.completedCount+' completed levels, '+t.coins+' TEST coins. ':'No Word Trails progress in this file. ';
-  if(!confirm('Import complete Visual Lab TEST backup? Matching saved progress is replaced. Existing purchased wheel ownership is kept.\n\n'+comparison+wallet+'\n'+test+'\nTEST coins will NOT become real Insight Tokens.\n\nExport your current backup first if you need to keep it.'))return;
+  if(!confirm('Import complete Visual Lab TEST backup? Matching saved progress is replaced. Existing purchased wheel ownership is kept.\n\n'+comparison+wallet+'\n'+test+'\nTEST coins will NOT become real Insight Tokens.\n\nIMPORTANT: TEST and LIVE share a GitHub Pages browser-storage origin. Importing the native wallet here also changes the saved native wallet visible in LIVE on this device.\n\nExport your current backup first if you need to keep it.'))return;
   const result=applyBackup(value);
   if(result.unchanged)notice('This backup is already present; no balances were changed.');
  }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message)}
