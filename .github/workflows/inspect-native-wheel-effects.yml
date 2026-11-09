@@ -29,13 +29,17 @@ jobs:
             ('selection','selection-line'),
             ('ocean','seawheel')
           ]
-          for file in files:
-            s=file.read_text(errors='replace')
-            print('FILE_LEN',file,len(s))
-            for key,phrase in terms:
-              places=[m.start() for m in re.finditer(re.escape(phrase),s,re.I)]
-              print('COUNT',file.name,key,len(places))
-              limit=12 if key=='native-theme' else 5 if key in ['curved-trace','curve-cubic','svg-curve','glitter','wheel-sparks','selection','ocean'] else 2
-              for p in places[:limit]:
-                print('MATCH',file.name,key,p,repr(s[max(0,p-440):p+1150].replace('\n',' ')[:1530]))
+          html=files[0].read_text(errors='replace')
+          for start,end in [
+            ('<style id="bu3821-wheel-finishes">','</style>'),
+            ('<style id="bu3822-fluid-wheel-css">','</style>')
+          ]:
+            a=html.index(start);b=html.index(end,a)+len(end)
+            print('COMPLETE_NATIVE_CSS',start,'AT',a,repr(html[a:b][:9600]))
+          for token in ['bu3822Render','bu3822','bu3821Trace','bu3821','quadraticCurveTo']:
+            indexes=[m.start() for m in re.finditer(re.escape(token),html)]
+            last=[p for p in indexes if p>1500000]
+            print('NATIVE_JS_TOKEN',token,'COUNT',len(indexes),'JS_COUNT',len(last))
+            for p in last[:2]:
+              print('NATIVE_JS_CONTEXT',token,'AT',p,repr(html[max(0,p-1700):p+5200][:6800].replace('\\n',' ')))
           PY
