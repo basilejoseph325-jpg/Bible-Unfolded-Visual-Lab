@@ -1,0 +1,80 @@
+name: QA Word Trails Journey Seal Visual Screenshots
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-visual-polish.yml'
+      - 'experiments/word-trails-next-v1.css'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+permissions: {contents: read}
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Review real phone-size Journey Seal and scenic map
+        run: |
+          npm install --prefix /tmp/wt-visual puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8914 --bind 127.0.0.1 >/tmp/wt-visual-server.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/wt-visual/node_modules/puppeteer-core');
+          const {execSync}=require('node:child_process');
+          const assert=require('node:assert/strict');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              const errors=[];page.on('pageerror',e=>errors.push(e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              const url='http://127.0.0.1:8914/experiments/word-trails-next-v1.html';
+              await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
+              await page.evaluate(()=>{
+                const key='bu-visual-lab-wordtrails-next-v1',save=JSON.parse(localStorage.getItem(key));
+                save.level=14;save.unlocked=14;save.progress=null;save.coins=1050;
+                localStorage.setItem(key,JSON.stringify(save));
+              });
+              await page.goto(url+'?visual=1',{waitUntil:'networkidle0',timeout:120000});
+              const level=await page.evaluate(()=>window.BUWTAdditionalLevels[3]);
+              assert.equal(level.title,'A Shepherd Called');
+              for(const [word] of level.words)await page.evaluate(w=>{
+                for(const ch of w){
+                  const b=[...document.querySelectorAll('.wheel-letter')]
+                    .find(x=>x.textContent===ch&&!x.classList.contains('selected'));
+                  if(!b)throw Error('missing '+ch+' for '+w);
+                  b.click();
+                }
+                document.querySelector('#submit').click();
+              },word);
+              await page.waitForSelector('#finish[open]',{timeout:13000});
+              const bounds=await page.evaluate(()=>{
+                const rect=el=>{const r=el.getBoundingClientRect();return {top:r.top,bottom:r.bottom,height:r.height}};
+                const panel=document.querySelector('#finish .finish-panel');
+                return {dialog:rect(document.querySelector('#finish')),
+                panel:rect(panel),seal:rect(document.querySelector('#finish-seal')),
+                action:rect(document.querySelector('#next-level')),
+                name:document.querySelector('#finish-seal-title').textContent,
+                scrollPanel:panel.scrollHeight-panel.clientHeight,
+                visible:!document.querySelector('#finish-seal').hidden};
+              });
+              console.log('MILESTONE_PHONE_LAYOUT',JSON.stringify(bounds));
+              assert(bounds.visible&&bounds.name==='Wisdom Lantern');
+              assert(bounds.action.bottom<=bounds.panel.bottom+3 || bounds.scrollPanel>0,
+                'Win action should fit, or remain scrollable inside dialog');
+              const shot=(await page.screenshot({type:'jpeg',quality:67})).toString('base64');
+              for(let i=0;i<shot.length;i+=7600)console.log('WT_SEAL_SCREEN_'+(i/7600)+' '+shot.slice(i,i+7600));
+              await page.click('#next-level');
+              await page.click('#level-map');
+              await page.waitForSelector('#map[open]');
+              await page.evaluate(()=>document.querySelectorAll('.map-level')[14].scrollIntoView({block:'center'}));
+              const scene=(await page.screenshot({type:'jpeg',quality:67})).toString('base64');
+              for(let i=0;i<scene.length;i+=7600)console.log('WT_MAP_SCREEN_'+(i/7600)+' '+scene.slice(i,i+7600));
+              assert.equal(errors.length,0,'Page errors: '+errors.join('; '));
+              console.log('PASS scenic level map and milestone reward screen at 390 x 705');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{await browser?.close()}
+          })();
+          JS
