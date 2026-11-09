@@ -36,10 +36,6 @@ jobs:
           ]:
             a=html.index(start);b=html.index(end,a)+len(end)
             print('COMPLETE_NATIVE_CSS',start,'AT',a,repr(html[a:b][:9600]))
-          for token in ['bu3822Render','bu3822','bu3821Trace','bu3821','quadraticCurveTo']:
-            indexes=[m.start() for m in re.finditer(re.escape(token),html)]
-            last=[p for p in indexes if p>1500000]
-            print('NATIVE_JS_TOKEN',token,'COUNT',len(indexes),'JS_COUNT',len(last))
-            for p in last[:2]:
-              print('NATIVE_JS_CONTEXT',token,'AT',p,repr(html[max(0,p-1700):p+5200][:6800].replace('\\n',' ')))
+          for label,a,b in [('NATIVE_FLUID_SCRIPT',339800,348900),('NATIVE_MIST_SCRIPT',8323500,8328800)]:
+            print(label,repr(html[a:b]))
           PY
