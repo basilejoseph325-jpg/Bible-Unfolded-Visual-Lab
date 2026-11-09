@@ -33,18 +33,18 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   }))));
   const data=await page.evaluate((args)=>{
    const original=()=>Object.fromEntries(Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).map(k=>[k,localStorage.getItem(k)]));
-   localStorage.setItem(args.WK,JSON.stringify(args.wallet(800,600,['seawheel'])));
+   localStorage.setItem(args.WK,JSON.stringify(args.wallet));
    localStorage.setItem(args.RK,JSON.stringify(args.wallet(800,600,['seawheel'])));
    localStorage.setItem(args.OK,JSON.stringify({version:1,owned:['seawheel']}));
    localStorage.setItem(args.OB,JSON.stringify({version:1,owned:['seawheel']}));
-   localStorage.setItem(args.TEST,JSON.stringify(args.fixture(107)));
+   localStorage.setItem(args.TEST,JSON.stringify(args.fixture));
    localStorage.setItem(args.FEEL,JSON.stringify({music:true,sfx:true,musicVolume:42,sfxVolume:20,motion:true,haptics:true}));
    const before=JSON.stringify(original());
    const backup=window.BUPlatformSaves.makeBackup();
    const preview=window.BUPlatformSaves.dryRun(backup);
    const after=JSON.stringify(original());
    return {backup,preview,beforeEqualsAfter:before===after};
-  },{WK,RK,OK,OB,TEST,FEEL,wallet:wallet.toString(),fixture:fixture.toString()}).catch(()=>null);
+  },{WK,RK,OK,OB,TEST,FEEL,wallet:wallet(800,600,['seawheel']),fixture:fixture(107)}).catch(()=>null);
   // Avoid source-evaluation shortcuts: the fixture data is seeded with safe literals below.
   if(!data)throw Error('Unexpected failure seeding browser save fixture');
   assert.equal(data.beforeEqualsAfter,true);
