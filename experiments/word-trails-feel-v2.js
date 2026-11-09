@@ -327,12 +327,13 @@ function celebrateWin(){
  winTimers.push(cleanup);
 }
 function state(){return {...pref}}
-function change(name,value){
+function change(name,value,{silent=false}={}){
  if(!Object.prototype.hasOwnProperty.call(DEF,name))return;
  if(name.endsWith('Volume'))pref[name]=bound(value);else pref[name]=!!value;
- save();sync();if(name==='music'||name==='musicVolume')onMusicChange();
- if(name==='sfx'&&pref.sfx)cue('correct');
- if(name==='sfxVolume')cue('touch');
+ save();sync();
+ if(name==='music'||name==='musicVolume')onMusicChange();
+ if(!silent&&name==='sfx'&&pref.sfx)cue('correct');
+ if(!silent&&name==='sfxVolume')cue('touch');
 }
 function settings(){
  const dlg=$('wt-feel-settings');if(!dlg)return;
@@ -388,7 +389,7 @@ document.addEventListener('visibilitychange',()=>{
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',makeSettings,{once:true});
 else makeSettings();
 window.BUWTPolish=Object.freeze({
- cue,event,celebrateWin,clearWinFX,openSettings:settings,mixGain:()=>EFFECTS_MIX_GAIN,
+ cue,event,celebrateWin,clearWinFX,openSettings:settings,setPreference:change,mixGain:()=>EFFECTS_MIX_GAIN,
  voiceBoost:()=>VOICE_LOUDNESS_BOOST,featureBoost:cueBoost,audioMeter,
  musicEnabled:()=>!!pref.music&&pref.musicVolume>0,
  musicVolume:()=>pref.musicVolume,sfxEnabled:()=>!!pref.sfx,sfxVolume:()=>pref.sfxVolume,
