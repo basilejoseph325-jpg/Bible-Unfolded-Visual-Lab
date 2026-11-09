@@ -158,6 +158,51 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   console.log('RESTORED_PUZZLE_IN_REAL_GAME',JSON.stringify(progress));
   console.log('TEST_SAVE_AFTER_CHILD_LOAD',JSON.stringify(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'))));
   assert.equal(progress.level,'LEVEL 1 / 30');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');
+  // Older TEST saves lacked the later claimedSparks/boardBible ledgers.
+  const legacyWT=await page.evaluate(()=>{
+   const source=window.BUPlatformSaves.makeBackup();
+   const game=JSON.parse(source.extensions.wordTrailsNext.state);
+   delete game.claimedSparks;delete game.boardBible;delete game.paidBonuses;
+   source.extensions.wordTrailsNext.state=JSON.stringify(game);
+   return window.BUPlatformSaves.dryRun(source).incomingWordTrails;
+  });
+  assert(legacyWT.present&&legacyWT.coins===177);
+  console.log('LEGACY_WORD_TRAILS_OLD_SCHEMA',JSON.stringify(legacyWT));
+
+  await page.evaluate(()=>window.BUWTNativeShell.close());
+  await page.evaluate(()=>document.getElementById('save-export').click());
+  const exportedStatus=await page.$eval('#bu-wt-save-status',e=>e.textContent);
+  assert(exportedStatus.includes('Complete TEST backup prepared'));
+  console.log('NATIVE_SETTINGS_EXPORT_CONTROL',exportedStatus);
+
+  // Exercise the user-facing input, not just the pure import function.
+  const incoming=JSON.parse(JSON.stringify(report.candidate));
+  incoming.extensions.wordTrailsNext.state=JSON.stringify({
+   ...JSON.parse(incoming.extensions.wordTrailsNext.state),coins:199
+  });
+  const nav=page.waitForNavigation({waitUntil:'domcontentloaded',timeout:30000});
+  await page.evaluate((payload)=>{
+   const input=document.getElementById('save-file'),dt=new DataTransfer();
+   dt.items.add(new File([JSON.stringify(payload)],'v2-test-import.json',{type:'application/json'}));
+   input.files=dt.files;
+   window.confirm=()=>true;
+   input.dispatchEvent(new Event('change',{bubbles:true}));
+  },incoming);
+  await nav;
+  await page.waitForFunction(()=>window.BUPlatformSaves?.bound?.(),{timeout:30000});
+  const uiImported=await page.evaluate(()=>{
+   const w=JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17'));
+   const t=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
+   return {coins:w.coins,points:w.points,testCoins:t.coins,purchases:w.purchases,
+      journal:localStorage.getItem('bu-visual-lab-import-rollback-v2'),
+      file:document.getElementById('save-file')?.value};
+  });
+  console.log('NATIVE_SETTINGS_V2_IMPORT_CONTROL',JSON.stringify(uiImported));
+  assert.equal(uiImported.coins,130);
+  assert.equal(uiImported.testCoins,199);
+  assert(uiImported.purchases.includes('seawheel')&&uiImported.purchases.includes('goldwheel'));
+  assert.equal(uiImported.journal,null);
+
   if(errors.length)console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,8)));
   await page.close();
   console.log('PASS coordinated TEST save v2 native/Word Trails, legacy compatibility, idempotence, rollback and real puzzle resume');
