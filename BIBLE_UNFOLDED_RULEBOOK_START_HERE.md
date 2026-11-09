@@ -1,4 +1,8 @@
 # BIBLE UNFOLDED — PERMANENT HEADQUARTERS RULEBOOK
+## CRITICAL — WORD TRAILS NEXT LIVE RELEASE BLOCKER (owner directive, Nov 9, 2026)
+
+**Before Word Trails NEXT is moved from Visual Lab to LIVE, complete shared-core architecture integration. This is a mandatory release gate—not optional cleanup.** The owner explicitly instructed that we remember this. Word Trails owns its unique crossword gameplay, but must not keep separate replacements for the normal Bible Unfolded menu, settings, music/audio, shared rewards wallet, existing wheel ownership/equip state, and coordinated save systems. Ensure purchased effects (especially Ocean Glow: curved trace, glow, glitter) remain identical; preserve existing live rewards/progress and test on Samsung Android and iPhone Safari. No live promotion until owner approval, verified rollback, and the checklist in [docs/WORD_TRAILS_PRE_LIVE_SHARED_CORE_RELEASE_GATE.md](docs/WORD_TRAILS_PRE_LIVE_SHARED_CORE_RELEASE_GATE.md) is complete. **Release status: BLOCKED.** TEST game may continue safely.
+
 ## Binding Addendum: Mandatory Preflight, Deployment Verification and New-Chat Startup
 **Owner directive: November 3, 2026.** This addendum supplements the existing BIBLE_UNFOLDED_PERMANENT_HEADQUARTERS_RULEBOOK and James's original addendum; it replaces or weakens nothing. Keep both originals intact. This GitHub copy is a persistent, easy-to-retrieve operational entry point, not a replacement for the complete archived rulebook.
 
