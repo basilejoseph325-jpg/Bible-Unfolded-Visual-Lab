@@ -4,16 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#092b34">
-<script>
-/* Visual Lab only: unlike the other modes, NEXT lives in a standalone page.
-   Treat a browser refresh as a fresh visit to the Visual Lab homepage,
-   preserving test coins and in-progress crossword in localStorage. */
-(()=>{try{
- const entry=performance.getEntriesByType('navigation')[0];
- const reloading=entry?.type==='reload'||(!entry&&performance.navigation?.type===1);
- if(reloading)location.replace('../index.html?wt_home_refresh='+Date.now());
-}catch(_){}})();
-</script>
+<!-- Reload resumes this same Word Trails puzzle from its protected local save. -->
+
 <meta name="description" content="Bible Unfolded Visual Lab — next-generation Word Trails puzzle preview.">
 <title>Word Trails NEXT · 30 Bible Levels • Bible Unfolded</title>
 <link rel="stylesheet" href="word-trails-next-v1.css?v=scenic-map-seals-v8">
