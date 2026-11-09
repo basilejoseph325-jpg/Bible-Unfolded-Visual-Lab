@@ -256,13 +256,17 @@ jobs:
                 await page.click('#next-level');
               }
               await page.click('#next-level');
+              assert((await page.$eval('#level-label',el=>el.textContent)).includes('LEVEL 12'),'Eleven-level regression should continue into new level 12');
+              await page.click('#level-map');
               await page.waitForSelector('#map[open]');
               const buttons=await page.$$eval('.map-level',els=>els.map(el=>({disabled:el.disabled,complete:el.classList.contains('complete')})));
               assert.equal(buttons.length,30,'Level map should now contain thirty cards');
-              assert(buttons.every(x=>!x.disabled&&x.complete),'All eleven levels must unlock and complete');
+              assert(buttons.slice(0,11).every(x=>!x.disabled&&x.complete),'All original eleven levels must be completed');
+              assert(!buttons[11].disabled&&!buttons[11].complete,'Next level 12 must be unlocked, not pre-completed');
+              assert(buttons.slice(12).every(x=>x.disabled),'Later Bible levels must remain locked in the 11-level regression');
               const store=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),savedKey);
               assert.equal(store.completed.length,11);
-              assert.equal(store.unlocked,10);
+              assert.equal(store.unlocked,11);
               assert.equal(store.claimedSparks.length,23,'All 23 hidden Bible words should persist');
               assert.equal(store.boardBible.length,8,'Eight Bible answers must be discovered within crossword boards');
               console.log('ELEVEN_LEVELS_PASS',JSON.stringify({
@@ -316,7 +320,7 @@ jobs:
               // After the original approved 5x5 phone checks, verify the new 7x7
               // Bible board on each handset size without altering the letter wheel.
               await page.click('#level-map');
-              await page.evaluate(()=>document.querySelector('.map-level:last-child').click());
+              await page.evaluate(()=>document.querySelectorAll('.map-level')[10].click());
               assert((await page.$eval('#level-label',e=>e.textContent)).includes('LEVEL 11'));
               for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
                 await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
