@@ -28,13 +28,16 @@ function install(){
  const style=document.createElement('style');style.id='wt-next-launch-style';style.textContent=css;
  document.head.appendChild(style);
  const section=document.createElement('section');section.id='wt-next-entry';
- section.innerHTML='<a href="'+PATH+'" aria-label="Play the new eight-level Word Trails test">'+
+ section.innerHTML='<a href="'+PATH+'" aria-label="Play the new 30-level Word Trails test">'+
  '<span class="wt-next-kicker">VISUAL LAB · NEW GAMEPLAY TEST</span>'+
  '<strong class="wt-next-title">Word Trails NEXT</strong>'+
- '<span class="wt-next-copy">11 crossword levels · bigger Bible puzzles · Scripture words · rewards · original sounds</span>'+
+ '<span class="wt-next-copy">30 crossword levels · bigger Bible puzzles · Scripture words · rewards · original sounds</span>'+
  '<span class="wt-next-go">PLAY THE NEW VERSION →</span></a>'+
  '<button type="button" id="wt-next-compare" aria-expanded="false">Show previous Word Trails for comparison</button>';
  scroll.prepend(section);
+ section.querySelector('a[href="'+PATH+'"]').addEventListener('click',event=>{
+  if(window.BUWTNativeShell?.launch?.()){event.preventDefault()}
+ });
  section.querySelector('#wt-next-compare').addEventListener('click',()=>{
   const open=page.classList.toggle('wt-next-compare'),b=section.querySelector('#wt-next-compare');
   b.textContent=open?'Hide previous Word Trails':'Show previous Word Trails for comparison';
@@ -61,7 +64,7 @@ function routeHomeCard(){
   try{window.BUPremiumSFX?.play?.('navigate')}catch(_){}
   // Word Trails is a separate HTML document; allow the navigation sample to
   // actually start playing before unloading the original game document.
-  window.setTimeout(()=>window.location.assign(PATH),235);
+  window.setTimeout(()=>{if(!window.BUWTNativeShell?.launch?.())window.location.assign(PATH)},235);
  },true);
 }
 routeHomeCard();
