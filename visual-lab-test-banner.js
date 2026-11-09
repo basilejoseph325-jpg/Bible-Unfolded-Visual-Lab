@@ -127,3 +127,28 @@ else install();
  el.src='bu-platform-saves-v2.js?v=20261109-test-safe-backup-v2';
  el.defer=true;document.head.appendChild(el);
 })();
+
+
+/* TEST-only canonical direct-link + refresh continuation.  A published standalone
+   Word Trails link redirects to the real native root, and the root opens its
+   same-origin crossword frame using the actual global menu/settings/announcer.
+   Only explicit Word Trails requests activate the host. */
+(()=>{'use strict';
+ const params=new URLSearchParams(location.search);
+ const direct=params.get('wt_launch')==='native';
+ if(!direct && location.hash!=='#word-trails')return;
+ if(direct){
+  params.delete('wt_launch');
+  const query=params.toString();
+  history.replaceState(history.state,'',location.pathname+(query?'?'+query:'')+location.hash);
+ }
+ let attempts=0;
+ function launch(){
+  const host=window.BUWTNativeShell;
+  if(host?.nativeReady?.()&&host?.launch?.())return;
+  if(++attempts<48)setTimeout(launch,250);
+  else console.warn('Word Trails native shell was unavailable; use the main Word Trails card.');
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',launch,{once:true});
+ else launch();
+})();
