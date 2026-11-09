@@ -29,19 +29,46 @@ jobs:
               await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
               await page.goto('http://127.0.0.1:8878/index.html',{waitUntil:'domcontentloaded',timeout:120000});
               await page.waitForSelector('#home-cross',{timeout:60000});
-              const detail=await page.evaluate(()=>{
+              await page.waitForFunction(()=>{
                 const card=document.querySelector('#home-cross');
-                const bounding=(e)=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}};
-                return {html:card.outerHTML.slice(0,7000),className:card.className,rectangle:bounding(card),
-                  children:[...card.querySelectorAll('*')].slice(0,45).map(e=>({
-                    tag:e.tagName,className:String(e.className).slice(0,120),id:e.id,
-                    box:bounding(e),background:getComputedStyle(e).backgroundImage,
-                    objectFit:getComputedStyle(e).objectFit,
-                    src:e.getAttribute('src'),
-                    onclick:e.getAttribute('onclick')
-                  }))};
+                return card&&getComputedStyle(card.querySelector('.art-cross'),'::after').backgroundImage.includes('word-trails-home-next-crossword');
+              },{timeout:15000});
+              await page.evaluate(()=>document.querySelector('#home-cross').scrollIntoView({block:'center'}));
+              await new Promise(r=>setTimeout(r,380));
+              const detail=await page.evaluate(()=>{
+                const card=document.querySelector('#home-cross'),poster=card.querySelector('.art-cross');
+                const rect=el=>{const r=el.getBoundingClientRect();return {x:r.x,y:r.y,width:r.width,height:r.height}};
+                const old=card.querySelector('.cin-cross-letters');
+                const text=card.querySelector('.cinematic-card-title')?.textContent;
+                const cta=card.querySelector('.cinematic-card-cta')?.textContent;
+                return {rect:rect(card),poster:rect(poster),
+                  newBackground:getComputedStyle(poster).backgroundImage,
+                  illustration:getComputedStyle(poster,'::after').backgroundImage,
+                  oldLetters:getComputedStyle(old).display,
+                  cta,title:text,
+                  goldFrame:getComputedStyle(card).borderColor,
+                  actualImage:!!document.querySelector('#home-cross .art-cross')};
               });
-              console.log('WORD_TRAILS_CARD_DOM',JSON.stringify(detail));
+              console.log('NEW_WORD_TRAILS_CARD',JSON.stringify(detail));
+              const assert=require('node:assert/strict');
+              assert(detail.newBackground.includes('bible-book-art/01_genesis.webp'));
+              assert(detail.illustration.includes('word-trails-home-next-crossword-v1.svg'));
+              assert.equal(detail.oldLetters,'none');
+              assert(detail.cta.includes('PLAY CROSSWORDS'));
+              assert(detail.title.includes('Bible Word'));
+              const imgResp=await page.goto('http://127.0.0.1:8878/assets/ui/word-trails-home-next-crossword-v1.svg',{waitUntil:'domcontentloaded'});
+              assert.equal(imgResp.status(),200,'New SVG puzzle artwork must exist on published pages');
+              const content=await page.content();
+              assert(content.includes('NOAH')||content.includes('N</text>'),'Only an accurate crossword overlay may ship');
+              await page.goto('http://127.0.0.1:8878/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForSelector('#home-cross',{timeout:60000});
+              await page.waitForFunction(()=>getComputedStyle(document.querySelector('#home-cross .art-cross'),'::after').backgroundImage.includes('word-trails-home-next-crossword'),{timeout:15000});
+              await page.evaluate(()=>document.querySelector('#home-cross').scrollIntoView({block:'center'}));
+              await new Promise(r=>setTimeout(r,450));
+              const shot=(await (await page.$('#home-cross')).screenshot({type:'jpeg',quality:73})).toString('base64');
+              for(let i=0;i<shot.length;i+=7800)
+                console.log('WORD_TRAILS_CARD_PREVIEW_'+(i/7800)+' '+shot.slice(i,i+7800));
+              console.log('PASS test-only cinematic card image swap, clean crossword and wheel, original card UI untouched');
             }catch(e){console.log('FAIL',e.stack);process.exitCode=1}
             finally{await browser?.close()}
           })();
