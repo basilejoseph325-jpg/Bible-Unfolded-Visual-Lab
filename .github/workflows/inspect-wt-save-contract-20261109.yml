@@ -1,0 +1,41 @@
+name: Inspect Word Trails Save and Native Export-Import Contracts
+on:
+  push:
+    paths: ['.github/workflows/inspect-wt-save-contract-20261109.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+    - uses: actions/checkout@v4
+    - name: Read-only exact native save schema inspection
+      run: |
+        python3 - <<'PY'
+        from pathlib import Path
+        import re
+        files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+        terms=[
+          'save-export','save-import','save-file','exportSave','importSave',
+          'exportProgress','importProgress','SAVE_KEY','STORAGE_KEY',
+          'downloadBackup','importBackup','saveTransfer',
+          'bible-unfolded-rewards-v17','bible-unfolded-wheel-ownership-v3825',
+          'localStorage.clear','JSON.stringify(localStorage',
+          'localStorage.length','localStorage.key('
+        ]
+        for file in files:
+          s=file.read_text(errors='replace')
+          print('SOURCE',file.name,len(s))
+          for t in terms:
+            hits=list(re.finditer(re.escape(t),s,re.I))
+            print('TERM',t,'COUNT',len(hits))
+            limit=6 if t in ('save-export','save-import','save-file','exportProgress','importProgress','exportSave','importSave') else 2
+            for m in hits[:limit]:
+              # native settings markup outside script is not informative
+              if file.name=='index.html' and m.start()<1500000 and t not in ('save-export','save-import','save-file'):continue
+              a=max(0,m.start()-1600);b=min(len(s),m.end()+2700)
+              chunk=s[a:b].replace(chr(10),' ')
+              # Hide embedded audio, data images and giant serialized arrays.
+              chunk=re.sub(r'(?:data:audio|data:image)[^\s\x27\x22]{120,}', '[BASE64 HIDDEN]',chunk)
+              print('CONTEXT',t,'OFFSET',m.start(),repr(chunk[:4200]))
+        PY
