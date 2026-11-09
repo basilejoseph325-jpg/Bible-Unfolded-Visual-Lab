@@ -15,7 +15,7 @@ const keys=Object.freeze({
 });
 const read=(k)=>{try{const v=JSON.parse(localStorage.getItem(k)||'null');return v&&typeof v==='object'&&!Array.isArray(v)?v:null}catch(_){return null}};
 const natural=(v)=>Number.isSafeInteger(v)&&v>=0?v:0;
-const unique=(v)=>Array.isArray(v)?[...new Set(v.filter(x=>typeof x==='string'))]:[];
+const unique=(v)=>Array.isArray(v)?[...new Set(v.filter(x=>typeof x==='string'||(Number.isSafeInteger(x)&&x>=0)))]:[];
 function inspect(){
  const game=read(keys.testSave),wallet=read(keys.sharedWallet)||read(keys.sharedWalletRecovery);
  return Object.freeze({
