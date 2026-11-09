@@ -1,0 +1,147 @@
+/* Bible Unfolded shared navigation + wheel skins, isolated Word Trails NEXT.
+   IMPORTANT: no #app layout/grid changes; the menu lives in the top layer. */
+#wt-unified-menu[hidden],#wt-unified-menu [hidden]{display:none!important}
+#wt-unified-menu{
+ position:fixed;inset:0 0 0 auto;
+ display:block;box-sizing:border-box;
+ width:min(92vw,392px);height:100vh;height:100dvh;
+ max-width:100vw;max-height:100vh;max-height:100dvh;
+ margin:0 0 0 auto;padding:0;border:0;
+ background:transparent;color:#fff0c9;overflow:visible;
+ filter:drop-shadow(-10px 0 22px #0009);
+}
+#wt-unified-menu:not([open]){display:none!important}
+#wt-unified-menu::backdrop{background:#031722bd;backdrop-filter:blur(4px)}
+#wt-unified-menu .wt-menu-shell{
+ height:100%;display:flex;flex-direction:column;min-height:0;
+ border-left:2px solid #e1bc79;border-radius:20px 0 0 20px;
+ background:radial-gradient(ellipse at 10% -15%,#caa05e2e,transparent 55%),
+  linear-gradient(160deg,#174b51 0%,#092e3b 64%,#061f2d 100%);
+ box-shadow:inset 0 0 0 2px #f5da991f;overflow:hidden;
+}
+#wt-unified-menu .wt-menu-header{
+ flex:0 0 auto;display:flex;align-items:center;gap:10px;
+ border-bottom:1px solid #e5c78669;
+ padding:17px 14px 12px;padding-top:max(17px,env(safe-area-inset-top));
+ background:linear-gradient(90deg,#254c50a0,#09323b99);
+}
+#wt-unified-menu .wt-menu-titleblock{flex:1;min-width:0;text-align:center}
+#wt-unified-menu .wt-menu-titleblock>span{display:block;font:850 10px/1.2 system-ui,sans-serif;letter-spacing:.14em;color:#d8bd8d}
+#wt-unified-menu h2{font:700 24px/1.1 Georgia,serif;color:#ffebc0;margin:5px 0 0;text-shadow:0 2px 4px #0007}
+#wt-unified-menu #wt-menu-back,
+#wt-unified-menu #wt-menu-close{
+ flex:0 0 35px;width:35px;height:35px;display:grid;place-items:center;
+ border-radius:50%;border:1px solid #efdbb199;
+ background:#123a45e8;color:#ffdfaa;font:800 27px/1 system-ui,sans-serif;
+ box-shadow:0 2px 4px #0006;
+}
+#wt-unified-menu #wt-menu-back[hidden]{visibility:hidden!important;display:grid!important}
+#wt-unified-menu .wt-menu-main,
+#wt-unified-menu .wt-menu-rewards,
+#wt-unified-menu .wt-menu-help{
+ flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+ -webkit-overflow-scrolling:touch;padding:14px 14px 12px;
+ scrollbar-width:thin;scrollbar-color:#e1bf7d77 transparent;
+}
+#wt-unified-menu .wt-menu-wallet{
+ border:1px solid #e3c58f80;border-radius:12px;padding:11px 10px;
+ background:linear-gradient(125deg,#a77a4052,#163b42a6);
+ font:800 12px/1.45 system-ui,sans-serif;text-align:center;color:#f8e4b7;
+}
+#wt-unified-menu .wt-menu-testwallet{
+ font:700 10px/1.3 system-ui,sans-serif;color:#dfdbc5;
+ text-align:center;margin:5px 0 10px;
+}
+#wt-unified-menu .wt-menu-links{display:flex;flex-direction:column;gap:5px}
+#wt-unified-menu .wt-menu-links button{
+ display:grid;grid-template-columns:34px 1fr;grid-template-rows:auto auto;
+ column-gap:11px;align-items:center;min-height:56px;text-align:left;padding:9px 12px;
+ border:1px solid #e7d1a35a;border-radius:12px;background:linear-gradient(100deg,#1e4d55b8,#0d3442c7);
+ color:#ffeed0;box-shadow:inset 0 1px #ffffff0a,0 2px 4px #0004;
+}
+#wt-unified-menu .wt-menu-links button:active{transform:translateY(1px);filter:brightness(1.2)}
+#wt-unified-menu .wt-menu-links button>span{grid-row:1 / 3;display:grid;place-items:center;
+ width:32px;height:32px;border-radius:9px;color:#ffe1a1;font:850 21px/1 Georgia,serif;
+ background:#173944;box-shadow:inset 0 0 0 1px #efd6a365;
+}
+#wt-unified-menu .wt-menu-links button>strong{font:750 14px/1.2 system-ui,sans-serif}
+#wt-unified-menu .wt-menu-links button>small{font:500 11px/1.4 system-ui,sans-serif;color:#d7dcce;margin-top:3px}
+#wt-unified-menu .wt-menu-foot{
+ font:500 11px/1.4 system-ui,sans-serif;color:#cfc6ae;text-align:center;
+ margin:13px 3px 5px;
+}
+#wt-unified-menu .wt-menu-intro{
+ font:500 13px/1.5 system-ui,sans-serif;color:#e9d9ba;margin:0 0 13px;
+}
+#wt-unified-menu #wt-wheel-rewards{display:flex;flex-direction:column;gap:8px}
+#wt-unified-menu .wt-wheel-item{
+ display:grid;grid-template-columns:42px minmax(0,1fr) auto;
+ align-items:center;gap:8px;border:1px solid #e0c28c76;border-radius:12px;
+ padding:10px 8px;background:#0a303dd6;
+}
+#wt-unified-menu .wt-wheel-item.active{
+ background:linear-gradient(100deg,#6e682a8a,#103b43e0);
+ border-color:#fae5a7cf;
+}
+#wt-unified-menu .wt-wheel-symbol{
+ display:grid;place-items:center;width:40px;height:40px;border-radius:50%;
+ border:2px solid #f1d49b;background:radial-gradient(#184951,#0b2937);
+ color:#ffdb92;font:800 23px Georgia,serif;
+}
+#wt-unified-menu .wt-wheel-symbol[data-style='goldwheel']{
+ color:#fff5be;background:radial-gradient(#d5a950,#69502c);
+}
+#wt-unified-menu .wt-wheel-symbol[data-style='moonwheel']{
+ color:#e6f3ff;background:radial-gradient(#778bad,#283d66);border-color:#bdcde6;
+}
+#wt-unified-menu .wt-wheel-symbol[data-style='seawheel']{
+ color:#ddfffa;background:radial-gradient(#40b6ad,#075e74);border-color:#85f3e8;
+}
+#wt-unified-menu .wt-wheel-copy{display:flex;flex-direction:column;gap:5px;min-width:0}
+#wt-unified-menu .wt-wheel-copy strong{font:750 12px/1.2 system-ui,sans-serif;color:#ffe9c1}
+#wt-unified-menu .wt-wheel-copy small{font:450 10px/1.3 system-ui,sans-serif;color:#cddbd8}
+#wt-unified-menu .wt-wheel-action{
+ min-width:72px;border-radius:9px;min-height:33px;padding:5px 9px;
+ border:1px solid #fae2b4;background:linear-gradient(#fce1a2,#b98846);
+ color:#143541;font:850 11px system-ui,sans-serif;
+}
+#wt-unified-menu .wt-wheel-action:disabled{color:#e8d6ab;background:#315e58;border-color:#a0c7a6;opacity:1}
+#wt-unified-menu .wt-menu-gold{
+ display:block;width:100%;min-height:45px;margin-top:16px;
+ border:1.5px solid #fff0c5;border-radius:12px;
+ background:linear-gradient(#ffe6a9,#c79546);color:#17333e;font:900 13px system-ui,sans-serif;
+}
+#wt-unified-menu .wt-menu-help h3{font:800 24px Georgia,serif;color:#fbe4ad;margin:5px 0}
+#wt-unified-menu .wt-menu-help p{font:500 14px/1.5 system-ui,sans-serif;color:#ece2ce;margin:12px 0}
+#wt-unified-menu .wt-menu-help strong{color:#ffdf99}
+#wt-unified-menu .wt-menu-status{
+ flex:0 0 auto;min-height:16px;padding:0 15px 9px;margin:0;color:#ffe6b0;
+ font:750 11px/1.35 system-ui,sans-serif;text-align:center;
+}
+#wt-unified-menu button:focus-visible{outline:3px solid #ffe3a6;outline-offset:2px}
+
+/* Native wheel rewards apply only to the letter circle. No board/viewport geometry changes. */
+html.gold-wheel #app #wheel{
+ background:radial-gradient(circle at 37% 22%,#795a35,#49321d 65%,#261a16)!important;
+ border-color:#ffde8a!important;
+ box-shadow:inset 0 2px #fff1c043,inset 0 -15px 30px #2a160e83,0 6px 20px #0008,0 0 13px #dca84f65!important;
+}
+html.gold-wheel #app .wheel-letter:not(.selected){color:#fff5ce!important;text-shadow:0 1px 3px #2b1809!important}
+html.gold-wheel #app .wheel-letter.selected{background:radial-gradient(#fff4c8,#dca84a)!important;color:#463019!important}
+html.gold-wheel #app .wheel-center{background:linear-gradient(145deg,#775a35,#332519)!important;border-color:#ffe3a0!important}
+html.moon-wheel #app #wheel{
+ background:radial-gradient(circle at 36% 23%,#465d8e,#202e55 67%,#111b3a)!important;
+ border-color:#dbe6ff!important;
+ box-shadow:inset 0 2px #e6f2ff42,inset 0 -13px 36px #07102a9e,0 5px 19px #0008,0 0 15px #c5dbfa61!important;
+}
+html.moon-wheel #app .wheel-letter:not(.selected){color:#eaf3ff!important;text-shadow:0 1px 4px #06132f!important}
+html.moon-wheel #app .wheel-letter.selected{background:radial-gradient(#f8fdff,#99b5dc)!important;color:#183453!important}
+html.moon-wheel #app .wheel-center{background:linear-gradient(150deg,#3b5485,#182a4d)!important;border-color:#e7f3ff!important}
+html.sea-wheel #app #wheel{
+ background:radial-gradient(circle at 38% 20%,#30a8ac,#09616e 58%,#06333f)!important;
+ border-color:#9cf4e6!important;
+ box-shadow:inset 0 2px #e1ffef5e,inset 0 -14px 30px #022a36ad,0 6px 20px #0008,0 0 17px #62e9dd8a!important;
+}
+html.sea-wheel #app .wheel-letter:not(.selected){color:#e8fffd!important;text-shadow:0 1px 4px #07454d!important}
+html.sea-wheel #app .wheel-letter.selected{background:radial-gradient(#edffef,#76d9ce)!important;color:#064e5d!important}
+html.sea-wheel #app .wheel-center{background:linear-gradient(150deg,#1c7e88,#074b63)!important;border-color:#a7fff0!important}
