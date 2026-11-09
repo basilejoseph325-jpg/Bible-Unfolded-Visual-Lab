@@ -34,3 +34,7 @@ Working in **Visual Lab** until this checklist passes is the preferred workflow.
 - `experiments/word-trails-native-wheel-v1.*` — ported native wheel visual effects (verify ongoing parity)
 
 **Release status as of November 9, 2026: BLOCKED pending shared-core integration, save migration plan, device QA, and owner approval.**
+
+
+## Owner reaffirmation — PROMOTE ALL APPROVED TEST WORK TO LIVE AFTER APPROVAL (November 9, 2026)
+All changes needed to bring Word Trails NEXT and its real shared-menu, Settings, original voices, sound preferences, rewards/wheel effects, coordinated saves, navigation and gameplay fixes into LIVE MUST be included in the eventual carefully tested release, not left behind in TEST. Full source and release checklist: [WORD_TRAILS_MANDATORY_LIVE_PROMOTION_MANIFEST_2026-11-09.md](WORD_TRAILS_MANDATORY_LIVE_PROMOTION_MANIFEST_2026-11-09.md). This is **not permission to deploy before physical testing and explicit owner release approval**.
