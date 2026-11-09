@@ -20,10 +20,15 @@ Hard failures include: invalid rack / impossible word, out-of-grid answer, cross
 **Browser regression results:** All 30 puzzles can be completed; voice preview, sound panel, existing purchased wheel effects, first-level gameplay, bonus satchels, Bible discoveries, six milestone seals, level-map imagery, replay protection, and five phone-size viewport checks passed. Separate 390×705 phone screenshots were reviewed for the win screen and scenic map; the Next Level button remained usable.
 
 ## Remaining editorial QA
-- The validator reports **accidental adjacent crossword tiles** on several boards in levels 12–30. Crossings themselves are valid and the puzzles complete, but some adjacent filled tiles belong to different words. Review/adjust these layouts before scaling to hundreds of levels, so the boards read cleanly at a glance.
+- **Resolved in TEST (November 9):** Every level 12–30 crossword was re-laid out without changing any answer words. There are now zero unrelated touching-tile pairs in those 19 boards. The automated QA gate now rejects any recurrence on new levels (legacy 1–11 layouts are preserved).
 - Legacy levels 1–11 contain a few duplicate/reserved bonus words in their historical source text. The runtime safely de-duplicates and removes reserved bonuses, and the linter reports them without changing the approved first 11 layouts.
-- Citation URLs and reference-field completeness are checked automatically, but **the wording of every Bible clue/explanation still needs editorial comparison to the cited NWT passage**. A source-shaped URL alone is not a factual verification.
+- **Source progress, not final human signoff:** all 77 new-level Bible-answer and hidden-discovery entries now pass an exact cited-book/chapter URL match. Wording was corrected for Sarah, Samson, Psalms, Moses' rod, Leah (three levels), and the Hannah discovery, with targeted JW.org/NWT passage checks. This automated check is not proof that each of the 77 wordings has been independently reviewed against its full passage; James/owner editorial signoff remains outstanding.
 - **Human device playtesting remains required:** the owner's Samsung Android and James's iPhone Safari, especially longer puzzles, voice playback, 7×7 tile readability and the new reward modal.
+
+## Started: mandatory shared-core integration
+- Completed first-pass ownership inventory in `WORD_TRAILS_SHARED_CORE_INTEGRATION_AUDIT_2026-11-09.md`, covering prototype progress, test currency, music/SFX, settings, voice, menu, wallet, wheel ownership and effects.
+- Loaded a **read-only** `word-trails-shared-core-boundary-v1.js` in TEST. Its migration preview quarantines TEST coins and explicitly cannot update saves or modify the real wallet. A dedicated automated zero-write check is part of the quality workflow.
+- This is the START of integration, not the completed connection to the authoritative live shared core. The pre-live release checklist remains binding.
 
 ## Release rule
 **NOT APPROVED FOR LIVE.** The mandatory shared-core integration, migration, and rollback checklist in [WORD_TRAILS_PRE_LIVE_SHARED_CORE_RELEASE_GATE.md](WORD_TRAILS_PRE_LIVE_SHARED_CORE_RELEASE_GATE.md) remains binding. Do not promote this prototype to LIVE without explicit owner approval.
