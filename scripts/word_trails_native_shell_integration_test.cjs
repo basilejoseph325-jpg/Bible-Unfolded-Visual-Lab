@@ -99,6 +99,21 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       const after=await page.evaluate(()=>({active:window.BUWTNativeShell.active(),frame:!!document.getElementById('bu-wt-native-game'),menu:!!document.getElementById('game-menu'),home:!!document.getElementById('home-cross')}));
       console.log('NATIVE_RETURN',JSON.stringify(after));
       assert(!after.active&&!after.frame&&after.home&&after.menu);
+      // Back-arrow navigation must close the native shell, not navigate the iframe
+      // to a second, nested copy of index.html.
+      await page.evaluate(()=>window.BUWTNativeShell.launch());
+      await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu);
+      const roots=await page.evaluate(()=>({pauseAudio:typeof window.pauseAudio,syncMusic:typeof window.syncMusic,hash:location.hash}));
+      await page.evaluate(()=>document.getElementById('bu-wt-native-game').contentWindow.document.querySelector('#app .back').click());
+      const backArrow=await page.evaluate(()=>({active:window.BUWTNativeShell.active(),url:location.href,iframe:!!document.getElementById('bu-wt-native-game')}));
+      console.log('REAL_ARROW_BACK',JSON.stringify({roots,backArrow}));
+      assert.equal(backArrow.active,false,'In-game back must close the parent shell');
+      assert.equal(backArrow.iframe,false,'No nested homepage may be created');
+      await page.evaluate(()=>window.BUWTNativeShell.launch());
+      await page.waitForFunction(()=>window.BUWTNativeShell.active());
+      await page.evaluate(()=>history.back());
+      await page.waitForFunction(()=>!window.BUWTNativeShell.active());
+      console.log('BROWSER_BACK_CLOSES_GAME',viewport.width+'x'+viewport.height);
       if(errors.length)console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,12)));
       await page.close();
     }
