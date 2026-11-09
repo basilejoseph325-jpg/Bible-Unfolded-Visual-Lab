@@ -3,6 +3,8 @@ on:
   push:
     paths:
       - 'scripts/word_trails_quality_gate.mjs'
+      - 'scripts/word_trails_shared_core_boundary_test.mjs'
+      - 'experiments/word-trails-shared-core-boundary-v1.js'
       - 'experiments/word-trails-levels-12-30-v1.js'
       - 'experiments/word-trails-next-v1.js'
       - '.github/workflows/qa-word-trails-puzzle-quality.yml'
@@ -17,3 +19,8 @@ jobs:
         run: |
           node --check scripts/word_trails_quality_gate.mjs
           node scripts/word_trails_quality_gate.mjs
+      - name: Prove Word Trails migration boundary cannot write to real or test saves
+        run: |
+          node --check experiments/word-trails-shared-core-boundary-v1.js
+          node --check scripts/word_trails_shared_core_boundary_test.mjs
+          node scripts/word_trails_shared_core_boundary_test.mjs
