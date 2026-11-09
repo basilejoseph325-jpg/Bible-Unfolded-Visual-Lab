@@ -41,7 +41,7 @@ else install();
 (()=>{'use strict';
  const key=new URLSearchParams(location.search).get('wt_nav');
  if(!key)return;
- const targets={journey:'home-journey',gallery:'home-gallery',rewards:'home-shop',about:'home-menu'};
+ const targets={journey:'home-journey',gallery:'home-gallery',rewards:'home-shop',about:'home-menu',settings:'home-menu'};
  if(!targets[key])return;
  let attempts=0;
  const jump=()=>{
@@ -51,6 +51,9 @@ else install();
   if(key==='about'){
    button.click();
    setTimeout(()=>document.getElementById('bu3925-about-menu')?.click(),180);
+  }else if(key==='settings'){
+   button.click();
+   setTimeout(()=>document.getElementById('menu-settings')?.click(),230);
   }else button.click();
  };
  if(document.readyState==='complete')setTimeout(jump,330);
