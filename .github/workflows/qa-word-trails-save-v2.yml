@@ -1,0 +1,41 @@
+name: QA Coordinated Word Trails TEST Save v2
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-save-v2.yml'
+      - 'bu-platform-saves-v2.js'
+      - 'scripts/word_trails_save_v2_browser_test.cjs'
+      - 'visual-lab-test-banner.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v4
+    - name: Syntax and static isolation rules
+      run: |
+        node --check bu-platform-saves-v2.js
+        node --check scripts/word_trails_save_v2_browser_test.cjs
+        python3 - <<'PY'
+        from pathlib import Path
+        s=Path('bu-platform-saves-v2.js').read_text()
+        b=Path('visual-lab-test-banner.js').read_text()
+        assert "bu-platform-saves-v2.js" in b
+        assert "WordTrailsNextTEST" in s
+        assert "coinsNeverConvertToInsightTokens:true" in s
+        assert "return nativeHandler.call(picker,event)" in s
+        assert "window.__bu388SkipCheckpoint=true" in s
+        assert "testCoinsQuarantined:true" in s
+        assert "localStorage.clear(" not in s
+        assert "location.reload()" in s
+        PY
+    - name: Simulate complete game import/export and fail-safe recovery in Chrome
+      run: |
+        set -euo pipefail
+        npm install --prefix /tmp/bu-saves-qa puppeteer-core@24 --no-audit --no-fund --silent
+        python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-save-http.log 2>&1 &
+        sleep 1
+        NODE_PATH=/tmp/bu-saves-qa/node_modules node scripts/word_trails_save_v2_browser_test.cjs
