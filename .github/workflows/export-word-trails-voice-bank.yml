@@ -1,0 +1,27 @@
+name: Export Existing Voice Bank Chunks for Word Trails
+on:
+  push:
+    paths: ['.github/workflows/export-word-trails-voice-bank.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract original demo voice literals in safe log chunks
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          source=Path('bible_unfolded_core_part5.js').read_text(errors='replace')
+          m=re.search(r'const BU382_EMBEDDED_VOICES\s*=\s*(\{[\s\S]*?\});',source)
+          assert m, 'Original voice clips must exist'
+          bank=m.group(1).removesuffix(';')
+          assert len(bank)>600000
+          assert 'charlie_excellent_thinking' in bank and 'julian_beautifully_done' in bank
+          print('VOICE_BANK_START',len(bank))
+          for i,p in enumerate(range(0,len(bank),6000)):
+            print('VOICE_BANK_PIECE_%04d:'%i + bank[p:p+6000])
+          print('VOICE_BANK_END')
+          PY
