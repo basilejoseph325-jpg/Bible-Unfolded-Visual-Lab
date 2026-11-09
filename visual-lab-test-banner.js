@@ -59,3 +59,58 @@ else install();
  if(document.readyState==='complete')setTimeout(jump,330);
  else window.addEventListener('load',()=>setTimeout(jump,330),{once:true});
 })();
+
+
+/* Visual Lab-only shared Settings synchronization:
+   Main Bible Unfolded retains its native Settings/sound engine and Word Trails
+   retains its game-specific SFX synthesis. These four preference controls
+   synchronize across both game modes; we never replace main audio playback. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ const KEY='bu-platform-audio-preferences-v1';
+ const ids={music:'setting-music',sfx:'setting-sfx',musicVolume:'setting-volume',
+  sfxVolume:'setting-sfx-volume',motion:'setting-motion'};
+ const els={};let applying=false,installed=false,attempts=0;
+ const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(_){return null}};
+ const pct=v=>Math.max(0,Math.min(100,Number(v)||0));
+ function snapshot(){
+  return {music:els.music.checked,sfx:els.sfx.checked,
+   musicVolume:pct(els.musicVolume.value),sfxVolume:pct(els.sfxVolume.value),
+   motion:!els.motion.checked};
+ }
+ function save(){
+  if(applying)return;
+  try{localStorage.setItem(KEY,JSON.stringify({...snapshot(),updated:Date.now(),source:'main'}))}catch(_){}
+ }
+ function initial(){
+  const stored=read();if(!stored||stored.source!=='trails')return;
+  applying=true;
+  try{
+   for(const key of ['music','sfx','musicVolume','sfxVolume','motion']){
+    if(!Object.prototype.hasOwnProperty.call(stored,key))continue;
+    const el=els[key],value=key==='motion'?!stored[key]:stored[key];
+    if(el.type==='checkbox'){
+     if(el.checked!==!!value){el.checked=!!value;el.dispatchEvent(new Event('change',{bubbles:true}))}
+    }else{
+     const p=pct(value);
+     if(Number(el.value)!==p){el.value=String(p);el.dispatchEvent(new Event('input',{bubbles:true}));el.dispatchEvent(new Event('change',{bubbles:true}))}
+    }
+   }
+  }finally{applying=false}
+ }
+ function install(){
+  if(installed||attempts++>22)return;
+  for(const [key,id] of Object.entries(ids)){
+   const el=document.getElementById(id);
+   if(!el){setTimeout(install,280);return}
+   els[key]=el;
+  }
+  installed=true;initial();
+  for(const el of Object.values(els)){
+   el.addEventListener('input',save);el.addEventListener('change',save);
+  }
+  save();
+ }
+ if(document.readyState==='complete')setTimeout(install,800);
+ else window.addEventListener('load',()=>setTimeout(install,800),{once:true});
+})();
