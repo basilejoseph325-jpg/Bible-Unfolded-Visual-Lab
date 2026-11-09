@@ -291,7 +291,8 @@ function ui(){
  $('spark').classList.toggle('claimed',sparkCount===sparkMax);
  $('spark').setAttribute('aria-label','Bible words found '+sparkCount+' of '+sparkMax+'. Open clues and discoveries');
  $('spark-progress').textContent=sparkCount+'/'+sparkMax;
- if(window.BUWTPolish){$('audio').textContent='♫';$('audio').setAttribute('aria-label','Sound and effects settings');
+ if(window.BUWTUnifiedMenu){$('audio').textContent='☰';$('audio').setAttribute('aria-label','Open Bible Unfolded menu');}
+ else if(window.BUWTPolish){$('audio').textContent='♫';$('audio').setAttribute('aria-label','Sound and effects settings');
  $('audio').setAttribute('aria-pressed','false')}
  else{$('audio').textContent=save.sound?'♫':'♪';
  $('audio').setAttribute('aria-label',save.sound?'Mute music and sounds':'Enable music and sounds');
@@ -595,7 +596,7 @@ $('submit').addEventListener('click',()=>{cue('touch');submit()});
 $('shuffle').addEventListener('click',shuffle);
 $('hint').addEventListener('click',hint);
 $('spark').addEventListener('click',()=>{cue('touch');openSpark()});
-$('audio').addEventListener('click',()=>{if(window.BUWTPolish)window.BUWTPolish.openSettings();else toggleSound()});
+$('audio').addEventListener('click',()=>{if(window.BUWTUnifiedMenu)window.BUWTUnifiedMenu.open();else if(window.BUWTPolish)window.BUWTPolish.openSettings();else toggleSound()});
 $('level-map').addEventListener('click',levelMap);
 $('next-level').addEventListener('click',()=>{
  const n=Math.min(LEVELS.length-1,index+1);
