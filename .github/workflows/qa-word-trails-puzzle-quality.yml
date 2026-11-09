@@ -5,6 +5,11 @@ on:
       - 'scripts/word_trails_quality_gate.mjs'
       - 'scripts/word_trails_shared_core_boundary_test.mjs'
       - 'experiments/word-trails-shared-core-boundary-v1.js'
+      - 'scripts/word_trails_shared_rewards_integration_test.mjs'
+      - 'bu-platform-rewards-v1.js'
+      - 'experiments/word-trails-unified-menu-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+      - 'journey-progress-caption.js'
       - 'experiments/word-trails-levels-12-30-v1.js'
       - 'experiments/word-trails-next-v1.js'
       - '.github/workflows/qa-word-trails-puzzle-quality.yml'
@@ -24,3 +29,11 @@ jobs:
           node --check experiments/word-trails-shared-core-boundary-v1.js
           node --check scripts/word_trails_shared_core_boundary_test.mjs
           node scripts/word_trails_shared_core_boundary_test.mjs
+      - name: Verify actual shared Rewards and wheel service bindings
+        run: |
+          node --check bu-platform-rewards-v1.js
+          node --check experiments/word-trails-unified-menu-v1.js
+          node --check journey-progress-caption.js
+          node --check scripts/word_trails_shared_rewards_integration_test.mjs
+          node scripts/word_trails_shared_rewards_integration_test.mjs
+
