@@ -9,6 +9,8 @@ on:
       - 'experiments/word-trails-next-v1.js'
       - 'experiments/word-trails-feel-v2.js'
       - 'visual-lab-test-banner.js'
+      - 'bu-platform-rewards-v1.js'
+      - 'journey-progress-caption.js'
 permissions: {contents: read}
 jobs:
   test:
@@ -26,20 +28,26 @@ jobs:
           from pathlib import Path
           main=Path('experiments/word-trails-next-v1.js').read_text()
           menu=Path('experiments/word-trails-unified-menu-v1.js').read_text()
+          core=Path('bu-platform-rewards-v1.js').read_text()
+          host=Path('journey-progress-caption.js').read_text()
           html=Path('experiments/word-trails-next-v1.html').read_text()
           css=Path('experiments/word-trails-unified-menu-v1.css').read_text()
           assert 'word-trails-unified-menu-v1.js' in html and 'word-trails-unified-menu-v1.css' in html
-          assert 'bible-unfolded-rewards-v17' in menu
-          assert 'bible-unfolded-wheel-ownership-v3825' in menu
-          assert 'bible-unfolded-rewards-v17-recovery-v3811' in menu
+          assert 'bible-unfolded-rewards-v17' in core
+          assert 'bible-unfolded-wheel-ownership-v3825' in core
+          assert 'bible-unfolded-rewards-v17-recovery-v3811' in core
           assert "seawheel" in menu and "goldwheel" in menu and "moonwheel" in menu
+          assert 'api.equipWheel(id)' in menu
+          assert 'localStorage.setItem(MAIN' not in menu
+          assert 'attachNativeHost({' in host
+          assert '../bu-platform-rewards-v1.js' in html
           assert 'BUWTUnifiedMenu' in main
           assert 'BUWTPolish?.openSettings' in menu
           assert 'html.sea-wheel #app #wheel' in css
           assert 'position:fixed' in css and '#wt-unified-menu' in css
           assert '.board{' not in css
           assert 'data-wt-menu' in menu
-          print('PASS standalone shared-menu integration, exact existing wallet keys, no gameplay geometry changes')
+          print('PASS shared Rewards core native host and Word Trails menu integration, exact wallet keys, no gameplay geometry changes')
           PY
       - name: Phone browser menu, owned rewards, sound settings and no-scroll gameplay
         run: |
