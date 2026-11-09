@@ -28,4 +28,9 @@ jobs:
               for m in hits[:(13 if k in ('announcer','prefs','speaker') else 7)]:
                 lo=max(0,m.start()-360);hi=min(len(s),m.end()+710)
                 print('MATCH',f.name,k,m.start(),repr(s[lo:hi].replace('\n',' ')[:1090]))
+          s=Path('bible_unfolded_core_part5.js').read_text(errors='replace')
+          for label,a,b in [('VOICE_START',4152200,4157800),('VOICE_END',4157800,4163100)]:
+            print(label,repr(s[a:b]))
+          i=Path('index.html').read_text(errors='replace')
+          print('NATIVE_SETTINGS_HTML',repr(i[1282410:1286800]))
           PY
