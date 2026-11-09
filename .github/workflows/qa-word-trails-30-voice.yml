@@ -165,6 +165,26 @@ jobs:
              const targetLevel=i+12;
              const label=await page.$eval('#level-label',el=>el.textContent);
              assert(label.includes('LEVEL '+targetLevel+' / 30'),'Wrong level label '+label);
+             // Actual gameplay: early six-letter rack supports TWO good bonus
+             // words; later racks use the usual three-word satchel.
+             if(targetLevel===12||targetLevel===13){
+              const gain=targetLevel===12?['USE','SEES']:['THE','HER','SHE'];
+              const expected=gain.length;
+              const coinsBefore=Number(await page.$eval('#points',el=>el.textContent));
+              for(const word of gain)await play(word);
+              const actual=await page.evaluate(()=>({
+               bonus:Number(document.querySelector('#bonus-count').textContent),
+               goal:Number(document.querySelector('#bonus-pips').dataset.goal),
+               coins:Number(document.querySelector('#points').textContent)
+              }));
+              console.log('ACTUAL_BONUS_SATCHEL',JSON.stringify({level:targetLevel,...actual}));
+              assert.equal(actual.goal,expected,'Every satchel must have a reachable target');
+              assert.equal(actual.bonus,expected);
+              assert.equal(actual.coins,coinsBefore+2*expected+8,'Bonus satchel must pay once');
+              await play(gain[0]);
+              assert.equal(Number(await page.$eval('#points',el=>el.textContent)),actual.coins,
+                'Replaying a bonus word must not mint a second reward');
+             }
              const gems=[data.spark,...data.extraSparks.map(x=>x.word)];
              for(const word of gems){
               await play(word);
@@ -178,6 +198,14 @@ jobs:
              const milestone=targetLevel%5===0;
              const small=await page.$eval('#finish .finish-small',e=>e.textContent);
              if(milestone)assert(small.includes('MILESTONE'));
+             const seal=await page.evaluate(()=>({
+              visible:!document.querySelector('#finish-seal').hidden,
+              name:document.querySelector('#finish-seal-title').textContent,
+              marked:document.querySelector('#finish').classList.contains('wt-milestone')
+             }));
+             assert.equal(seal.visible,milestone,'Only each fifth level earns a Journey Seal');
+             assert.equal(seal.marked,milestone);
+             if(milestone)assert(seal.name.length>=9,'Each Journey Seal must be named');
              assert((await page.$eval('#finish-spark',e=>e.textContent)).includes('Bible discoveries'));
              console.log('SOLVED_LEVEL',JSON.stringify({level:targetLevel,title:data.title,
                words:data.words.length,bible:data.bibleBoard.length,gems:gems.length,milestone}));
@@ -190,7 +218,18 @@ jobs:
              claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
             await page.click('#next-level');
             await page.waitForSelector('#map[open]');
-            assert.equal(await page.evaluate(()=>document.querySelectorAll('#map .map-level').length),30);
+            const mapQA=await page.evaluate(()=>({
+             levels:document.querySelectorAll('#map .map-level').length,
+             chapters:document.querySelectorAll('#map .map-chapter-title').length,
+             scenePreviews:[...document.querySelectorAll('#map .map-level-thumb')]
+               .filter(x=>x.style.backgroundImage.includes('bible-book-art')).length,
+             seals:[...document.querySelectorAll('#map .map-milestone-status')].length
+            }));
+            console.log('SCENIC_LEVEL_MAP',JSON.stringify(mapQA));
+            assert.equal(mapQA.levels,30);
+            assert.equal(mapQA.chapters,6,'Six five-level scenic chapters');
+            assert.equal(mapQA.scenePreviews,30,'All 30 levels need illustrated map previews');
+            assert.equal(mapQA.seals,6,'All six milestone seals must show on the level map');
             await page.click('#map-x');
             for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
              await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
@@ -199,8 +238,18 @@ jobs:
              console.log('THIRTY_LEVEL_PHONE_'+width+'x'+height,JSON.stringify(g));
              assert(g.scroll<=1&&g.board[1]+g.board[3]<g.wheel[1]&&g.wheel[1]+g.wheel[3]<=g.appBottom+1);
             }
+            // A replay of the last Journey Seal may celebrate again, never pay again.
+            const oldBalance=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).coins);
+            await page.click('#level-map');
+            await page.waitForSelector('#map[open]');
+            await page.evaluate(()=>document.querySelectorAll('#map .map-level')[29].click());
+            const replayData=await page.evaluate(()=>window.BUWTAdditionalLevels[18]);
+            for(const [word] of replayData.words)await play(word);
+            await page.waitForSelector('#finish[open]',{timeout:13000});
+            assert.equal(await page.$eval('#finish-reward',e=>e.textContent),'Replay complete');
+            assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).coins),oldBalance);
             assert.equal(errors.length,0,'Uncaught page errors: '+errors.join(' | '));
-            console.log('PASS 30 levels, real voice bank, native menu/settings, 38 hidden Bible words, milestones, preserved 11 original levels, five phone layouts');
+            console.log('PASS 30 levels, original voices, bonus satchels, 6 collectible Journey Seals, scenic maps, no replay minting, five phone layouts');
            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
            finally{if(browser)await browser.close()}
           })();
