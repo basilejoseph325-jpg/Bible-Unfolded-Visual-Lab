@@ -460,7 +460,10 @@ function submit(){
 function completeLevel(){
  locked=false;
  const already=save.completed.includes(index);
- const reward=already?0:20+5*index;
+ const milestone=(index+1)%5===0;
+ const milestoneBonus=!already&&milestone?60:0;
+ // A special five-level milestone pays once; replays never mint duplicate coins.
+ const reward=already?0:20+5*index+milestoneBonus;
  if(!already){
   save.completed.push(index);save.coins+=reward;
   save.unlocked=Math.min(LEVELS.length-1,Math.max(save.unlocked,index+1));
@@ -474,6 +477,9 @@ function completeLevel(){
  if(!window.BUWTPolish?.celebrateWin)confetti();
  window.BUWTPolish?.event('complete',{level:index,reward});
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
+ $('finish').querySelector('.finish-small').textContent=milestone?'★ FIVE-LEVEL MILESTONE ★':'BIBLE UNFOLDED · WORD TRAILS';
+ $('finish').querySelector('.victory-intro').textContent=milestone&&!already?
+  'A milestone reached! +60 extra test coins for your journey.':'Every word brings a new discovery.';
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
  $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
  $('finish-spark').textContent='★ '+sparksFound()+' / '+sparkTotal()+' Bible discoveries collected';
