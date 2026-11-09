@@ -3,6 +3,7 @@
    Actual Word Trails test coins remain in their original separate save. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
+const nativeShell=()=>{try{return parent!==window&&parent.BUWTNativeShell?.active?.()?parent.BUWTNativeShell:null}catch(_){return null}};
 const STYLES=[
  {id:'classic',name:'Classic Puzzle Wheel',desc:'Original finish, always free',cost:0,mark:'◯'},
  {id:'goldwheel',name:'Golden Puzzle Wheel',desc:'A softly glowing golden wheel',cost:180,mark:'✦'},
@@ -63,7 +64,9 @@ function refresh(){
   card.append(symbol,content,btn);view.appendChild(card);
  }
 }
-function show(view='menu'){
+function show(view='menu',{local=false}={}){
+ const native=nativeShell();
+ if(native&&!local){close();if(view==='menu')return native.openMenu();if(view==='help')return show('help',{local:true});}
  const dlg=$('wt-unified-menu');if(!dlg)return;
  if(!dlg.open)dlg.showModal();
  for(const panel of dlg.querySelectorAll('[data-menu-view]'))panel.hidden=panel.dataset.menuView!==view;
@@ -133,6 +136,6 @@ function init(){
  window.addEventListener('pageshow',refresh);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
-window.BUWTUnifiedMenu=Object.freeze({open:()=>show('menu'),show,equip,refresh,
+window.BUWTUnifiedMenu=Object.freeze({open:()=>show('menu'),show,showLocal:(view)=>show(view,{local:true}),equip,refresh,
  owned:()=>[...owned()],currentTheme,wallet,themeIds:STYLES.map(s=>s.id)});
 })();
