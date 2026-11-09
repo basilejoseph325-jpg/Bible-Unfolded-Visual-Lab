@@ -1,0 +1,38 @@
+name: Inspect Bible Unfolded Shared Menu and Wheel Rewards
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-word-trails-main-menu.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find menu, wheel cosmetics and saved rewards in main game
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          paths=[Path('index.html')]+sorted(Path('.').glob('bible_unfolded_core_part*.js'))
+          queries=[
+            ('OCEAN_EXACT',r'(?i)ocean\s*glow'),
+            ('WHEEL_THEMES',r'(?i)wheel\s*(?:themes?|skins?|styles?)'),
+            ('COSMETIC',r'(?i)(?:ocean|aurora|ember|bronze|midnight|sunset|glow)[\s_-]*(?:glow|wheel|theme|skin)'),
+            ('MENU_ELEMENT',r'(?i)(?:id|class)=["\'][^"\']{0,50}(?:menu|settings|reward|shop|inventory)[^"\']*["\']'),
+            ('WHEEL_STYLES',r'(?i)(?:wheel(?:Theme|Skin|Color|Style)|theme(?:Wheel|Id)|skin(?:Wheel|Id)|selectedSkin|ownedSkins)'),
+            ('LOCAL_SAVE',r'(?:localStorage\.(?:getItem|setItem)|sessionStorage\.setItem)\('),
+            ('REWARD_SETTINGS',r'(?i)(?:coin.*(?:unlock|shop|theme)|unlock.*(?:wheel|skin|theme)|(?:skin|theme).*cost)')
+          ]
+          for file in paths:
+            s=file.read_text(errors='replace')
+            print('SCAN_FILE',file,len(s))
+            for key,pattern in queries:
+              matches=list(re.finditer(pattern,s))
+              print('HIT_COUNT',file.name,key,len(matches))
+              limit=9 if key in ['OCEAN_EXACT','WHEEL_THEMES','WHEEL_STYLES','REWARD_SETTINGS'] else 3
+              for m in matches[:limit]:
+                a=max(0,m.start()-190);b=min(len(s),m.end()+320)
+                print('HIT',file.name,key,m.start(),repr(s[a:b].replace('\n',' ')[:540]))
+          PY
