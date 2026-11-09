@@ -1,0 +1,48 @@
+name: Inspect Visual Lab Word Trails Home Card
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-word-trails-home-card.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect actual card asset and geometry in browser
+        run: |
+          npm install --prefix /tmp/wtcard puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8878 --bind 127.0.0.1 >/tmp/wt-card-http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/wtcard/node_modules/puppeteer-core');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,
+              executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+              args:['--no-sandbox','--disable-setuid-sandbox']});
+              const page=await browser.newPage();
+              page.on('pageerror',e=>console.log('PAGEERR',e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8878/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForSelector('#home-cross',{timeout:60000});
+              const detail=await page.evaluate(()=>{
+                const card=document.querySelector('#home-cross');
+                const bounding=(e)=>{const r=e.getBoundingClientRect();return {x:r.x,y:r.y,w:r.width,h:r.height}};
+                return {html:card.outerHTML.slice(0,7000),className:card.className,rectangle:bounding(card),
+                  children:[...card.querySelectorAll('*')].slice(0,45).map(e=>({
+                    tag:e.tagName,className:String(e.className).slice(0,120),id:e.id,
+                    box:bounding(e),background:getComputedStyle(e).backgroundImage,
+                    objectFit:getComputedStyle(e).objectFit,
+                    src:e.getAttribute('src'),
+                    onclick:e.getAttribute('onclick')
+                  }))};
+              });
+              console.log('WORD_TRAILS_CARD_DOM',JSON.stringify(detail));
+            }catch(e){console.log('FAIL',e.stack);process.exitCode=1}
+            finally{await browser?.close()}
+          })();
+          JS
