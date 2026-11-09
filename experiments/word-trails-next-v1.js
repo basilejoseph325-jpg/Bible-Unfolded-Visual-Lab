@@ -150,6 +150,15 @@ const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
  {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
  ...EXTRA_SPARKS[i]
 ]);
+const MILESTONE_SEALS=Object.freeze({
+ 5:{symbol:'✧',name:'First Steps',detail:'Your first five trails'},
+ 10:{symbol:'❖',name:'Courage Crest',detail:'Ten journeys completed'},
+ 15:{symbol:'✶',name:'Wisdom Lantern',detail:'Fifteen paths discovered'},
+ 20:{symbol:'✦',name:'Steadfast Seal',detail:'Twenty trails explored'},
+ 25:{symbol:'✥',name:'Discovery Compass',detail:'Twenty-five journeys finished'},
+ 30:{symbol:'✺',name:'Scripture Scholar',detail:'Thirty levels completed'}
+});
+const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues'];
 const STORAGE='bu-visual-lab-wordtrails-next-v1';
 const $=id=>document.getElementById(id);
 const F=(name,value)=>document.documentElement.style.setProperty(name,value);
@@ -492,14 +501,22 @@ function completeLevel(){
  $('finish-level').textContent='LEVEL '+(index+1)+' COMPLETE';
  $('finish').querySelector('.finish-small').textContent=milestone?'★ FIVE-LEVEL MILESTONE ★':'BIBLE UNFOLDED · WORD TRAILS';
  $('finish').querySelector('.victory-intro').textContent=milestone&&!already?
-  'A milestone reached! +60 extra test coins for your journey.':'Every word brings a new discovery.';
+  'A new Journey Seal earned! Your exploration continues.':'Every word brings a new discovery.';
+ const seal=MILESTONE_SEALS[index+1]||null;
+ $('finish').classList.toggle('wt-milestone',!!seal);
+ $('finish-seal').hidden=!seal;
+ if(seal){
+  $('finish-seal-symbol').textContent=seal.symbol;
+  $('finish-seal-title').textContent=seal.name;
+  $('finish-seal-note').textContent=already?'Journey Seal previously collected':seal.detail+' · +60 extra test coins';
+ }
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
  $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
  $('finish-spark').textContent='★ '+sparksFound()+' / '+sparkTotal()+' Bible discoveries collected';
  $('next-level').textContent=index===LEVELS.length-1?'Explore Level Map':'Next Level';
  $('stay').textContent=sparksFound()===sparkTotal()?'Replay this level':'Find more Bible words';
  $('finish').showModal();
- window.BUWTPolish?.celebrateWin?.();
+ window.BUWTPolish?.celebrateWin?.(milestone&&!already);
 }
 function setScene(){
  const url='../bible-book-art/'+level.scene;F('--scene','url("'+url+'")');
@@ -590,14 +607,42 @@ function toggleSound(){
  else{music?.pause();ctx?.suspend().catch(()=>{})}
 }
 function levelMap(){
- $('map-list').replaceChildren();
+ const host=$('map-list');host.replaceChildren();
  LEVELS.forEach((lev,i)=>{
+  if(i%5===0){
+   const head=document.createElement('div');
+   head.className='map-chapter-title';
+   const number=Math.floor(i/5)+1;
+   head.textContent='CHAPTER '+number+' · '+MAP_CHAPTERS[number-1];
+   host.append(head);
+  }
   const b=document.createElement('button'),unlocked=i<=save.unlocked;
-  b.type='button';b.className='map-level'+(i===index?' here':'')+(save.completed.includes(i)?' complete':'');
+  const collected=save.completed.includes(i),seal=MILESTONE_SEALS[i+1];
+  b.type='button';
+  b.className='map-level'+(i===index?' here':'')+(collected?' complete':'')+(seal?' milestone':'');
   b.disabled=!unlocked;
-  b.innerHTML='<span>'+(unlocked?i+1:'🔒')+'</span><strong>'+lev.title+'</strong><small>'+(unlocked?'★ '+sparksFound(i)+'/'+sparkTotal(i)+' Bible finds':'Locked')+'</small>';
+  const art=document.createElement('span');
+  art.className='map-level-thumb';
+  art.style.backgroundImage='linear-gradient(180deg,#051d2580,#051d25b5),url("../bible-book-art/'+lev.scene+'")';
+  const no=document.createElement('b');
+  no.textContent=unlocked?String(i+1):'🔒';
+  art.append(no);
+  const details=document.createElement('span');
+  details.className='map-level-info';
+  const title=document.createElement('strong');
+  title.textContent=lev.title;
+  const progress=document.createElement('small');
+  progress.textContent=unlocked?'★ '+sparksFound(i)+'/'+sparkTotal(i)+' Bible finds':'Locked';
+  details.append(title,progress);
+  if(seal){
+   const stamp=document.createElement('small');
+   stamp.className='map-milestone-status';
+   stamp.textContent=collected?seal.symbol+' '+seal.name:'✧ Journey Seal';
+   details.append(stamp);
+  }
+  b.append(art,details);
   b.addEventListener('click',()=>{showLevel(i);cue('levelEnter');$('map').close()});
-  $('map-list').append(b);
+  host.append(b);
  });$('map').showModal();
 }
 wheel.addEventListener('pointerdown',e=>{
