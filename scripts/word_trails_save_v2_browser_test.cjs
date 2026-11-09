@@ -16,7 +16,7 @@ const fixture=(coins)=>({
  progress:{level:0,found:['ANTIC'],bonuses:['CAT'],hinted:['0:0'],combo:2}
 });
 const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earned:['chapter-noah'],spent:[],hints:{},
- streak:1,lastDay:'',rank:1,equippedWheel:'classic'});
+ streak:1,lastDay:new Date().toISOString().slice(0,10),rank:1,equippedWheel:'classic'});
 (async()=>{
  const browser=await puppeteer.launch({headless:true,executablePath:BIN,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
  try{
@@ -62,7 +62,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
    const candidate=JSON.parse(JSON.stringify(params.backup));
    candidate.keys['bible-unfolded-rewards-v17']=JSON.stringify({
      points:135,coins:130,purchases:['goldwheel'],earned:[],spent:[],
-     streak:0,lastDay:'',rank:1,equippedWheel:'goldwheel'
+     streak:1,lastDay:new Date().toISOString().slice(0,10),rank:1,equippedWheel:'goldwheel'
    });
    candidate.keys['bible-unfolded-rewards-v17-recovery-v3811']=candidate.keys['bible-unfolded-rewards-v17'];
    candidate.extensions.wordTrailsNext.state=JSON.stringify({...JSON.parse(candidate.extensions.wordTrailsNext.state),coins:177});
