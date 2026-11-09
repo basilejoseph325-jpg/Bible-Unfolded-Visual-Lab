@@ -81,6 +81,12 @@ jobs:
               await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
               await page.goto('http://127.0.0.1:8876/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0',timeout:120000});
               const $=async sel=>page.$eval(sel,el=>el.textContent);
+              const openSettings=async()=>{
+                await page.click('#audio');
+                await page.waitForSelector('#wt-unified-menu[open]',{timeout:10000});
+                await page.click('#wt-unified-menu [data-wt-menu="settings"]');
+                await page.waitForSelector('#wt-feel-settings[open]',{timeout:10000});
+              };
               const check=await page.evaluate(()=>({
                 api:!!window.BUWTPolish,settings:!!document.querySelector('#wt-feel-settings'),
                 motion:document.querySelector('#app').dataset.motion,
@@ -136,8 +142,7 @@ jobs:
                 const cues=['touch','undo','trace','wordSettle','coinLand','levelEnter'];
                 for(const cue of cues)window.BUWTPolish.cue(cue);
               });
-              await page.click('#audio');
-              await page.waitForSelector('#wt-feel-settings[open]');
+              await openSettings();
               const settingsShot=(await page.screenshot({type:'jpeg',quality:56})).toString('base64');
               for(let i=0;i<settingsShot.length;i+=8000)
                 console.log('FEEL_SETTINGS_SHOT_'+(i/8000)+' '+settingsShot.slice(i,i+8000));
@@ -208,7 +213,7 @@ jobs:
               assert.equal(await $('#bonus-count'),'3');
               let pref=await page.evaluate(()=>window.BUWTPolish.state());
               assert(pref.music&&pref.sfx&&pref.sfxVolume===55&&pref.musicVolume===45);
-              await page.click('#audio');
+              await openSettings();
               await setting('motion',false);
               await setting('haptics',false);
               await page.click('#feel-done');
@@ -229,7 +234,7 @@ jobs:
               });
               console.log('REDUCED_MOTION_WIN_EFFECTS',noWinFx);
               assert.equal(noWinFx,0,'No glitter or confetti may animate with visual effects disabled');
-              await page.click('#audio');
+              await openSettings();
               await setting('motion',true);
               await setting('haptics',true);
               await page.click('#feel-done');
@@ -243,7 +248,7 @@ jobs:
               assert.equal(after,before,'All bonus and satchel coins must pay only once per level');
               saved=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
               assert.equal(saved.paidBonuses.filter(x=>x==='satchel:0').length,1);
-              await page.click('#audio');
+              await openSettings();
               const dialogBox=await page.$eval('#wt-feel-settings',el=>({height:el.getBoundingClientRect().height,window:innerHeight}));
               assert(dialogBox.height<=dialogBox.window);
               await page.click('#feel-done');
@@ -277,7 +282,7 @@ jobs:
               assert(fx.glints>=27&&fx.foils>=58,'First premium glitter/confetti wave must appear');
               assert.equal(fx.touch,'none','Decorations must never block the Next Level button');
               await page.click('#next-level');
-              await page.click('#audio');
+              await openSettings();
               await setting('motion',false);
               await page.click('#feel-done');
               for(const word of ['DINER','RIDE','DINE','DIRE'])await play(word);
@@ -290,7 +295,7 @@ jobs:
               console.log('WIN_FX_OFF',JSON.stringify(reduced));
               assert(reduced.glints===0&&reduced.foils===0,'Motion disabled must suppress decorative particles');
               await page.click('#next-level');
-              await page.click('#audio');
+              await openSettings();
               await setting('motion',true);
               await page.click('#feel-done');
               await page.evaluate(()=>{
