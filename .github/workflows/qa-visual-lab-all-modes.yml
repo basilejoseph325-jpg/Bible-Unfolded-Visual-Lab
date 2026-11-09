@@ -1,0 +1,29 @@
+name: QA Bible Unfolded Visual Lab cross-mode native regression
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-visual-lab-all-modes.yml'
+      - 'scripts/visual_lab_all_mode_smoke_test.cjs'
+      - 'visual-lab-test-banner.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'word-trails-next-launcher.js'
+      - 'bu-platform-saves-v2.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+    - uses: actions/checkout@v4
+    - name: Verify no standalone game has replaced native core
+      run: |
+        node --check scripts/visual_lab_all_mode_smoke_test.cjs
+        node --check word-trails-native-shell-v1.js
+        node --check bu-platform-saves-v2.js
+    - name: Original home modes, menu/settings, Word Trails smoke on phone viewports
+      run: |
+        set -euo pipefail
+        npm install --prefix /tmp/bu-all-modes puppeteer-core@24 --no-audit --no-fund --silent
+        python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-all-modes-http.log 2>&1 &
+        sleep 1
+        NODE_PATH=/tmp/bu-all-modes/node_modules node scripts/visual_lab_all_mode_smoke_test.cjs
