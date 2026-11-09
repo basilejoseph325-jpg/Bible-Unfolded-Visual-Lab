@@ -118,7 +118,7 @@ jobs:
               assert.equal(shared.primary.equippedWheel,'seawheel');
               assert.equal(shared.backup.equippedWheel,'seawheel');
               assert.equal(shared.primary.coins,420,'Equip must never charge twice');
-              assert(shared.background.includes('rgb(48, 168, 172)')||shared.background.includes('#30a8ac'));
+              assert(shared.background.includes('rgba(22, 141, 148')&&shared.background.includes('rgb(20, 45, 77)'), 'Owned Ocean Glow must display layered glowing native finish');
               await page.$$eval('#wt-wheel-rewards .wt-wheel-item',els=>{
                 const m=els.find(x=>x.querySelector('strong').textContent==='Moonlit Puzzle Wheel');
                 m.querySelector('button').click();
