@@ -1,0 +1,207 @@
+name: QA Word Trails 30 Levels and Native Shared Settings Voices
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-30-voice.yml'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-announcer-v1.js'
+      - 'experiments/word-trails-main-settings-v1.js'
+      - 'experiments/word-trails-main-settings-v1.css'
+      - 'experiments/word-trails-original-voice-clips-v1.js'
+      - 'experiments/word-trails-unified-menu-v1.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static source-first 30-level content and 20 original voice clips
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-next-v1.js
+          node --check experiments/word-trails-feel-v2.js
+          node --check experiments/word-trails-unified-menu-v1.js
+          node --check experiments/word-trails-main-settings-v1.js
+          node --check experiments/word-trails-announcer-v1.js
+          node --check experiments/word-trails-original-voice-clips-v1.js
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node - <<'JS'
+          const fs=require('fs'),vm=require('vm'),assert=require('node:assert/strict');
+          const sandbox={window:{}};
+          for(const path of ['experiments/word-trails-levels-12-30-v1.js',
+                             'experiments/word-trails-original-voice-clips-v1.js']){
+            vm.runInNewContext(fs.readFileSync(path,'utf8'),sandbox,{timeout:4000,filename:path});
+          }
+          const lev=sandbox.window.BUWTAdditionalLevels;
+          const voices=sandbox.window.BUWTVoiceClips;
+          assert.equal(lev.length,19);
+          assert.equal(Object.keys(voices).length,20);
+          for(const who of ['charlie','paul','toby','julian'])
+           for(const what of ['excellent_thinking','another_discovery','youre_on_a_roll','chapter_complete','beautifully_done'])
+            assert(voices[who+'_'+what].startsWith('data:audio/mpeg;base64,'),'Missing authentic voice '+who+' '+what);
+          const counts={};
+          for(let i=0;i<lev.length;i++){
+           const a=lev[i],seen=new Set(),rack=[...a.rack];
+           assert(a.size>=6&&a.size<=7);
+           assert(fs.existsSync('bible-book-art/'+a.scene),'Missing scenic image '+a.scene);
+           assert(a.bibleBoard.length>=2&&a.extraSparks.length>=1);
+           for(const item of [a.spark,...a.extraSparks.map(x=>x.word)]){
+             assert(!seen.has(item),'Duplicate Bible find '+a.title+':'+item);seen.add(item);
+           }
+           for(const fact of [...a.bibleBoard,...a.extraSparks,{word:a.spark,url:a.url}]){
+             assert(fact.url.startsWith('https://www.jw.org/en/library/bible/nwt/books/'));
+             assert([...fact.word].every(c=>a.rack.includes(c)));
+           }
+           for(const [word,r,c,dir] of a.words){
+             assert(r>=0&&c>=0&&r+(dir==='down'?word.length-1:0)<a.size);
+             assert(c+(dir==='across'?word.length-1:0)<a.size);
+             assert([...word].every(c=>a.rack.includes(c)));
+           }
+           for(const f of a.bibleBoard)assert(a.words.some(w=>w[0]===f.word));
+           counts[a.title]=a.words.length;
+          }
+          console.log('PASS 30-level source-first library, 19 additional scenic backgrounds, 20 original announcement clips',JSON.stringify(counts));
+          JS
+      - name: Mobile gameplay actual 30 puzzle solutions, announcer and menu parity
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-native-voices puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8897 --bind 127.0.0.1 >/tmp/wordtrails30http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-native-voices/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+           let browser;
+           try{
+            browser=await puppeteer.launch({headless:true,
+             executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+             args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+            const page=await browser.newPage();
+            const errors=[];page.on('pageerror',e=>errors.push(e.message));
+            await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+            const url='http://127.0.0.1:8897/experiments/word-trails-next-v1.html';
+            await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
+            const installed=await page.evaluate(()=>({
+             levels:window.BUWTAdditionalLevels?.length,voice:window.BUWTAnnouncer?.available(),
+             settings:!!window.BUWTMainSettings,menu:!!window.BUWTUnifiedMenu,
+             sound:!!window.BUWTPolish?.setPreference,
+             options:[...document.querySelectorAll('#wt-voice-mode option')].map(x=>x.value)
+            }));
+            console.log('SHARED_SETTINGS_BOOT',JSON.stringify(installed));
+            assert.equal(installed.levels,19);assert(installed.voice&&installed.settings&&installed.menu&&installed.sound);
+            assert.deepEqual(installed.options,['rotate','off','charlie','paul','toby','julian']);
+            await page.evaluate(()=>{
+             const key='bu-visual-lab-wordtrails-next-v1';
+             const old=JSON.parse(localStorage.getItem(key))||{};
+             Object.assign(old,{level:11,unlocked:29,completed:[...Array(11).keys()],coins:3500,progress:null});
+             localStorage.setItem(key,JSON.stringify(old));
+             localStorage.setItem('bible-unfolded-private-voice-pref-v381',JSON.stringify({mode:'charlie',volume:65}));
+            });
+            await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
+            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 30'));
+            const dims=()=>page.evaluate(()=>{
+             const b=document.querySelector('#board').getBoundingClientRect();
+             const w=document.querySelector('#wheel').getBoundingClientRect();
+             return {board:[b.x,b.y,b.width,b.height],wheel:[w.x,w.y,w.width,w.height],
+               scroll:document.body.scrollHeight-innerHeight,appBottom:document.querySelector('#app').getBoundingClientRect().bottom};
+            });
+            const before=await dims();
+            await page.click('#audio');
+            await page.waitForSelector('#wt-unified-menu[open]');
+            await page.click('#wt-unified-menu [data-wt-menu="settings"]');
+            await page.waitForSelector('#wt-main-settings[open]');
+            const fields=await page.evaluate(()=>({
+              rows:[...document.querySelectorAll('#wt-main-settings .setting-row b')].map(el=>el.textContent),
+              title:document.querySelector('#wt-main-settings h2').textContent,
+              voice:document.querySelector('#wt-voice-mode').value,
+              audio:window.BUWTPolish.state()
+            }));
+            console.log('NATIVE_SETTINGS_FIELDS',JSON.stringify(fields));
+            assert(fields.rows.includes('Music')&&fields.rows.includes('Sound Effects')&&fields.rows.includes('Announcer'));
+            assert(fields.rows.includes('Reduced motion'));assert.equal(fields.voice,'charlie');
+            assert.deepEqual(await dims(),before,'Settings must not change board or wheel sizing');
+            await page.$eval('#wt-voice-volume',el=>{el.value='47';el.dispatchEvent(new Event('input',{bubbles:true}))});
+            assert.equal(await page.evaluate(()=>window.BUWTAnnouncer.getVolume()),47);
+            await page.click('#wt-voice-preview');
+            await new Promise(r=>setTimeout(r,450));
+            const voiceSave=await page.evaluate(()=>({
+             native:JSON.parse(localStorage.getItem('bible-unfolded-private-voice-pref-v381')),
+             backup:JSON.parse(localStorage.getItem('bible-unfolded-voice-pref-recovery-v3813')),
+             status:document.getElementById('wt-voice-status').textContent
+            }));
+            console.log('ACTUAL_VOICE_PREVIEW',JSON.stringify(voiceSave));
+            assert.equal(voiceSave.native.mode,'charlie');assert.equal(voiceSave.native.volume,47);
+            assert.deepEqual(voiceSave.native,voiceSave.backup);
+            assert(voiceSave.status.includes('Playing Charlie')||voiceSave.status.includes('Voice'));
+            await page.click('#wt-more-sounds');
+            await page.waitForSelector('#wt-feel-settings[open]');
+            await page.click('#feel-done');
+            assert.equal(await page.$eval('#audio',el=>el.textContent),'☰');
+            const openLevel=async idx=>{
+             await page.evaluate(i=>document.getElementById('level-map').click(),idx);
+             await page.waitForSelector('#map[open]');
+             await page.evaluate(i=>{
+              const x=[...document.querySelectorAll('#map button')].filter(e=>/\d/.test(e.textContent));
+              const button=document.querySelector('[data-level="'+i+'"]');
+              if(button)button.click();
+             },idx);
+            };
+            const play=async word=>page.evaluate(w=>{
+             for(const ch of w){
+              const b=[...document.querySelectorAll('.wheel-letter')]
+               .find(el=>el.textContent===ch&&!el.classList.contains('selected'));
+              if(!b)throw Error('Letter '+ch+' missing for '+w);
+              b.click();
+             }
+             document.querySelector('#submit').click();
+            },word);
+            for(let i=0;i<19;i++){
+             const data=await page.evaluate(i=>window.BUWTAdditionalLevels[i],i);
+             const targetLevel=i+12;
+             const label=await page.$eval('#level-label',el=>el.textContent);
+             assert(label.includes('LEVEL '+targetLevel+' / 30'),'Wrong level label '+label);
+             const gems=[data.spark,...data.extraSparks.map(x=>x.word)];
+             for(const word of gems){
+              await play(word);
+              await page.waitForSelector('#discovery[open]',{timeout:10000});
+              assert((await page.$eval('#spark-title',e=>e.textContent)).includes(word));
+              await page.click('#spark-next');
+             }
+             assert.equal(await page.$eval('#spark-progress',e=>e.textContent),gems.length+'/'+(gems.length+data.bibleBoard.length));
+             for(const [word] of data.words)await play(word);
+             await page.waitForSelector('#finish[open]',{timeout:13000});
+             const milestone=targetLevel%5===0;
+             const small=await page.$eval('#finish .finish-small',e=>e.textContent);
+             if(milestone)assert(small.includes('MILESTONE'));
+             assert((await page.$eval('#finish-spark',e=>e.textContent)).includes('Bible discoveries'));
+             console.log('SOLVED_LEVEL',JSON.stringify({level:targetLevel,title:data.title,
+               words:data.words.length,bible:data.bibleBoard.length,gems:gems.length,milestone}));
+             if(targetLevel!==30){await page.click('#next-level');await new Promise(r=>setTimeout(r,80))}
+            }
+            const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
+            assert.equal(stored.completed.length,30);
+            assert(stored.claimedSparks.length>=38);
+            console.log('SAVED_30_LEVELS',JSON.stringify({completed:stored.completed.length,
+             claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
+            await page.click('#next-level');
+            await page.waitForSelector('#map[open]');
+            assert.equal(await page.$$eval('#map .level-item',e=>e.length),30);
+            await page.click('#map-x');
+            for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
+             await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+             await new Promise(r=>setTimeout(r,110));
+             const g=await dims();
+             console.log('THIRTY_LEVEL_PHONE_'+width+'x'+height,JSON.stringify(g));
+             assert(g.scroll<=1&&g.board[1]+g.board[3]<g.wheel[1]&&g.wheel[1]+g.wheel[3]<=g.appBottom+1);
+            }
+            assert.equal(errors.length,0,'Uncaught page errors: '+errors.join(' | '));
+            console.log('PASS 30 levels, real voice bank, native menu/settings, 38 hidden Bible words, milestones, preserved 11 original levels, five phone layouts');
+           }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+           finally{if(browser)await browser.close()}
+          })();
+          JS
