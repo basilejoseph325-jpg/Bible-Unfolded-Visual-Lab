@@ -130,7 +130,9 @@ jobs:
                 console.log('WORD_TRAILS_SHARED_REWARDS_SHOT_'+(i/7900)+' '+shots.slice(i,i+7900));
               await page.click('#wt-unified-menu [data-wt-menu="back"]');
               await page.click('#wt-unified-menu [data-wt-menu="settings"]');
-              await page.waitForSelector('#wt-feel-settings[open]');
+              await page.waitForSelector('#wt-main-settings[open]');
+                await page.click('#wt-more-sounds');
+                await page.waitForSelector('#wt-feel-settings[open]');
               assert(!(await page.evaluate(()=>document.querySelector('#wt-unified-menu').open)));
               const soundBefore=await page.evaluate(()=>window.BUWTPolish.state());
               await page.click('#wt-feel-settings [data-demo="trace"]');
