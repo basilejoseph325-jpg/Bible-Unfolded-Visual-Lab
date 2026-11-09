@@ -17,6 +17,7 @@ const css=[
  // Only the home card poster changes: keep title, icon, teal panel, button and gold frame.
  '#home #home-cross .cinematic-poster.art-cross{position:relative!important;overflow:hidden!important;background-image:linear-gradient(180deg,rgba(2,21,30,.05),rgba(3,22,29,.20)),url("bible-book-art/01_genesis.webp")!important;background-position:center center!important;background-size:cover!important}',
  '#home #home-cross .cin-cross-letters{display:none!important}',
+ '#home #home-cross .poster-symbol{z-index:12!important}',
  '#home #home-cross .cinematic-poster.art-cross::after{content:"";display:block;position:absolute;inset:0;background:url("assets/ui/word-trails-home-next-crossword-v1.svg?v=nov09-card1") center/100% 100% no-repeat;z-index:2;pointer-events:none}'
 ].join('\n');
 function install(){
