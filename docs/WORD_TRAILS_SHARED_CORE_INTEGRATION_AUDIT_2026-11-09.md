@@ -34,6 +34,14 @@ Word Trails NEXT is a **separate standalone page** under `experiments/` with its
 - The phone-browser rewards/menu/effects test and actual root-home host-attachment verification passed in GitHub Actions run `42689888082` (after correcting obsolete checks that expected wallet constants to remain duplicated in the menu).
 - **This is an integrated Rewards/wheel slice, NOT completion of the entire core architecture.** Global menu/navigation parity, settings/audio/announcers and coordinated save migration still remain open.
 
+
+## Phase 3 native menu and Settings discovery — checkpoint (November 9)
+- Protected pre-menu checkpoint branch: `checkpoint/word-trails-rewards-before-native-menu-20261109` (Visual Lab only). LIVE remains untouched.
+- Direct inspection of the repository's real 11.7 MB `index.html` and split `bible_unfolded_core_part*.js` used read-only GitHub Actions inspection (run `42700123271`, succeeded); source was not rewritten or substituted with a lookalike.
+- **Confirmed authoritative root interface**: root `#home-menu` binds `openMenu()`; the real root `#settings-dialog` and `#dialog-mask` are controlled by `openDialog('settings')`, `closeDialog()`, and `syncSettings()`. Actual voice selection lives at `#bu381-voice-mode`; exported backups use `#save-export`/ `#save-import`. The root's normal mode navigation is wired to `openJourney`, `openGallery`, `openRewards`, etc.
+- The current Word Trails `#wt-unified-menu` and `#wt-main-settings` remain **separate implementations**. Shared rewards Phase 2 is done, but menu/settings Phase 3 is **discovery only, NOT integrated or tested**. The main game's real menu cannot simply be called from a different standalone HTML document; use a properly tested same-document native host or documented safe handoff, not an unverified cross-window global.
+- **Next implementation gates**: connect Word Trails to the actual native menu/navigation and Settings interface without losing active crossword progress; integrate music/effects preference semantics while retaining approved per-mode cues and original voices; then dry-run versioned coordinated saves with rollback, followed by Android/iPhone parity QA. No TEST coins become Insight Tokens automatically.
+
 ## Still blocked for release
 - [ ] Inspect exact authoritative **live** APIs/DOM/save schema before binding adapters; the giant bundled live index cannot be treated as documented API.
 - [ ] Replace TEST menu/settings/audio/reward direct implementations one system at a time, using actual platform functions with browser parity tests.
