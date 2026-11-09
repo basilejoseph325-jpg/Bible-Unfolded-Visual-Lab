@@ -48,12 +48,15 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
        active:[...document.querySelectorAll('.screen')].filter(e=>!e.hidden&&getComputedStyle(e).display!=='none').map(e=>e.id).slice(0,8),
        help:!document.getElementById('help-dialog')?.hidden,
        frame:!!window.BUWTNativeShell?.active?.(),
-       root:location.pathname,hash:location.hash
+       root:location.pathname,hash:location.hash,
+       screenVisible:[...document.querySelectorAll('section,[role="dialog"],main')].filter(e=>{const r=e.getBoundingClientRect();const st=getComputedStyle(e);return r.width>10&&r.height>10&&st.display!=='none'&&st.visibility!=='hidden'}).slice(0,20).map(e=>({id:e.id,cls:String(e.className).slice(0,65),tag:e.tagName,role:e.getAttribute('role')})),
+       builderIds:[...document.querySelectorAll('[id]')].filter(e=>/builder|word.build|wb-/i.test(e.id)).slice(0,25).map(e=>({id:e.id,hidden:e.hidden,display:getComputedStyle(e).display}))
      }));
      console.log('MODE_'+vp.width+'_'+id,JSON.stringify({before,result}));
      assert(result.root.endsWith('/index.html'),'Native card must not navigate to a nested copy of homepage');
      assert(!result.frame,'Non-Word-Trails modes must not open the Word Trails overlay');
-     assert(result.help||result.active.some(x=>x!=='home'),'Native mode card must open a real destination: '+id);
+     if(id==='home-builder')assert(result.screenVisible.some(x=>/build|wb-/i.test(x.id+' '+x.cls))||result.builderIds.some(x=>x.display!=='none'&&!x.hidden),'Builder must present a visible game screen');
+     else assert(result.help||result.active.some(x=>x!=='home'),'Native mode card must open a real destination: '+id);
    }
    await page.evaluate(()=>{
      window.closeDialog?.();window.closeMenu?.();window.focusHome();
