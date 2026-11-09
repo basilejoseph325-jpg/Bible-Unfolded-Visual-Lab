@@ -156,7 +156,9 @@ jobs:
               assert.deepEqual(second,first,'Native styles must not resize or move the crossword/wheel');
               await page.click('#audio');
               await page.click('#wt-unified-menu [data-wt-menu="settings"]');
-              await page.waitForSelector('#wt-feel-settings[open]');
+              await page.waitForSelector('#wt-main-settings[open]');
+                await page.click('#wt-more-sounds');
+                await page.waitForSelector('#wt-feel-settings[open]');
               await page.$eval('#wt-feel-settings [data-pref="motion"]',e=>{e.checked=false;e.dispatchEvent(new Event('change',{bubbles:true}))});
               await page.click('#feel-done');
               const pos2=await page.$$eval('.wheel-letter',els=>els.slice(0,2).map(el=>{
