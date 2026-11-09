@@ -3,9 +3,6 @@
    Actual Word Trails test coins remain in their original separate save. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
-const MAIN='bible-unfolded-rewards-v17';
-const BACKUP='bible-unfolded-rewards-v17-recovery-v3811';
-const ENT=['bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ownership-v3825-backup'];
 const STYLES=[
  {id:'classic',name:'Classic Puzzle Wheel',desc:'Original finish, always free',cost:0,mark:'◯'},
  {id:'goldwheel',name:'Golden Puzzle Wheel',desc:'A softly glowing golden wheel',cost:180,mark:'✦'},
@@ -14,21 +11,12 @@ const STYLES=[
 ];
 const IDS=new Set(STYLES.map(x=>x.id));
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
-const valid=x=>x&&typeof x==='object'&&!Array.isArray(x)&&Number.isFinite(x.points)&&Number.isFinite(x.coins)&&x.coins>=0;
-function wallet(){const a=read(MAIN),b=read(BACKUP);return valid(a)?a:valid(b)?b:null}
-function owned(){
- const out=new Set(['classic']);
- for(const key of [MAIN,BACKUP,...ENT]){
-  const x=read(key);if(!x||typeof x!=='object')continue;
-  const list=Array.isArray(x.purchases)?x.purchases:Array.isArray(x.owned)?x.owned:[];
-  for(const id of list)if(IDS.has(id))out.add(id);
- }
- return out;
-}
-function currentTheme(){
- const w=wallet(),have=owned();
- return w&&IDS.has(w.equippedWheel)&&have.has(w.equippedWheel)?w.equippedWheel:'classic';
-}
+// All wallet, permanent purchase and equipped-wheel logic now comes from
+// the exact same shared service loaded by the TEST homepage.
+const platform=()=>window.BUPlatformRewards;
+function wallet(){return platform()?.wallet()||null}
+function owned(){return new Set(platform()?.owned()||['classic'])}
+function currentTheme(){return platform()?.currentTheme()||'classic'}
 function apply(theme){
  const id=IDS.has(theme)?theme:'classic';
  document.documentElement.classList.toggle('gold-wheel',id==='goldwheel');
@@ -37,24 +25,17 @@ function apply(theme){
 }
 function status(msg){if($('wt-menu-status'))$('wt-menu-status').textContent=msg}
 function equip(id){
- if(!IDS.has(id)||!owned().has(id)){status('That wheel has not been unlocked yet.');return false}
- const w=wallet();
- if(!w){status('Please open the main Bible Unfolded Rewards screen to initialize the shared wallet.');return false}
- const next={...w,equippedWheel:id,
-  purchases:[...new Set([...(Array.isArray(w.purchases)?w.purchases:[]),...[...owned()].filter(s=>s!=='classic')])]};
- const json=JSON.stringify(next);
- let former=null;
- try{
-  former=localStorage.getItem(MAIN);
-  localStorage.setItem(MAIN,json);
-  if(localStorage.getItem(MAIN)!==json)throw Error('Not saved');
-  try{localStorage.setItem(BACKUP,json)}catch(_){}
- }catch(_){
-  try{if(former===null)localStorage.removeItem(MAIN);else localStorage.setItem(MAIN,former)}catch(_){}
-  status('Wheel selection could not be saved. The previous selection is unchanged.');
+ const api=platform();
+ if(!api){status('Shared Rewards service unavailable. No change was made.');return false}
+ const result=api.equipWheel(id);
+ if(!result.ok){
+  status(result.reason==='not-owned'?'That wheel has not been unlocked yet.':
+    result.reason==='wallet-unavailable'?'Please open the main Bible Unfolded Rewards screen to initialize your wallet.':
+    'Wheel choice was not saved. Your previous rewards and balance are unchanged.');
   refresh();return false;
  }
- apply(id);refresh();status('✓ '+STYLES.find(s=>s.id===id).name+' equipped across Bible Unfolded.');
+ apply(api.currentTheme());refresh();
+ status('✓ '+STYLES.find(s=>s.id===id).name+' equipped across Bible Unfolded.');
  return true;
 }
 function refresh(){
@@ -146,8 +127,9 @@ function init(){
   trigger.setAttribute('aria-pressed','false');
  }
  window.addEventListener('storage',event=>{
-  if([MAIN,BACKUP,...ENT].includes(event.key))refresh();
+  if(Object.values(platform()?.keys||{}).includes(event.key))refresh();
  });
+ window.addEventListener('bu-platform-rewards-change',refresh);
  window.addEventListener('pageshow',refresh);
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
