@@ -1,0 +1,179 @@
+name: QA Word Trails Unified Menu and Shared Wheel Rewards
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-unified-menu-v1.yml'
+      - 'experiments/word-trails-unified-menu-v1.js'
+      - 'experiments/word-trails-unified-menu-v1.css'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-feel-v2.js'
+      - 'visual-lab-test-banner.js'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and exact shared wallet contracts
+        run: |
+          node --check experiments/word-trails-unified-menu-v1.js
+          node --check experiments/word-trails-next-v1.js
+          node --check experiments/word-trails-feel-v2.js
+          node --check visual-lab-test-banner.js
+          python3 - <<'PY'
+          from pathlib import Path
+          main=Path('experiments/word-trails-next-v1.js').read_text()
+          menu=Path('experiments/word-trails-unified-menu-v1.js').read_text()
+          html=Path('experiments/word-trails-next-v1.html').read_text()
+          css=Path('experiments/word-trails-unified-menu-v1.css').read_text()
+          assert 'word-trails-unified-menu-v1.js' in html and 'word-trails-unified-menu-v1.css' in html
+          assert 'bible-unfolded-rewards-v17' in menu
+          assert 'bible-unfolded-wheel-ownership-v3825' in menu
+          assert 'bible-unfolded-rewards-v17-recovery-v3811' in menu
+          assert "seawheel" in menu and "goldwheel" in menu and "moonwheel" in menu
+          assert 'BUWTUnifiedMenu' in main
+          assert 'BUWTPolish?.openSettings' in menu
+          assert 'html.sea-wheel #app #wheel' in css
+          assert 'position:fixed' in css and '#wt-unified-menu' in css
+          assert '.board{' not in css
+          assert 'data-wt-menu' in menu
+          print('PASS standalone shared-menu integration, exact existing wallet keys, no gameplay geometry changes')
+          PY
+      - name: Phone browser menu, owned rewards, sound settings and no-scroll gameplay
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-shared-menu puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8890 --bind 127.0.0.1 >/tmp/bu-shared-menu-http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/bu-shared-menu/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,
+                executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+              const page=await browser.newPage();
+              const errors=[];page.on('pageerror',e=>errors.push(e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8890/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const geometry=()=>page.evaluate(()=>{
+                const box=e=>{const r=e.getBoundingClientRect();return [r.left,r.top,r.width,r.height,r.bottom]};
+                return {board:box(document.querySelector('#board')),wheel:box(document.querySelector('#wheel')),
+                  tile:box(document.querySelector('.tile')),
+                  app:box(document.querySelector('#app')),bodyScroll:document.body.scrollHeight-innerHeight,
+                  menuLabel:document.querySelector('#audio')?.textContent,
+                  level:document.querySelector('#level-label')?.textContent};
+              });
+              const before=await geometry();
+              assert.equal(before.menuLabel,'☰','Regular menu button must replace isolated audio-only header action');
+              assert(before.tile[2]>=64&&before.bodyScroll<=1);
+              await page.click('#audio');
+              await page.waitForSelector('#wt-unified-menu[open]');
+              const nav=await page.$$eval('.wt-menu-links button',els=>els.map(e=>e.querySelector('strong')?.textContent));
+              console.log('NATIVE_STYLE_MENU',JSON.stringify(nav));
+              assert(nav.includes('Rewards')&&nav.includes('Settings')&&nav.includes('Journey Path')&&nav.includes('Cover Screen'));
+              const during=await geometry();
+              assert.deepEqual(before.board,during.board,'Opening shared menu must not alter board geometry');
+              assert.deepEqual(before.wheel,during.wheel,'Opening shared menu must not alter wheel geometry');
+              assert.equal(during.bodyScroll,before.bodyScroll);
+              await page.click('#wt-unified-menu [data-wt-menu="rewards"]');
+              const names=await page.$$eval('#wt-wheel-rewards strong',els=>els.map(e=>e.textContent));
+              assert.deepEqual(names,['Classic Puzzle Wheel','Golden Puzzle Wheel','Moonlit Puzzle Wheel','Ocean Glow Wheel']);
+              await page.evaluate(()=>{
+                localStorage.setItem('bible-unfolded-rewards-v17',JSON.stringify({
+                  points:1400,coins:420,earned:['chapter-noah'],spent:[],purchases:['goldwheel'],
+                  hints:{},streak:1,lastDay:'',rank:1,equippedWheel:'classic'
+                }));
+                localStorage.setItem('bible-unfolded-rewards-v17-recovery-v3811',JSON.stringify({
+                  points:1400,coins:420,purchases:['seawheel'],equippedWheel:'classic'
+                }));
+                localStorage.setItem('bible-unfolded-wheel-ownership-v3825',JSON.stringify({
+                  version:1,owned:['seawheel']
+                }));
+                window.BUWTUnifiedMenu.refresh();
+              });
+              const owned=await page.evaluate(()=>window.BUWTUnifiedMenu.owned());
+              assert(owned.includes('goldwheel')&&owned.includes('seawheel')&&!owned.includes('moonwheel'));
+              await page.$$eval('#wt-wheel-rewards .wt-wheel-item',els=>{
+                const e=els.find(x=>x.querySelector('strong').textContent==='Ocean Glow Wheel');
+                if(!e)throw Error('Ocean wheel missing');
+                e.querySelector('button').click();
+              });
+              const shared=await page.evaluate(()=>({
+                primary:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')),
+                backup:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17-recovery-v3811')),
+                theme:window.BUWTUnifiedMenu.currentTheme(),
+                background:getComputedStyle(document.querySelector('#wheel')).backgroundImage
+              }));
+              console.log('OCEAN_GLOW_EQUIPPED',JSON.stringify({
+                theme:shared.theme,coins:shared.primary.coins,points:shared.primary.points,
+                purchases:shared.primary.purchases,visual:shared.background.slice(0,160)}));
+              assert.equal(shared.theme,'seawheel');
+              assert(shared.primary.purchases.includes('goldwheel')&&shared.primary.purchases.includes('seawheel'));
+              assert.equal(shared.primary.equippedWheel,'seawheel');
+              assert.equal(shared.backup.equippedWheel,'seawheel');
+              assert.equal(shared.primary.coins,420,'Equip must never charge twice');
+              assert(shared.background.includes('rgb(48, 168, 172)')||shared.background.includes('#30a8ac'));
+              await page.$$eval('#wt-wheel-rewards .wt-wheel-item',els=>{
+                const m=els.find(x=>x.querySelector('strong').textContent==='Moonlit Puzzle Wheel');
+                m.querySelector('button').click();
+              });
+              assert.equal(await page.evaluate(()=>window.BUWTUnifiedMenu.currentTheme()),'seawheel','Locked Moonlit wheel must stay locked');
+              assert((await page.$eval('#wt-menu-status',e=>e.textContent)).includes('must be unlocked'));
+              const shots=(await page.screenshot({type:'jpeg',quality:57})).toString('base64');
+              for(let i=0;i<shots.length;i+=7900)
+                console.log('WORD_TRAILS_SHARED_REWARDS_SHOT_'+(i/7900)+' '+shots.slice(i,i+7900));
+              await page.click('#wt-unified-menu [data-wt-menu="back"]');
+              await page.click('#wt-unified-menu [data-wt-menu="settings"]');
+              await page.waitForSelector('#wt-feel-settings[open]');
+              assert(!(await page.evaluate(()=>document.querySelector('#wt-unified-menu').open)));
+              const soundBefore=await page.evaluate(()=>window.BUWTPolish.state());
+              await page.click('#wt-feel-settings [data-demo="trace"]');
+              await page.click('#feel-done');
+              assert(!(await page.evaluate(()=>document.querySelector('#wt-feel-settings').open)));
+              assert.deepEqual(await page.evaluate(()=>window.BUWTPolish.state()),soundBefore);
+              assert.equal((await geometry()).menuLabel,'☰');
+              await page.click('#audio');
+              await page.waitForSelector('#wt-unified-menu[open]');
+              await page.click('#wt-unified-menu [data-wt-menu="levels"]');
+              await page.waitForSelector('#map[open]');
+              await page.click('#map-x');
+              await page.click('#audio');
+              await page.click('#wt-unified-menu [data-wt-menu="continue"]');
+              assert(!(await page.evaluate(()=>document.querySelector('#wt-unified-menu').open)));
+              for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
+                await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+                await new Promise(r=>setTimeout(r,100));
+                const g=await geometry();
+                const b=g.board,w=g.wheel;
+                console.log('SHARED_MENU_PHONE_'+width+'x'+height,JSON.stringify({tile:g.tile[2],boardBottom:b[4],wheelTop:w[1],wheelBottom:w[4],bodyScroll:g.bodyScroll}));
+                assert(g.tile[2]>=60&&b[4]<w[1]&&w[4]<=g.app[4]+1&&g.bodyScroll<=1);
+                await page.click('#audio');
+                await page.waitForSelector('#wt-unified-menu[open]');
+                const m=await page.$eval('#wt-unified-menu',e=>e.getBoundingClientRect());
+                assert(m.height<=height+1,'Menu overlay must fit device height');
+                await page.click('#wt-menu-close');
+              }
+              // Verify handoff into full native Rewards page on the same Visual Lab origin.
+              await page.click('#audio');
+              await page.click('#wt-unified-menu [data-wt-menu="rewards"]');
+              await page.click('#wt-unified-menu [data-wt-menu="shop"]');
+              await page.waitForFunction(()=>location.pathname.endsWith('/index.html'),{timeout:18000});
+              await page.waitForSelector('#rewards',{timeout:60000});
+              await page.waitForFunction(()=>{
+                const r=document.querySelector('#rewards');return r&&!r.hidden
+              },{timeout:25000});
+              const navRoute=await page.evaluate(()=>({path:location.pathname,url:location.search,rewards:!document.getElementById('rewards').hidden}));
+              console.log('NATIVE_REWARDS_HANDOFF',JSON.stringify(navRoute));
+              assert(navRoute.url.includes('wt_nav=rewards')&&navRoute.rewards);
+              assert.equal(errors.length,0,'Uncaught errors: '+errors.join('; '));
+              console.log('PASS shared native-style menu, ocean glow owned/equip, no charges, old settings preserved, unchanged phone layout, native rewards handoff');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{await browser?.close()}
+          })();
+          JS
