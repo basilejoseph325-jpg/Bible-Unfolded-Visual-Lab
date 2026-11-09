@@ -1,0 +1,19 @@
+name: Word Trails — Puzzle Content Quality Gate
+on:
+  push:
+    paths:
+      - 'scripts/word_trails_quality_gate.mjs'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - '.github/workflows/qa-word-trails-puzzle-quality.yml'
+permissions: {contents: read}
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check all 30 puzzle definitions, bonus banks, sources and art
+        run: |
+          node --check scripts/word_trails_quality_gate.mjs
+          node scripts/word_trails_quality_gate.mjs
