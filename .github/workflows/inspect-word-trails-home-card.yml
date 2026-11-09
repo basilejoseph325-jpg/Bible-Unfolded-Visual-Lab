@@ -3,6 +3,9 @@ on:
   push:
     paths:
       - '.github/workflows/inspect-word-trails-home-card.yml'
+      - 'word-trails-next-launcher.js'
+      - 'visual-lab-test-banner.js'
+      - 'assets/ui/word-trails-home-next-crossword-v1.svg'
 permissions: {contents: read}
 jobs:
   inspect:
@@ -47,6 +50,8 @@ jobs:
                   oldLetters:getComputedStyle(old).display,
                   cta,title:text,
                   goldFrame:getComputedStyle(card).borderColor,
+                  iconZ:getComputedStyle(card.querySelector('.poster-symbol')).zIndex,
+                  iconPosition:getComputedStyle(card.querySelector('.poster-symbol')).position,
                   actualImage:!!document.querySelector('#home-cross .art-cross')};
               });
               console.log('NEW_WORD_TRAILS_CARD',JSON.stringify(detail));
@@ -56,6 +61,7 @@ jobs:
               assert.equal(detail.oldLetters,'none');
               assert(detail.cta.includes('PLAY CROSSWORDS'));
               assert(detail.title.includes('Bible Word'));
+              assert(Number(detail.iconZ)>=10,'Original Word Trails gold icon should sit above artwork and text');
               const imgResp=await page.goto('http://127.0.0.1:8878/assets/ui/word-trails-home-next-crossword-v1.svg',{waitUntil:'domcontentloaded'});
               assert.equal(imgResp.status(),200,'New SVG puzzle artwork must exist on published pages');
               const content=await page.content();
