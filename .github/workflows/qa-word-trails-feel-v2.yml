@@ -40,7 +40,7 @@ jobs:
           assert "const QUIET_CUES=new Set(['touch','trace','undo'])" in js, "Preserve swipe/tap/undo"
           assert "function celebrateWin()" in js and "winConfetti(stage,58)" in js and "winGlitter(stage,27)" in js
           assert 'id="finish-fx"' in html and "finish-fx" in css
-          assert "window.BUWTPolish?.celebrateWin?.()" in main
+          assert "window.BUWTPolish?.celebrateWin?.(milestone&&!already)" in main
           print("PASS separate quiet gameplay sounds and premium win-only glitter")
           assert "EFFECTS_MIX_GAIN=11.2" in js, "Master gain preserved across the voice normalization change"
           assert "VOICE_LOUDNESS_BOOST=4.0" in js
