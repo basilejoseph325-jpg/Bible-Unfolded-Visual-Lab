@@ -1,0 +1,112 @@
+/* Visual Lab Word Trails - the native Bible Unfolded settings design.
+   Uses the SAME rows, labels and announcer options as original index.html.
+   No #app, #board, #wheel or tile geometry changes; top-layer dialog only. */
+#wt-main-settings{
+ box-sizing:border-box;border:0;padding:0;margin:auto;
+ background:transparent;color:#f6e9c8;
+ width:min(91vw,560px);max-width:91vw;
+ max-height:84dvh;overflow:visible;
+ filter:drop-shadow(0 11px 24px #0009);
+}
+#wt-main-settings::backdrop{background:#03141ccd;backdrop-filter:blur(5px)}
+#wt-main-settings .wt-shared-settings-panel{
+ position:relative;box-sizing:border-box;max-height:84dvh;overflow-y:auto;
+ overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ border:1.5px solid #d6b781;border-radius:20px;padding:25px 24px 22px;
+ background:linear-gradient(155deg,#124852 0%,#0d3542 54%,#0a2b38 100%);
+ box-shadow:inset 0 0 0 2px #e5c68c12,0 14px 26px #0008;
+}
+#wt-main-settings .dialog-x{
+ position:absolute;top:19px;right:19px;width:38px;height:38px;
+ border:0;background:transparent;color:#ffe3a5;font:500 38px/1 Georgia,serif;
+}
+#wt-main-settings .overline{
+ margin-top:1px;color:#d6bb83;letter-spacing:.18em;
+ font:800 10px/1.3 system-ui,sans-serif;
+}
+#wt-main-settings h2{
+ margin:8px 0 24px;color:#ffe2a9;font:700 clamp(30px,6.7vw,40px)/1.1 Georgia,serif;
+ letter-spacing:.01em;
+}
+#wt-main-settings .music-note{
+ display:block;margin:0 0 12px;color:#c9d6d5;font:450 12px/1.58 system-ui,sans-serif;
+}
+#wt-main-settings .setting-row{
+ display:flex;align-items:center;justify-content:space-between;gap:13px;
+ padding:13px 0;border-bottom:1px solid #9aa9a64a;min-height:62px;
+}
+#wt-main-settings .setting-row span{display:flex;flex-direction:column;gap:4px;min-width:0}
+#wt-main-settings .setting-row b{font:750 17px/1.25 system-ui,sans-serif;color:#f6ead7}
+#wt-main-settings .setting-row small{font:450 12px/1.3 system-ui,sans-serif;color:#bbcbd0}
+#wt-main-settings input[type=checkbox]{
+ width:24px;height:24px;flex:0 0 24px;accent-color:#eac379;
+ border-radius:2px;margin:0 3px;
+}
+#wt-main-settings .setting-volume{
+ display:block;position:relative;margin:15px 0 21px;color:#f3e4c7;
+ font:700 13px/1.4 system-ui,sans-serif;
+}
+#wt-main-settings .setting-volume>b{display:block;margin-bottom:12px}
+#wt-main-settings .setting-volume>input[type=range]{
+ appearance:none;display:inline-block;width:calc(100% - 54px);height:6px;
+ border-radius:8px;background:#57626d;border:1px solid #9b9291;
+ vertical-align:middle;margin:0 9px 0 3px;accent-color:#ebc77c;
+}
+#wt-main-settings input[type=range]::-webkit-slider-thumb{
+ appearance:none;width:19px;height:19px;border-radius:50%;
+ background:#eac77d;border:1px solid #f6dba0;box-shadow:0 1px 4px #0003;
+}
+#wt-main-settings .setting-volume>span{
+ display:inline-block;width:40px;text-align:right;color:#dcc58d;
+ font:500 12px/1 system-ui,sans-serif;vertical-align:middle;
+}
+#wt-main-settings .bu383-sfx-preview{margin:8px 0 19px}
+#wt-main-settings .bu383-sfx-preview button,
+#wt-main-settings .bu381-preview button{
+ border:1px solid #bd9b66;color:#efd09a;background:#143c43;
+ border-radius:11px;padding:10px 13px;min-height:37px;font:750 12px system-ui,sans-serif;
+}
+#wt-main-settings .bu381-voice-controls{
+ margin:10px 0 18px;padding:16px 15px 14px;
+ border:1px solid #9f9b7e82;border-radius:16px;
+ background:linear-gradient(#0b333ce0,#0a2c35c9);
+}
+#wt-main-settings .bu381-voice-label{
+ display:flex;align-items:center;justify-content:space-between;gap:8px;
+ color:#e5c282;font:850 12px/1.2 system-ui,sans-serif;letter-spacing:.10em;
+}
+#wt-main-settings .bu381-private{
+ padding:4px 9px;border-radius:20px;background:#795828;
+ font:800 9px/1 system-ui,sans-serif;color:#ebdebc;letter-spacing:0;white-space:nowrap;
+}
+#wt-main-settings select{
+ width:min(46%,230px);padding:10px 9px;border:1px solid #ae9973;
+ border-radius:10px;background:#193f48;color:#f6e6c9;
+ font:500 14px/1.3 system-ui,sans-serif;min-height:41px;
+}
+#wt-main-settings .bu381-preview{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+#wt-main-settings .bu381-preview small{font:450 11px/1.4 system-ui,sans-serif;color:#c6cfca}
+#wt-main-settings .bu381-voice-controls .music-note{font-size:10px;margin:6px 0}
+#wt-main-settings .bu381-voice-controls a{color:#f8d392;text-decoration:underline}
+#wt-main-settings .save-transfer{
+ padding:15px 14px;margin:15px 0;border:1px solid #dfc18d63;
+ border-radius:12px;background:#082a34;
+}
+#wt-main-settings .save-transfer b{font:750 14px system-ui,sans-serif}
+#wt-main-settings .save-transfer p{font:450 12px/1.5 system-ui,sans-serif;color:#cbd0c8}
+#wt-main-settings .save-transfer button{
+ border:1px solid #e8cf9b;border-radius:9px;color:#f7deaa;
+ background:#15454c;padding:11px;font:700 12px system-ui,sans-serif;
+}
+#wt-main-settings .gold-button{
+ width:100%;min-height:43px;margin-top:10px;
+ border:1.5px solid #fff0c4;border-radius:11px;
+ background:linear-gradient(#ffe4aa,#c7954a);
+ color:#14313f;font:900 14px system-ui,sans-serif;
+}
+#wt-main-settings button:focus-visible,#wt-main-settings input:focus-visible,
+#wt-main-settings select:focus-visible{outline:3px solid #ffe6a6;outline-offset:2px}
+@media(max-height:670px){
+ #wt-main-settings .wt-shared-settings-panel{padding:16px 17px}
+ #wt-main-settings h2{margin-bottom:12px}
+}
