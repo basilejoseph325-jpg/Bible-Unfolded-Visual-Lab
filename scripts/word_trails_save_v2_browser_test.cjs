@@ -44,7 +44,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
    const preview=window.BUPlatformSaves.dryRun(backup);
    const after=JSON.stringify(original());
    return {backup,preview,beforeEqualsAfter:before===after};
-  },{WK,RK,OK,OB,TEST,FEEL,wallet:wallet(800,600,['seawheel']),fixture:fixture(107)}).catch(()=>null);
+  },{WK,RK,OK,OB,TEST,FEEL,wallet:wallet(800,600,['seawheel']),fixture:fixture(107)}).catch(e=>{console.error('SEEDING_ERROR',e.stack||e);return null});
   // Avoid source-evaluation shortcuts: the fixture data is seeded with safe literals below.
   if(!data)throw Error('Unexpected failure seeding browser save fixture');
   assert.equal(data.beforeEqualsAfter,true);
