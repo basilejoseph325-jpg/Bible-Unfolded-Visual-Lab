@@ -1,0 +1,44 @@
+name: Extract Existing Bible Unfolded Demo Voice Clips for Word Trails
+on:
+  push:
+    paths: ['.github/workflows/extract-word-trails-demo-voices.yml']
+permissions: {contents: write}
+jobs:
+  extract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: true}
+      - name: Reuse exact existing noncommercial clips, no audio recreation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          core=Path('bible_unfolded_core_part5.js').read_text()
+          m=re.search(r'const BU382_EMBEDDED_VOICES\s*=\s*(\{[\s\S]*?\});',core)
+          if not m:raise SystemExit('Original voice clip bank missing. Do not substitute voices.')
+          bank=m.group(1)
+          clips=re.findall(r'([a-z]+_(?:excellent_thinking|another_discovery|youre_on_a_roll|chapter_complete|beautifully_done))["\']?\s*:',bank)
+          print('SOURCE_BANK_BYTES',len(bank),'VOICE_KEYS_FOUND',len(clips))
+          assert len(bank)>100000
+          assert all(name in bank for name in [
+            'charlie_excellent_thinking','paul_chapter_complete','toby_you­re_on_a_roll'.replace('­',''),
+            'julian_beautifully_done'
+          ])
+          dest=Path('experiments/word-trails-original-voice-clips-v1.js')
+          dest.write_text(
+            '/* Original Bible Unfolded embedded ElevenLabs demo clips.\n'
+            '   Reused unchanged for noncommercial Visual Lab testing only.\n'
+            '   Final commercial recordings require an eligible license. */\n'
+            'window.BUWTVoiceClips=Object.freeze('+bank+');\n')
+          print('EXTRACTED_VOICES',dest,len(dest.read_bytes()))
+          PY
+          node --check experiments/word-trails-original-voice-clips-v1.js
+          git config user.name 'bible-unfolded-qa[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add experiments/word-trails-original-voice-clips-v1.js
+          if ! git diff --cached --quiet; then
+            git commit -m 'Visual Lab only: share original noncommercial announcer demo clips with Word Trails'
+            git push origin HEAD:main
+          fi
