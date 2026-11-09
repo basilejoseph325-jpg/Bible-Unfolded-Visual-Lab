@@ -117,6 +117,28 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       if(errors.length)console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,12)));
       await page.close();
     }
+    // Published page direct URLs must open the REAL root menu host, not an isolated
+    // lookalike. ?native=1 forces this route in the localhost test server.
+    const deep=await browser.newPage();deep.setDefaultTimeout(60000);
+    await deep.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+    await deep.goto('http://127.0.0.1:8891/experiments/word-trails-next-v1.html?native=1',{waitUntil:'domcontentloaded',timeout:120000});
+    await deep.waitForFunction(()=>location.pathname.endsWith('/index.html')&&window.BUWTNativeShell?.active?.() &&
+      !!document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
+    let link=await deep.evaluate(()=>({pathname:location.pathname,hash:location.hash,query:location.search,
+      native:window.BUWTNativeShell.active(),menu:!!document.querySelector('#game-menu')}));
+    console.log('PUBLISHED_DIRECT_LINK_REAL_NATIVE_HOST',JSON.stringify(link));
+    assert(link.native&&link.menu&&link.hash==='#word-trails'&&!link.query.includes('wt_launch'));
+    await deep.reload({waitUntil:'domcontentloaded',timeout:120000});
+    await deep.waitForFunction(()=>window.BUWTNativeShell?.active?.() &&
+      document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
+    console.log('ACTIVE_WORD_TRAILS_REFRESH_RESUMES_NATIVE_HOST',await deep.evaluate(()=>location.href));
+    await deep.evaluate(()=>window.BUWTNativeShell.close());
+    await deep.reload({waitUntil:'domcontentloaded',timeout:120000});
+    await deep.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.(),{timeout:60000});
+    assert.equal(await deep.evaluate(()=>window.BUWTNativeShell.active()),false);
+    console.log('EXITED_WORD_TRAILS_REFRESH_STAYS_HOME',await deep.evaluate(()=>location.href));
+    await deep.close();
+
     console.log('PASS Native Word Trails menu / Settings / original voice / return for portrait and landscape');
   }catch(e){failures++;console.error('NATIVE_SHELL_QA_FAILED',e.stack||e);process.exitCode=1}
   finally{await browser.close()}
