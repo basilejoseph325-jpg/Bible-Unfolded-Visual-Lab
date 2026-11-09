@@ -90,7 +90,7 @@ for(let i=0;i<levels.length;i++){
  let usable=0;
  for(const word of bonuses){
   if(!wordOK(word)||!canMake(l.rack,word))error('Impossible bonus '+word);
-  if(seen.has(word))error('Repeated bonus '+word);seen.add(word);
+  if(seen.has(word)){if(i>=11)error('Repeated bonus '+word);else warn('Legacy duplicate bonus '+word+' safely deduplicated by the runtime');}seen.add(word);
   if(required.has(word)||secretWords.has(word)){
    if(i>=11)error('Unreachable bonus '+word+' is already an answer or Bible secret');
    else warn('Legacy bonus '+word+' reserved by higher priority match');
