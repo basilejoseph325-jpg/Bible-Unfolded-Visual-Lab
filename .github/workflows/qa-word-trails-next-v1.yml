@@ -25,7 +25,8 @@ jobs:
           css=Path('experiments/word-trails-next-v1.css').read_text()
           assert "bu-visual-lab-wordtrails-next-v1" in js
           assert "Word Trails NEXT" in html
-          assert len(re.findall("rack:'",js))==11
+          assert len(re.findall("rack:'",js))==11, 'Preserve original eleven verified levels'
+          assert 'word-trails-levels-12-30-v1.js' in html, 'Load nineteen additional levels'
           assert "live-game scores" in js
           assert "localStorage.setItem(STORAGE" in js
           assert "word-trails-next-v1.js" in html and "word-trails-next-v1.css" in html
@@ -257,7 +258,7 @@ jobs:
               await page.click('#next-level');
               await page.waitForSelector('#map[open]');
               const buttons=await page.$$eval('.map-level',els=>els.map(el=>({disabled:el.disabled,complete:el.classList.contains('complete')})));
-              assert.equal(buttons.length,11);
+              assert.equal(buttons.length,30,'Level map should now contain thirty cards');
               assert(buttons.every(x=>!x.disabled&&x.complete),'All eleven levels must unlock and complete');
               const store=await page.evaluate(k=>JSON.parse(localStorage.getItem(k)),savedKey);
               assert.equal(store.completed.length,11);
@@ -331,7 +332,7 @@ jobs:
                 assert(g.overflowBody<=1&&g.overflowApp<=1,'No page scrolling on expanded board');
               }
               assert.equal(errors.length,0,'No page errors: '+errors.join(', '));
-              console.log('PASS Word Trails NEXT — 11 levels, 6x6/7x7 Bible answers, saved state, no scroll and Android-sized layouts');
+              console.log('PASS Word Trails NEXT — original 11 level regressions preserved within the 30-level map');
             }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();
