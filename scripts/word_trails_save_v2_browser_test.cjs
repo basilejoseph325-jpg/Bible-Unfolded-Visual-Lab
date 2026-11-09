@@ -142,8 +142,12 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   console.log('LEGACY_V1_IMPORT_STILL_SUPPORTED',JSON.stringify(legacy));
 
   // Reload and launch real crossword. A partial puzzle has to be readable.
+  const beforeReload=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'));
+  console.log('TEST_SAVE_BEFORE_RELOAD',JSON.stringify(beforeReload));
   await page.reload({waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.());
+  const afterReload=await page.evaluate(()=>({state:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'),url:location.href}));
+  console.log('TEST_SAVE_AFTER_RELOAD',JSON.stringify(afterReload));
   await page.evaluate(()=>window.BUWTNativeShell.launch());
   await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.document?.querySelector('#solved-count'));
   const progress=await page.evaluate(()=>{
@@ -152,6 +156,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
      coins:f.getElementById('points').textContent};
   });
   console.log('RESTORED_PUZZLE_IN_REAL_GAME',JSON.stringify(progress));
+  console.log('TEST_SAVE_AFTER_CHILD_LOAD',JSON.stringify(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'))));
   assert.equal(progress.level,'LEVEL 1 / 30');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');
   if(errors.length)console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,8)));
   await page.close();
