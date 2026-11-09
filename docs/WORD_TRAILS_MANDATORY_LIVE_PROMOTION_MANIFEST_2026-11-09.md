@@ -32,3 +32,10 @@ All approved Word Trails NEXT improvements and shared-core integrations develope
 When the owner says "next", "continue", or "move to live", read this manifest and `BIBLE_UNFOLDED_RULEBOOK_START_HERE.md`, inspect current TEST/LIVE commits, continue the pending release gates, and do not ask the owner to repeat what needs promoting. A prior conversation going read-only does not cancel this requirement.
 
 **LIVE promotion status: PENDING owner physical QA, final compatibility/release checks, and explicit LIVE authorization.** 
+
+## Read-only current LIVE vs TEST core audit (November 9, 2026)
+- Verified GitHub blob hashes in Story-Trails LIVE and Bible-Unfolded-Visual-Lab TEST: **all five** `bible_unfolded_core_part1.js` through `bible_unfolded_core_part5.js` are byte-identical as of this inspection. This supports a thin shared-core adapter approach; it does NOT authorize overwriting LIVE core or infer future versions stay identical.
+- The two `index.html` files differ (LIVE 11,725,984 bytes; TEST 11,728,969 bytes). **Never replace LIVE index wholesale with TEST index.** Inspect its small approved changes and add only those actually needed for the integrated release.
+- TEST-only current entry/integration files include `word-trails-native-shell-v1.js`, `word-trails-next-launcher.js`, `bu-platform-rewards-v1.js`, `bu-platform-saves-v2.js`, `experiments/word-trails-next-v1.{html,js,css}`, `experiments/word-trails-levels-12-30-v1.js`, menu/voice/Settings/audio/wheel adapters, and supporting CSS/assets. The `visual-lab-test-banner.js` TEST identity ribbon and diagnostic/TEST-specific hardcoded behavior are NOT general-purpose LIVE features.
+- LIVE currently has older Word Trails styles and scripts (e.g. `word-trails-cinematic.css` and `word-trails-starfield-v3-test.js`), so adding Word Trails NEXT must preserve them unless the owner explicitly approves replacement. Confirm whether the LIVE original Word Trails remains available for any legacy progress or compatibility need.
+- This was a **read-only repository hash and file inventory**, NOT a deployed compatibility run, a safe migration dry-run on real user data, or a LIVE release.
