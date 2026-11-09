@@ -149,7 +149,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   const afterReload=await page.evaluate(()=>({state:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'),url:location.href}));
   console.log('TEST_SAVE_AFTER_RELOAD',JSON.stringify(afterReload));
   await page.evaluate(()=>window.BUWTNativeShell.launch());
-  await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.document?.querySelector('#solved-count'));
+  await page.waitForFunction(()=>{const f=document.getElementById('bu-wt-native-game')?.contentWindow?.document;return f?.getElementById('solved-count')?.textContent==='1 / 4'&&f?.getElementById('points')?.textContent==='177'}, {timeout:60000});
   const progress=await page.evaluate(()=>{
    const f=document.getElementById('bu-wt-native-game').contentWindow.document;
    return {level:f.getElementById('level-label').textContent,solved:f.getElementById('solved-count').textContent,
