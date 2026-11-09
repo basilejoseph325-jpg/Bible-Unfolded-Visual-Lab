@@ -44,8 +44,9 @@ function sync(){
  }
  for(const id of ['musicVolume','sfxVolume']){const node=$('feel-'+id);if(node)node.textContent=pref[id]+'%'}
  const btn=$('audio');
- if(btn){btn.textContent='♫';btn.title='Sound, music and effects settings';
-  btn.setAttribute('aria-label','Sound and effects settings');btn.setAttribute('aria-pressed','false')}
+ if(btn){btn.textContent=window.BUWTUnifiedMenu?'☰':'♫';
+  btn.title=window.BUWTUnifiedMenu?'Bible Unfolded menu':'Sound, music and effects settings';
+  btn.setAttribute('aria-label',window.BUWTUnifiedMenu?'Open Bible Unfolded menu':'Sound and effects settings');btn.setAttribute('aria-pressed','false')}
 }
 function audio(){
  if(!pref.sfx||pref.sfxVolume<=0||!active())return null;
