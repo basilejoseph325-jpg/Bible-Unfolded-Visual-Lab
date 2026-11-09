@@ -33,3 +33,26 @@ else install();
 })();
 /* Load new Word Trails selector only within the isolated Visual Lab. */
 (()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=word-trails-home-image-nov09-v3';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Word Trails standalone page -> existing Bible Unfolded screens.
+   The native main game owns these screens. Handoff only changes navigation
+   after it is loaded; never touches its reward logic, progress or display. */
+(()=>{'use strict';
+ const key=new URLSearchParams(location.search).get('wt_nav');
+ if(!key)return;
+ const targets={journey:'home-journey',gallery:'home-gallery',rewards:'home-shop',about:'home-menu'};
+ if(!targets[key])return;
+ let attempts=0;
+ const jump=()=>{
+  if(attempts++>22)return;
+  const button=document.getElementById(targets[key]);
+  if(!button){setTimeout(jump,300);return}
+  if(key==='about'){
+   button.click();
+   setTimeout(()=>document.getElementById('bu3925-about-menu')?.click(),180);
+  }else button.click();
+ };
+ if(document.readyState==='complete')setTimeout(jump,330);
+ else window.addEventListener('load',()=>setTimeout(jump,330),{once:true});
+})();
