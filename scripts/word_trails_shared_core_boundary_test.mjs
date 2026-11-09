@@ -5,7 +5,7 @@ import vm from 'node:vm';
 import assert from 'node:assert/strict';
 const code=fs.readFileSync('experiments/word-trails-shared-core-boundary-v1.js','utf8');
 const data=new Map([
- ['bu-visual-lab-wordtrails-next-v1',JSON.stringify({level:14,unlocked:15,coins:640,completed:['1','2','2'],sparks:['14:NOAH'],paidBonuses:['14|JOIN']})],
+ ['bu-visual-lab-wordtrails-next-v1',JSON.stringify({level:14,unlocked:15,coins:640,completed:[1,2,2],sparks:['14:NOAH'],paidBonuses:['14|JOIN']})],
  ['bible-unfolded-rewards-v17',JSON.stringify({coins:777,points:119,equippedWheel:'seawheel',purchases:['seawheel']})]
 ]);
 let writes=0;const localStorage={
