@@ -34,7 +34,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   const data=await page.evaluate((args)=>{
    const original=()=>Object.fromEntries(Array.from({length:localStorage.length},(_,i)=>localStorage.key(i)).map(k=>[k,localStorage.getItem(k)]));
    localStorage.setItem(args.WK,JSON.stringify(args.wallet));
-   localStorage.setItem(args.RK,JSON.stringify(args.wallet(800,600,['seawheel'])));
+   localStorage.setItem(args.RK,JSON.stringify(args.wallet));
    localStorage.setItem(args.OK,JSON.stringify({version:1,owned:['seawheel']}));
    localStorage.setItem(args.OB,JSON.stringify({version:1,owned:['seawheel']}));
    localStorage.setItem(args.TEST,JSON.stringify(args.fixture));
