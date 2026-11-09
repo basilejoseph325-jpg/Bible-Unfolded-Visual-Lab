@@ -94,7 +94,7 @@ jobs:
               assert(look.theme);
               assert(look.wheelBG.includes('rgba(22, 141, 148')&&look.wheelBG.includes('rgba(52, 91, 128'),
                 'Luminous wheel must use layered Ocean Glow, not previous flat teal.');
-              assert(look.wheelShadow.includes('rgb(114, 204, 242)'),'Purchased wheel must emit blue ambient glow');
+              assert(look.wheelShadow.includes('rgba(114, 204, 242'),'Purchased wheel must emit blue ambient glow');
               const positions=await page.$$eval('.wheel-letter',els=>Object.fromEntries(els.map(el=>{
                 const r=el.getBoundingClientRect();
                 return [el.textContent,{x:r.x+r.width/2,y:r.y+r.height/2}];
