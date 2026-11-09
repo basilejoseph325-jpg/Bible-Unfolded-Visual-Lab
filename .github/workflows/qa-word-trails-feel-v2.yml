@@ -85,6 +85,8 @@ jobs:
                 await page.click('#audio');
                 await page.waitForSelector('#wt-unified-menu[open]',{timeout:10000});
                 await page.click('#wt-unified-menu [data-wt-menu="settings"]');
+                await page.waitForSelector('#wt-main-settings[open]');
+                await page.click('#wt-more-sounds');
                 await page.waitForSelector('#wt-feel-settings[open]',{timeout:10000});
               };
               const check=await page.evaluate(()=>({
