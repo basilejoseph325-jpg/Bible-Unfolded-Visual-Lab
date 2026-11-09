@@ -1,0 +1,37 @@
+name: Inspect Word Trails Native Menu Integration Contract
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-wt-native-shell-contract.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect actual native markup and related function bindings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('index.html').read_text(errors='replace')
+          sources=[('index',html)]+[(x.name,x.read_text(errors='replace')) for x in sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+          ids=['home-menu','bu-story-drawer','story-drawer','menu-drawer','dialog-mask','settings-dialog','settings-close','setting-music','setting-sfx','setting-volume','setting-sfx-volume','home-rewards','menu-settings','menu-rewards','bu381-voice-mode','save-export','home-cross']
+          for id in ids:
+            m=re.search(r'<[^>]{0,400}\bid=[\'"]'+re.escape(id)+r'[\'"][^>]{0,400}>',html)
+            print('NATIVE_ELEMENT',id,repr(html[max(0,m.start()-180):m.end()+260].replace('\n',' ')[:750]) if m else 'not found in raw html')
+          for key in ['wt_nav','home-menu','settings-dialog','bu-story-drawer','menu-drawer','menu-settings','settings-close','home-cross']:
+            for name,s in sources:
+              # Skip markup hits; focus on script calls/references around code tokens
+              start=0;count=0
+              while count<8:
+                pos=s.find(key,start)
+                if pos<0:break
+                start=pos+len(key)
+                if name=='index' and pos<1500000:continue
+                if pos>len(s):break
+                chunk=s[max(0,pos-260):min(len(s),pos+380)].replace('\n',' ')
+                print('CODE_REF',key,name,pos,repr(chunk[:640]))
+                count+=1
+          PY
