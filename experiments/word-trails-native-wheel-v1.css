@@ -1,0 +1,114 @@
+/* Word Trails NEXT - faithful standalone port of the Bible Unfolded wheel FX.
+   Original source: index.html styles bu3821 / bu3822 / bu3823.
+   Same native entitlement classes; do not change the wheel's diameter or layout.
+   Loaded AFTER unified menu CSS to replace its flat cosmetic-only approximation. */
+html {--bu3822-ribbon:#f7d58e;--bu3822-halo:#ffd782;--bu3821-spark:#ffe09c}
+html.gold-wheel {--bu3822-ribbon:#fff0ad;--bu3822-halo:#ffe1a0;--bu3821-spark:#ffe08f}
+html.moon-wheel {--bu3822-ribbon:#e1f2ff;--bu3822-halo:#87bde8;--bu3821-spark:#b4deff}
+html.sea-wheel {--bu3822-ribbon:#c1fff3;--bu3822-halo:#82ddf6;--bu3821-spark:#a1fff0}
+
+/* Preserve all previously approved sizes, wheel positions, letter coordinates. */
+html.sea-wheel #app #wheel{
+ background:
+  radial-gradient(circle at 46% 32%,#c9f8ff24,transparent 55%),
+  radial-gradient(circle at 50% 46%,#168d9485 0%,#345b8099 48%,#142d4d 75%,#091f37 100%)!important;
+ border-color:#b4e1f3!important;
+ box-shadow:inset 0 1px 3px #e3fbff83,inset 0 0 38px #b4e8ff35,
+  0 0 13px #72ccf269,0 0 28px #5cbfe637,0 5px 20px #0009!important;
+}
+html.moon-wheel #app #wheel{
+ background:radial-gradient(circle at 50% 46%,#5d7d9e 0%,#244967 55%,#102939 100%)!important;
+ border-color:#d8ecff!important;
+ box-shadow:inset 0 0 18px #b2d5fd77,0 0 20px #7ea5eb77,0 5px 21px #0008!important;
+}
+html.gold-wheel #app #wheel{
+ background:radial-gradient(circle at 50% 46%,#775023 0%,#654b27 50%,#342f28 100%)!important;
+ border-color:#fbe1a3!important;
+ box-shadow:inset 0 0 17px #efae4270,0 0 20px #e9b65b88,0 5px 21px #0008!important;
+}
+html:is(.sea-wheel,.moon-wheel,.gold-wheel) #app #wheel::before{
+ content:"";position:absolute;inset:0;border-radius:50%;pointer-events:none;
+ border:1.5px solid #e4f3ff6c;box-shadow:inset 0 0 17px #d4f2ff36;
+ z-index:0;
+}
+html.gold-wheel #app #wheel::before{border-color:#fbe1a3aa;box-shadow:inset 0 0 14px #efae4270}
+html.moon-wheel #app #wheel::before{border-color:#d8ecffaa;box-shadow:inset 0 0 14px #b2d5fd77}
+html.sea-wheel #app #wheel::before{border-color:#c8f8ffab;box-shadow:inset 0 0 15px #a2f7ff54}
+
+/* Purchased cosmetics now change ALL three parts of the effect:
+   outer halo, letter faces (normal + selected), and the finger ribbon. */
+html:is(.sea-wheel,.moon-wheel,.gold-wheel) #app .wheel-letter{
+ border:1.25px solid #d8eaff99;border-radius:50%;
+ background:radial-gradient(circle at 30% 23%,#7badd522,#061b303b 80%)!important;
+ box-shadow:inset 0 0 10px #d2efff11,0 0 10px #c7eaff17!important;
+ text-shadow:0 1px 3px #06192a!important;
+ transition:background .09s,box-shadow .09s,color .09s;
+}
+html.sea-wheel #app .wheel-letter:not(.selected){
+ color:#f4fbff!important;border-color:#c9edffad;
+}
+html.sea-wheel #app .wheel-letter.selected{
+ color:#18364f!important;border:2px solid #d9f5ff!important;
+ background:radial-gradient(circle at 31% 22%,#f2fcff 0%,#d2ecff 48%,#81b7db 100%)!important;
+ box-shadow:inset 0 1px 7px #fff,inset 0 -3px 9px #95c7de5c,
+  0 0 12px #c2edffb5,0 0 23px #8ee6ff76!important;
+ text-shadow:0 1px 1px #fff8!important;
+}
+html.moon-wheel #app .wheel-letter:not(.selected){
+ color:#ffffff!important;border-color:#ceeaffb7;
+}
+html.moon-wheel #app .wheel-letter.selected{
+ color:#1c3552!important;border:2px solid #eef7ff!important;
+ background:radial-gradient(circle at 29% 17%,#f2faff,#a4c4db 55%,#587a9b)!important;
+ box-shadow:inset 0 1px 7px #eef9ff88,0 0 16px #92c8fdc0!important;text-shadow:0 1px 1px #fff!important;
+}
+html.gold-wheel #app .wheel-letter:not(.selected){
+ color:#fff5cc!important;border-color:#ffdfa3ac;
+}
+html.gold-wheel #app .wheel-letter.selected{
+ color:#38281b!important;border:2px solid #fff4cb!important;
+ background:radial-gradient(circle at 30% 20%,#fff3cc,#e6c27a 56%,#99703a)!important;
+ box-shadow:inset 0 1px 7px #fff3c0ae,0 0 16px #ffa52bcc!important;text-shadow:0 1px 1px #fff6d9!important;
+}
+
+/* Original native fluid ribbon: soft diffuse halo + crisp lit core + leading tip.
+   Width here is CSS wheel pixels, rather than the main game's 100-unit viewBox. */
+#app .selection-lines .bu3822-halo{
+ fill:none;stroke:var(--bu3822-halo);stroke-width:20;opacity:.28;
+ stroke-linecap:round;stroke-linejoin:round;pointer-events:none;
+}
+#app .selection-lines .bu3822-ribbon{
+ fill:none;stroke:var(--bu3822-ribbon);stroke-width:8.5;
+ stroke-linecap:round;stroke-linejoin:round;pointer-events:none;
+ filter:drop-shadow(0 0 3px var(--bu3822-halo)) drop-shadow(0 0 6px var(--bu3822-halo));
+}
+#app .selection-lines .bu3822-tip{
+ fill:var(--bu3822-ribbon);stroke:var(--bu3822-halo);stroke-width:1;
+ filter:drop-shadow(0 0 6px var(--bu3822-halo));pointer-events:none;
+}
+#app #wheel .bu3823-mist{
+ position:absolute;inset:0;width:100%;height:100%;z-index:1;
+ pointer-events:none;user-select:none;border-radius:50%;
+}
+#app #wheel .wheel-letter{z-index:2}
+#app #wheel .wheel-center{z-index:3}
+.bu3821-trace-glint{
+ position:fixed;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;
+ z-index:1000;pointer-events:none;border-radius:50%;
+ background:var(--bu3821-spark,#f9d994);
+ box-shadow:0 0 5px 2px var(--bu3821-spark,#ffe09c),0 0 14px 5px var(--bu3821-spark,#ffe09c);
+ opacity:.95;animation:bu3821-glint .38s ease-out forwards;will-change:opacity,transform;
+}
+@keyframes bu3821-glint{to{opacity:0;transform:scale(.18)}}
+.bu3822-finish-glint{
+ position:fixed;z-index:1001;width:7px;height:7px;margin:-3.5px;
+ border-radius:50%;background:var(--bu3822-ribbon);
+ box-shadow:0 0 8px 2px var(--bu3822-halo);pointer-events:none;
+ animation:bu3822-dissolve 420ms ease-out forwards;
+}
+@keyframes bu3822-dissolve{to{opacity:0;transform:translate(var(--fx),var(--fy)) scale(.2)}}
+@media(prefers-reduced-motion:reduce){
+ #app #wheel .bu3823-mist,.bu3821-trace-glint,.bu3822-finish-glint{display:none!important}
+}
+.wt-feel-no-motion #app #wheel .bu3823-mist,
+.wt-feel-no-motion .bu3821-trace-glint,.wt-feel-no-motion .bu3822-finish-glint{display:none!important}
