@@ -38,4 +38,8 @@ jobs:
             print('COMPLETE_NATIVE_CSS',start,'AT',a,repr(html[a:b][:9600]))
           for label,a,b in [('NATIVE_FLUID_SCRIPT',339800,348900),('NATIVE_MIST_SCRIPT',8323500,8328800)]:
             print(label,repr(html[a:b]))
+          hits=[m.start() for m in re.finditer('bu3822',html)]
+          print('BU3822_POSITIONS',hits)
+          # Short code excerpts around the last executable fluid-wheel references
+          for p in hits[-6:]:print('BU3822_FINAL',p,repr(html[max(0,p-1300):p+2700].replace('\\n',' ')[:3990]))
           PY
