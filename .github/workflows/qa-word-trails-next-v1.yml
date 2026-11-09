@@ -150,13 +150,10 @@ jobs:
               assert.equal(Number(await page.$eval('#points',e=>e.textContent)),97,'Second hint should cost 15');
               await play('ANTIC');
               assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4');
-              // Refreshing a standalone Word Trails screen now intentionally
-              // returns to the main TEST homepage, like other game modes.
-              await page.reload({waitUntil:'domcontentloaded'});
-              await page.waitForFunction(()=>location.pathname.endsWith('/index.html'),{timeout:15000});
-              assert((await page.evaluate(()=>location.search)).includes('wt_home_refresh='));
-              await page.goto('http://127.0.0.1:8765/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0'});
-              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4','In-progress state must restore when returning to Word Trails');
+              // Word Trails now safely restores its current crossword on refresh.
+              await page.reload({waitUntil:'networkidle0'});
+              assert((await page.evaluate(()=>location.pathname)).endsWith('/experiments/word-trails-next-v1.html'));
+              assert.equal(await page.$eval('#solved-count',e=>e.textContent),'1 / 4','In-progress state must restore on refresh');
               for(const word of ['TACO','TONIC','COIN'])await play(word);
               await page.waitForSelector('#finish[open]');
               const fxAtWin=await page.evaluate(()=>{
