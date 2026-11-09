@@ -369,7 +369,10 @@ function updateSelection(){
  }
  const svg=$('selection-lines'),pos=locations();
  svg.setAttribute('viewBox','0 0 '+wheel.clientWidth+' '+wheel.clientHeight);svg.replaceChildren();
- if(chosen.length>1){
+ if(window.BUWTWheelNative){
+  window.BUWTWheelNative.render(svg,chosen,chosen.map(i=>pos[i]));
+ }else if(chosen.length>1){
+  // Safe fallback if the visual-only native wheel module fails to load.
   const path=document.createElementNS('http://www.w3.org/2000/svg','polyline');
   path.setAttribute('points',chosen.map(i=>pos[i].x+','+pos[i].y).join(' '));svg.appendChild(path);
  }
@@ -477,6 +480,7 @@ function setScene(){
 }
 function showLevel(n,resume=false){
  if(n<0||n>=LEVELS.length||n>save.unlocked)return;
+ window.BUWTWheelNative?.cancel?.();
  if($('finish').open){window.BUWTPolish?.clearWinFX?.();$('finish').close();}
  if($('discovery').open)$('discovery').close();
  if($('map').open)$('map').close();
@@ -569,12 +573,14 @@ function levelMap(){
 }
 wheel.addEventListener('pointerdown',e=>{
  if(locked)return;const b=e.target.closest('.wheel-letter');if(!b)return;
+ window.BUWTWheelNative?.begin?.(e);
  dragging=true;dragActive=false;pointer=e.pointerId;
  start={x:e.clientX,y:e.clientY,index:Number(b.dataset.letterIndex)};
  try{wheel.setPointerCapture(e.pointerId)}catch(_){}
 });
 wheel.addEventListener('pointermove',e=>{
  if(!dragging||e.pointerId!==pointer||!start)return;
+ window.BUWTWheelNative?.move?.(e);
  if(!dragActive&&Math.hypot(e.clientX-start.x,e.clientY-start.y)>9){
   dragActive=true;chosen=[start.index];cue('trace');updateSelection();
  }
@@ -587,11 +593,12 @@ wheel.addEventListener('pointermove',e=>{
 });
 function release(e){
  if(!dragging||e.pointerId!==pointer)return;
+ window.BUWTWheelNative?.end?.(e);
  const was=dragActive;dragging=false;dragActive=false;pointer=null;start=null;
  if(was){suppressClickUntil=performance.now()+200;submit()}
 }
 wheel.addEventListener('pointerup',release);
-wheel.addEventListener('pointercancel',e=>{if(e.pointerId===pointer){dragging=false;dragActive=false;pointer=null;start=null;clear()}});
+wheel.addEventListener('pointercancel',e=>{if(e.pointerId===pointer){window.BUWTWheelNative?.cancel?.();dragging=false;dragActive=false;pointer=null;start=null;clear()}});
 $('submit').addEventListener('click',()=>{cue('touch');submit()});
 $('shuffle').addEventListener('click',shuffle);
 $('hint').addEventListener('click',hint);
