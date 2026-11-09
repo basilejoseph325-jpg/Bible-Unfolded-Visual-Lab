@@ -33,4 +33,19 @@ jobs:
             print(label,repr(s[a:b]))
           i=Path('index.html').read_text(errors='replace')
           print('NATIVE_SETTINGS_HTML',repr(i[1282410:1286800]))
+          import json
+          src=Path('bible_unfolded_core_part5.js').read_text(errors='replace')
+          idxs=[m.start() for m in re.finditer('BU382_EMBEDDED_VOICES',src)]
+          print('VOICE_BANK_POSITIONS',idxs)
+          for p in idxs[:2]:print('VOICE_BANK_SAMPLE',repr(src[max(0,p-150):p+200]))
+          for token in ['const BU382_EMBEDDED_VOICES=','const BU382_EMBEDDED_VOICES =','BU382_EMBEDDED_VOICES =','bu381Play(']:
+            idx=src.find(token);print('VOICE_DEFINITION',token,idx)
+            if token.startswith('const BU382') and idx>=0:
+              print('VOICE_BANK_END',src.find('};',idx), 'BYTES',src.find('};',idx)-idx)
+          html=Path('index.html').read_text(errors='replace')
+          for token in ['const STORAGE_KEY','const SAVE_KEY','const musicOn','localStorage.setItem(','id="settings-dialog"']:
+            hits=[m.start() for m in re.finditer(re.escape(token),html)];print('PREF_LOCATIONS',token,hits[:8])
+          for token in ['function bu25VolumeEnvelope','setting-music','setting-sfx','setting-volume','bu381-voice-mode']:
+            matches=[m.start() for m in re.finditer(re.escape(token),src)]
+            print('NATIVE_PREF_CODE',token,matches[:8])
           PY
