@@ -1,0 +1,31 @@
+name: Inspect Native Settings and Announcers for Word Trails
+on:
+  push:
+    paths: ['.github/workflows/inspect-word-trails-native-settings.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Find main settings UI and voice preferences
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+          patterns={'setting-title':r'(?:id=["\'](?:settings|settings-modal|settings-panel)|PERSONALIZE THE JOURNEY|Background soundtrack|Hear word-complete sound)',
+                    'announcer':r'Announcer|Rotate voices|VOICE ANNOUNCEMENTS|voiceVolume|announcerMode|selectedVoice|preferredVoice',
+                    'speaker':r'speechSynthesis|SpeechSynthesisUtterance|playAnnouncer|announceGood|GOOD JOB|Good job|Great job|voiceEnabled',
+                    'prefs':r'(?:buSettings|BUPrefs|SETTINGS_KEY|settingsKey|bible-unfolded-settings|voiceVolume)',
+                    'scene':r'(?:bible-book-art|wordTrailsNext)'}
+          for f in files:
+            s=f.read_text(errors='replace')
+            for k,pat in patterns.items():
+              hits=list(re.finditer(pat,s,re.I))
+              print('FILE_COUNT',f.name,k,len(hits))
+              for m in hits[:(13 if k in ('announcer','prefs','speaker') else 7)]:
+                lo=max(0,m.start()-360);hi=min(len(s),m.end()+710)
+                print('MATCH',f.name,k,m.start(),repr(s[lo:hi].replace('\n',' ')[:1090]))
+          PY
