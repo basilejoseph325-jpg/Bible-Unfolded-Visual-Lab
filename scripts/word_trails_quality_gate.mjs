@@ -69,7 +69,10 @@ for(let i=0;i<levels.length;i++){
  }
  if(reached.size!==words.length)error('Disconnected crossword '+reached.size+'/'+words.length);
  if(words.length>=4&&crossings<2)error('Insufficient intersections');
- if(unwantedTouch)warn(unwantedTouch+' accidental touching tile pairs; editorial layout cleanup recommended');
+ if(unwantedTouch){
+  if(i>=11)error(unwantedTouch+' unrelated touching tile pairs (new levels require clean crossword spacing)');
+  else warn(unwantedTouch+' legacy touching tile pairs; original layouts remain protected');
+ }
  const bible=l.bibleBoard||[],bibSeen=new Set();
  if(i>=11&&bible.length<2)error('Need at least two biblical crossword words');
  for(const item of bible){
