@@ -1,0 +1,41 @@
+name: Inspect Native Purchased Wheel Rendering
+on:
+  push:
+    paths: ['.github/workflows/inspect-native-wheel-effects.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect wheel visuals and original gesture code
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('index.html'),Path('bible_unfolded_core_part5.js')]
+          terms=[
+            ('native-theme','sea-wheel'),
+            ('curved-trace','quadraticCurveTo'),
+            ('curve-cubic','bezierCurveTo'),
+            ('svg-curve','createElementNS'),
+            ('glitter','glitter'),
+            ('wheel-sparks','sparkle'),
+            ('wheel','wheel-path'),
+            ('wheel-select','wheel-letter'),
+            ('wheel-glow','wheel-glow'),
+            ('trail','trail-path'),
+            ('selection','selection-line'),
+            ('ocean','seawheel')
+          ]
+          for file in files:
+            s=file.read_text(errors='replace')
+            print('FILE_LEN',file,len(s))
+            for key,phrase in terms:
+              places=[m.start() for m in re.finditer(re.escape(phrase),s,re.I)]
+              print('COUNT',file.name,key,len(places))
+              limit=12 if key=='native-theme' else 5 if key in ['curved-trace','curve-cubic','svg-curve','glitter','wheel-sparks','selection','ocean'] else 2
+              for p in places[:limit]:
+                print('MATCH',file.name,key,p,repr(s[max(0,p-440):p+1150].replace('\n',' ')[:1530]))
+          PY
