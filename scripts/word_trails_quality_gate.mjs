@@ -29,6 +29,14 @@ const scriptureOK=x=>x&&x.url?.startsWith('https://www.jw.org/en/library/bible/n
  typeof x.clue==='string'&&x.clue.length>=10&&
  typeof x.reference==='string'&&x.reference.length>=6&&
  typeof x.insight==='string'&&x.insight.length>=20;
+// Verify that each newer Bible clue links to the very Bible book and chapter it cites.
+const sourceMatchesReference=x=>{
+ const match=x?.reference?.match(/^(.+?)\s+(\d+):\d+/);
+ if(!match)return false;
+ let book=match[1].toLowerCase().replace(/\s+/g,'-');
+ if(book==='psalm')book='psalms';
+ return x.url===`https://www.jw.org/en/library/bible/nwt/books/${book}/${match[2]}/`;
+};
 for(let i=0;i<levels.length;i++){
  const l=levels[i],n=i+1,size=l.size||5,words=l.words||[];
  const error=s=>fail.push('Level '+n+': '+s),warn=s=>review.push('Level '+n+': '+s);
@@ -79,6 +87,7 @@ for(let i=0;i<levels.length;i++){
   if(!required.has(item.word)||bibSeen.has(item.word))error('Bible answer missing or duplicate: '+item.word);
   bibSeen.add(item.word);
   if(!scriptureOK(item))error('Incomplete NWT source fields: '+item.word);
+  if(i>=11&&!sourceMatchesReference(item))error('Wrong chapter URL for Bible crossword answer '+item.word);
  }
  const secret=[{word:l.spark,clue:l.clue,reference:l.reference,url:l.url,insight:l.insight},...(extra[i]||[])];
  const secretWords=new Set();
@@ -88,6 +97,7 @@ for(let i=0;i<levels.length;i++){
   if(required.has(item.word)||secretWords.has(item.word))error('Hidden word duplicates an answer or secret '+item.word);
   secretWords.add(item.word);
   if(!scriptureOK(item))error('Hidden word needs full NWT source: '+item.word);
+  if(i>=11&&!sourceMatchesReference(item))error('Wrong chapter URL for hidden Bible discovery '+item.word);
  }
  const bonuses=l.bonus.trim().split(/\s+/),seen=new Set();
  let usable=0;
