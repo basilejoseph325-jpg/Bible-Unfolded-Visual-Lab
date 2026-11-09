@@ -4,11 +4,13 @@
    experience. Audio/gameplay remain independent; no layout changes. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
+const nativeShell=()=>{try{return parent!==window&&parent.BUWTNativeShell?.active?.()?parent.BUWTNativeShell:null}catch(_){return null}};
 const SHARED_AUDIO='bu-platform-audio-preferences-v1';
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
 const pct=x=>Math.max(0,Math.min(100,Number(x)||0));
 function current(){return window.BUWTPolish?.state?.()||{}}
 function saveShared(){
+ if(nativeShell())return; // Parent's actual Settings owns shared preferences.
  const s=current();
  try{localStorage.setItem(SHARED_AUDIO,JSON.stringify({
   music:!!s.music,sfx:!!s.sfx,musicVolume:pct(s.musicVolume),
@@ -35,6 +37,7 @@ function draw(){
  }
 }
 function applySharedInitial(){
+ if(nativeShell())return; // Native parent sends its current controls after frame load.
  const a=read(SHARED_AUDIO);
  if(!a||!window.BUWTPolish?.setPreference)return;
  for(const name of ['music','sfx','musicVolume','sfxVolume']){
@@ -43,6 +46,7 @@ function applySharedInitial(){
  }
 }
 function open(){
+ if(nativeShell())return nativeShell().openSettings();
  const d=$('wt-main-settings');if(!d)return;
  draw();if(!d.open)d.showModal();
 }
