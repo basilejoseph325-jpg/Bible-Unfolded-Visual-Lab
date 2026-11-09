@@ -159,6 +159,13 @@ function canMake(rack,word){
  for(const ch of word)if(!count[ch]--)return false;
  return true;
 }
+/* A bonus must never also be a crossword answer or a Bible discovery.
+   The old level packs accidentally contained unreachable/duplicate bonuses. */
+const BONUS_BANKS=LEVELS.map((lev,i)=>{
+ const reserved=new Set([...lev.words.map(w=>w[0]),...BIBLE_SPARKS[i].map(w=>w.word)]);
+ return new Set(lev.bonus.trim().split(/\s+/).filter(w=>valid(w)&&canMake(lev.rack,w)&&!reserved.has(w)));
+});
+function bonusGoal(i=index){return Math.min(3,BONUS_BANKS[i].size)}
 function buildCells(level){
  const map=new Map(),limit=level.size||5;
  for(const [text,r,c,dir] of level.words){
@@ -293,7 +300,8 @@ function ui(){
  $('points').textContent=String(save.coins);
  $('solved-count').textContent=found.size+' / '+level.words.length;
  $('bonus-count').textContent=bonuses.size;
- window.BUWTPolish?.bonusPips(bonuses.size>=3?3:bonuses.size);
+ window.BUWTPolish?.bonusPips(bonuses.size);
+ const pips=$('bonus-pips');if(pips){pips.dataset.goal=String(bonusGoal());pips.setAttribute('aria-label','Bonus satchel '+Math.min(bonuses.size,bonusGoal())+' of '+bonusGoal());}
  $('combo').textContent=combo>1?combo+'× COMBO':'';
  $('progress-fill').style.width=(found.size/level.words.length*100)+'%';
  $('hint-cost').textContent=save.claimedFreeHints.includes(index)?'15':'FREE';
@@ -438,15 +446,16 @@ function submit(){
   if(found.has(word)){flash('Already on the board');cue('touch');return}
   finishWord(word);return;
  }
- const bank=new Set(level.bonus.split(' ').filter(w=>valid(w)&&canMake(level.rack,w)));
+ const bank=BONUS_BANKS[index];
  if(bank.has(word)){
   if(bonuses.has(word)){flash('Bonus already collected');cue('touch');return}
   bonuses.add(word);combo++;
   const key=index+'|'+word,paid=!save.paidBonuses.includes(key);
   if(paid){save.paidBonuses.push(key);save.coins+=2}
-  // Three unique bonuses fill a small satchel. This milestone pays only once per level.
+  // Every level has a reachable satchel: min(3, playable bonus count).
+  // Early level 12 intentionally has two good English bonus words, not filler.
   const vaultKey='satchel:'+index;
-  const vault=bonuses.size>=3&&!save.paidBonuses.includes(vaultKey);
+  const vault=bonusGoal()>0&&bonuses.size>=bonusGoal()&&!save.paidBonuses.includes(vaultKey);
   if(vault){save.paidBonuses.push(vaultKey);save.coins+=8}
   ui();storeProgress();
   window.BUWTPolish?.event('bonus',{word,count:bonuses.size,coins:paid?2:0});
