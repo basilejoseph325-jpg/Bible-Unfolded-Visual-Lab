@@ -113,6 +113,24 @@ for(let i=0;i<levels.length;i++){
  summaries.push({level:n,title:l.title,grid:size,answers:words.length,crossings,unwantedTouch,
   bibleOnBoard:bible.length,bibleHidden:secret.length,playableBonuses:usable,scene:l.scene});
 }
+// New-level Bible finds must not recycle precisely the same educational clue
+// on a later board. Repeated answer words are allowed with fresh source-backed
+// meaning; the original eleven level answers and geometry remain unchanged.
+const reviewedClues=new Map(),reviewedInsights=new Map();
+const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+for(let k=0;k<later.length;k++){
+ const L=later[k],lev=k+12;
+ const discovery=[...L.bibleBoard.map(x=>({word:x.word,clue:x.clue,insight:x.insight})),
+   {word:L.spark,clue:L.clue,insight:L.insight},...L.extraSparks];
+ for(const x of discovery){
+  for(const [value,store,label] of [[x.clue,reviewedClues,'clue'],[x.insight,reviewedInsights,'insight']]){
+   const key=x.word+'|'+norm(value);
+   if(store.has(key))fail.push('Level '+lev+': '+x.word+' repeats the exact '+label+
+     ' from level '+store.get(key)+'; provide a different researched angle');
+   else store.set(key,lev);
+  }
+ }
+}
 const scenery=new Set(summaries.slice(11).map(x=>x.scene));
 if(scenery.size<12)fail.push('Scenery: only '+scenery.size+' distinct illustrations in 19 new levels');
 for(let i=12;i<summaries.length;i++)
