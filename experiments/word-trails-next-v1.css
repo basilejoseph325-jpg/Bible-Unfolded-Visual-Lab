@@ -375,3 +375,71 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
   --tile:min(13.1vw,calc((100dvh - var(--header) - var(--play) - var(--footer) - 30px) / 7),60px);
  }
 }
+
+
+/* JOURNEY SEAL AND SCENIC MAP — Word Trails TEST only. Modal-only styling. */
+#finish .finish-seal[hidden]{display:none!important}
+#finish .finish-seal{
+ max-width:320px;min-height:44px;box-sizing:border-box;
+ display:flex;align-items:center;justify-content:center;gap:11px;
+ padding:8px 12px;margin:2px auto 10px;border-radius:13px;
+ border:1px solid #fce5a5aa;background:linear-gradient(110deg,#61451f88,#b68a435c 45%,#5d452087);
+ box-shadow:inset 0 1px #fff0ba47,0 2px 9px #0005;
+ color:#ffedb8;text-align:left;
+}
+#finish .finish-seal #finish-seal-symbol{
+ display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;
+ border-radius:50%;border:1.5px solid #ffe2a3;
+ background:radial-gradient(circle at 25% 25%,#ffe49c,#a27333 64%,#69421f);
+ color:#f9f4cc;text-shadow:0 0 7px #fff4cc;
+ box-shadow:0 0 9px #f5c57465;font:800 24px/1 Georgia,serif;
+}
+#finish .finish-seal .finish-seal-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+#finish .finish-seal strong{font:800 15px/1.15 Georgia,serif;color:#fff0c5}
+#finish .finish-seal small{font:550 10px/1.3 system-ui,sans-serif;color:#e4d3ad}
+#finish.wt-milestone .victory-star{
+ margin-top:4px;font-size:73px;color:#fff0b9;
+ text-shadow:0 0 9px #fff2c3,0 0 26px #f3c971cc,0 0 48px #ffdc8088;
+}
+#finish.wt-milestone .victory-intro{margin-bottom:6px}
+#finish.wt-milestone .finish-panel{border-color:#f7d998}
+#finish.wt-milestone .reward-coin{
+ background:linear-gradient(135deg,#ad733b,#dbb66a 50%,#8d602c);
+ box-shadow:inset 0 1px #fff3c699,0 0 12px #dfb16755,0 4px 10px #0008;
+}
+.map-list .map-chapter-title{
+ grid-column:1/-1;display:block;min-height:22px;margin:9px 0 0;
+ padding:5px 5px 4px;border-bottom:1px solid #edcc865b;
+ color:#ffdfa4;font:850 10px/1.2 system-ui,sans-serif;
+ letter-spacing:.09em;text-transform:uppercase;
+}
+.map-level span.map-level-thumb{
+ position:relative;display:grid;place-items:center;
+ flex:0 0 39px;width:39px;height:43px;border-radius:8px;
+ background-size:cover;background-position:center;
+ border:1px solid #ffe0a2ab;
+ box-shadow:inset 0 0 0 1px #020f1e39,0 1px 4px #0008;
+ overflow:hidden;
+}
+.map-level span.map-level-thumb b{
+ color:#fff5d7;text-shadow:0 1px 3px #00141e,0 0 4px #000;
+ font:900 17px/1 Georgia,serif;
+}
+.map-level span.map-level-info{
+ flex:1 1 auto;min-width:0;width:auto;height:auto;min-height:0;
+ padding:0;display:flex;flex-direction:column;gap:4px;align-items:flex-start;
+ border:0;border-radius:0;background:none;box-shadow:none;text-align:left;
+}
+.map-level .map-level-info strong{flex:none;font:750 11px/1.13 system-ui,sans-serif}
+.map-level .map-level-info small{flex:none;font:550 9px/1.2 system-ui,sans-serif;color:#e6d7b9}
+.map-level .map-level-info .map-milestone-status{
+ color:#ffdd8e;font-weight:850;font-size:9px;
+}
+.map-level.milestone{border-color:#d8b96b8c;background:linear-gradient(135deg,#214d50,#0a3642)}
+.map-level.milestone.complete{border-color:#f6e1a2;box-shadow:inset 0 0 0 1px #fad68b37,0 0 9px #d1a65a2e}
+#bonus-pips[data-goal="2"] i:nth-child(3){display:none!important}
+@media(max-height:680px){
+ #finish .finish-seal{padding:5px 8px;margin:1px auto 7px}
+ #finish .finish-seal #finish-seal-symbol{width:30px;height:30px;flex-basis:30px;font-size:21px}
+ #finish.wt-milestone .victory-star{font-size:58px}
+}
