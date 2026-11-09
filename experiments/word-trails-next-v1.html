@@ -4,7 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#092b34">
-<!-- Reload resumes this same Word Trails puzzle from its protected local save. -->
+<!-- A published direct link must use the same real Bible Unfolded menu host.
+     The standalone fallback stays available to local automated QA only. -->
+<script>
+(()=>{'use strict';try{
+ const args=new URLSearchParams(location.search);
+ if(window.top===window && args.get('standalone')!=='qa' &&
+    (location.hostname.endsWith('.github.io')||args.get('native')==='1')){
+  location.replace('../index.html?wt_launch=native');
+ }
+}catch(_){}})();
+</script>
+<!-- Embedded Word Trails reload still resumes its protected crossword save. -->
 
 <meta name="description" content="Bible Unfolded Visual Lab — next-generation Word Trails puzzle preview.">
 <title>Word Trails NEXT · 30 Bible Levels • Bible Unfolded</title>
