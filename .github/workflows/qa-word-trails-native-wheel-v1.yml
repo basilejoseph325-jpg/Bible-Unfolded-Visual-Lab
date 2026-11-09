@@ -1,0 +1,172 @@
+name: QA Original Ocean Glow Wheel Parity in Word Trails NEXT
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-native-wheel-v1.yml'
+      - 'experiments/word-trails-native-wheel-v1.css'
+      - 'experiments/word-trails-native-wheel-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate original effect integration and unchanged audio
+        run: |
+          node --check experiments/word-trails-native-wheel-v1.js
+          node --check experiments/word-trails-next-v1.js
+          python3 - <<'PY'
+          from pathlib import Path
+          c=Path('experiments/word-trails-next-v1.js').read_text()
+          s=Path('experiments/word-trails-native-wheel-v1.js').read_text()
+          css=Path('experiments/word-trails-native-wheel-v1.css').read_text()
+          h=Path('experiments/word-trails-next-v1.html').read_text()
+          assert 'window.BUWTWheelNative.render' in c
+          assert 'window.BUWTWheelNative?.begin' in c
+          assert 'window.BUWTWheelNative?.move' in c
+          assert 'window.BUWTWheelNative?.end' in c
+          assert 'const tangent=' in s and " C" in s
+          assert 'quadraticCurveTo' in s and 'bu3823-mist' in s
+          assert 'bu3821-trace-glint' in s and 'bu3822-finish-glint' in s
+          assert 'bu3822-ribbon' in css and 'bu3822-halo' in css
+          assert 'html.sea-wheel #app #wheel' in css
+          assert 'word-trails-native-wheel-v1.js' in h
+          assert 'word-trails-native-wheel-v1.css' in h
+          assert 'soundReady()' in c and "cue('trace')" in c
+          assert '.board{' not in css and 'grid-template-rows' not in css, 'Visual parity must not change gameplay layout'
+          print('PASS original curved ribbon, glitter and native fog modules present; sound and sizing unchanged')
+          PY
+      - name: Verify pointer drag glowing curve, touch particles and phone layout
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/wt-native-wheel puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8891 --bind 127.0.0.1 >/tmp/wt-wheel-http.log 2>&1 &
+          sleep 1
+          node <<'JS'
+          const puppeteer=require('/tmp/wt-native-wheel/node_modules/puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          (async()=>{
+            let browser;
+            try{
+              browser=await puppeteer.launch({headless:true,
+                executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),
+                args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
+              const page=await browser.newPage();
+              const errors=[];page.on('pageerror',e=>errors.push(e.stack||e.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8891/experiments/word-trails-next-v1.html',{waitUntil:'networkidle0',timeout:120000});
+              const first=await page.evaluate(()=>{
+                const b=document.getElementById('board').getBoundingClientRect();
+                const w=document.getElementById('wheel').getBoundingClientRect();
+                return {board:[b.x,b.y,b.width,b.height],wheel:[w.x,w.y,w.width,w.height]};
+              });
+              assert(await page.evaluate(()=>!!window.BUWTWheelNative));
+              const oldSound=await page.evaluate(()=>window.BUWTPolish.state());
+              await page.evaluate(()=>{
+                localStorage.setItem('bible-unfolded-rewards-v17',JSON.stringify({
+                  points:3000,coins:483,earned:[],spent:[],purchases:['seawheel','goldwheel','moonwheel'],
+                  hints:{},streak:3,rank:2,equippedWheel:'classic'
+                }));
+                window.BUWTUnifiedMenu.refresh();
+              });
+              await page.click('#audio');
+              await page.click('#wt-unified-menu [data-wt-menu="rewards"]');
+              await page.$$eval('#wt-wheel-rewards .wt-wheel-item',arr=>{
+                const sea=arr.find(x=>x.querySelector('strong').textContent==='Ocean Glow Wheel');
+                sea.querySelector('button').click();
+              });
+              await page.click('#wt-menu-close');
+              const look=await page.evaluate(()=>{
+                const w=document.getElementById('wheel'),
+                 selected=document.querySelector('.wheel-letter'),
+                 cs=getComputedStyle(w),letter=getComputedStyle(selected);
+                return {theme:document.documentElement.classList.contains('sea-wheel'),
+                  native:window.BUWTWheelNative.debug(),
+                  wheelBG:cs.backgroundImage,wheelShadow:cs.boxShadow,
+                  letterBorder:letter.borderColor,
+                  size:w.getBoundingClientRect().width};
+              });
+              console.log('ORIGINAL_OCEAN_STYLE',JSON.stringify(look));
+              assert(look.theme);
+              assert(look.wheelBG.includes('rgb(22, 141, 148)')&&look.wheelBG.includes('rgb(52, 91, 128)'),
+                'Luminous wheel must use layered Ocean Glow, not previous flat teal.');
+              assert(look.wheelShadow.includes('rgb(114, 204, 242)'),'Purchased wheel must emit blue ambient glow');
+              const positions=await page.$$eval('.wheel-letter',els=>Object.fromEntries(els.map(el=>{
+                const r=el.getBoundingClientRect();
+                return [el.textContent,{x:r.x+r.width/2,y:r.y+r.height/2}];
+              })));
+              const seq=['T','O','N','I','C'];
+              for(const item of seq)assert(positions[item],'Missing required wheel letter '+item);
+              await page.mouse.move(positions.T.x,positions.T.y);
+              await page.mouse.down();
+              for(const item of seq.slice(1)){
+                await page.mouse.move(positions[item].x,positions[item].y,{steps:5});
+                await new Promise(r=>setTimeout(r,60));
+              }
+              const during=await page.evaluate(()=>{
+                const native=window.BUWTWheelNative.debug();
+                const selected=[...document.querySelectorAll('.wheel-letter.selected')].map(x=>x.textContent);
+                const p=document.querySelector('.selection-lines .bu3822-ribbon');
+                const h=document.querySelector('.selection-lines .bu3822-halo');
+                const mist=document.querySelector('#wheel .bu3823-mist');
+                const css=getComputedStyle(p);
+                const sample=document.querySelector('.wheel-letter.selected');
+                return {native,selected,path:p?.getAttribute('d'),halo:h?.getAttribute('d'),
+                  mist:!!mist,glints:document.querySelectorAll('.bu3821-trace-glint').length,
+                  ribbonStroke:css.stroke,
+                  letterBackground:sample?getComputedStyle(sample).backgroundImage:'',
+                  anyPolyline:!!document.querySelector('#selection-lines polyline')};
+              });
+              console.log('CURVED_OCEAN_DRAG',JSON.stringify(during));
+              assert(during.native.active&&during.mist,'Finger drag must activate original native mist canvas');
+              assert(during.native.glints>=2,'Touch and drag must create real glitter particles');
+              assert(during.selected.length>=3,'Normal wheel must still select letters on drag');
+              assert(during.path&&during.path.includes(' C')&&!during.anyPolyline,'Wheel must render native cubic Bézier, not straight polyline');
+              assert.equal(during.path,during.halo,'Ribbon and glow must follow the exact same curved path');
+              assert(during.ribbonStroke.includes('193, 255, 243'),'Ocean Glow ribbon must use its own luminous color');
+              assert(during.letterBackground.includes('rgb(242, 252, 255)'),'Selected letter must have luminous ice-blue face');
+              const screenshot=(await page.screenshot({type:'jpeg',quality:65})).toString('base64');
+              for(let i=0;i<screenshot.length;i+=7800)
+                console.log('NATIVE_OCEAN_WHEEL_DRAG_SCREEN_'+(i/7800)+' '+screenshot.slice(i,i+7800));
+              await page.mouse.up();
+              await new Promise(r=>setTimeout(r,900));
+              const end=await page.evaluate(()=>({
+                mist:!!document.querySelector('#wheel .bu3823-mist'),
+                line:document.querySelector('.selection-lines .bu3822-ribbon')?.getAttribute('d')||'',
+                selected:document.querySelectorAll('.wheel-letter.selected').length,
+                native:window.BUWTWheelNative.debug(),
+                sound:window.BUWTPolish.state()
+              }));
+              console.log('NATIVE_DRAG_CLEANUP',JSON.stringify(end));
+              assert(!end.mist,'Fog must remove itself after pointer release');
+              assert(!end.line&&end.selected===0,'Selection must clear after word submits');
+              assert.deepEqual(end.sound,oldSound,'Wheel FX must never change sound preferences');
+              const second=await page.evaluate(()=>{
+                const b=document.getElementById('board').getBoundingClientRect();
+                const w=document.getElementById('wheel').getBoundingClientRect();
+                return {board:[b.x,b.y,b.width,b.height],wheel:[w.x,w.y,w.width,w.height]};
+              });
+              assert.deepEqual(second,first,'Native styles must not resize or move the crossword/wheel');
+              await page.click('#audio');
+              await page.click('#wt-unified-menu [data-wt-menu="settings"]');
+              await page.waitForSelector('#wt-feel-settings[open]');
+              await page.$eval('#wt-feel-settings [data-pref="motion"]',e=>{e.checked=false;e.dispatchEvent(new Event('change',{bubbles:true}))});
+              await page.click('#feel-done');
+              const pos2=await page.$$eval('.wheel-letter',els=>els.slice(0,2).map(el=>{
+                const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2};
+              }));
+              await page.mouse.move(pos2[0].x,pos2[0].y);await page.mouse.down();
+              await page.mouse.move(pos2[1].x,pos2[1].y,{steps:7});
+              assert(!(await page.evaluate(()=>!!document.querySelector('#wheel .bu3823-mist'))),
+                'Disabling visual effects must suppress native mist/glitter');
+              await page.mouse.up();
+              assert.equal(errors.length,0,'Page errors: '+errors.join(' | '));
+              console.log('PASS Native Ocean Glow visual parity: glowing wheel, ice-blue letter faces, moving Bézier, mist/glitter, cleanup, unchanged sound and board geometry');
+            }catch(e){console.error('FAIL',e.stack);process.exitCode=1}
+            finally{await browser?.close()}
+          })();
+          JS
