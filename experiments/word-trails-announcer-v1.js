@@ -8,6 +8,7 @@ const modes=['rotate','off','charlie','paul','toby','julian'];
 const voices=['charlie','paul','toby','julian'];
 const phrases=['excellent_thinking','another_discovery','youre_on_a_roll','chapter_complete','beautifully_done'];
 const $=id=>document.getElementById(id);
+const nativeShell=()=>{try{return parent!==window&&parent.BUWTNativeShell?.active?.()?parent.BUWTNativeShell:null}catch(_){return null}};
 const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
 let settings=read(KEY)||read(BAK)||{};
 let mode=modes.includes(settings.mode)?settings.mode:'rotate';
@@ -39,6 +40,7 @@ function choose(){
  return pool[Math.floor(Math.random()*pool.length)]||'charlie';
 }
 function play(phrase,{milestone=false,preview=false}={}){
+ const native=nativeShell();if(native)return native.playVoice(phrase,{milestone,preview});
  if(!phrases.includes(phrase)||document.hidden||volume<=0||(!preview&&mode==='off'))return false;
  if(!window.BUWTVoiceClips){if(preview)status('Original announcer recordings are unavailable.');return false}
  if(!preview){
@@ -64,6 +66,7 @@ function play(phrase,{milestone=false,preview=false}={}){
  return true;
 }
 function change(m,v){
+ const native=nativeShell();if(native){const changed=native.changeVoice(m,v);window.dispatchEvent(new Event('bu-wt-voice-change'));return changed;}
  if(modes.includes(m))mode=m;
  if(v!==undefined)volume=Math.max(0,Math.min(100,Number(v)||0));
  if(mode==='off')stop();else if(now)now.volume=volume/100;
@@ -78,7 +81,8 @@ window.addEventListener('storage',e=>{
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stop()});
 window.addEventListener('pagehide',stop);
 window.BUWTAnnouncer=Object.freeze({
- play,stop,change,getMode:()=>mode,getVolume:()=>volume,
- available:()=>!!window.BUWTVoiceClips&&Object.keys(window.BUWTVoiceClips).length>=20
+ play,stop,change,getMode:()=>nativeShell()?.voicePrefs().mode||mode,
+ getVolume:()=>nativeShell()?.voicePrefs().volume??volume,
+ available:()=>nativeShell()?true:!!window.BUWTVoiceClips&&Object.keys(window.BUWTVoiceClips).length>=20
 });
 })();
