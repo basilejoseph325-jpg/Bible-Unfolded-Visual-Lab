@@ -26,6 +26,14 @@ Word Trails NEXT is a **separate standalone page** under `experiments/` with its
 - Established a read-only inventory/migration-preview boundary; it must never update localStorage or import values.
 - Confirmed that changing core systems is a separate integration phase and should not be bundled with puzzle-layout edits or sound tuning.
 
+## Phase 2 implemented — one real Rewards/wheel integration (November 9)
+- New `bu-platform-rewards-v1.js` is the same service imported by Word Trails and the main TEST homepage. It owns read/ownership/equip operations for the existing `bible-unfolded-rewards-v17` wallet and permanent v3825 entitlement backups.
+- `journey-progress-caption.js` now loads the service in Visual Lab and attaches an adapter using the main game's **actual** `bu3824RefreshWallet`, `bu3824MergeEntitlements`, `bu3824OwnedWheels`, `economy`, and `setWheelTheme` methods. It does not replace native rewards functionality.
+- `experiments/word-trails-unified-menu-v1.js` no longer writes wallet keys directly. It calls `window.BUPlatformRewards.equipWheel()` and uses that same service to read owned wheels and the equipped style.
+- Test coins remain completely separate. An equip cannot mint currency, unlock an unowned wheel, charge another purchase or rewrite the independent ownership backup. The shared test checks zero test-coin conversion, backup wheel recovery, negative Points, preserved wallets, errors on storage failure and native-host delegation.
+- The phone-browser rewards/menu/effects test and actual root-home host-attachment verification passed in GitHub Actions run `42689888082` (after correcting obsolete checks that expected wallet constants to remain duplicated in the menu).
+- **This is an integrated Rewards/wheel slice, NOT completion of the entire core architecture.** Global menu/navigation parity, settings/audio/announcers and coordinated save migration still remain open.
+
 ## Still blocked for release
 - [ ] Inspect exact authoritative **live** APIs/DOM/save schema before binding adapters; the giant bundled live index cannot be treated as documented API.
 - [ ] Replace TEST menu/settings/audio/reward direct implementations one system at a time, using actual platform functions with browser parity tests.
