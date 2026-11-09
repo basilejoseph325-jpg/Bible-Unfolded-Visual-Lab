@@ -114,3 +114,6 @@ else install();
  if(document.readyState==='complete')setTimeout(install,800);
  else window.addEventListener('load',()=>setTimeout(install,800),{once:true});
 })();
+
+/* Visual Lab ONLY — mount Word Trails under the real main-game UI. */
+(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=native-host-20261109-1';s.defer=true;document.head.appendChild(s)})();
