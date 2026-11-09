@@ -135,6 +135,13 @@ const EXTRA_SPARKS=[
    url:'https://www.jw.org/en/library/bible/nwt/books/judges/16/',
    insight:'Samson removed the doors and posts of Gaza’s city gate, along with the bar, and carried them away (Judges 16:3).'}]
 ];
+// Verified extension: the original 11 levels remain untouched.
+if(Array.isArray(window.BUWTAdditionalLevels)){
+ for(const next of window.BUWTAdditionalLevels){
+  if(!next||!Array.isArray(next.words)||!Array.isArray(next.extraSparks))throw Error('Broken additional level module');
+  LEVELS.push(next);EXTRA_SPARKS.push(next.extraSparks);
+ }
+}
 const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
  {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
  ...EXTRA_SPARKS[i]
