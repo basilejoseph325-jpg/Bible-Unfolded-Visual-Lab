@@ -117,3 +117,13 @@ else install();
 
 /* Visual Lab ONLY — mount Word Trails under the real main-game UI. */
 (()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=native-host-20261109-1';s.defer=true;document.head.appendChild(s)})();
+
+
+/* Visual Lab ONLY — extend the actual native Settings backup controls so one
+   complete portable JSON includes Word Trails NEXT progress as quarantined TEST
+   data, while preserving native v1 import and the shared Rewards wallet. */
+(()=>{if(window.BUPlatformSaves||document.getElementById('bu-platform-save-core-v2'))return;
+ const el=document.createElement('script');el.id='bu-platform-save-core-v2';
+ el.src='bu-platform-saves-v2.js?v=20261109-test-safe-backup-v2';
+ el.defer=true;document.head.appendChild(el);
+})();
