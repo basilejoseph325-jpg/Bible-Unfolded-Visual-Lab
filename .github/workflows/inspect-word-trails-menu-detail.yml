@@ -1,0 +1,39 @@
+name: Inspect Bible Unfolded Menu Economy Details
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-word-trails-menu-detail.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract exact menu markup, shared wallet and wheel theme settings
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          src=Path('index.html').read_text(errors='replace')
+          core=Path('bible_unfolded_core_part5.js').read_text(errors='replace')
+          for key in ['id="bu-story-menu"','id="home-menu"','id="home-rewards"',
+                      'id="reward-products"','id="reward-screen"','id="reward-modal"',
+                      'class="drawer-links"','data-nav="rewards"','data-nav="settings"']:
+            i=src.find(key);print('MAIN_HTML',key,i)
+            if i>=0:print('MAIN_HTML_CONTEXT',repr(src[max(0,i-240):i+3100].replace('\n',' ')))
+          for key in ['const BU_WHEEL_IDS','const ECONOMY','const E_KEY','const ECONOMY_KEY',
+                      'function saveEconomy','function loadEconomy','function setWheelTheme',
+                      'function openRewards','function bu3824RefreshWallet',
+                      'function bu3824MergeEntitlements','function purchase(','const available=',
+                      'const available =','function openMenu','function closeMenu']:
+            i=core.find(key);print('CORE5',key,i)
+            if i>=0:print('CORE5_CONTEXT',repr(core[max(0,i-480):i+3900].replace('\n',' ')[:4100]))
+          for key in ['gold-wheel','moon-wheel','sea-wheel','equippedWheel','purchases','bible-unfolded-economy','wallet']:
+            for file in [src,core]:
+              found=list(re.finditer(re.escape(key),file,re.I))
+              print('THEME_COUNT',key,'index' if file is src else 'core5',len(found))
+              for m in found[:4]:
+                print('THEME_CONTEXT',key,'index' if file is src else 'core5',
+                   repr(file[max(0,m.start()-185):m.end()+270].replace('\n',' ')))
+          PY
