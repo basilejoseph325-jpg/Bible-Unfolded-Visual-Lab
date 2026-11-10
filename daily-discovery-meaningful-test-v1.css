@@ -234,3 +234,11 @@
  }
  #bu375-body.bu-insight-reading .bu-insight-thumb{height:85px!important}
 }
+
+
+/* Actual image thumbnails: no blank photo slots if the remote original is unavailable. */
+#bu375-body.bu-insight-reading .bu-insight-thumb{overflow:hidden;position:relative;display:block}
+#bu375-body.bu-insight-reading .bu-insight-thumb img{
+ width:100%;height:100%;display:block;object-fit:cover;object-position:center;
+ border-radius:inherit;filter:saturate(.94) contrast(1.04)
+}
