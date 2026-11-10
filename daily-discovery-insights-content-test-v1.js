@@ -12,7 +12,7 @@ const I='https://www.jw.org/en/library/books/Insight-on-the-Scriptures/';
 const A='journey-art/';
 const items=[
 {
- id:'nile',category:'ANCIENT EGYPT',art:A+'03_deliverance.webp',title:'A River That Helped Sustain an Empire',
+ id:'nile',category:'ANCIENT EGYPT',art:'family-worship-menu-art/v1/topic-12-baby-moses.webp',title:'A River That Helped Sustain an Empire',
  subtitle:'The Nile was much more than scenery in the Bible accounts.',
  source:'Nile — Insight on the Scriptures',reference:'Insight on the Scriptures · Nile',url:I+'Nile/',
  body:[
@@ -36,7 +36,7 @@ const items=[
  share:{moment:'When someone says they are not good enough or have made too many mistakes.',opener:'Have you ever felt that your weaknesses mattered more than your good intentions?',thought:'Peter felt unworthy, yet Jesus reassured him and invited him to do meaningful work.',question:'Could it be encouraging to know that imperfections do not have to define a person?',bridge:'Luke 5 shows that moment in just a few verses.',reference:'Luke 5:8–11',url:B+'luke/5/'}
 },
 {
- id:'early-students',category:'ORGANIZATIONAL HISTORY',art:A+'07_good_news_spreads.webp',title:'A Small Bible Study That Kept Asking Questions',
+ id:'early-students',category:'ORGANIZATIONAL HISTORY',art:'scholar-research-assets/witness-history.webp',title:'A Small Bible Study That Kept Asking Questions',
  subtitle:'A look at the early Bible Students near Pittsburgh.',
  source:'Proclaiming the Lord’s Return (1870–1914) — JW.org',reference:'Historical account · 1870',url:'https://www.jw.org/en/library/books/Jehovahs-Witnesses-Proclaimers-of-Gods-Kingdom/You-Are-My-Witnesses-Says-Jehovah/Proclaiming-the-Lords-Return-1870-1914/',
  body:[
@@ -84,7 +84,7 @@ const items=[
  share:{moment:'When someone admires nature or mentions feeling worn out.',opener:'Have you ever thought about why the Bible talks about the stars and tired people in the same passage?',thought:'Isaiah 40 moves from the vastness of the stars to the idea that God can give strength to people who are weary.',question:'Would you find that connection comforting?',bridge:'Isaiah 40:26–31 brings those thoughts together.',reference:'Isaiah 40:26–31',url:B+'isaiah/40/'}
 },
 {
- id:'radio',category:'ORGANIZATIONAL HISTORY',art:A+'07_good_news_spreads.webp',title:'The Night the Bible Students Went on the Air',
+ id:'radio',category:'ORGANIZATIONAL HISTORY',art:'scholar-research-assets/witness-history.webp',title:'The Night the Bible Students Went on the Air',
  subtitle:'A remarkable evening in February 1924.',
  source:'Broadcasting the Good News — From Our Archives',reference:'WBBR · February 24, 1924',url:'https://www.jw.org/en/library/series/from-our-archives-1/Broadcasting-the-Good-News/',
  body:[
@@ -120,7 +120,7 @@ const items=[
  share:{moment:'When someone speaks about being new to a place, alone, or overlooked.',opener:'There’s a Bible account about a woman who moved to a new place and had to gather food from leftover grain.',thought:'A man named Boaz noticed Ruth and went beyond politeness by arranging practical help.',question:'What do you think makes someone truly feel welcome?',bridge:'Ruth chapter 2 tells the story.',reference:'Ruth 2:1–16',url:B+'ruth/2/'}
 },
 {
- id:'joseph',category:'ANCIENT EGYPT',art:A+'03_deliverance.webp',title:'Joseph’s Advice Was a Plan, Not Just a Prediction',
+ id:'joseph',category:'ANCIENT EGYPT',art:'15-joseph-names-and-decisions.jpg',title:'Joseph’s Advice Was a Plan, Not Just a Prediction',
  subtitle:'A practical detail in Pharaoh’s dream.',
  source:'Genesis 41:25–49 — New World Translation',reference:'Genesis 41:25–49',url:B+'genesis/41/',
  body:[
