@@ -25,7 +25,7 @@ const CATALOG=Object.freeze([
 const IDS=new Set(CATALOG.map(x=>x.id));
 const MODE=[
  {id:'home-cross',title:'Word Trails',desc:'Uncover something new in the crossword adventure.',icon:'✧'},
- {id:'home-journey',title:'Story Adventure',desc:'Explore the next chapter of the Bible story.',icon:'✦'}
+ {id:'home-story',title:'Story Adventure',desc:'Explore the next chapter of the Bible story.',icon:'✦'}
 ];
 const pad=n=>String(n).padStart(2,'0');
 const stamp=d=>d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
@@ -110,8 +110,10 @@ function updateEntry(){
  subtitle.textContent='Daily expedition · '+fmt(state.credits)+' test credits · Goal: '+name;
 }
 function insert(){
- const home=document.getElementById(HOME),shop=document.getElementById('home-shop');
- if(!home||!shop||document.getElementById('bu-engage-launch'))return false;
+ const home=document.getElementById(HOME),story=home?.querySelector('#home-story');
+ // The old #home-shop button is inside .cinematic-bottom-nav (display:none).
+ // Insert into the VISIBLE game-card stack instead, before Story Adventure.
+ if(!home||!story||!story.closest('.cinematic-cards')||document.getElementById('bu-engage-launch'))return false;
  const b=document.createElement('button');
  b.id='bu-engage-launch';b.type='button';
  b.setAttribute('aria-label','Open the Daily Discovery Hall and Treasury');
@@ -121,7 +123,7 @@ function insert(){
   '<span class="bu-engage-launch-title">The Discovery Hall</span>'+
   '<span class="bu-engage-launch-copy">Expeditions · Treasury · Collectibles</span>'+
   '</span><span class="bu-engage-arrow" aria-hidden="true">›</span>';
- shop.insertAdjacentElement('afterend',b);
+ story.insertAdjacentElement('beforebegin',b);
  b.addEventListener('click',()=>show('today'));
  updateEntry();
  return true;
