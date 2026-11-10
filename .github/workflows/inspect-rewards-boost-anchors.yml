@@ -1,0 +1,72 @@
+name: Inspect native Rewards and playable Trivia boost anchors
+on:
+  push:
+    paths: ['.github/workflows/inspect-rewards-boost-anchors.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect code and actual DOM without mutating saves
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-audit puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8898 --bind 127.0.0.1 >/tmp/bu-audit-server.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-audit/node_modules node <<'JS'
+          const p=require('puppeteer-core'),{execSync}=require('child_process');
+          (async()=>{
+           let browser;
+           try{
+            browser=await p.launch({headless:true,executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),args:['--no-sandbox','--disable-setuid-sandbox']});
+            const page=await browser.newPage();await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+            page.on('pageerror',e=>console.log('PAGE_ERROR',e.message));
+            await page.goto('http://127.0.0.1:8898/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForSelector('#home-rewards',{timeout:60000});
+            await page.evaluate(()=>document.getElementById('home-rewards').click());
+            await new Promise(r=>setTimeout(r,650));
+            console.log('REWARDS_STATE',JSON.stringify(await page.evaluate(()=>{
+             const screen=document.getElementById('rewards'),rect=e=>{if(!e)return null;const r=e.getBoundingClientRect();return [r.x,r.y,r.width,r.height]};
+             const items=[...document.querySelectorAll('#reward-products .reward-product')].map(x=>({text:x.textContent?.slice(0,160),buttons:[...x.querySelectorAll('button')].map(y=>({text:y.textContent,disabled:y.disabled,attrs:y.outerHTML.slice(0,230)}))}));
+             return {screen:rect(screen),screenHidden:screen.hidden,products:rect(document.getElementById('reward-products')),
+              productsParent:document.getElementById('reward-products')?.parentElement?.outerHTML.slice(0,1200),
+              productCount:items.length,items,
+              text:screen?.textContent.slice(0,2000),
+              native:{wallet:!!window.BUPlatformRewards,truth:typeof economy,openRewards:typeof openRewards,
+               openTrivia:typeof window.BUStage16TriviaLifecycle?.getQuiz,ctx:typeof window.BUStage16TriviaLifecycle}};
+            })));
+            await page.evaluate(()=>{window.closeDialog?.();window.focusHome?.();});
+            await page.evaluate(()=>document.getElementById('home-story')?.click());
+            await new Promise(r=>setTimeout(r,500));
+            console.log('STORY_STATE',JSON.stringify(await page.evaluate(()=>({screens:[...document.querySelectorAll('.screen')].filter(x=>!x.hidden).map(x=>x.id),
+             play:document.getElementById('play')?.textContent.slice(0,180),
+             possibleButtons:[...document.querySelectorAll('#play button, #bu3857-screen button')].slice(0,30).map(x=>({id:x.id,txt:x.textContent.slice(0,40)}))}))));
+            await page.evaluate(()=>{window.focusHome?.();document.getElementById('home-rewards')?.click()});
+            const test=await page.evaluate(()=>({
+             trivia:document.getElementById('bu34-trivia')?.outerHTML.slice(0,800),
+             getQuiz:typeof window.BUStage16TriviaLifecycle?.getQuiz,
+             openTrivia:typeof window.BUStage16TriviaLifecycle,
+             globalkeys:Object.keys(window).filter(x=>/trivia|quiz|daily|rewards/i.test(x)).slice(0,65)
+            }));
+            console.log('TRIVIA_GLOBALS',JSON.stringify(test));
+           }catch(e){console.error('AUDIT_FAILED',e.stack);process.exitCode=1}
+           finally{await browser?.close()}
+          })();
+          JS
+      - name: Source extract only relevant native functions
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          s=''
+          for i in range(1,6):
+            a=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',a)
+            if m:s+=json.loads(m.group(1))
+          for key in ["function purchase(id,cost)","function openRewards()","const available=[{id:'edenprint'","function bu34Render","function bu34Hint","BUStage16TriviaLifecycle","function claimDaily","function bu3857Hint"]:
+            i=s.find(key)
+            print('SOURCE_ANCHOR',key,i,repr(s[max(0,i-150):i+2500]) if i>=0 else '')
+          PY
