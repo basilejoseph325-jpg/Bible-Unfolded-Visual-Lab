@@ -18,7 +18,7 @@ const KEY='bu-daily-insight-test-v1';
 const Q=new URLSearchParams(location.search);
 const DATA=()=>window.BUDailyDiscoveryLibrary||[];
 const $=s=>document.querySelector(s);
-const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;':'&quot;',"'":'&#39;'}[c]));
+const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const safeURL=url=>/^https:\/\/(?:www\.)?jw\.org\/en\//.test(url)?url:'#';
 const localDay=()=>{const d=new Date();return[d.getFullYear(),('0'+(d.getMonth()+1)).slice(-2),('0'+d.getDate()).slice(-2)].join('-')};
 const dayIndex=date=>{
