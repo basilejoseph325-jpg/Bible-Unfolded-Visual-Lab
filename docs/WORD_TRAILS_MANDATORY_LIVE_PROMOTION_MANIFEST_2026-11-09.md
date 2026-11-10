@@ -40,6 +40,9 @@ When the owner says "next", "continue", or "move to live", read this manifest an
 - LIVE currently has older Word Trails styles and scripts (e.g. `word-trails-cinematic.css` and `word-trails-starfield-v3-test.js`), so adding Word Trails NEXT must preserve them unless the owner explicitly approves replacement. Confirm whether the LIVE original Word Trails remains available for any legacy progress or compatibility need.
 - This was a **read-only repository hash and file inventory**, NOT a deployed compatibility run, a safe migration dry-run on real user data, or a LIVE release.
 
+## Exact file-dependency checklist before LIVE promotion
+The newer read-only comparison now has a separate [Word Trails LIVE File Delta Manifest](WORD_TRAILS_LIVE_FILE_DELTA_MANIFEST_2026-11-09.md) with **21 tracked code/adapter dependencies, 20 currently absent from LIVE, one differing adapter**, and the required `assets/ui/word-trails-home-next-crossword-v1.svg` homepage overlay. It distinguishes TEST-only modules that require adaptation from safe asset dependencies. Consult the file before any LIVE copy; revalidate all hashes against the frozen release candidate.
+
 ## Additional TEST content work after initial shared-core integration (November 9)
 - **Carry the revised 30-level source bank into LIVE with the rest of Word Trails NEXT**, not an older source snapshot: `experiments/word-trails-levels-12-30-v1.js` contains 14 newly diversified Bible clues/explanations at levels 18–26 and 29. Existing answers, board geometry, currency and save structure were kept. Update `experiments/word-trails-next-v1.html` asset versions as part of the controlled LIVE package.
 - An added checker in `scripts/word_trails_quality_gate.mjs` now rejects identical educational clues and explanations recycled across newer levels. GitHub Actions quality gate, native-voice/30-level gameplay, Ocean Glow, rewards/menu, and FEEL SFX tests passed on the updated code.
