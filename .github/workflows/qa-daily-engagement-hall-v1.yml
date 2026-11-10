@@ -1,0 +1,42 @@
+name: QA Daily Discovery Hall Visual Lab Only
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-daily-engagement-hall-v1.yml'
+      - 'daily-engagement-hall-test-v1.js'
+      - 'daily-engagement-hall-test-v1.css'
+      - 'scripts/qa_daily_engagement_hall_v1.cjs'
+      - 'visual-lab-test-banner.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate test-only scripts and loader
+        run: |
+          set -euo pipefail
+          node --check daily-engagement-hall-test-v1.js
+          node --check visual-lab-test-banner.js
+          node --check scripts/qa_daily_engagement_hall_v1.cjs
+          grep -q 'bu-daily-hall-test-loader' visual-lab-test-banner.js
+          test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
+          test -f journey-art/02_faith_promises.webp
+          test -f bible-book-art/19_psalms.webp
+          test -f journey-art/03_deliverance.webp
+      - name: Real browser test on phone portrait and landscape
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-engage-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8897 --bind 127.0.0.1 >/tmp/bu-engage-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-engage-qa/node_modules node scripts/qa_daily_engagement_hall_v1.cjs
+      - name: Save browser previews
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-hall-visual-lab-previews
+          path: /tmp/BU-Daily-Hall-*.png
+          if-no-files-found: ignore
