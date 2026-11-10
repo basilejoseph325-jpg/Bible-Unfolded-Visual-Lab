@@ -1,0 +1,41 @@
+name: QA James Reward Loop — TEST Only
+on:
+  push:
+    paths:
+      - 'james-return-loop-test-v1.js'
+      - 'james-return-loop-test-v1.css'
+      - 'scripts/qa_james_return_loop_v1.cjs'
+      - 'visual-lab-test-banner.js'
+      - '.github/workflows/qa-james-return-loop-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript and source assets
+        run: |
+          set -euo pipefail
+          node --check james-return-loop-test-v1.js
+          node --check scripts/qa_james_return_loop_v1.cjs
+          test -f bible-book-art/08_ruth.webp
+          test -f bible-book-art/17_esther.webp
+          test -f bible-book-art/27_daniel.webp
+          test -f bible-book-art/54_1_timothy.webp
+          grep -q 'bu-james-return-loop-v1-test-only' james-return-loop-test-v1.js
+      - name: Browser acceptance — portrait and landscape, real Trivia integration
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-james-return-loop-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-james-return-loop-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-james-return-loop-qa/node_modules node scripts/qa_james_return_loop_v1.cjs
+      - name: Upload TEST screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: james-rewards-test-mobile-screenshots
+          path: /tmp/BU-JAMES-REWARDS-*.png
+          if-no-files-found: ignore
