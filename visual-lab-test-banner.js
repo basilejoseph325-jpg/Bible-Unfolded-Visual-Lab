@@ -175,6 +175,6 @@ else install();
  document.head.appendChild(css);
  const js=document.createElement('script');
  js.id='bu-daily-hall-test-loader';
- js.src='daily-engagement-hall-test-v1.js?v=20261109-hall-v2';
+ js.src='daily-engagement-hall-test-v1.js?v=20261109-hall-visible-v3';
  js.defer=true;document.head.appendChild(js);
 })();
