@@ -124,3 +124,45 @@
 #bu-arcade-shell[data-aura="aurora"]{box-shadow:0 0 0 4px #1e646d,0 10px 65px #56cfc891}
 #bu-arcade-shell[data-aura="starfall"]{box-shadow:0 0 0 4px #483110,0 10px 65px #f9cc6d99}
 #bu-arcade-shell[data-aura="royalglow"]{box-shadow:0 0 0 4px #5e447e,0 10px 65px #a89dea99}
+
+
+/* V2.1 rendered-art QA corrections: no native grey buttons in bonus / reward,
+   richer bonus-stage backdrop, chest illustration sizing, compact landscape CTA. */
+#bu-arcade-stage #bu-arcade-play .bu-a-button,
+#bu-arcade-stage .bu-a-win .bu-a-button{
+ appearance:none!important;display:inline-block;border:1px solid #fff0bc!important;
+ background:linear-gradient(180deg,#fff1c3 0%,#f2c36d 56%,#bf813b 100%)!important;
+ color:#14333c!important;padding:11px 16px!important;border-radius:11px!important;
+ cursor:pointer!important;font:900 12px system-ui,sans-serif!important;
+ box-shadow:inset 0 1px #ffffffd2,0 5px 9px #0008!important;min-height:41px!important;
+ text-shadow:0 1px #fff8!important;transition:transform .13s,filter .13s!important
+}
+#bu-arcade-stage #bu-arcade-play .bu-a-button.secondary{
+ background:linear-gradient(#24637a,#103442)!important;color:#fff0c5!important;
+ border-color:#e3c68e!important;text-shadow:none!important
+}
+#bu-arcade-stage #bu-arcade-play .bu-a-button:active,
+#bu-arcade-stage .bu-a-win .bu-a-button:active{transform:translateY(2px)}
+#bu-arcade-play{background:linear-gradient(110deg,#051825e8,#092e47d9),
+ url("journey-art/04_judges_kings.webp") center center/cover}
+#bu-arcade-play .bu-a-play-panel{background:linear-gradient(147deg,#10394bec,#092a3ef1),
+ url("journey-art/04_judges_kings.webp") center/cover}
+#bu-arcade-play .bu-a-chest{display:grid;place-items:center;background:
+ radial-gradient(ellipse at 50% 5%,#ffe7a166,transparent 65%),
+ linear-gradient(180deg,#97501e,#4d291b 100%);color:#fff0ba}
+#bu-arcade-play .bu-a-chest svg{display:block;width:85%;height:85px;filter:drop-shadow(0 5px 5px #120901aa)}
+#bu-arcade-stage .bu-a-win-card{background:radial-gradient(ellipse at 55% 3%,#c99540 0%,#21526b 40%,#061b2c 100%)}
+#bu-arcade-stage .bu-a-win-card:before{content:"";position:absolute;inset:7px;border:1px solid #ffe4a654;border-radius:12px;pointer-events:none}
+#bu-arcade-stage .bu-a-win .bu-a-button{min-width:min(100%,300px);margin-top:9px}
+@media(max-height:470px){
+ #bu-arcade-shell .bu-a-main .bu-a-panel{padding:8px}
+ #bu-arcade-shell .bu-a-main .bu-a-panel h3{font-size:23px;margin:1px 0 2px}
+ #bu-arcade-shell .bu-a-main .bu-a-panel p{margin:3px 0;font-size:11px}
+ #bu-arcade-shell .bu-a-main .bu-a-prize-art{height:42px;margin-bottom:4px}
+ #bu-arcade-shell .bu-a-main .bu-a-prize-art .bu-a-big-icon{font-size:36px!important}
+ #bu-arcade-shell .bu-a-main .bu-a-reward-stats{display:none}
+ #bu-arcade-shell .bu-a-main .bu-a-giant{min-height:35px;font-size:12px;padding:6px}
+ #bu-arcade-play .bu-a-chest svg{height:56px}
+ #bu-arcade-stage #bu-arcade-play .bu-a-button{min-height:29px!important;padding:4px 12px!important;font-size:10px!important}
+ #bu-arcade-stage .bu-a-win .bu-a-button{min-height:33px!important;padding:7px!important}
+}
