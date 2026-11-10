@@ -1,12 +1,6 @@
 name: QA Treasure Quest V2 TEST Bonus Game
+# Legacy Treasure Quest V2 paused. Owner declined game mechanic.
 on:
-  push:
-    paths:
-      - '.github/workflows/qa-treasure-quest-v2.yml'
-      - 'daily-treasure-quest-test-v2.css'
-      - 'daily-treasure-quest-test-v2.js'
-      - 'scripts/qa_treasure_quest_v2.cjs'
-      - 'visual-lab-test-banner.js'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
