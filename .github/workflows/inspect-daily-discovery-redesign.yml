@@ -1,0 +1,63 @@
+name: Inspect Daily Discovery & Deep Dive for Redesign (read only)
+on:
+  push:
+    paths: ['.github/workflows/inspect-daily-discovery-redesign.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source mode and native persistence inspection
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          html=Path('index.html').read_text(errors='replace')
+          s=''
+          for i in range(1,6):
+            v=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',v)
+            if m:s+=json.loads(m.group(1))
+          print('SIZE_BYTES',len(html),len(s))
+          pats=['function bu388Daily','function bu388','function bu38Daily','function daily','function openDaily','function bu40','function claimDaily','deep dive','Deep Dive','Daily Discovery','home-daily','daily-body','daily-deep','daily-discovery','BU_DAILY_','dailyDiscovery','dailyRecord','dailyQuestions','function bu386']
+          for label,src in [('HTML',html),('CORE',s)]:
+            for pat in pats:
+              ms=list(re.finditer(re.escape(pat),src,re.I))
+              if not ms:continue
+              print('PAT',label,pat,len(ms))
+              for m in ms[:(5 if pat in ['Deep Dive','deep dive','daily-discovery','Daily Discovery'] else 12)]:
+                start=max(0,m.start()-360);end=min(len(src),m.end()+950)
+                print('AT',m.start(),repr(src[start:end].replace('\n',' '))[:1600])
+          PY
+      - name: Browser screens and handlers (actual TEST)
+        run: |
+          set -e
+          npm install --prefix /tmp/bu-dd-audit puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-dd-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-dd-audit/node_modules node <<'JS'
+          const puppeteer=require('puppeteer-core'),{execSync}=require('node:child_process');
+          (async()=>{let br;try{
+           br=await puppeteer.launch({headless:true,executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),args:['--no-sandbox']});
+           const p=await br.newPage();await p.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+           p.on('pageerror',e=>console.log('PAGE_ERROR',e.message));
+           await p.goto('http://127.0.0.1:8894/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+           await p.waitForSelector('#home',{timeout:60000});
+           const pre=await p.evaluate(()=>({cards:[...document.querySelectorAll('button')].filter(x=>/daily|deep/i.test(x.id+' '+x.textContent?.slice(0,80))).slice(0,50).map(x=>({id:x.id,txt:x.textContent.slice(0,95),html:x.outerHTML.slice(0,170)})),screens:[...document.querySelectorAll('section')].filter(x=>/daily|deep/i.test(x.id)).map(x=>({id:x.id,cls:x.className,hidden:x.hidden,html:x.outerHTML.slice(0,350)}))}));
+           console.log('HOME_DAILY',JSON.stringify(pre));
+           const b=pre.cards.find(x=>/home-daily|daily-card|home-discover/i.test(x.id));
+           if(b)await p.evaluate(id=>document.getElementById(id)?.click(),b.id);
+           await new Promise(r=>setTimeout(r,350));
+           console.log('DAILY_AFTER_CLICK',JSON.stringify(await p.evaluate(()=>({
+            visible:[...document.querySelectorAll('section')].filter(x=>!x.hidden&&getComputedStyle(x).display!=='none').map(x=>({id:x.id,cls:String(x.className).slice(0,60),html:x.outerHTML.slice(0,1400)})).slice(0,9),
+            controls:[...document.querySelectorAll('button')].filter(x=>{const r=x.getBoundingClientRect();return r.width>20&&r.height>15}).slice(0,45).map(x=>({id:x.id,txt:x.textContent?.slice(0,60),data:x.dataset,html:x.outerHTML.slice(0,150)})),
+            globals:Object.keys(window).filter(x=>/daily|deep|discovery|scholar/i.test(x)).slice(0,80)
+           }))));
+           await p.close();
+          }catch(e){console.error('FAIL_DAILY_AUDIT',e.stack);process.exitCode=1}
+          finally{await br?.close()}
+          })();
+          JS
