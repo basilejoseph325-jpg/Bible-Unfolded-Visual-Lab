@@ -73,7 +73,7 @@ jobs:
             sizes=[float(node.get('rx','0')) for node in root.iter() if node.tag.endswith('ellipse')]
             assert not any(rx >= 25 for rx in sizes), 'cartoon oval patches still present'
           assert 'trivia-tablet-a-relief-v3.svg?v=4' in v3
-          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4' in l
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5' in l
           photograph=Path('assets/ui/trivia-real-rock-v4.jpg').read_bytes()
           assert len(photograph)>600000 and photograph[:3]==bytes([255,216,255])
           v4=Path('trivia-photo-stone-tablets-v4.css').read_text()
