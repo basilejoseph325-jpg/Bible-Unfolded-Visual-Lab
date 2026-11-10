@@ -12,7 +12,7 @@ const I='https://www.jw.org/en/library/books/Insight-on-the-Scriptures/';
 const A='journey-art/';
 const items=[
 {
- id:'nile',category:'ANCIENT EGYPT',art:'https://commons.wikimedia.org/wiki/Special:FilePath/Nile_river_egypt.jpg?width=1200',title:'A River That Helped Sustain an Empire',
+ id:'nile',category:'ANCIENT EGYPT',art:'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Nile_river_egypt.jpg/1280px-Nile_river_egypt.jpg',title:'A River That Helped Sustain an Empire',
  subtitle:'The Nile was much more than scenery in the Bible accounts.',
  source:'Nile — Insight on the Scriptures',reference:'Insight on the Scriptures · Nile',url:I+'Nile/',
  body:[
