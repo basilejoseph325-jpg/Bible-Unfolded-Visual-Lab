@@ -26,7 +26,17 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
     homeShop:!!document.getElementById('home-shop'),
     theme:document.getElementById('bu-engage-hall')?.dataset.scene
    }));
+   const placement=await page.evaluate(()=>{
+    const b=document.getElementById('bu-engage-launch'),shop=document.getElementById('home-shop');
+    const box=e=>{const r=e.getBoundingClientRect();const c=getComputedStyle(e);return {tag:e.tagName,id:e.id,cls:String(e.className).slice(0,90),rect:{x:r.x,y:r.y,w:r.width,h:r.height},display:c.display,visibility:c.visibility,opacity:c.opacity,overflow:c.overflow,position:c.position}};
+    const parents=[];for(let el=b,n=0;el&&n<8;el=el.parentElement,n++)parents.push(box(el));
+    const r=b.getBoundingClientRect();
+    return {parents,shop:box(shop),screen:{w:innerWidth,h:innerHeight},hit:r.width&&r.height?document.elementFromPoint(Math.max(0,Math.min(innerWidth-1,r.left+r.width/2)),Math.max(0,Math.min(innerHeight-1,r.top+r.height/2)))?.id:null};
+   });
+   console.log('DAILY_HALL_HOME_PLACEMENT_'+vp.width,JSON.stringify(placement));
+   await page.screenshot({path:'/tmp/BU-Daily-Hall-HOME-'+vp.width+'.png',fullPage:false});
    assert(initial.homeShop);
+   assert(placement.parents[0].rect.w>190&&placement.parents[0].rect.h>=60,'Discovery Hall card should be clearly visible on HOME');
    assert(initial.launcher.includes('Discovery Hall'),'Hall must be part of native home');
    await page.evaluate(()=>document.getElementById('bu-engage-launch').click());
    await page.waitForSelector('#bu-engage-hall');
