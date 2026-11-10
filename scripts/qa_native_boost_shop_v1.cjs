@@ -105,9 +105,10 @@ async function state(page){return page.evaluate((keys)=>({
     console.log('TRIVIA_POWERUP_PASS_'+viewport.width);
     // Read-only Story source + an actual use of a stored Letter Lens on legacy Story.
     await page.evaluate(()=>{
-      for(const x of document.querySelectorAll('main#app > .screen'))x.hidden=true;
-      const root=document.getElementById('play');root.hidden=false;
-      activeBook='genesis';stage=0;mode='clue';
+      // Enter through the ACTUAL native chapter controller, not a stale
+      // hidden screen with manually replaced mode/stage variables.
+      focusHome();
+      startChapter('genesis',true);
     });
     await wait(1700);
     const story=await page.evaluate(()=>({
@@ -116,7 +117,7 @@ async function state(page){return page.evaluate((keys)=>({
       text:document.querySelector('#play')?.textContent.slice(0,120)
     }));
     console.log('BOOST_STORY_'+viewport.width,JSON.stringify(story));
-    assert.equal(story.source,'EARTH','The test scene must read the current active native Story word');
+    assert(story.source&&story.source.length>2,'A native Story answer must be available');
     assert(story.mounted,'Letter Lens boost must mount in native Story when answer is available');
     await page.evaluate(()=>document.querySelector('#bu-boost-story-launch').click());
     await page.evaluate(()=>document.querySelector('#bu-boost-popover [data-power-act=letter]').click());
@@ -126,7 +127,7 @@ async function state(page){return page.evaluate((keys)=>({
       stock:window.BUNativeBoostShop.preview().inventory.letter,
       real:['bible-unfolded-rewards-v17','bible-unfolded-wheel-ownership-v3825'].map(k=>localStorage.getItem(k))
     }));
-    assert(lens.text.includes('E  ·  A'));
+    assert(lens.text.includes(story.source.slice(0,2).split('').join('  ·  ')),'Lens must reveal the true current native Story word');
     assert.equal(lens.stock,0);
     assert.equal(lens.real[0],before.native[0]);assert.equal(lens.real[1],before.native[2]);
     await page.evaluate(()=>{document.querySelector('.bu-boost-lens-message button').click()});
