@@ -164,17 +164,17 @@ else install();
 })();
 
 
-/* Visual Lab ONLY — Daily Discovery Hall prototype.
- * Kept in independent assets and isolated test-only storage. The canonical
- * daily checkmark, rewards wallet, purchases and LIVE project are untouched. */
+/* Visual Lab ONLY — Treasure Quest V2, animated daily bonus game.
+ * Replaces the v1 dull Hall experiment. Existing v1 data can be read by
+ * the new V2 as a one-way TEST-only migration; LIVE remains untouched. */
 (()=>{'use strict';
- if(document.getElementById('bu-daily-hall-test-loader'))return;
+ if(document.getElementById('bu-treasure-quest-v2-loader'))return;
  const css=document.createElement('link');css.rel='stylesheet';
- css.id='bu-daily-hall-test-css';
- css.href='daily-engagement-hall-test-v1.css?v=20261109-hall-v1';
+ css.id='bu-treasure-quest-v2-css';
+ css.href='daily-treasure-quest-test-v2.css?v=20261109-arcade-v2';
  document.head.appendChild(css);
- const js=document.createElement('script');
- js.id='bu-daily-hall-test-loader';
- js.src='daily-engagement-hall-test-v1.js?v=20261109-hall-visible-v3';
- js.defer=true;document.head.appendChild(js);
+ const js=document.createElement('script');js.defer=true;
+ js.id='bu-treasure-quest-v2-loader';
+ js.src='daily-treasure-quest-test-v2.js?v=20261109-arcade-v2';
+ document.head.appendChild(js);
 })();
