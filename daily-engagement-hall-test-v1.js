@@ -45,7 +45,7 @@ function defaultState(){
  let ref={points:0,coins:0,levels:0};
  try{ref=canonical()}catch(_){}
  return {version:1,credits:Math.max(420,Math.min(5000,Math.floor(ref.coins||0))),
-   owned:['dawn'],scene:'dawn',badge:null,goal:'library',
+   owned:['dawn'],scene:'dawn',badge:null,goal:'library',awards:[],
    activity:{},evidence:ref,updated:today()};
 }
 function normalized(raw){
@@ -56,6 +56,7 @@ function normalized(raw){
  b.scene=b.owned.includes(a.scene)&&CATALOG.some(x=>x.id===a.scene&&x.kind==='scene')?a.scene:'dawn';
  b.badge=b.owned.includes(a.badge)&&CATALOG.some(x=>x.id===a.badge&&x.kind==='seal')?a.badge:null;
  b.goal=IDS.has(a.goal)?a.goal:'library';
+ b.awards=Array.isArray(a.awards)?[...new Set(a.awards.filter(x=>typeof x==='string'&&/^\d{4}-\d{2}-\d{2}:(3|5|7)$/.test(x)))].slice(-250):[];
  b.activity=a.activity&&typeof a.activity==='object'&&!Array.isArray(a.activity)?a.activity:{};
  b.evidence=a.evidence&&typeof a.evidence==='object'?a.evidence:b.evidence;
  b.updated=typeof a.updated==='string'?a.updated:today();
@@ -81,15 +82,23 @@ function assessProgress(){
  const coinsGain=Number(now.coins)>Number(old.coins||0);
  const levelGain=Number(now.levels)>Number(old.levels||0);
  const d=today(),fresh=pointsGain||coinsGain||levelGain;
- const next={...state,evidence:now,activity:{...state.activity}};
+ const next={...state,evidence:now,activity:{...state.activity},awards:[...state.awards]};
  if(fresh&&!next.activity[d]){
   // Each day rewards at most once; this is a preview-only expedition reward.
   next.activity[d]=true;
   next.credits+=40;
  }
- // Native balance increases are NEVER deducted/converted or copied a second time.
- // Test spending is intentionally independent of native spending.
- if(fresh||JSON.stringify(old)!==JSON.stringify(now))save(next);
+ // Weekly awards are earned by actual activity on 3, 5 and 7 distinct days.
+ // Earning more than one tier at a time is still idempotent for each week.
+ const dates=week(),active=dates.filter(x=>next.activity[x]).length;
+ for(const [tier,bonus] of [[3,100],[5,150],[7,200]]){
+  const id=dates[0]+':'+tier;
+  if(active>=tier&&!next.awards.includes(id)){
+   next.awards.push(id);next.credits+=bonus;
+  }
+ }
+ // Test spending remains independent of the real wallet, forever.
+ if(fresh||JSON.stringify(old)!==JSON.stringify(now)||next.awards.length!==state.awards.length)save(next);
 }
 function percent(){const g=item(state.goal);return g?Math.min(100,Math.round(100*state.credits/Math.max(1,g.cost))):100}
 function updateEntry(){
@@ -134,7 +143,8 @@ function todayHTML(){
   'Earn a new game reward, increase your Points, or complete a new Word Trails level to light today’s expedition seal.')+'</p>'+
   '<div class="bu-mini-row"><span class="bu-label">This week · '+n+' of 7 seals</span><span class="bu-reward">+40 preview credits per active day</span></div>'+
   '<div class="bu-seals">'+days.map((d,i)=>'<span title="'+weekday[i]+'" class="bu-seal'+(state.activity[d]?' done':'')+(d===today()?' today':'')+'">'+(state.activity[d]?'✓':(i+1))+'</span>').join('')+'</div>'+
-  '<p class="bu-muted">Your original daily checkmark and streak remain unchanged. This expedition measures new play progress instead.</p>'+
+  '<p class="bu-muted">Weekly milestones: 3 days earns the Explorer Crest, 5 the Scholar Laurel, and 7 the Golden Chronicle. Each includes bonus test credits.</p>'+ 
+  '<p class="bu-muted">Your original daily checkmark and streak remain unchanged. This expedition measures new play progress instead.</p>'+ 
   button('Check for new progress','check')+'</section>'+
   '<section class="bu-panel"><span class="bu-meta">Today’s featured journey</span><h3>'+escape(choice.title)+'</h3>'+
   '<p>'+escape(choice.desc)+'</p><p>Any Bible Unfolded mode can count toward the expedition, so you always have a choice.</p>'+
@@ -181,16 +191,18 @@ function treasuryHTML(){
 }
 function galleryHTML(){
  const ownedItems=CATALOG.filter(x=>owned(x.id));
- return '<div class="bu-panel"><span class="bu-meta">My Discovery Gallery</span>'+
+ const weekly=[{tier:3,name:'Explorer Crest',icon:'✧'},{tier:5,name:'Scholar Laurel',icon:'❦'},{tier:7,name:'Golden Chronicle',icon:'✥'}];
+ const trophies=weekly.filter(x=>state.awards.some(a=>a.endsWith(':'+x.tier)));
+ return '<div class="bu-panel"><span class="bu-meta">My Discovery Gallery</span>'+ 
   '<h3>A collection that grows with you</h3>'+
-  '<p>'+ownedItems.length+' of '+CATALOG.length+' treasury pieces collected. Choose which scene and collector seal you want to display.</p>'+
+  '<p>'+ownedItems.length+' of '+CATALOG.length+' treasury pieces collected · '+trophies.length+' expedition trophies earned. Choose what to display.</p>'+ 
   '<div class="bu-progress"><span style="width:'+(100*ownedItems.length/CATALOG.length)+'%"></span></div>'+
   '<div class="bu-gallery">'+ownedItems.map(x=>'<article class="bu-gallery-piece">'+
   '<div class="seal" aria-hidden="true">'+escape(x.icon)+'</div>'+
   '<strong>'+escape(x.name)+'</strong>'+
   '<div style="margin-top:9px">'+((x.kind==='scene'?state.scene:state.badge)===x.id?
   '<span class="bu-label">On display</span>':button('Display','equip',x.id,true))+'</div></article>').join('')+
-  '</div></div><div class="bu-panel" style="margin-top:12px"><span class="bu-meta">Next discovery</span>'+
+  '</div>'+(trophies.length?'<h3 style="margin-top:20px">Expedition trophies</h3><div class="bu-gallery">'+trophies.map(x=>'<article class="bu-gallery-piece"><div class="seal">'+x.icon+'</div><strong>'+x.name+'</strong><span class="bu-label">EARNED · WEEKLY MILESTONE</span></article>').join('')+'</div>':'')+'</div><div class="bu-panel" style="margin-top:12px"><span class="bu-meta">Next discovery</span>'+ 
   '<h3>There’s always something to work toward</h3>'+
   '<p>Set a savings goal in the Treasury. Finish daily discoveries and return to unlock your next visual treasure.</p>'+
   button('Visit Treasury','tab','treasury')+'</div>';
@@ -246,6 +258,11 @@ function buy(id){
  if(state.credits<p.cost){notify('Choose it as a savings goal and keep playing.');return}
  const next={...state,credits:state.credits-p.cost,owned:[...state.owned,id]};
  if(p.kind==='scene')next.scene=id;else next.badge=id;
+ if(next.goal===id){
+  const targets=CATALOG.filter(x=>x.cost>0&&!next.owned.includes(x.id)).sort((a,b)=>a.cost-b.cost);
+  const follow=targets.find(x=>x.cost>=next.credits+120)||targets[0];
+  if(follow)next.goal=follow.id;
+ }
  if(!save(next)){notify('Could not securely save this purchase. Nothing was charged.');return}
  draw();notify('Unlocked: '+p.name+' · Added to your Gallery!');
 }
