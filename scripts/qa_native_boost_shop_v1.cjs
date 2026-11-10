@@ -111,6 +111,7 @@ async function state(page){return page.evaluate((keys)=>({
       startChapter('genesis',true,true);
     });
     await wait(1700);
+    await page.evaluate(()=>window.BUNativeBoostShop.testActions.refresh());
     const story=await page.evaluate(()=>({
       source:typeof BEATS==='object'?BEATS[0]?.word:null,
       mounted:!!document.querySelector('#bu-boost-story-launch'),
@@ -119,7 +120,7 @@ async function state(page){return page.evaluate((keys)=>({
     console.log('BOOST_STORY_'+viewport.width,JSON.stringify(story));
     console.log('STORY_DEBUG_'+viewport.width,JSON.stringify(await page.evaluate(()=>{
       const ids=['play','journey','bu3857-screen','scene-hint','hint','bu-boost-story-launch'];
-      return {mode,activeBook,stage,currentWord:BEATS?.[stage]?.word,
+      return {mode,activeBook,stage,currentWord:BEATS?.[stage]?.word, boostInventory:window.BUNativeBoostShop.preview().inventory,
         bu3857State:typeof bu3857State==='object'?JSON.stringify(bu3857State)?.slice(0,160):null,
         screens:ids.map(id=>{const e=document.getElementById(id),r=e?.getBoundingClientRect(),s=e&&getComputedStyle(e);return {id,exists:!!e,hidden:e?.hidden,rect:r?[r.x,r.y,r.width,r.height]:null,display:s?.display,parent:e?.parentElement?.id}})};
     })));
