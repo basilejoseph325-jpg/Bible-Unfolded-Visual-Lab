@@ -34,6 +34,19 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
     return {parents,shop:box(shop),screen:{w:innerWidth,h:innerHeight},hit:r.width&&r.height?document.elementFromPoint(Math.max(0,Math.min(innerWidth-1,r.left+r.width/2)),Math.max(0,Math.min(innerHeight-1,r.top+r.height/2)))?.id:null};
    });
    console.log('DAILY_HALL_HOME_PLACEMENT_'+vp.width,JSON.stringify(placement));
+   const dashboard=await page.evaluate(()=>{
+     const ids=['home','home-hero','home-shop','home-cross','home-story','home-journey','home-gallery','home-help'];
+     return ids.map(id=>{
+      const e=document.getElementById(id);if(!e)return {id,found:false};
+      const trace=[];let el=e;
+      for(let i=0;i<6&&el;i++,el=el.parentElement){
+       const r=el.getBoundingClientRect(),cs=getComputedStyle(el);
+       trace.push({tag:el.tagName,id:el.id,cls:typeof el.className==='string'?el.className.slice(0,80):'',display:cs.display,overflow:cs.overflow,position:cs.position,rect:[Math.round(r.x),Math.round(r.y),Math.round(r.width),Math.round(r.height)]});
+      }
+      return {id,trace};
+     })
+   });
+   console.log('DASHBOARD_ANCHORS_'+vp.width,JSON.stringify(dashboard));
    await page.screenshot({path:'/tmp/BU-Daily-Hall-HOME-'+vp.width+'.png',fullPage:false});
    assert(initial.homeShop);
    assert(placement.parents[0].rect.w>190&&placement.parents[0].rect.h>=60,'Discovery Hall card should be clearly visible on HOME');
