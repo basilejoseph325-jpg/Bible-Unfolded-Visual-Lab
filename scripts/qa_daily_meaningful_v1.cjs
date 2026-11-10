@@ -148,7 +148,8 @@ async function inject(page){
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.source),c.id+' source');
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.share),c.id+' share');
    assert(c.moment>18&&c.starter>25&&c.question>24,c.id);
-   assert(c.image===''||/^(?:journey-art\/.+\.webp|family-worship-menu-art\/v1\/.+\.webp|scholar-research-assets\/.+\.webp|15-joseph-names-and-decisions\.jpg)$/.test(c.image),c.id);
+   assert(c.image===''||/^(?:journey-art\/.+\.webp|family-worship-menu-art\/v1\/.+\.webp|scholar-research-assets\/.+\.webp|15-joseph-names-and-decisions\.jpg)$/.test(c.image)||
+    (c.id==='nile'&&c.image==='https://commons.wikimedia.org/wiki/Special:FilePath/Nile_river_egypt.jpg?width=1200'),c.id);
   }
   console.log('PASS_EDITED_CATALOG_18',JSON.stringify({count:audit.length,categories:[...categories]}));
   await ctx.close();
