@@ -1,12 +1,6 @@
 name: QA Daily Discovery Hall Visual Lab Only
+# Superseded by QA Treasure Quest V2; retained for manual rollback inspections.
 on:
-  push:
-    paths:
-      - '.github/workflows/qa-daily-engagement-hall-v1.yml'
-      - 'daily-engagement-hall-test-v1.js'
-      - 'daily-engagement-hall-test-v1.css'
-      - 'scripts/qa_daily_engagement_hall_v1.cjs'
-      - 'visual-lab-test-banner.js'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
