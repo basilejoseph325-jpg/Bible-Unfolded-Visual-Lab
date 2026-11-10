@@ -1,0 +1,31 @@
+name: Inspect native trivia reload and announcer gates (TEST read-only)
+on:
+  push:
+    paths: ['.github/workflows/inspect-trivia-refresh-and-voice-gate.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read actual native source predicates and reload hooks
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          files=[Path('index.html'),*sorted(Path('.').glob('bible_unfolded_core_part*.js'))]
+          terms=['function bu381Play','bu381Play=','bu381Play(', 'function focusHome', 'pageshow','wt_home_refresh','beforeunload', 'location.reload()', 'home-trivia', 'refresh']
+          for f in files:
+            s=f.read_text(errors='replace')
+            print('SOURCE',f.name,len(s))
+            for term in terms:
+              found=list(re.finditer(re.escape(term),s,re.I))
+              print('TERM',term,'COUNT',len(found))
+              lim=3 if term.lower() in ['function bu381play','bu381play=','function focushome','wt_home_refresh','pageshow'] else 1
+              for m in found[:lim]:
+                context=s[max(0,m.start()-850):min(len(s),m.end()+1900)]
+                context=context.replace(chr(10),' ')
+                context=re.sub(r'data:(?:audio|image)/[^\s\x27\x22]{100,}','[data hidden]',context)
+                print('MATCH',term,'AT',m.start(),repr(context[:2950]))
+          PY
