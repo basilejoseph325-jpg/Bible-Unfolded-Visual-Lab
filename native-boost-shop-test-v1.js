@@ -202,12 +202,9 @@ function getStory(){
   }
   const play=$('#play');
   if(play&&!play.hidden&&typeof mode!=='undefined'&&mode==='clue'){
-   const data={
-    genesis:GENESIS_BEATS,eden:EDEN_BEATS,cain:CAIN_BEATS,noah:NOAH_BEATS,
-    babel:BABEL_BEATS,abraham:ABRAHAM_BEATS,moses:MOSES_BEATS,
-    moses_midian:MOSES_MIDIAN_BEATS,moses_bush:MOSES_BUSH_BEATS
-   };
-   const beat=data[activeBook]?.[stage];
+   // Native Story gameplay reads BEATS[stage], which is the active-book
+   // question bank. GENESIS_BEATS can be a DIFFERENT archival source.
+   const beat=typeof BEATS!=='undefined'?BEATS?.[stage]:null;
    const word=String(beat?.word||'').toUpperCase();
    if(word.length>2&&/^[A-Z]+$/.test(word))return {word,kind:'legacy',key:activeBook+'-'+stage};
   }
