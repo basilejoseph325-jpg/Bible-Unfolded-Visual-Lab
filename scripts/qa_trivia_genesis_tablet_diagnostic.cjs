@@ -66,5 +66,11 @@ const p=require('puppeteer-core'),{execSync}=require('child_process');
    return out;
   });
   console.log('DIAG_QUESTION_SOURCES',JSON.stringify(candidates).slice(0,24000));
+  const functions=await page.evaluate(()=>{
+   const names=['bu3826Questions','bu35Questions','bu3848TopicBatch','bu39148CreationQuality','bu34Start','bu34Draw'];
+   const out={};for(const n of names){try{out[n]=window[n]?.toString().slice(0,6500)||'absent'}catch(e){out[n]=String(e)}}return out;
+  });
+  console.log('DIAG_FUNCTIONS',JSON.stringify(functions).slice(0,22000));
+
  }finally{await browser.close()}
 })();
