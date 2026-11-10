@@ -72,3 +72,16 @@
  #bu375-body.bu-insight-reading .bu-insight-tabs{padding:6px 10px}
 }
 @media(prefers-reduced-motion:reduce){#bu375-body.bu-insight-reading *{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Historically honest Nile cover: abstract water, riverbanks and warm light.
+   Existing Moses/Red Sea artwork portrays a DIFFERENT body of water and must
+   never be used as photographic/illustrated evidence for the Nile itself. */
+#bu375-body.bu-insight-reading .bu-insight-cover.no-art[data-illustration="nile"]{
+ background:
+  radial-gradient(ellipse at 74% 14%,#f6dea67a 0%,#e4ba7566 12%,transparent 37%),
+  repeating-linear-gradient(175deg,transparent 0 17px,#c7d6cd11 18px,#b6d9d422 20px,transparent 23px 44px),
+  linear-gradient(135deg,#192e33 0%,#4f6b67 32%,#174b5b 53%,#132c3c 80%,#061b2c 100%);
+}
+#bu375-body.bu-insight-reading .bu-insight-cover.no-art[data-illustration="nile"]:before{
+ background:linear-gradient(180deg,#182f2b2b,#061c29a6 60%,#071b25e9 100%);
+}
