@@ -116,7 +116,7 @@ function renderShare(){
  const s=x.share;
  const saved=!isCurrentToday()||view.preview;
  return cover(x,'◈ SHARE THE THOUGHT · '+x.category,true)+
- '<div class="bu-insight-section">'+
+ '<div class="bu-insight-section bu-insight-share-page">'+
  '<div class="bu-insight-share-banner"><h3>A Thought Worth Sharing</h3>'+
  '<p>One natural idea for a friendly conversation today. Make it your own.</p></div>'+
  '<section class="bu-insight-conversation"><span class="number">WHEN IT MIGHT FIT</span>'+
