@@ -1,0 +1,50 @@
+name: Inspect native Rewards hints and wallet (TEST READ ONLY)
+on:
+  push:
+    paths: ['.github/workflows/inspect-native-rewards-design.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search decoded native engine without modifying files
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          sources={}
+          main=Path('index.html').read_text(errors='replace')
+          sources['index']=main
+          decoded=''
+          for i in range(1,6):
+            p=Path(f'bible_unfolded_core_part{i}.js')
+            if not p.exists():continue
+            s=p.read_text(errors='replace')
+            q=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',s)
+            if q:
+              try: decoded+=json.loads(q.group(1))
+              except Exception as e:print('DECODE_ERR',str(e))
+          sources['decoded_core']=decoded
+          patterns=[
+           ('store shop reward ids',r'(?i)(?:id|class)=["\x27][^"\x27]{0,80}(?:shop|reward|token|hint|wallet)[^"\x27]*["\x27]'),
+           ('shop source functions',r'(?i)(?:function\s+[\w$]*(?:shop|reward|purchase|buy|hint)[\w$]*\s*\(|const\s+[\w$]*(?:shop|reward|purchase|buy|hint)[\w$]*\s*=)'),
+           ('wheel native contract',r'(?i)bu3824(?:RefreshWallet|MergeEntitlements|OwnedWheels)|function\s+setWheelTheme'),
+           ('economy writes',r'(?i)(?:economy\.coins|economy\.points|rewards-v17|rewardCoins|spendCoins|coins\s*-=|purchases\s*:)'),
+           ('store item names and costs',r'(?i)(?:Ocean Glow|Sea Wheel|Gold Wheel|Moon Wheel|buy.*wheel|wheel.*buy|price\s*:\s*\d+|cost\s*:\s*\d+)'),
+           ('daily streak',r'(?i)(?:daily.?check|daily.?streak|daily.?journey|check.?in|daily.*claim)'),
+           ('hint buttons',r'(?i)(?:drop a letter|first letter|full reveal|light.?bulb|eliminate|square hint|hintModal)')
+          ]
+          print('SIZES', {k:len(v) for k,v in sources.items()})
+          for source,t in sources.items():
+           for title,pat in patterns:
+            hits=list(re.finditer(pat,t,re.I))
+            print('\nGROUP',source,title,'TOTAL',len(hits))
+            maxn=13 if title in ['shop source functions','economy writes','wheel native contract','store item names and costs'] else 7
+            for match in hits[:maxn]:
+             a=max(0,match.start()-240);b=min(len(t),match.end()+370)
+             excerpt=t[a:b].replace('\n',' ').replace('\r',' ')[:620]
+             print('MATCH',match.start(),repr(excerpt))
+          PY
