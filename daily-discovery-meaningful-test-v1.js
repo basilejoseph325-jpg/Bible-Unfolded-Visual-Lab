@@ -80,7 +80,7 @@ function tabs(){
  '</nav>';
 }
 function cover(x,kicker){
- return '<header class="bu-insight-cover" style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)">'+
+ return '<header class="bu-insight-cover'+(x.art?'':' no-art')+'" data-illustration="'+escapeHTML(x.id)+'"'+(x.art?' style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"':'')+'>'+
  '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
  '<h2>'+escapeHTML(x.title)+'</h2>'+
  '<p>'+escapeHTML(x.subtitle)+'</p>'+
