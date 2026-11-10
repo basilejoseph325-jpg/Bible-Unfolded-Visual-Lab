@@ -305,9 +305,18 @@ document.addEventListener('keydown',event=>{
   else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
  }
 });
+let openedFromLink=false;
+function prepared(){
+ if(!insert())return false;
+ // Explicit Visual Lab deep link provides a reliable direct test entry.
+ if(!openedFromLink&&new URLSearchParams(location.search).get('hall')==='1'){
+  openedFromLink=true;show('today');
+ }
+ return true;
+}
 function start(){
- if(insert())return;
- const observer=new MutationObserver(()=>{if(insert())observer.disconnect()});
+ if(prepared())return;
+ const observer=new MutationObserver(()=>{if(prepared())observer.disconnect()});
  observer.observe(document.documentElement,{subtree:true,childList:true});
  setTimeout(()=>observer.disconnect(),18000);
 }
