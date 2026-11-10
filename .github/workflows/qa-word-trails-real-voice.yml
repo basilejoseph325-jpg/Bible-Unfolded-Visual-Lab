@@ -1,0 +1,22 @@
+name: Diagnose real Word Trails announcer playback (TEST)
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-real-voice.yml'
+      - 'scripts/word_trails_real_voice_diagnostic.cjs'
+permissions: {contents: read}
+jobs:
+  actual-recordings:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check voice diagnostic syntax
+        run: node --check scripts/word_trails_real_voice_diagnostic.cjs
+      - name: Real native recording, speaker and cooldown checks
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-actual-voices puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8907 --bind 127.0.0.1 >/tmp/bu-real-voices.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-actual-voices/node_modules node scripts/word_trails_real_voice_diagnostic.cjs
