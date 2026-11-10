@@ -23,6 +23,16 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   await page.evaluate(()=>document.getElementById('home-cross').click());
   await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&document.querySelector('#bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
   console.log('FIRST_LAUNCH',JSON.stringify(await state()));
+  const savedBeforeRefresh=await page.evaluate(()=>localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
+  await page.reload({waitUntil:'domcontentloaded',timeout:120000});
+  await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:60000});
+  const refreshedTrail=await state();
+  const savedAfterRefresh=await page.evaluate(()=>localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
+  console.log('WORD_TRAILS_BROWSER_REFRESH',JSON.stringify(refreshedTrail));
+  assert(refreshedTrail.homeVisible&&!refreshedTrail.active&&refreshedTrail.hash==='','Word Trails refresh should return to home');
+  assert.equal(savedAfterRefresh,savedBeforeRefresh,'Refresh must never delete saved crossword data');
+  await page.evaluate(()=>document.getElementById('home-cross').click());
+  await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
   await page.evaluate(()=>document.querySelector('#bu-wt-native-game').contentWindow.document.querySelector('#app .back').click());
   await page.waitForFunction(()=>!window.BUWTNativeShell.active());
   console.log('AFTER_CHILD_BACK',JSON.stringify(await state()));
@@ -30,8 +40,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   await new Promise(r=>setTimeout(r,1150));
   const afterReenter=await state();
   console.log('SECOND_CARD_LAUNCH',JSON.stringify(afterReenter));
-  if(!afterReenter.active)console.log('REPRO_CONFIRMED','Native Word Trails card is stuck after return.');
-  else console.log('REPRO_NOT_PRESENT','Native Word Trails card successfully relaunches.');
+  assert(afterReenter.active,'After Back, tapping the same homepage card must reopen Word Trails');
+  console.log('REENTRY_FIXED','Native Word Trails card successfully relaunches.');
   await page.evaluate(()=>window.BUWTNativeShell?.close?.());
 
   await page.goto('http://127.0.0.1:8902/index.html',{waitUntil:'domcontentloaded',timeout:120000});
@@ -64,6 +74,26 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    }finally{window.bu381Play=original}
   });
   console.log('ANNOUNCER_BRIDGE_CALLS',JSON.stringify(voice));
+  const spoken=await page.evaluate(()=>{
+   const calls=[],prior=window.bu381Play;
+   window.bu381Play=(phrase,opts)=>{calls.push({phrase,opts});return true};
+   const f=document.getElementById('bu-wt-native-game').contentWindow.document;
+   function solve(word){
+    const used=new Set();
+    for(const c of word){
+      const button=[...f.querySelectorAll('.wheel-letter')].find(b=>b.textContent===c&&!used.has(Number(b.dataset.letterIndex)));
+      if(!button)throw Error('Cannot tap '+c+' in '+word);
+      used.add(Number(button.dataset.letterIndex));button.click();
+    }
+    f.getElementById('submit').click();
+   }
+   try{solve('ANTIC');solve('TACO');return {calls,solved:f.getElementById('solved-count').textContent}}
+   finally{window.bu381Play=prior}
+  });
+  console.log('ANNOUNCER_ACTUAL_PUZZLE_PROGRESS',JSON.stringify(spoken));
+  assert(spoken.solved.startsWith('2 /'),'Two real crossword words should solve');
+  assert(spoken.calls.some(c=>c.opts?.milestone===true&&c.phrase==='excellent_thinking'),
+    'Progress must send a sparse native original-voice encouragement before level ends');
   await page.close();
  }catch(e){console.error('PHONE_FEEDBACK_REPRO_ERROR',e.stack||e);process.exitCode=1}
  finally{await browser.close()}
