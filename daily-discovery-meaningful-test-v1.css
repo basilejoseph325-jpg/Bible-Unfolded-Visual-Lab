@@ -104,3 +104,137 @@
  #bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact{min-height:87px;padding:7px 15px}
  #bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact h2{font-size:23px}
 }
+
+
+
+/* Daily Discovery Editorial Polish V2 — TEST ONLY
+   A unified magazine-like sharing page and elegant photo-led saved shelf.
+   Intentional removal of separate bordered information cards. */
+#bu375-body.bu-insight-reading .bu-insight-share-page {
+  position:relative;
+  padding:17px clamp(18px,4.2vw,34px) 30px;
+  background:
+   radial-gradient(ellipse at 96% 4%,rgba(207,166,93,.16),transparent 46%),
+   radial-gradient(ellipse at -14% 65%,rgba(35,91,103,.45),transparent 52%),
+   linear-gradient(165deg,#0c3540 0%,#082735 53%,#062330 100%);
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page::before {
+ content:"✧";
+ position:absolute;right:26px;top:19px;font:38px Georgia,serif;
+ color:#e8bc6c;opacity:.3;pointer-events:none;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-share-banner {
+ margin:0 0 4px!important;padding:10px 2px 20px!important;
+ background:none!important;border:0!important;border-radius:0!important;
+ border-bottom:1px solid rgba(238,202,139,.46)!important;
+ box-shadow:none!important;color:#f9eac8!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-share-banner h3 {
+ margin:0 26px 9px 0!important;
+ color:#ffe8b8!important;
+ font:700 clamp(27px,6.2vw,39px)/1.1 Georgia,"Times New Roman",serif!important;
+ letter-spacing:-.025em;text-shadow:0 2px 10px #0007;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-share-banner p {
+ margin:0!important;color:#e9dbbc!important;
+ font:400 clamp(13px,3.2vw,16px)/1.55 Georgia,serif!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation,
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation.question {
+ margin:0!important;padding:19px 2px 20px!important;
+ border:0!important;border-radius:0!important;
+ border-bottom:1px solid rgba(224,191,132,.30)!important;
+ background:transparent!important;box-shadow:none!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation .number {
+ display:block;margin-bottom:9px;color:#e7c488!important;
+ font:800 10px/1.5 system-ui,-apple-system,sans-serif!important;
+ letter-spacing:.17em!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation p {
+ color:#f9edd7!important;
+ font:400 clamp(16px,3.65vw,19px)/1.6 Georgia,"Times New Roman",serif!important;
+ text-wrap:pretty;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation.question p {
+ color:#ffe0a0!important;
+ font:italic 700 clamp(22px,5.05vw,30px)/1.35 Georgia,"Times New Roman",serif!important;
+ padding:3px 0 7px;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-extra {
+ margin-top:17px;padding:3px 0 3px 15px;
+ border-top:0!important;border-left:2px solid #d8ad68;
+ color:#eaddc4;font:400 clamp(14px,3.4vw,17px)/1.6 Georgia,serif;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-extra b {
+ display:block;color:#efc98a;font:750 11px/1.5 system-ui,sans-serif;
+ letter-spacing:.03em;margin-bottom:5px;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-sources {
+ padding:16px 2px 10px!important;margin:0!important;
+ background:transparent!important;border:0!important;border-radius:0!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-sources p {
+ color:#d5dfd7!important;font:400 13px/1.65 Georgia,serif!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-next {
+ margin-top:15px;
+}
+#bu375-body.bu-insight-reading .bu-insight-archive {
+ margin:0!important;padding:24px clamp(17px,4.4vw,32px) 26px!important;
+ background:radial-gradient(ellipse at 100% 0%,#ac885f24,transparent 50%);
+}
+#bu375-body.bu-insight-reading .bu-insight-archive h2 {
+ font:700 clamp(27px,6.1vw,37px)/1.12 Georgia,serif!important;
+ margin:5px 0 11px!important;text-wrap:balance;
+ color:#ffdfaa!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-archive>p {
+ font:400 clamp(14px,3.35vw,16px)/1.55 Georgia,serif!important;
+ color:#d2e0d8!important;margin-bottom:22px!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row {
+ position:relative;
+ display:grid!important;grid-template-columns:minmax(92px,30%) minmax(0,1fr)!important;
+ gap:15px!important;align-items:center!important;
+ width:100%;min-height:116px;padding:11px 29px 11px 11px!important;
+ border:1px solid #e4bf7c9c!important;border-radius:15px!important;
+ background:linear-gradient(120deg,#215564 0%,#0c3545 100%)!important;
+ box-shadow:0 7px 16px #00152070,inset 0 1px 0 #fff2!important;
+ color:#ffe5b6!important;margin:0 0 13px!important;
+ transition:transform .13s ease,background .13s ease;
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row:active {
+ transform:scale(.986);background:#245363!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row::after {
+ content:"›";position:absolute;right:11px;top:50%;transform:translateY(-50%);
+ color:#f4d18e;font:28px Georgia,serif;opacity:.85;
+}
+#bu375-body.bu-insight-reading .bu-insight-thumb {
+ width:100%!important;height:94px!important;min-width:0!important;
+ border:1px solid #f4d39a80!important;border-radius:11px!important;
+ background-size:cover!important;background-position:center!important;
+ background-color:#174b58!important;
+ background-image:radial-gradient(ellipse at 70% 18%,#bdaf7d70,transparent 46%),
+ linear-gradient(145deg,#285766,#133746)!important;
+ box-shadow:inset 0 0 0 1px #00151b6b,0 2px 8px #0004;
+}
+/* For a valid background-image supplied inline, do not let fallback override it. */
+#bu375-body.bu-insight-reading .bu-insight-thumb[style] {
+ background-image:var(--bu-photo,none);
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row strong {
+ font:700 clamp(16px,3.75vw,21px)/1.22 Georgia,serif!important;
+ color:#ffe6b6;overflow-wrap:anywhere;
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row small {
+ display:block;margin-top:10px!important;font:800 10px/1.3 system-ui,sans-serif!important;
+ color:#f6cf8d!important;letter-spacing:.05em;
+}
+@media(max-width:380px){
+ #bu375-body.bu-insight-reading .bu-insight-saved-row{
+  grid-template-columns:93px minmax(0,1fr)!important;gap:10px!important;
+ }
+ #bu375-body.bu-insight-reading .bu-insight-thumb{height:85px!important}
+}
