@@ -142,7 +142,7 @@ function renderSaved(){
  '<h2>Discoveries Worth Keeping</h2><p>Save a thought whenever it speaks to you. Return here to reread or find the sharing idea.</p>'+
  (collection.length?collection.map(x=>
  '<button class="bu-insight-saved-row" type="button" data-insight-open="'+escapeHTML(x.id)+'" aria-label="Read '+escapeHTML(x.title)+'">'+
- '<span class="bu-insight-thumb"><img data-insight-image="'+escapeHTML(x.id)+'" src="'+escapeHTML(x.art||fallbackArt(x))+'" alt="" loading="lazy" decoding="async"></span>'+
+ '<span class="bu-insight-thumb"><img data-insight-image="'+escapeHTML(x.id)+'" src="'+escapeHTML(x.art||fallbackArt(x))+'" alt="" loading="eager" decoding="async"></span>'+
  '<span><strong>'+escapeHTML(x.title)+'</strong><small>'+escapeHTML(x.category)+'</small></span></button>'
  ).join(''):'<div class="bu-insight-empty">Nothing saved yet. Open today’s thought and tap “Save this Discovery” to start your collection.</div>')+
  '<div class="bu-insight-next">'+iconButton('✦ Open Today’s Discovery','current')+'</div>'+
