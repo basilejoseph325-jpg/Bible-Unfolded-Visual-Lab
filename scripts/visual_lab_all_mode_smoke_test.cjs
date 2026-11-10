@@ -9,7 +9,8 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
  try{
   for(const vp of [{width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2},
                    {width:832,height:384,isMobile:true,hasTouch:true,deviceScaleFactor:2}]){
-   const page=await browser.newPage();page.setDefaultTimeout(45000);
+   const context=await browser.createBrowserContext();
+   const page=await context.newPage();page.setDefaultTimeout(45000);
    const errors=[];page.on('pageerror',e=>errors.push(e.message.slice(0,180)));
    await page.setViewport(vp);
    await page.goto('http://127.0.0.1:8895/index.html',{waitUntil:'domcontentloaded',timeout:120000});
@@ -92,7 +93,7 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
    await page.evaluate(()=>window.BUWTNativeShell.close());
    console.log('ALL_MODE_PAGE_ERRORS_'+vp.width,JSON.stringify(errors.slice(0,6)));
    assert.equal(errors.length,0,'Mode navigation must not introduce unhandled page errors');
-   await page.close();
+   await context.close();
   }
   console.log('PASS all native home modes + shared Word Trails host in portrait and landscape');
  }catch(e){console.error('FAIL_ALL_MODES',e.stack||e);process.exitCode=1}
