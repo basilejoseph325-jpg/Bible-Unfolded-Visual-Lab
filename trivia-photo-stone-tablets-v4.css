@@ -134,3 +134,35 @@
     letter-spacing:-.015em!important;
   }
 }
+
+
+/* TEST 2026-11-10 — stable photographic stone surface.
+ * Phone report: tablet D goes smooth/white and intermittently flickers.
+ * Investigation: previous surface was painted by a filtered/blended ::before
+ * GPU layer and D uniquely used the very bottom (100%) of a square texture.
+ * Put the SAME locally hosted photograph directly into the four buttons'
+ * background layers (no animated/filtered pseudo composite).
+ * No new geometry, handlers, scrolling or JS changes. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer="3"]{
+ --stone-y:82%!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+ background-color:var(--stone-warm,#dec89b)!important;
+ background-image:
+   linear-gradient(147deg,rgba(249,235,202,.52) 0%,rgba(223,191,145,.34) 58%,rgba(156,119,79,.27) 100%),
+   url("assets/ui/trivia-real-rock-v4.jpg?v=1")!important;
+ background-size:100% 100%,100% auto!important;
+ background-position:center center,50% var(--stone-y,50%)!important;
+ background-repeat:no-repeat,no-repeat!important;
+ background-blend-mode:normal,multiply!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong)::before{
+ content:none!important;display:none!important;
+ background-image:none!important;filter:none!important;
+ mix-blend-mode:normal!important;
+}
+/* Neutral choices disabled after a judged answer must retain stone texture,
+ * though slightly muted. True hint-eliminated controls stay visibly removed. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:disabled:not(.correct):not(.wrong):not(.bu3922-eliminated){
+ opacity:.90!important;filter:none!important;
+}
