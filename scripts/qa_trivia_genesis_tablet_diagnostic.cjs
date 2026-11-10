@@ -51,5 +51,20 @@ const p=require('puppeteer-core'),{execSync}=require('child_process');
    return {fns,globalNames,photoCropStats:stats};
   });
   console.log('DIAG_DEEP',JSON.stringify(deeper).slice(0,27000));
+  const candidates=await page.evaluate(()=>{
+   const names=['BU39148_CREATION_QUALITY','bu3826Questions','bu35Questions','BU_SCHOLAR_BANK','bu3830Question','bu3829QuestionIdentity','bu3829UnseenTrivia','bu35Trivia'];
+   const out={};for(const name of names){
+    try{
+     const obj=window[name];const val=typeof obj==='function'?'[function]':JSON.stringify(obj);
+     const idx=typeof val==='string'?val.toLowerCase().indexOf('foods assigned'):-1;
+     const idx2=typeof val==='string'?val.toLowerCase().indexOf('humans received seed-bearing'):-1;
+     out[name]={type:typeof obj,array:Array.isArray(obj),keys:obj&&typeof obj==='object'?Object.keys(obj).slice(0,25):[],
+      length:val?.length||0,hit:idx,hit2:idx2,
+      excerpt:idx>=0?val.slice(Math.max(0,idx-250),idx+1000):idx2>=0?val.slice(Math.max(0,idx2-300),idx2+600):val?.slice(0,220)};
+    }catch(e){out[name]={error:String(e)}}
+   }
+   return out;
+  });
+  console.log('DIAG_QUESTION_SOURCES',JSON.stringify(candidates).slice(0,24000));
  }finally{await browser.close()}
 })();
