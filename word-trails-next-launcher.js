@@ -64,7 +64,7 @@ function routeHomeCard(){
   try{window.BUPremiumSFX?.play?.('navigate')}catch(_){}
   // Word Trails is a separate HTML document; allow the navigation sample to
   // actually start playing before unloading the original game document.
-  window.setTimeout(()=>{if(!window.BUWTNativeShell?.launch?.())window.location.assign(PATH)},235);
+  window.setTimeout(()=>{navigating=false;if(!window.BUWTNativeShell?.launch?.())window.location.assign(PATH)},235);
  },true);
 }
 routeHomeCard();
