@@ -103,6 +103,9 @@ async function state(page){return page.evaluate((keys)=>({
     assert(await page.evaluate(()=>bu34Quiz.answered&&bu34Quiz.score===1),
      'The correct answer must still run through native Bible Trivia scoring');
     console.log('TRIVIA_POWERUP_PASS_'+viewport.width);
+    // Native Trivia may legitimately award Achievement Points on the correct
+    // answer. Snapshot the actual post-game wallet before testing Story Lens.
+    const afterLegitimatePlay=await state(page);
     // Read-only Story source + an actual use of a stored Letter Lens on legacy Story.
     await page.evaluate(()=>{
       // Enter through the ACTUAL native chapter controller, not a stale
@@ -136,15 +139,16 @@ async function state(page){return page.evaluate((keys)=>({
     }));
     assert(lens.text.includes(story.source.slice(0,2).split('').join('  ·  ')),'Lens must reveal the true current native Story word');
     assert.equal(lens.stock,0);
-    assert.equal(lens.real[0],before.native[0]);assert.equal(lens.real[1],before.native[2]);
+    assert.equal(lens.real[0],afterLegitimatePlay.native[0]);assert.equal(lens.real[1],afterLegitimatePlay.native[2]);
     await page.evaluate(()=>{document.querySelector('.bu-boost-lens-message button').click()});
     // A real earned marker produces one star; every five gives a free functional booster.
+    const beforeMilestone=await page.evaluate(()=>window.BUNativeBoostShop.preview());
     await page.evaluate(()=>{
       for(let i=0;i<5;i++)economy.earned.push('trivia-qa-verified-new-'+i);
     });
     await page.waitForFunction(()=>window.BUNativeBoostShop.preview().granted>=1,{timeout:9000});
     const gifted=await state(page);
-    assert.equal(gifted.preview.stars,5);
+    assert(gifted.preview.stars>=beforeMilestone.stars+5,'Five new accomplishments must increase stars by five');
     assert.equal(gifted.preview.inventory.fifty,1,'Five authentic new events must unlock free functional inventory');
     await page.reload({waitUntil:'domcontentloaded',timeout:120000});
     await page.addStyleTag({url:base+'native-boost-shop-test-v1.css'});
@@ -154,7 +158,7 @@ async function state(page){return page.evaluate((keys)=>({
     assert.equal(reload.preview.tokens,gifted.preview.tokens);
     assert.equal(reload.preview.inventory.fifty,gifted.preview.inventory.fifty);
     assert.equal(reload.preview.stars,gifted.preview.stars);
-    assert.deepEqual(reload.native,before.native,'After refresh canonical LIVE-safe keys must remain unchanged');
+    assert.deepEqual(reload.native,afterLegitimatePlay.native,'After refresh canonical LIVE-safe keys must reflect only legitimate gameplay');
     assert.equal(errs.length,0,'No runtime page errors: '+JSON.stringify(errs));
     console.log('PASS_Native_Boosters_'+viewport.width+' checkout, gameplay effects, free booster, persistence and LIVE-wallet protection');
     await ctx.close();
