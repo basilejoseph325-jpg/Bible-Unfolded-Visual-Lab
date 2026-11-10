@@ -425,13 +425,12 @@ function finishWord(word){
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
  flash((bibleAnswer?'★ BIBLE WORD · ':'✦ ')+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
  cue('correct');haptic(15);
- // Speak at meaningful early progress, not only near the completion screen.
- // The native announcer normally waits 45 seconds between regular phrases;
- // its existing milestone cadence offers a moderated 12-second window while
- // retaining native speaker selection, Off/volume, and no-overlap protection.
- if(found.size===2||(found.size===5&&level.words.length>=7))
-  window.BUWTAnnouncer?.play?.('excellent_thinking',{milestone:true});
+ // Request one real native encouragement while the crossword is still active.
+ // If the original voice is busy or in its cooldown, the shared announcer
+ // retries safely until accepted; never keep a cue after this board finishes.
+ if(found.size<level.words.length)window.BUWTAnnouncer?.progress?.();
  if(found.size===level.words.length&&!completionShown){
+  window.BUWTAnnouncer?.cancelProgress?.();
   completionShown=true;locked=true;
   setTimeout(()=>completeLevel(),780);
  }
@@ -496,7 +495,7 @@ function completeLevel(){
   save.unlocked=Math.min(LEVELS.length-1,Math.max(save.unlocked,index+1));
  }
  save.progress=null;store();ui();cue('complete');
- window.BUWTAnnouncer?.play?.('chapter_complete',{milestone:true});
+ window.BUWTAnnouncer?.play?.('chapter_complete',{milestone:true,queueIfBlocked:true});
  // Keep the everyday feedback gentle. The level-win celebration gets a distinct cadence.
  haptic([38,58,36,75,70]);
  // Standalone V5 celebration is inside the top-layer dialog; avoid wasting
@@ -531,6 +530,7 @@ function setScene(){
 }
 function showLevel(n,resume=false){
  if(n<0||n>=LEVELS.length||n>save.unlocked)return;
+ window.BUWTAnnouncer?.resetProgress?.();
  window.BUWTWheelNative?.cancel?.();
  if($('finish').open){window.BUWTPolish?.clearWinFX?.();$('finish').close();}
  if($('discovery').open)$('discovery').close();
