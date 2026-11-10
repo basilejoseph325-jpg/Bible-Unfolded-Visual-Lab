@@ -116,7 +116,7 @@ else install();
 })();
 
 /* Visual Lab ONLY — mount Word Trails under the real main-game UI. */
-(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=native-host-real-voice-retry-20261109';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=native-host-real-voice-retry-20261109-r2';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Visual Lab ONLY — extend the actual native Settings backup controls so one
