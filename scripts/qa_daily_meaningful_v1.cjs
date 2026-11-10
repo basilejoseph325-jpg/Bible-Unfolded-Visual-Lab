@@ -71,6 +71,16 @@ async function inject(page){
    assert(opening.jwLinks.length>0&&opening.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
    await page.evaluate(()=>document.getElementById('bu40-daily-confetti')?.remove());
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-today.png'});
+   // Trap every native-document press; all Daily tabs must be handled at
+   // window capture, not allowed through to the old navigation/knock hooks.
+   await page.evaluate(()=>{
+    window.__buDailyTabLeak=[];
+    for(const type of ['pointerdown','pointerup','touchstart','touchend','mousedown','mouseup','click']){
+     document.addEventListener(type,e=>{
+      if(e.target?.closest?.('[data-insight-tab]'))window.__buDailyTabLeak.push(type);
+     },true);
+    }
+   });
    await page.evaluate(()=>document.querySelector('[data-insight-action=share]').click());
    const share=await page.evaluate(()=>({
     tab:window.BUDailyInsightV1.inspect().tab,
@@ -93,13 +103,25 @@ async function inject(page){
    console.log('INSIGHT_SHARE_LAYOUT_'+v.width,JSON.stringify(shareLayout));
    assert(shareLayout.firstIdea.y>=0&&shareLayout.firstIdea.y<v.height,'The first sharing idea must appear without scrolling');
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-share.png'});
-   await page.evaluate(()=>document.querySelector('[data-insight-tab=today]').click());
+   await page.tap('[data-insight-tab=today]');
+   assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'today',
+     'Real mobile touch should switch from Share to Today');
    await page.evaluate(()=>document.querySelector('[data-insight-action=save]').click());
    await page.evaluate(()=>document.querySelector('[data-insight-action=read]')?.click());
    const saved=await page.evaluate(()=>window.BUDailyInsightV1.inspect());
    assert.equal(saved.saved.length,1);assert(saved.read.includes(saved.today));
    assert(saved.shared.includes(saved.today));
-   await page.evaluate(()=>document.querySelector('[data-insight-tab=saved]').click());
+   await page.tap('[data-insight-tab=saved]');
+   assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'saved',
+     'Real mobile touch should switch from Today to Saved');
+   await page.tap('[data-insight-tab=share]');
+   assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'share',
+     'Real mobile touch should switch from Saved to Share');
+   await page.tap('[data-insight-tab=saved]');
+   assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'saved',
+     'Real mobile touch should switch back to Saved');
+   const oldAudioLeaks=await page.evaluate(()=>window.__buDailyTabLeak);
+   assert.deepEqual(oldAudioLeaks,[],'Daily tab presses must NEVER reach native document knock handlers');
    const savedView=await page.evaluate(()=>({rows:document.querySelectorAll('.bu-insight-saved-row').length,
     label:document.querySelector('.bu-insight-archive h2')?.textContent,
     imageCount:document.querySelectorAll('.bu-insight-saved-row img[data-insight-image]').length}));
