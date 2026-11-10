@@ -338,7 +338,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.0.0-test',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.0.1-test-chime-nav',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
