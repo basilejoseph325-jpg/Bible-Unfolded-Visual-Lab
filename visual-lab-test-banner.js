@@ -168,3 +168,21 @@ else install();
  * No bonus card, fake store, or mini-game is loaded. Existing LIVE & TEST
  * modes, actual Rewards, daily checkmark and saves remain unchanged.
  * Preserved source assets for informed redesign, not removed player data. */
+
+
+/* Visual Lab ONLY: native Power-Up Shop V1.
+ * Uses the EXISTING Rewards & Progress and Trivia/Story gameplay.
+ * All experimental purchases are in isolated TEST-only storage to preserve
+ * original real Insight Tokens and achievements on the shared Pages origin.
+ * Never copy this loader to Story-Trails LIVE without migration QA/approval. */
+(()=>{'use strict';
+ if(document.getElementById('bu-native-boost-shop-v1-loader'))return;
+ const style=document.createElement('link');style.rel='stylesheet';
+ style.id='bu-native-boost-shop-v1-style';
+ style.href='native-boost-shop-test-v1.css?v=20261110-native-power-v1';
+ document.head.append(style);
+ const script=document.createElement('script');script.defer=true;
+ script.id='bu-native-boost-shop-v1-loader';
+ script.src='native-boost-shop-test-v1.js?v=20261110-native-power-v1';
+ document.head.append(script);
+})();
