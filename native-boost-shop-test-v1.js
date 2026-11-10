@@ -235,9 +235,14 @@ function mountTrivia(){
  if(!bar.querySelector('#bu-boost-trivia-launch')){
   const btn=document.createElement('button');btn.type='button';btn.id='bu-boost-trivia-launch';
   btn.setAttribute('aria-label','Open Trivia power-ups');
-  btn.innerHTML='<span aria-hidden="true">⚡</span><small>BOOST</small>';
+  // The approved Trivia toolbar paints a gold icon through ::before.
+  // Do not insert ordinary text or an emoji: those are hidden by its
+  // font-size:0 / color:transparent rules and leave a blank button.
+  btn.title='Boost · open Trivia power-ups';
   btn.addEventListener('click',e=>{e.stopPropagation();showPopover('trivia',btn)});
-  bar.append(btn);
+  const progress=bar.querySelector(':scope > span');
+  if(progress)bar.insertBefore(btn,progress);
+  else bar.append(btn);
  }
  apply50(r);
  const b=$('#bu-boost-trivia-launch');
