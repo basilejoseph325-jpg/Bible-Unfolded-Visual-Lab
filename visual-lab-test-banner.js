@@ -164,17 +164,7 @@ else install();
 })();
 
 
-/* Visual Lab ONLY — Treasure Quest V2, animated daily bonus game.
- * Replaces the v1 dull Hall experiment. Existing v1 data can be read by
- * the new V2 as a one-way TEST-only migration; LIVE remains untouched. */
-(()=>{'use strict';
- if(document.getElementById('bu-treasure-quest-v2-loader'))return;
- const css=document.createElement('link');css.rel='stylesheet';
- css.id='bu-treasure-quest-v2-css';
- css.href='daily-treasure-quest-test-v2.css?v=20261109-arcade-v21';
- document.head.appendChild(css);
- const js=document.createElement('script');js.defer=true;
- js.id='bu-treasure-quest-v2-loader';
- js.src='daily-treasure-quest-test-v2.js?v=20261109-arcade-v21';
- document.head.appendChild(js);
-})();
+/* Daily Engagement: Treasure Quest V2 paused after owner playtest feedback.
+ * No bonus card, fake store, or mini-game is loaded. Existing LIVE & TEST
+ * modes, actual Rewards, daily checkmark and saves remain unchanged.
+ * Preserved source assets for informed redesign, not removed player data. */
