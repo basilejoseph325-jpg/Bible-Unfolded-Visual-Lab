@@ -153,6 +153,15 @@ function sound(major=false){
  }catch(_){}
 }
 const giftSVG='<svg viewBox="0 0 64 64" fill="none" aria-hidden="true"><rect x="10" y="26" width="44" height="29" rx="5" fill="#b67629" stroke="#59320b" stroke-width="2"/><rect x="8" y="20" width="48" height="12" rx="3" fill="#f7d891" stroke="#74450e" stroke-width="2"/><path d="M29 20c-12 0-17-5-14-11 4-7 15 2 17 11M35 20c12 0 17-5 14-11-4-7-15 2-17 11" stroke="#6e3e0e" stroke-width="4"/><path d="M29 20h6v35h-6z" fill="#fff1bc"/><path d="M8 25h48v6H8z" fill="#ffe4a1"/><path d="M14 51h36" stroke="#673c13" stroke-width="2"/></svg>';
+const chestSVG='<svg viewBox="0 0 128 105" fill="none" role="img" aria-label="Golden treasure chest">'+
+ '<path d="M15 41Q17 9 64 9Q111 9 113 41V54H15Z" fill="#955026" stroke="#fce4a1" stroke-width="4"/>'+
+ '<path d="M22 41Q26 20 64 20Q102 20 106 41" stroke="#ffe4a1" stroke-width="5"/>'+
+ '<path d="M33 17V52M95 17V52" stroke="#c7a45c" stroke-width="10" opacity=".8"/>'+
+ '<rect x="12" y="45" width="104" height="48" rx="7" fill="#713916" stroke="#f0c56b" stroke-width="5"/>'+
+ '<path d="M14 56H114M14 86H114" stroke="#d29e46" stroke-width="7"/>'+
+ '<rect x="46" y="40" width="36" height="38" rx="5" fill="#ffe4a0" stroke="#7b4c20" stroke-width="4"/>'+
+ '<path d="M59 61C53 52 73 52 69 61L67 69H61Z" fill="#7a451e"/>'+
+ '<path d="M21 94L17 101H35L38 94M91 94L88 101H111L106 94" fill="#d5a459"/></svg>';
 function launchCard(){
  const story=document.querySelector('#home .cinematic-cards #home-story');
  if(!story)return false;
@@ -354,7 +363,7 @@ function renderGame(){
  '<p class="bu-a-game-sub">'+(isChest?'Choose a chest to reveal your surprise.':'Tap two matching pictures. Fill all 3 stars.')+'</p>'+
  '<div class="bu-a-sparkline">'+(isChest?'✦ ✦ ✦': '★'.repeat(complete)+'☆'.repeat(3-complete))+'</div>'+
  (isChest?'<div class="bu-a-chests">'+[0,1,2].map(i=>
-  '<button type="button" class="bu-a-chest" data-action="chest" data-id="'+i+'" aria-label="Open treasure chest '+(i+1)+'">✦</button>').join('')+'</div>':
+  '<button type="button" class="bu-a-chest" data-action="chest" data-id="'+i+'" aria-label="Open treasure chest '+(i+1)+'">'+chestSVG+'</button>').join('')+'</div>':
  '<div class="bu-a-memory">'+game.cards.map((pair,i)=>
   '<button type="button" class="bu-a-card'+(game.flipped.includes(i)?' open':'')+
   (game.matched.includes(i)?' matched':'')+'" data-action="flip" data-id="'+i+
