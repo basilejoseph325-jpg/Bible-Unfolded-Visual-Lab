@@ -11,7 +11,8 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   browser=await puppeteer.launch({headless:true,executablePath:bin,args:['--no-sandbox','--disable-setuid-sandbox']});
   for(const vp of [{width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2},
                    {width:832,height:384,isMobile:true,hasTouch:true,deviceScaleFactor:2}]){
-   const page=await browser.newPage();
+   const context=await browser.createBrowserContext();
+   const page=await context.newPage();
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.setViewport(vp);
    await page.goto('http://127.0.0.1:8897/index.html',{waitUntil:'domcontentloaded',timeout:120000});
@@ -77,6 +78,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    console.log('DAILY_HALL_ERRORS_'+vp.width,JSON.stringify(errors));
    assert.equal(errors.length,0,'No unhandled JavaScript exceptions');
    await page.close();
+   await context.close();
   }
   console.log('PASS Visual Lab Daily Discovery Hall, test-only purchase isolation, persistence and portrait/landscape');
  }catch(e){console.error('FAIL_DAILY_HALL',e.stack||e);process.exitCode=1}
