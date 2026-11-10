@@ -23,6 +23,11 @@ async function state(page){return page.evaluate((keys)=>({
     await page.setViewport(viewport);page.on('pageerror',e=>errs.push(e.message));
     await page.goto(base+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
     await page.waitForSelector('#home-rewards',{timeout:60000});
+    await page.evaluate(()=>{
+      const action=[...document.querySelectorAll('button')].find(b=>/let.s play!/i.test(b.textContent.trim()));
+      action?.click();
+    });
+    await wait(260);
     await page.addStyleTag({url:base+'native-boost-shop-test-v1.css'});
     await page.addScriptTag({url:base+'native-boost-shop-test-v1.js'});
     await page.waitForFunction(()=>!!window.BUNativeBoostShop&&!!document.querySelector('#bu-native-boosters'),{timeout:10000});
