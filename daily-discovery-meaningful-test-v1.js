@@ -142,7 +142,7 @@ function renderSaved(){
  '<h2>Discoveries Worth Keeping</h2><p>Save a thought whenever it speaks to you. Return here to reread or find the sharing idea.</p>'+
  (collection.length?collection.map(x=>
  '<button class="bu-insight-saved-row" type="button" data-insight-open="'+escapeHTML(x.id)+'" aria-label="Read '+escapeHTML(x.title)+'">'+
- '<span class="bu-insight-thumb"'+(x.art?' style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"':'')+'></span>'+
+ '<span class="bu-insight-thumb"><img data-insight-image="'+escapeHTML(x.id)+'" src="'+escapeHTML(x.art||fallbackArt(x))+'" alt="" loading="lazy" decoding="async"></span>'+
  '<span><strong>'+escapeHTML(x.title)+'</strong><small>'+escapeHTML(x.category)+'</small></span></button>'
  ).join(''):'<div class="bu-insight-empty">Nothing saved yet. Open today’s thought and tap “Save this Discovery” to start your collection.</div>')+
  '<div class="bu-insight-next">'+iconButton('✦ Open Today’s Discovery','current')+'</div>'+
@@ -155,6 +155,35 @@ function showToast(message){
  body.querySelector('.bu-insight-wrap')?.append(p);
  setTimeout(()=>p.remove(),2200);
 }
+/* Keep archive artwork visible even if a remote host or an older file fails.
+   Fallbacks are decorative, not depictions of a particular Bible event. */
+const INSIGHT_ART_FALLBACKS=[
+ 'journey-art/01_the_beginning.webp','journey-art/02_faith_promises.webp',
+ 'journey-art/04_judges_kings.webp','journey-art/05_exile_return.webp',
+ 'journey-art/06_the_messiah.webp','journey-art/07_good_news_spreads.webp',
+ 'journey-art/08_revelation.webp'
+];
+function fallbackArt(x){
+ let n=0;for(const ch of String(x?.id||'daily'))n=(Math.imul(n,31)+ch.charCodeAt(0))>>>0;
+ return INSIGHT_ART_FALLBACKS[n%INSIGHT_ART_FALLBACKS.length];
+}
+function hydrateIllustrations(){
+ const body=$('#bu375-body');if(!body)return;
+ body.querySelectorAll('img[data-insight-image]').forEach(img=>{
+  img.addEventListener('error',()=>{
+   const alternate=fallbackArt(getItem(img.dataset.insightImage));
+   if(img.getAttribute('src')!==alternate){img.src=alternate;}
+   else{img.style.display='none';}
+  });
+ });
+ const header=body.querySelector('.bu-insight-cover');
+ const x=item();
+ if(header&&x?.art){
+  const probe=new Image();
+  probe.onerror=()=>{if(header.isConnected)header.style.backgroundImage='url("'+fallbackArt(x)+'")';};
+  probe.src=x.art;
+ }
+}
 function display(){
  if(!view.open)return;
  const root=$('#bu375-daily'),body=$('#bu375-body');
@@ -163,6 +192,7 @@ function display(){
  body.innerHTML='<div class="bu-insight-wrap">'+tabs()+
  (view.tab==='today'?renderToday():view.tab==='share'?renderShare():renderSaved())+'</div>';
  body.scrollTop=0;
+ hydrateIllustrations();
 }
 function open(){
  const root=$('#bu375-daily'),body=$('#bu375-body');
