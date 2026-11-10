@@ -27,6 +27,9 @@ jobs:
           for n in 01_the_beginning 02_faith_promises 03_deliverance 04_judges_kings 05_exile_return 06_the_messiah 07_good_news_spreads; do
             test -f "journey-art/$n.webp"
           done
+          test -f family-worship-menu-art/v1/topic-12-baby-moses.webp
+          test -f scholar-research-assets/witness-history.webp
+          test -f 15-joseph-names-and-decisions.jpg
           grep -q 'bu-daily-insight-test-v1' daily-discovery-meaningful-test-v1.js
       - name: Run browser acceptance in portrait and landscape (native Daily and save isolation)
         run: |
