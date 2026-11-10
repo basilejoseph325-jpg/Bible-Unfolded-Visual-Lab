@@ -1,0 +1,84 @@
+/* Bible Unfolded native Boost Shop (TEST only) — integrates into existing
+   Rewards screen & native Trivia/Story toolbars. No global mode overrides. */
+#bu-native-boosters{
+ --boost-cream:#fff2d2;--boost-gold:#f6d48f;
+ isolation:isolate;position:relative;box-sizing:border-box;margin:15px 7px 19px;
+ border:1px solid #f1cf83;border-radius:19px;overflow:hidden;
+ color:var(--boost-cream);font-family:system-ui,-apple-system,sans-serif;
+ background:linear-gradient(145deg,#153f50ee,#092532 62%,#061d28);
+ box-shadow:0 12px 30px #03141b9c,inset 0 2px #fff1c34a;
+}
+#bu-native-boosters *{box-sizing:border-box}
+#bu-native-boosters:before{content:"";position:absolute;inset:6px;border:1px solid #fff0ae25;border-radius:12px;pointer-events:none}
+#bu-native-boosters .bu-boost-head{position:relative;min-height:106px;display:flex;gap:7px;align-items:center;justify-content:space-between;padding:15px 13px 13px;border-bottom:1px solid #f2cb8170;
+ background:linear-gradient(95deg,#082332ee,#0e3c47d5 55%,#1a516055),url("journey-art/07_good_news_spreads.webp") center 48%/cover}
+#bu-native-boosters .bu-boost-eyebrow{display:block;font:850 9px/1.15 system-ui,sans-serif;letter-spacing:.12em;color:#ffe59a}
+#bu-native-boosters h2{margin:5px 0 3px;font:700 clamp(20px,5.2vw,29px)/1.1 Georgia,serif;color:#ffe5ab;text-shadow:0 2px 8px #000a}
+#bu-native-boosters .bu-boost-head p{margin:2px 0 0;color:#fff4e0;font:650 11px/1.28 system-ui,sans-serif}
+#bu-native-boosters .bu-boost-balance{flex:none;padding:8px 9px;border:1px solid #ffe1a4;border-radius:11px;text-align:right;background:#0a2735e8;box-shadow:0 5px 12px #0007}
+#bu-native-boosters .bu-boost-balance strong{display:block;white-space:nowrap;font:700 23px Georgia,serif;color:#ffe19a}
+#bu-native-boosters .bu-boost-balance span{display:block;color:#f8de9e;font:800 9px system-ui,sans-serif;letter-spacing:.05em}
+#bu-native-boosters .bu-boost-star-track{padding:10px 12px 8px;background:#0b2c3b}
+#bu-native-boosters .bu-boost-star-track>div:first-child{display:flex;align-items:center;justify-content:space-between;gap:9px;color:#f9dc9a;font:850 10px system-ui,sans-serif}
+#bu-native-boosters .bu-boost-star-track span{font-weight:750;color:#fff1d0}
+#bu-native-boosters .bu-boost-bar{height:10px;background:#07151e;border:1px solid #b99b6a;border-radius:99px;overflow:hidden;margin-top:6px;box-shadow:inset 0 2px 4px #0009}
+#bu-native-boosters .bu-boost-bar i{display:block;height:100%;background:linear-gradient(90deg,#c27e30,#f0c567,#fff1b5);border-radius:99px;box-shadow:0 0 9px #ffe28c;transition:width .5s ease}
+#bu-native-boosters .bu-boost-inventory{display:flex;align-items:center;gap:5px;flex-wrap:wrap;padding:9px 12px 10px;border-bottom:1px solid #a789594a}
+#bu-native-boosters .bu-boost-inventory>b{font:850 9px system-ui,sans-serif;letter-spacing:.12em;color:#f9cc77;margin-right:3px}
+#bu-native-boosters .bu-boost-inventory span{border-radius:99px;border:1px solid #f1c47a99;background:#1b5261;padding:4px 7px;color:#f4dfb1;font:750 10px system-ui,sans-serif;white-space:nowrap}
+#bu-native-boosters .bu-boost-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+#bu-native-boosters .bu-boost-item{display:flex;min-width:0;min-height:161px;flex-direction:column;align-items:center;justify-content:space-between;text-align:center;gap:6px;padding:10px 8px 9px;
+ border:1px solid #e5b96f;border-radius:14px;
+ background:radial-gradient(ellipse at 50% -18%,#b6a16f5c,transparent 58%),linear-gradient(152deg,#23546a,#092634);
+ box-shadow:0 6px 13px #0007,inset 0 1px #ffdfad52;
+}
+#bu-native-boosters .bu-boost-item.bundle{background:radial-gradient(ellipse at 50% -18%,#e5ba6d91,transparent 62%),linear-gradient(152deg,#614829,#133744 80%);border-color:#ffe0a1}
+#bu-native-boosters .bu-boost-icon{flex:none;display:grid;place-items:center;width:50px;height:50px;line-height:1;border:2px solid #fff0ac;border-radius:50%;
+ background:radial-gradient(circle at 25% 20%,#ffeec0,#b88741 58%,#623c21);box-shadow:inset 0 1px #fff9,0 0 13px #ffd7756b;color:#203743;font:700 29px Georgia,serif}
+#bu-native-boosters .bu-boost-copy{display:flex;flex:1;flex-direction:column;gap:3px;justify-content:center;min-width:0}
+#bu-native-boosters .bu-boost-copy strong{font:700 17px/1.08 Georgia,serif;color:#ffe6af}
+#bu-native-boosters .bu-boost-copy small{font:600 10px/1.35 system-ui,sans-serif;color:#e7e2d4}
+#bu-native-boosters .bu-boost-item button{appearance:none;width:min(100%,175px);min-height:31px;border:1px solid #ffefb9;border-radius:9px;cursor:pointer;box-shadow:inset 0 1px #fff8d3,0 3px 8px #0008;
+ background:linear-gradient(#ffedb5,#dea554 70%,#bf843b);color:#13313c;font:900 13px system-ui,sans-serif}
+#bu-native-boosters .bu-boost-item button:active{transform:translateY(2px);box-shadow:inset 0 3px 5px #0003}
+#bu-native-boosters .bu-boost-foot{padding:9px 12px 13px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:#e2d3ac;font:600 10px/1.3 system-ui,sans-serif}
+#bu-native-boosters .bu-boost-foot button{flex:none;background:#1d4f60;color:#ffe0a1;border:1px solid #d6ae69;border-radius:9px;min-height:32px;font:750 11px system-ui,sans-serif;padding:5px 9px}
+#bu-boost-trivia-launch{flex:none!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:2px!important;white-space:nowrap!important;padding:3px 6px!important;min-width:49px!important;max-width:70px!important;min-height:32px!important;border:1px solid #ffe9a4!important;border-radius:10px!important;background:linear-gradient(#ebc97a,#a87938)!important;color:#18343d!important;box-shadow:0 0 10px #ffe28e7d,inset 0 1px #fff9!important;font:900 15px system-ui,sans-serif!important;cursor:pointer!important}
+#bu-boost-trivia-launch small{font:900 9px system-ui,sans-serif;color:#1f3035}
+#bu-boost-trivia-launch.armed{box-shadow:0 0 18px #ffe59ef2!important;animation:buBoostPulse 1.8s infinite}
+#bu34-trivia .bu3918-tools{gap:5px!important}
+#bu34-body .bu-boost-erased{opacity:.23!important;filter:grayscale(.9)!important;pointer-events:none!important;transform:scale(.98)!important}
+#bu34-body .bu-boost-shielded{animation:buBoostShield .55s!important;box-shadow:0 0 13px #f5d381!important}
+#bu-boost-story-launch{appearance:none;flex:none;min-width:29px;min-height:29px;padding:1px;border:1px solid #ffdf91;border-radius:9px;background:linear-gradient(#ffe2a0,#bd8d48);color:#173647;font-size:19px;box-shadow:0 0 14px #ffe1979c;cursor:pointer}
+#bu-boost-popover{position:fixed;z-index:21500;width:min(245px,calc(100vw - 15px));padding:12px;border:1px solid #f3d28b;border-radius:15px;background:linear-gradient(152deg,#124b5e,#092434);box-shadow:0 10px 32px #000e,inset 0 1px #fff5a849;font-family:system-ui,-apple-system,sans-serif;color:#fff0c5}
+#bu-boost-popover .x{position:absolute;right:5px;top:5px;border:0;background:transparent;color:#ffe0a5;font:700 21px system-ui,sans-serif;cursor:pointer}
+#bu-boost-popover .bu-boost-pop-title{display:block;padding-right:19px;margin-bottom:9px;font:900 11px system-ui,sans-serif;letter-spacing:.09em;color:#ffe4a3}
+#bu-boost-popover [data-power-act]{display:block;width:100%;text-align:left;margin:5px 0;padding:9px 10px;min-height:47px;border:1px solid #dabb7c;border-radius:10px;color:#f5e6bf;background:#1a4d5e;cursor:pointer}
+#bu-boost-popover [data-power-act] b{display:block;font:800 13px system-ui,sans-serif;color:#ffe2a1}
+#bu-boost-popover [data-power-act] small{display:block;margin-top:2px;font:650 10px system-ui,sans-serif;color:#f0e6cb}
+#bu-boost-popover [data-power-act].minor{min-height:33px;color:#f5c979;text-align:center;font:800 11px system-ui,sans-serif;background:#102d3e}
+#bu-boost-toast{position:fixed;z-index:22600;bottom:20px;left:50%;transform:translateX(-50%);width:max-content;max-width:92vw;padding:11px 14px;border-radius:12px;border:1px solid #ffdf9c;background:#154b5c;color:#ffeac3;text-align:center;font:750 12px/1.3 system-ui,sans-serif;box-shadow:0 7px 25px #000a}
+#bu-boost-lens-message,.bu-boost-lens-message{position:fixed;z-index:22000;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;width:min(92vw,335px);padding:20px 17px;border-radius:17px;border:2px solid #ffdda4;background:radial-gradient(ellipse at top,#345f62,#0c2a3b 80%);color:#fff0c9;box-shadow:0 0 35px #f7d68a83,0 14px 45px #000c}
+.bu-boost-lens-message strong{font:700 48px Georgia,serif;color:#ffe6a3;text-shadow:0 0 20px #f8d98c}
+.bu-boost-lens-message small{font:700 12px system-ui,sans-serif;text-align:center}
+.bu-boost-lens-message button{margin-top:7px;padding:9px 17px;border:1px solid #ffdf9c;border-radius:9px;background:linear-gradient(#ffe5a0,#b9863f);color:#15323b;font:850 13px system-ui,sans-serif}
+#bu-boost-celebration{position:fixed;left:50%;top:43%;z-index:22500;transform:translate(-50%,-50%);width:min(94vw,365px);pointer-events:none}
+#bu-boost-celebration .bu-boost-reward-copy{position:relative;text-align:center;border:1px solid #fff0ac;border-radius:17px;padding:17px 14px;background:radial-gradient(ellipse at top,#9e7539,#0d3546 68%);box-shadow:0 0 32px #f8d06a9e,0 15px 34px #000c;animation:buBoostPop .42s ease both}
+#bu-boost-celebration strong{display:block;color:#fff2bb;font:700 24px Georgia,serif;text-shadow:0 2px 8px #0009}
+#bu-boost-celebration small{display:block;margin-top:5px;color:#fff5df;font:750 12px/1.3 system-ui,sans-serif}
+#bu-boost-celebration .bu-boost-particle{position:absolute;top:50%;left:50%;color:#ffe7a2;font:700 22px Georgia,serif;text-shadow:0 0 12px #ffe390;animation:buBoostBurst 1.25s ease-out var(--delay) both}
+@keyframes buBoostPop{0%{opacity:0;transform:scale(.55)}75%{transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+@keyframes buBoostPulse{50%{filter:brightness(1.2)}}
+@keyframes buBoostBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.3)}20%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(250deg) scale(.65)}}
+@keyframes buBoostShield{0%,100%{transform:scale(1)}40%{transform:scale(1.01);background:#734f23}}
+@media(max-width:400px){#bu-native-boosters .bu-boost-head{padding:12px 8px;gap:4px}
+ #bu-native-boosters .bu-boost-balance{padding:6px}#bu-native-boosters .bu-boost-balance strong{font-size:18px}
+ #bu-native-boosters .bu-boost-grid{gap:7px;padding:9px}#bu-native-boosters .bu-boost-item{padding:8px 5px;min-height:160px}
+ #bu-native-boosters .bu-boost-copy strong{font-size:15px}#bu-native-boosters .bu-boost-copy small{font-size:10px}
+ #bu-native-boosters .bu-boost-foot{flex-direction:column;align-items:stretch}#bu34-trivia .bu3918-tools{gap:3px!important}
+ #bu-boost-trivia-launch{min-width:35px!important;padding:3px!important;font-size:13px!important}
+ #bu-boost-trivia-launch small{display:none}}
+@media(min-width:650px){#bu-native-boosters .bu-boost-grid{grid-template-columns:repeat(3,minmax(0,1fr))}#bu-native-boosters .bu-boost-item{min-height:163px}}
+@media(max-height:460px){#bu-boost-popover [data-power-act]{min-height:39px;padding:6px 9px}
+ .bu-boost-lens-message{padding:10px 15px}.bu-boost-lens-message strong{font-size:36px}}
+@media(prefers-reduced-motion:reduce){#bu-native-boosters *,#bu-boost-celebration *,#bu-boost-popover *,#bu-boost-story-launch,#bu-boost-trivia-launch{animation:none!important;transition:none!important}}
