@@ -101,8 +101,10 @@ async function inject(page){
    assert(saved.shared.includes(saved.today));
    await page.evaluate(()=>document.querySelector('[data-insight-tab=saved]').click());
    const savedView=await page.evaluate(()=>({rows:document.querySelectorAll('.bu-insight-saved-row').length,
-    label:document.querySelector('.bu-insight-archive h2')?.textContent}));
+    label:document.querySelector('.bu-insight-archive h2')?.textContent,
+    imageCount:document.querySelectorAll('.bu-insight-saved-row img[data-insight-image]').length}));
    assert.equal(savedView.rows,1);
+   assert.equal(savedView.imageCount,1,'Saved thought must have a real image with fallback');
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-saved.png'});
    const protectedAfter=await page.evaluate(keys=>keys.map(k=>localStorage.getItem(k)),protectedKeys);
    assert.deepEqual(protectedAfter,base.keys,'Daily reading, saving and sharing never touch native wallet/old quiz saves');
@@ -149,7 +151,7 @@ async function inject(page){
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.share),c.id+' share');
    assert(c.moment>18&&c.starter>25&&c.question>24,c.id);
    assert(c.image===''||/^(?:journey-art\/.+\.webp|family-worship-menu-art\/v1\/.+\.webp|scholar-research-assets\/.+\.webp|15-joseph-names-and-decisions\.jpg)$/.test(c.image)||
-    (c.id==='nile'&&c.image==='https://commons.wikimedia.org/wiki/Special:FilePath/Nile_river_egypt.jpg?width=1200'),c.id);
+    (c.id==='nile'&&c.image==='https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Nile_river_egypt.jpg/1280px-Nile_river_egypt.jpg'),c.id);
   }
   console.log('PASS_EDITED_CATALOG_18',JSON.stringify({count:audit.length,categories:[...categories]}));
   await ctx.close();
