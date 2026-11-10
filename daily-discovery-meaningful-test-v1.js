@@ -229,7 +229,12 @@ function click(e){
   open();return;
  }
  if(!view.open)return;
- if(e.target.closest?.('#bu375-back')){close();return;}
+ if(e.target.closest?.('#bu375-back')){
+  // Legacy Back reopens its old five-question chooser. Bypass that old
+  // handler and return directly to the native home instead.
+  e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
+  close();if(typeof focusHome==='function')focusHome();return;
+ }
  const tab=e.target.closest?.('[data-insight-tab]');
  if(tab){e.preventDefault();switchTab(tab.dataset.insightTab);return}
  const saved=e.target.closest?.('[data-insight-open]');
