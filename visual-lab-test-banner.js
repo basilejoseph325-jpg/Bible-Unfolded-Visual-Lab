@@ -162,3 +162,19 @@ else install();
  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',launch,{once:true});
  else launch();
 })();
+
+
+/* Visual Lab ONLY — Daily Discovery Hall prototype.
+ * Kept in independent assets and isolated test-only storage. The canonical
+ * daily checkmark, rewards wallet, purchases and LIVE project are untouched. */
+(()=>{'use strict';
+ if(document.getElementById('bu-daily-hall-test-loader'))return;
+ const css=document.createElement('link');css.rel='stylesheet';
+ css.id='bu-daily-hall-test-css';
+ css.href='daily-engagement-hall-test-v1.css?v=20261109-hall-v1';
+ document.head.appendChild(css);
+ const js=document.createElement('script');
+ js.id='bu-daily-hall-test-loader';
+ js.src='daily-engagement-hall-test-v1.js?v=20261109-hall-v1';
+ js.defer=true;document.head.appendChild(js);
+})();
