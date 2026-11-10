@@ -142,7 +142,7 @@ function renderSaved(){
  '<h2>Discoveries Worth Keeping</h2><p>Save a thought whenever it speaks to you. Return here to reread or find the sharing idea.</p>'+
  (collection.length?collection.map(x=>
  '<button class="bu-insight-saved-row" type="button" data-insight-open="'+escapeHTML(x.id)+'" aria-label="Read '+escapeHTML(x.title)+'">'+
- '<span class="bu-insight-thumb" style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"></span>'+
+ '<span class="bu-insight-thumb"'+(x.art?' style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"':'')+'></span>'+
  '<span><strong>'+escapeHTML(x.title)+'</strong><small>'+escapeHTML(x.category)+'</small></span></button>'
  ).join(''):'<div class="bu-insight-empty">Nothing saved yet. Open today’s thought and tap “Save this Discovery” to start your collection.</div>')+
  '<div class="bu-insight-next">'+iconButton('✦ Open Today’s Discovery','current')+'</div>'+
@@ -202,6 +202,37 @@ function save(){
  if(!update({saved:[...set].slice(-150)})){showToast('Could not save this discovery.');return;}
  display();showToast(isSaved()?'♡ Added to saved discoveries':'Removed from saved discoveries');
 }
+/* Soft editorial chime, instead of the generic native navigation knock.
+   Respect the shared native SFX enable and volume settings. */
+let insightBell=null;
+function tabChime(){
+ try{
+  const toggle=document.getElementById('setting-sfx');
+  let prefs=null;
+  try{prefs=JSON.parse(localStorage.getItem('bu-platform-audio-preferences-v1')||'null')}catch(_){}
+  if(toggle ? !toggle.checked : prefs?.sfx===false)return;
+  const volumeControl=document.getElementById('setting-sfx-volume');
+  const level=Math.max(0,Math.min(1,Number(volumeControl?.value??prefs?.sfxVolume??65)/100));
+  if(level===0)return;
+  const Ctx=window.AudioContext||window.webkitAudioContext;
+  if(!Ctx)return;
+  if(!insightBell)insightBell=new Ctx();
+  if(insightBell.state==='suspended')insightBell.resume().catch(()=>{});
+  const now=insightBell.currentTime;
+  [[659.25,0,.10],[987.77,.10,.07]].forEach(([freq,delay,amplitude])=>{
+   const osc=insightBell.createOscillator(),gain=insightBell.createGain();
+   osc.type='sine';osc.frequency.value=freq;
+   gain.gain.setValueAtTime(.0001,now+delay);
+   gain.gain.exponentialRampToValueAtTime(Math.max(.0002,amplitude*level),now+delay+.018);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.47);
+   osc.connect(gain);gain.connect(insightBell.destination);
+   osc.start(now+delay);osc.stop(now+delay+.49);
+  });
+ }catch(_){}
+}
+function silenceNativeTabPress(e){
+ if(view.open&&e.target?.closest?.('[data-insight-tab]'))e.stopPropagation();
+}
 function switchTab(tab){
  if(!['today','share','saved'].includes(tab))return;
  view.tab=tab;display();
@@ -233,7 +264,7 @@ function click(e){
   close();if(typeof focusHome==='function')focusHome();return;
  }
  const tab=e.target.closest?.('[data-insight-tab]');
- if(tab){e.preventDefault();switchTab(tab.dataset.insightTab);return}
+ if(tab){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();if(tab.dataset.insightTab!==view.tab){tabChime();switchTab(tab.dataset.insightTab);}return}
  const saved=e.target.closest?.('[data-insight-open]');
  if(saved){view.id=saved.dataset.insightOpen;view.fromSaved=true;view.preview=false;switchTab('today');return}
  const b=e.target.closest?.('[data-insight-action]');
@@ -252,7 +283,7 @@ function boot(){
  const b=$('#bu375-home-cta'),d=$('#bu375-daily');
  if(!b||!d||!DATA().length)return false;
  state();
- document.addEventListener('click',click,true);
+ document.addEventListener('click',click,true);\n window.addEventListener('pointerdown',silenceNativeTabPress,true);\n window.addEventListener('touchstart',silenceNativeTabPress,true);
  const back=$('#bu375-back');
  if(back)back.addEventListener('click',close,false);
  const status=$('#bu375-home-status');
