@@ -111,12 +111,12 @@ async function state(page){return page.evaluate((keys)=>({
     });
     await wait(1700);
     const story=await page.evaluate(()=>({
-      source:typeof GENESIS_BEATS==='object'?GENESIS_BEATS[0]?.word:null,
+      source:typeof BEATS==='object'?BEATS[0]?.word:null,
       mounted:!!document.querySelector('#bu-boost-story-launch'),
       text:document.querySelector('#play')?.textContent.slice(0,120)
     }));
     console.log('BOOST_STORY_'+viewport.width,JSON.stringify(story));
-    assert.equal(story.source,'EARTH');
+    assert.equal(story.source,'EARTH','The test scene must read the current active native Story word');
     assert(story.mounted,'Letter Lens boost must mount in native Story when answer is available');
     await page.evaluate(()=>document.querySelector('#bu-boost-story-launch').click());
     await page.evaluate(()=>document.querySelector('#bu-boost-popover [data-power-act=letter]').click());
