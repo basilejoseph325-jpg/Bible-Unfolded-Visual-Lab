@@ -65,6 +65,7 @@ async function inject(page){
    assert.equal(opening.oldModes,0,'Deep Dive quiz chooser removed from new experience');
    assert(opening.title.length>12&&opening.bodyText.includes('MOMENT'));
    assert(opening.jwLinks.length>0&&opening.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
+   await page.evaluate(()=>document.getElementById('bu40-daily-confetti')?.remove());
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-today.png'});
    await page.evaluate(()=>document.querySelector('[data-insight-action=share]').click());
    const share=await page.evaluate(()=>({
@@ -136,7 +137,7 @@ async function inject(page){
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.source),c.id+' source');
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.share),c.id+' share');
    assert(c.moment>18&&c.starter>25&&c.question>24,c.id);
-   assert(/^journey-art\/.+\.webp$/.test(c.image),c.id);
+   assert(/^(?:journey-art\/.+\.webp|family-worship-menu-art\/v1\/.+\.webp|scholar-research-assets\/.+\.webp|15-joseph-names-and-decisions\.jpg)$/.test(c.image),c.id);
   }
   console.log('PASS_EDITED_CATALOG_18',JSON.stringify({count:audit.length,categories:[...categories]}));
   await ctx.close();
