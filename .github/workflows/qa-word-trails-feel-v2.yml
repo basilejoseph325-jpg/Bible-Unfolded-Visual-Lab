@@ -50,7 +50,7 @@ jobs:
           assert "function celebrateWin()" in js and "function clearWinFX()" in js
           assert ".wt-win-foil" in css and ".wt-win-glint" in css
           assert "getFloatTimeDomainData" in js and "signalMeter" in js
-          assert 'Reload resumes this same Word Trails puzzle' in html, "Reload should retain the game and its saved progress"
+          assert 'Embedded Word Trails reload still resumes its protected crossword save' in html, "Embedded refresh should retain the crossword progress"
           assert "master.gain.value=EFFECTS_MIX_GAIN" in js
           assert "createDynamicsCompressor()" in js
           assert "createWaveShaper()" in js and "peakGuard.curve=curve" in js, "Layered notes need a soft peak ceiling"
