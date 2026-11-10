@@ -179,11 +179,11 @@ else install();
  if(document.getElementById('bu-native-boost-shop-v1-loader'))return;
  const style=document.createElement('link');style.rel='stylesheet';
  style.id='bu-native-boost-shop-v1-style';
- style.href='native-boost-shop-test-v1.css?v=20261110-native-power-v1';
+ style.href='native-boost-shop-test-v1.css?v=20261110-boost-gold-icon-v2';
  document.head.append(style);
  const script=document.createElement('script');script.defer=true;
  script.id='bu-native-boost-shop-v1-loader';
- script.src='native-boost-shop-test-v1.js?v=20261110-native-power-v1';
+ script.src='native-boost-shop-test-v1.js?v=20261110-boost-gold-icon-v2';
  document.head.append(script);
 })();
 
