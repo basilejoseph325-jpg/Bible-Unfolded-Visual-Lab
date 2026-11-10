@@ -1,0 +1,29 @@
+name: QA Trivia Genesis and Fourth Tablet Diagnostics — TEST
+on:
+  push:
+    paths:
+      - 'scripts/qa_trivia_genesis_tablet_diagnostic.cjs'
+      - '.github/workflows/qa-trivia-genesis-diagnostic.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect native trivia question and computed tablet background on mobile
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_trivia_genesis_tablet_diagnostic.cjs
+          npm install --prefix /tmp/bu-trivia-d-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-trivia-d-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-trivia-d-qa/node_modules node scripts/qa_trivia_genesis_tablet_diagnostic.cjs
+      - name: Save screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivia-tablet-d-diagnostic
+          path: /tmp/BU-TRIVIA-D-BASE.png
+          if-no-files-found: ignore
