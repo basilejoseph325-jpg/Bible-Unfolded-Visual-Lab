@@ -11,6 +11,7 @@ const protectedKeys=['bible-unfolded-daily-discovery-v375','bible-unfolded-daily
  'bible-unfolded-rewards-v17','bible-unfolded-wheel-ownership-v3825','bible-unfolded-word-trails-next-v1'];
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 async function inject(page){
+ if(await page.evaluate(()=>!!window.BUDailyInsightV1))return;
  await page.addStyleTag({url:root+'daily-discovery-meaningful-test-v1.css'});
  await page.addScriptTag({url:root+'daily-discovery-insights-content-test-v1.js'});
  await page.addScriptTag({url:root+'daily-discovery-meaningful-test-v1.js'});
@@ -27,6 +28,9 @@ async function inject(page){
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(root+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForSelector('#bu375-home-cta',{timeout:60000});
+   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===18,{timeout:25000});
+   assert(await page.evaluate(()=>!!document.getElementById('bu-daily-insight-app-loader')),
+      'New Daily Discovery must be loaded by native TEST loader without manual injection');
    // User can dismiss the original daily checkmark popup; never modify it.
    await page.evaluate(()=>document.getElementById('daily-continue')?.click());
    await sleep(100);
