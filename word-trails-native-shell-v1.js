@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=real-native-announcer-retry-20261109';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=real-native-announcer-retry-20261109-r2';
 let shell=null,frame=null,opening=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
