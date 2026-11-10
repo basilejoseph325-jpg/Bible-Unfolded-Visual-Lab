@@ -68,7 +68,70 @@ const executablePath=execSync('command -v google-chrome || command -v chromium',
   await new Promise(r=>setTimeout(r,350));
   console.log('REAL_VOICE_WHILE_SOLVING',JSON.stringify({board,...await page.evaluate(()=>window.__voiceDiag)}));
   assert.equal(board.solved,'2 / 4');
-  console.log('DONE: inspected real root prerecorded speech attempts, not mocked returns.');
+  // Do not accept merely seeing a function call: wait for the actual native
+  // playing recording after its legitimate 12-second cooldown has elapsed.
+  await page.waitForFunction(()=>{
+   const d=window.__voiceDiag;
+   return d.results.filter(x=>x.phrase==='excellent_thinking'&&x.returned===true).length>=2 &&
+     d.audioHistory.filter(x=>x.tag==='AUDIO'&&x.resolved==='yes').length>=2;
+  },{timeout:22500});
+  const played=await page.evaluate(()=>({
+   voices:window.__voiceDiag.results.filter(x=>x.phrase==='excellent_thinking').map(x=>({returned:x.returned,opts:x.opts,at:x.at})),
+   audioStarts:window.__voiceDiag.audioHistory.filter(x=>x.tag==='AUDIO').length,
+   audioResolved:window.__voiceDiag.audioHistory.filter(x=>x.tag==='AUDIO'&&x.resolved==='yes').length,
+   childMode:document.getElementById('bu-wt-native-game').contentWindow.BUWTAnnouncer.getMode()
+  }));
+  console.log('REAL_MIDGAME_RECORDING_AFTER_COOLDOWN',JSON.stringify(played));
+  assert(played.voices.some(x=>x.returned===false),'Must actually encounter a native refusal before queued retry');
+  assert.equal(played.voices.filter(x=>x.returned===true).length,2,
+    'Initial priming and one successful gameplay voice, never repeated applause');
+
+  // Finish the crossword immediately after that voice. The native system would
+  // normally reject another clip; the queue must retain the genuine level-end
+  // phrase until the current native recording/cooldown permits it.
+  const last=await page.evaluate(()=>{
+   const f=document.getElementById('bu-wt-native-game').contentWindow.document;
+   const solve=word=>{
+    const used=new Set();
+    for(const ch of word){
+     const b=[...f.querySelectorAll('.wheel-letter')].find(x=>x.textContent===ch&&!used.has(Number(x.dataset.letterIndex)));
+     if(!b)throw Error('Cannot solve '+word);
+     used.add(Number(b.dataset.letterIndex));b.click()
+    }
+    f.getElementById('submit').click();
+   };
+   solve('TONIC');solve('COIN');
+   return {solved:f.getElementById('solved-count').textContent};
+  });
+  await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.document?.getElementById('finish')?.open,
+      {timeout:12000});
+  console.log('LEVEL_FINISHED_WITH_REAL_VOICE_ACTIVE',JSON.stringify(last));
+  await page.waitForFunction(()=>window.__voiceDiag.results.some(x=>x.phrase==='chapter_complete'&&x.returned===true),
+      {timeout:22500});
+  const completed=await page.evaluate(()=>{
+   const d=window.__voiceDiag;
+   return {ended:d.results.filter(x=>x.phrase==='chapter_complete'),audioStarts:d.audioHistory.length};
+  });
+  console.log('REAL_COMPLETION_RECORDING_NOT_LOST',JSON.stringify(completed));
+  assert(completed.ended.some(x=>x.returned===true));
+
+  // Turn off original announcer, then reset the board voice session.
+  // Neither a queued retry nor an existing clip may disregard native Off.
+  const disabled=await page.evaluate(()=>{
+   const sel=document.getElementById('bu381-voice-mode');sel.value='off';
+   sel.dispatchEvent(new Event('change',{bubbles:true}));
+   const child=document.getElementById('bu-wt-native-game').contentWindow;
+   child.BUWTAnnouncer.resetProgress();
+   const before=window.__voiceDiag.results.length;
+   const request=child.BUWTAnnouncer.progress();
+   return {request,before,mode:child.BUWTAnnouncer.getMode(),after:window.__voiceDiag.results.length};
+  });
+  await new Promise(r=>setTimeout(r,1600));
+  assert.equal(disabled.mode,'off');assert.equal(disabled.request,false);
+  assert.equal(disabled.before,disabled.after);
+  assert.equal(await page.evaluate(()=>window.__voiceDiag.results.length),disabled.before);
+  console.log('ORIGINAL_OFF_SETTING_PRESERVED',JSON.stringify(disabled));
+  console.log('PASS real native prerecorded midgame voice, cooldown retry, completion and Off settings.');
  }catch(e){console.error('REAL_VOICE_DIAG_FAILED',e.stack||e);process.exitCode=1}
  finally{await browser.close()}
 })();
