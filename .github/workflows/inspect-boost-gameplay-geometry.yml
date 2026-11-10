@@ -55,6 +55,6 @@ jobs:
             matches=list(re.finditer(pat,s))
             print('ALL_USAGE',pat,len(matches))
             for m in matches[:12]: print('USE',m.start(),repr(s[max(0,m.start()-400):m.start()+400]))
-          for v in ['Trace or tap the letters', 'function storyReadMarkup', 'function currentBeat', 'function getBeat', 'function currentStory', 'function renderStory', 'STORY_BOOKS', 'STORY_CHAPTERS', 'function storyHint(', 'storyHint(beat)', 'const STORY_BOOK', 'let activeBook', 'function storyBeat', 'function storyHint(beat)','function storyScene','function stageBeat','function bu34Choose','let bu34Quiz','function bu3857Current','function bu3857Render','function bu34Start','function openStory']:
+          for v in ['function startChapter(', 'function openJourney(', 'function openEpisodes(', 'function enterChapter(', 'function startChapter', 'function showJourney', 'function renderJourney', 'Trace or tap the letters', 'function storyReadMarkup', 'function currentBeat', 'function getBeat', 'function currentStory', 'function renderStory', 'STORY_BOOKS', 'STORY_CHAPTERS', 'function storyHint(', 'storyHint(beat)', 'const STORY_BOOK', 'let activeBook', 'function storyBeat', 'function storyHint(beat)','function storyScene','function stageBeat','function bu34Choose','let bu34Quiz','function bu3857Current','function bu3857Render','function bu34Start','function openStory']:
             i=s.find(v);print('SOURCE',v,i,repr(s[max(0,i-400):i+1100] if i>=0 else ''))
           PY
