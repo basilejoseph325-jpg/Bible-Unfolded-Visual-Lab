@@ -55,7 +55,25 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
      console.log('MODE_'+vp.width+'_'+id,JSON.stringify({before,result}));
      assert(result.root.endsWith('/index.html'),'Native card must not navigate to a nested copy of homepage');
      assert(!result.frame,'Non-Word-Trails modes must not open the Word Trails overlay');
-     if(id==='home-builder')assert(result.screenVisible.some(x=>/build|wb-/i.test(x.id+' '+x.cls))||result.builderIds.some(x=>x.display!=='none'&&!x.hidden),'Builder must present a visible game screen');
+     if(id==='home-books'){
+      // Owner-approved James TEST economy gates Bible Books on the first visit.
+      const gate=await page.evaluate(()=>({
+       visible:!!document.querySelector('#bu-james-gate[role="dialog"]'),
+       price:document.querySelector('#bu-james-gate')?.textContent||''
+      }));
+      assert(gate.visible&&gate.price.includes('180'),'Unowned Bible Books must show a functional token gate');
+      await page.evaluate(()=>document.querySelector('#bu-james-gate [data-buj-action="unlock-books"]').click());
+      await new Promise(r=>setTimeout(r,320));
+      const unlocked=await page.evaluate(()=>({
+       owned:window.BUJamesReturnLoopV1?.inspect?.().owned.includes('books'),
+       gate:!!document.querySelector('#bu-james-gate'),
+       active:[...document.querySelectorAll('.screen')].filter(e=>!e.hidden&&getComputedStyle(e).display!=='none').map(e=>e.id)
+      }));
+      console.log('BIBLE_BOOKS_UNLOCK_'+vp.width,JSON.stringify(unlocked));
+      assert(unlocked.owned&&!unlocked.gate,'Token purchase must unlock Bible Books in TEST');
+      assert(unlocked.active.some(x=>x!=='home'),'Unlocked Bible Books must open native game');
+     }
+     else if(id==='home-builder')assert(result.screenVisible.some(x=>/build|wb-/i.test(x.id+' '+x.cls))||result.builderIds.some(x=>x.display!=='none'&&!x.hidden),'Builder must present a visible game screen');
      else assert(result.help||result.active.some(x=>x!=='home'),'Native mode card must open a real destination: '+id);
    }
    await page.evaluate(()=>{
