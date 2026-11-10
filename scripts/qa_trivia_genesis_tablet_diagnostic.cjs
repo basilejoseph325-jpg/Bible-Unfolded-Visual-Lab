@@ -71,6 +71,21 @@ const p=require('puppeteer-core'),{execSync}=require('child_process');
    const out={};for(const n of names){try{out[n]=window[n]?.toString().slice(0,6500)||'absent'}catch(e){out[n]=String(e)}}return out;
   });
   console.log('DIAG_FUNCTIONS',JSON.stringify(functions).slice(0,22000));
+  const sourceBank=await page.evaluate(()=>{
+   try{
+    if(typeof BU34_BANK==='undefined')return {available:false};
+    const keys=Object.keys(BU34_BANK);const hits=[];
+    for(const [key,list] of Object.entries(BU34_BANK)){
+     if(!Array.isArray(list))continue;
+     for(let i=0;i<list.length;i++){
+      const q=list[i];if(/foods assigned|seed-bearing plants and fruit; other land creatures/i.test(JSON.stringify(q)))
+       hits.push({key,index:i,record:q});
+     }
+    }
+    return {available:true,keys:keys.slice(0,50),total:keys.reduce((n,k)=>n+(Array.isArray(BU34_BANK[k])?BU34_BANK[k].length:0),0),hits};
+   }catch(e){return {error:String(e)}}
+  });
+  console.log('DIAG_BANK',JSON.stringify(sourceBank).slice(0,24000));
 
  }finally{await browser.close()}
 })();
