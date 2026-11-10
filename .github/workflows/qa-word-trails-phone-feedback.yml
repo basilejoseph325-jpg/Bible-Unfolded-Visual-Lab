@@ -1,0 +1,30 @@
+name: QA Word Trails owner's phone feedback regressions
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-phone-feedback.yml'
+      - 'scripts/word_trails_phone_feedback_repro.cjs'
+      - 'word-trails-next-launcher.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'experiments/word-trails-announcer-v1.js'
+      - 'visual-lab-test-banner.js'
+permissions: {contents: read}
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify syntax for all affected TEST adapters
+        run: |
+          node --check scripts/word_trails_phone_feedback_repro.cjs
+          node --check word-trails-next-launcher.js
+          node --check word-trails-native-shell-v1.js
+          node --check experiments/word-trails-announcer-v1.js
+      - name: Browser reproduction for tap-back-tap, Trivia refresh and announcer
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/phonefeedback puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8902 --bind 127.0.0.1 >/tmp/bu-phone-feedback-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/phonefeedback/node_modules node scripts/word_trails_phone_feedback_repro.cjs
