@@ -232,36 +232,38 @@ function save(){
  if(!update({saved:[...set].slice(-150)})){showToast('Could not save this discovery.');return;}
  display();showToast(isSaved()?'♡ Added to saved discoveries':'Removed from saved discoveries');
 }
-/* Soft editorial chime, instead of the generic native navigation knock.
-   Respect the shared native SFX enable and volume settings. */
-let insightBell=null;
+/* Daily Discovery tabs use the game's ORIGINAL approved positive chime.
+ * Crucially, intercept every press phase before native menu audio handlers.
+ * The previous implementation played a custom tone but let touch/click
+ * handlers farther up the tree play the old knock as well. */
 function tabChime(){
  try{
-  const toggle=document.getElementById('setting-sfx');
-  let prefs=null;
-  try{prefs=JSON.parse(localStorage.getItem('bu-platform-audio-preferences-v1')||'null')}catch(_){}
-  if(toggle ? !toggle.checked : prefs?.sfx===false)return;
-  const volumeControl=document.getElementById('setting-sfx-volume');
-  const level=Math.max(0,Math.min(1,Number(volumeControl?.value??prefs?.sfxVolume??65)/100));
-  if(level===0)return;
-  const Ctx=window.AudioContext||window.webkitAudioContext;
-  if(!Ctx)return;
-  if(!insightBell)insightBell=new Ctx();
-  if(insightBell.state==='suspended')insightBell.resume().catch(()=>{});
-  const now=insightBell.currentTime;
-  [[659.25,0,.10],[987.77,.10,.07]].forEach(([freq,delay,amplitude])=>{
-   const osc=insightBell.createOscillator(),gain=insightBell.createGain();
-   osc.type='sine';osc.frequency.value=freq;
-   gain.gain.setValueAtTime(.0001,now+delay);
-   gain.gain.exponentialRampToValueAtTime(Math.max(.0002,amplitude*level),now+delay+.018);
-   gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.47);
-   osc.connect(gain);gain.connect(insightBell.destination);
-   osc.start(now+delay);osc.stop(now+delay+.49);
-  });
+  if(typeof sfxOn!=='undefined'&&!sfxOn)return;
+  if(typeof sfxVolume!=='undefined'&&Number(sfxVolume)<=0)return;
+  if(window.BUPremiumSFX?.play){
+   window.BUPremiumSFX.play('namePositive');
+   return;
+  }
+  if(typeof playChime==='function')playChime();
  }catch(_){}
 }
+const TAB_PRESS_EVENTS=['pointerdown','pointerup','touchstart','touchend','mousedown','mouseup'];
 function silenceNativeTabPress(e){
- if(view.open&&e.target?.closest?.('[data-insight-tab]'))e.stopPropagation();
+ if(!view.open||!e.target?.closest?.('[data-insight-tab]'))return;
+ // Do NOT preventDefault here: Android still needs its normal click.
+ // stopImmediatePropagation also protects from later same-node SFX handlers.
+ e.stopImmediatePropagation();
+ e.stopPropagation();
+}
+function captureTabClick(e){
+ if(!view.open)return;
+ const tab=e.target?.closest?.('[data-insight-tab]');
+ if(!tab)return;
+ e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
+ const next=tab.dataset.insightTab;
+ if(next===view.tab)return;
+ tabChime();
+ switchTab(next);
 }
 function switchTab(tab){
  if(!['today','share','saved'].includes(tab))return;
@@ -294,7 +296,7 @@ function click(e){
   close();if(typeof focusHome==='function')focusHome();return;
  }
  const tab=e.target.closest?.('[data-insight-tab]');
- if(tab){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();if(tab.dataset.insightTab!==view.tab){tabChime();switchTab(tab.dataset.insightTab);}return}
+ if(tab){captureTabClick(e);return}
  const saved=e.target.closest?.('[data-insight-open]');
  if(saved){view.id=saved.dataset.insightOpen;view.fromSaved=true;view.preview=false;switchTab('today');return}
  const b=e.target.closest?.('[data-insight-action]');
@@ -313,9 +315,11 @@ function boot(){
  const b=$('#bu375-home-cta'),d=$('#bu375-daily');
  if(!b||!d||!DATA().length)return false;
  state();
+ // Window capture prevents the legacy knock from reaching native handlers
+ // on button, container or document, on both mouse and real Android touch.
+ TAB_PRESS_EVENTS.forEach(type=>window.addEventListener(type,silenceNativeTabPress,true));
+ window.addEventListener('click',captureTabClick,true);
  document.addEventListener('click',click,true);
- window.addEventListener('pointerdown',silenceNativeTabPress,true);
- window.addEventListener('touchstart',silenceNativeTabPress,true);
  const back=$('#bu375-back');
  if(back)back.addEventListener('click',close,false);
  const status=$('#bu375-home-status');
