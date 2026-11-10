@@ -425,7 +425,12 @@ function finishWord(word){
  if(tile){const b=tile.getBoundingClientRect(),app=$('app').getBoundingClientRect();burst(b.left-app.left+b.width/2,b.top-app.top+b.height/2,'green')}
  flash((bibleAnswer?'★ BIBLE WORD · ':'✦ ')+word+' FOUND'+(reward?'  +10':'')+(comboReward?'  ·  COMBO +5 COINS':''));
  cue('correct');haptic(15);
- if(found.size===3||found.size===6)window.BUWTAnnouncer?.play?.('youre_on_a_roll');
+ // Speak at meaningful early progress, not only near the completion screen.
+ // The native announcer normally waits 45 seconds between regular phrases;
+ // its existing milestone cadence offers a moderated 12-second window while
+ // retaining native speaker selection, Off/volume, and no-overlap protection.
+ if(found.size===2||(found.size===5&&level.words.length>=7))
+  window.BUWTAnnouncer?.play?.('excellent_thinking',{milestone:true});
  if(found.size===level.words.length&&!completionShown){
   completionShown=true;locked=true;
   setTimeout(()=>completeLevel(),780);
