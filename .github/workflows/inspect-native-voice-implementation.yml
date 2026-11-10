@@ -1,0 +1,20 @@
+name: Inspect native voice implementation context TEST
+on:
+  push:
+    paths: ['.github/workflows/inspect-native-voice-implementation.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exact native voice playback/cooldown implementation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('bible_unfolded_core_part5.js').read_text()
+          for term in ['function bu381Play(', 'function bu385PlayRecorded(', 'bu381Play=function(', 'let bu382VoiceAllowed', 'const bu382VoiceAllowed', 'function pauseAudio(', 'bu385VoiceBalance=', 'function bu385NextPhrase(', 'window.bu381Play']:
+            i=s.find(term)
+            print('KEY',term,'INDEX',i)
+            if i>=0:print('CONTEXT',repr(s[max(0,i-320):i+3000]))
+          PY
