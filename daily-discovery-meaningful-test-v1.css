@@ -85,3 +85,22 @@
 #bu375-body.bu-insight-reading .bu-insight-cover.no-art[data-illustration="nile"]:before{
  background:linear-gradient(180deg,#182f2b2b,#061c29a6 60%,#071b25e9 100%);
 }
+
+/* Share view must reveal a usable ministry thought immediately, not require
+   scrolling past the same large cover again. */
+#bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact{min-height:138px;padding:14px 19px}
+#bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact h2{font-size:clamp(21px,4.5vw,31px);margin:6px 0 0}
+#bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact p{display:none}
+#bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact:after{font-size:22px}
+#bu375-body.bu-insight-reading .bu-insight-share-banner{padding:10px 13px}
+#bu375-body.bu-insight-reading .bu-insight-share-banner h3{font-size:23px}
+#bu375-body.bu-insight-reading .bu-insight-conversation{padding:12px 14px;margin-top:9px}
+#bu375-body.bu-insight-reading .bu-insight-conversation p{font-size:14px;line-height:1.48}
+#bu375-body.bu-insight-reading .bu-insight-conversation.question p{font-size:18px}
+#bu375-body.bu-insight-reading .bu-insight-extra{margin-top:12px;padding:10px;border-top:1px solid #ffe0a16b;
+ color:#fff0c9;font:650 13px/1.45 system-ui,sans-serif}
+#bu375-body.bu-insight-reading .bu-insight-extra b{display:block;color:#ffdb94;margin-bottom:5px}
+@media(max-height:480px){
+ #bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact{min-height:87px;padding:7px 15px}
+ #bu375-body.bu-insight-reading .bu-insight-cover.bu-insight-compact h2{font-size:23px}
+}
