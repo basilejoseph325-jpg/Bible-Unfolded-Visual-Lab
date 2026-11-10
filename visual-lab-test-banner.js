@@ -186,3 +186,30 @@ else install();
  script.src='native-boost-shop-test-v1.js?v=20261110-native-power-v1';
  document.head.append(script);
 })();
+
+
+/* Visual Lab ONLY · Meaningful Daily Discovery — source-first pilot.
+ * Replaces the old duplicate daily Trivia/Deep Dive QUESTION UI with a
+ * genuinely educational daily story, reflection and Share the Thought.
+ * Original v375 daily quiz saves and original rewards remain untouched.
+ * Existing page, Daily soundtrack, back and menu retained.
+ * Do NOT copy this loader into Story-Trails LIVE without owner approval. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ if(document.getElementById('bu-daily-insight-content-loader'))return;
+ const css=document.createElement('link');
+ css.rel='stylesheet';css.id='bu-daily-insight-style';
+ css.href='daily-discovery-meaningful-test-v1.css?v=20261110-meaningful-v1';
+ document.head.append(css);
+ const data=document.createElement('script');
+ data.id='bu-daily-insight-content-loader';data.async=false;
+ data.src='daily-discovery-insights-content-test-v1.js?v=20261110-meaningful-v1';
+ data.onload=()=>{
+  if(document.getElementById('bu-daily-insight-app-loader'))return;
+  const app=document.createElement('script');app.id='bu-daily-insight-app-loader';
+  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261110-meaningful-v1';
+  document.head.append(app);
+ };
+ data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
+ document.head.append(data);
+})();
