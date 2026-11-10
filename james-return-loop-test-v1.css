@@ -1,0 +1,52 @@
+/* Bible Unfolded — James Return Loop · Visual Lab TEST ONLY */
+#bu-james-rewards{color:#f7e8c8;margin:8px 0 24px;font-family:system-ui,-apple-system,sans-serif;line-height:1.45}
+#bu-james-rewards *,#bu-james-gate *{box-sizing:border-box}
+#bu-james-rewards .bu-james-hero{border:1px solid #e4ba71b3;border-radius:17px;padding:19px 17px 15px;background:linear-gradient(135deg,#123e4e,#081d2c);box-shadow:0 9px 25px #00152299}
+#bu-james-rewards .bu-james-hero>span,#bu-james-rewards .bu-james-eyebrow,#bu-james-gate .bu-james-eyebrow{color:#e7bd79;font:800 10px/1.5 system-ui,sans-serif;letter-spacing:.12em}
+#bu-james-rewards h2{margin:8px 0;font:700 clamp(26px,6vw,35px)/1.12 Georgia,serif;color:#ffe3a8}
+#bu-james-rewards h3{margin:7px 0;color:#ffe4b2;font:700 clamp(19px,4.6vw,25px)/1.15 Georgia,serif}
+#bu-james-rewards p{margin:7px 0 12px;color:#e0dfd4;font:400 13px/1.55 system-ui,sans-serif}
+#bu-james-rewards .bu-james-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:14px 0 4px}
+#bu-james-rewards .bu-james-stats>div{background:#041c2bbd;border:1px solid #bfa16d80;padding:11px 5px;border-radius:10px;text-align:center}
+#bu-james-rewards .bu-james-stats b{display:block;color:#ffe3a4;font:800 clamp(15px,4vw,22px) system-ui,sans-serif}
+#bu-james-rewards .bu-james-stats small{display:block;font:700 9px/1.5 system-ui,sans-serif;letter-spacing:.04em;color:#d2d3ca}
+#bu-james-rewards .bu-james-equipped{font-weight:700;color:#f5cf8e}
+#bu-james-rewards .bu-james-panel{margin-top:13px;padding:16px 14px 17px;background:linear-gradient(155deg,#0f3542,#0a2736);border:1px solid #bfa07181;border-radius:14px;box-shadow:0 4px 12px #0416248c}
+#bu-james-rewards .bu-james-panel small{color:#cfdbc9;font-size:11px;line-height:1.4;display:block;margin-top:8px}
+#bu-james-rewards .bu-james-actions,#bu-james-gate .bu-james-actions{display:flex;gap:8px;flex-wrap:wrap}
+#bu-james-rewards button[data-buj-action],#bu-james-gate button[data-buj-action]{min-height:42px;padding:9px 10px;border-radius:10px;border:1px solid #f7dea8;background:linear-gradient(175deg,#f7daa0,#dca85a);color:#163443;font:800 12px/1.2 system-ui,sans-serif;cursor:pointer;box-shadow:0 3px 7px #0004}
+#bu-james-rewards .bu-james-actions button{flex:1}
+#bu-james-rewards button[data-buj-action]:active,#bu-james-gate button[data-buj-action]:active{transform:scale(.98)}
+#bu-james-rewards button[disabled],#bu-james-gate button[disabled]{filter:saturate(.2);opacity:.52;cursor:default}
+#bu-james-rewards .bu-james-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:14px}
+#bu-james-rewards .bu-james-item{display:flex;flex-direction:column;overflow:hidden;border:1px solid #c8ac7a89;background:#123a47;border-radius:13px;min-width:0}
+#bu-james-rewards .bu-james-item img{width:100%;aspect-ratio:1.6;object-fit:cover;display:block}
+#bu-james-rewards .bu-james-item-info{padding:11px;flex:1;display:flex;flex-direction:column}
+#bu-james-rewards .bu-james-item-info>small{font-size:9px;letter-spacing:.07em;color:#e7bc74;margin:0 0 4px}
+#bu-james-rewards .bu-james-item strong{font:700 16px/1.2 Georgia,serif;color:#ffdfa6;overflow-wrap:anywhere}
+#bu-james-rewards .bu-james-item p{font-size:11px;margin:7px 0 10px;flex:1}
+#bu-james-rewards .bu-james-item a{color:#f7d28c;font-size:11px;text-decoration:underline;margin:0 0 9px}
+#bu-james-rewards .bu-james-item button{width:100%}
+#bu-james-rewards .bu-james-trophy{display:inline-block;margin:4px 3px 4px 0;padding:7px 9px;border:1px solid #d2a65c;border-radius:20px;background:#163d49;color:#f8d59b;font-size:11px}
+#bu-james-rewards .bu-james-disclaimer{font-size:11px!important;color:#d3dbd4!important;padding:7px 10px}
+#bu-james-quiz-bar{position:relative;z-index:2;margin:0 auto 6px;max-width:750px;width:100%;background:linear-gradient(90deg,#0b303b,#133b46);border:1px solid #ceac74;border-radius:9px;padding:6px 8px;font-family:system-ui,sans-serif;box-shadow:0 3px 9px #001a24a6}
+#bu-james-quiz-bar .bu-james-bar-top{display:flex;align-items:center;justify-content:space-between;gap:7px;color:#ffdb9d;font-weight:800;font-size:11px}
+#bu-james-quiz-bar .bu-james-bar-buttons{display:flex;gap:6px;margin-top:5px}
+#bu-james-quiz-bar button{appearance:none;flex:1;background:#f0ca84;color:#183541;border:1px solid #f9e6b7;border-radius:7px;font:800 10px/1.15 system-ui,sans-serif;min-height:26px;padding:4px 2px}
+#bu-james-quiz-bar button[disabled]{opacity:.43}
+#bu-james-gate{position:fixed;inset:0;background:#031820dd;z-index:2147482000;display:flex;align-items:center;justify-content:center;padding:16px;overscroll-behavior:contain}
+#bu-james-gate .bu-james-gate-card{width:min(100%,400px);max-height:92dvh;overflow:auto;padding:19px;background:linear-gradient(#17424d,#082b37);border:2px solid #e3ba75;border-radius:18px;box-shadow:0 20px 60px #000c;color:#fff0c9;text-align:center;font-family:system-ui,sans-serif}
+#bu-james-gate img{display:block;max-width:100%;width:220px;aspect-ratio:1.55;object-fit:cover;margin:12px auto;border-radius:11px}
+#bu-james-gate h2{font:700 28px/1.1 Georgia,serif;color:#ffe0a2;margin:12px 0}
+#bu-james-gate p{font:400 14px/1.5 system-ui,sans-serif;color:#ede4ce}
+#bu-james-gate .bu-james-actions{justify-content:center;margin-top:17px}
+#bu-james-gate button{flex:1}
+#bu-james-toast{position:fixed;z-index:2147482500;left:50%;bottom:max(20px,env(safe-area-inset-bottom));transform:translate(-50%,16px);pointer-events:none;opacity:0;transition:opacity .15s ease,transform .15s ease;background:#672f24;color:#fff4d4;border:1px solid #d2ae7d;padding:12px 17px;border-radius:13px;box-shadow:0 6px 25px #0009;width:min(90vw,440px);text-align:center;font:750 13px/1.35 system-ui,sans-serif}
+#bu-james-toast.good{background:#0d4d42}
+#bu-james-toast.show{opacity:1;transform:translate(-50%,0)}
+@media(max-width:355px){
+ #bu-james-rewards .bu-james-products{grid-template-columns:1fr}
+ #bu-james-rewards .bu-james-stats b{font-size:15px}
+ #bu-james-quiz-bar .bu-james-bar-buttons button{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){#bu-james-toast{transition:none!important}#bu-james-rewards button[data-buj-action]:active{transform:none}}
