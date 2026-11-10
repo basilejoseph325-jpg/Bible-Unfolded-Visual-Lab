@@ -79,8 +79,8 @@ function tabs(){
  '<button type="button" class="bu-insight-tab" role="tab" data-insight-tab="'+id+'" aria-selected="'+String(view.tab===id)+'">'+l+'</button>').join('')+
  '</nav>';
 }
-function cover(x,kicker){
- return '<header class="bu-insight-cover'+(x.art?'':' no-art')+'" data-illustration="'+escapeHTML(x.id)+'"'+(x.art?' style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"':'')+'>'+
+function cover(x,kicker,compact=false){
+ return '<header class="bu-insight-cover'+(x.art?'':' no-art')+(compact?' bu-insight-compact':'')+'" data-illustration="'+escapeHTML(x.id)+'"'+(x.art?' style="background-image:url(&quot;'+escapeHTML(x.art)+'&quot;)"':'')+'>'+
  '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
  '<h2>'+escapeHTML(x.title)+'</h2>'+
  '<p>'+escapeHTML(x.subtitle)+'</p>'+
@@ -115,25 +115,22 @@ function renderShare(){
  const x=item();if(!x)return '';
  const s=x.share;
  const saved=!isCurrentToday()||view.preview;
- return cover(x,'◈ SHARE THE THOUGHT · '+x.category)+
+ return cover(x,'◈ SHARE THE THOUGHT · '+x.category,true)+
  '<div class="bu-insight-section">'+
  '<div class="bu-insight-share-banner"><h3>A Thought Worth Sharing</h3>'+
- '<p>One natural way to bring today’s discovery into a friendly conversation. Use your own words; listen and follow the person’s interests.</p></div>'+
- '<section class="bu-insight-conversation"><span class="number">01 · WHEN IT MIGHT FIT</span><h3>A Natural Moment</h3>'+
+ '<p>One natural idea for a friendly conversation today. Make it your own.</p></div>'+
+ '<section class="bu-insight-conversation"><span class="number">WHEN IT MIGHT FIT</span>'+
  '<p>'+escapeHTML(s.moment)+'</p></section>'+
- '<section class="bu-insight-conversation question"><span class="number">02 · AN EASY OPENING</span><h3>You Could Start With…</h3>'+
- '<p>'+escapeHTML(s.opener)+'</p></section>'+
- '<section class="bu-insight-conversation"><span class="number">03 · SOMETHING INTERESTING</span><h3>The Thought</h3>'+
- '<p>'+escapeHTML(s.thought)+'</p></section>'+
- '<section class="bu-insight-conversation question"><span class="number">04 · INVITE THEIR THOUGHTS</span><h3>Ask, Then Listen</h3>'+
+ '<section class="bu-insight-conversation question"><span class="number">YOU COULD START WITH…</span>'+
+ '<p>'+escapeHTML(s.opener)+'</p>'+
+ '<div class="bu-insight-extra"><b>Something interesting to mention:</b> '+escapeHTML(s.thought)+'</div></section>'+
+ '<section class="bu-insight-conversation"><span class="number">ASK, THEN LISTEN</span>'+
  '<p>'+escapeHTML(s.question)+'</p></section>'+
- '<section class="bu-insight-conversation"><span class="number">05 · ONLY IF THEY ARE INTERESTED</span><h3>A Simple Way to Continue</h3>'+
- '<p>'+escapeHTML(s.bridge)+'</p></section>'+
- '<div class="bu-insight-sources"><p>Read together, if welcomed: '+
- link(s.url,s.reference)+' · <strong>Not a script.</strong> Keep things friendly and respect when someone does not want to continue.</p></div>'+
+ '<div class="bu-insight-sources"><p>'+escapeHTML(s.bridge)+' '+
+ link(s.url,s.reference)+'. There is no need to continue if the person is not interested.</p></div>'+
  '<div class="bu-insight-next">'+
  iconButton('‹ Back to the Discovery','today','secondary')+
- iconButton('✦ Copy the Opening Idea','copy')+
+ iconButton('✦ Copy the Sharing Idea','copy')+
  '</div>'+
  (!saved?'<div class="bu-insight-next">'+iconButton('✓ Remember today’s thought','read','secondary')+'</div>':'')+
  footerNote()+'</div>';
