@@ -105,6 +105,7 @@ async function inject(page){
     imageCount:document.querySelectorAll('.bu-insight-saved-row img[data-insight-image]').length}));
    assert.equal(savedView.rows,1);
    assert.equal(savedView.imageCount,1,'Saved thought must have a real image with fallback');
+   await page.waitForFunction(()=>[...document.querySelectorAll('.bu-insight-saved-row img')].every(i=>i.complete&&i.naturalWidth>0),{timeout:12000});
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-saved.png'});
    const protectedAfter=await page.evaluate(keys=>keys.map(k=>localStorage.getItem(k)),protectedKeys);
    assert.deepEqual(protectedAfter,base.keys,'Daily reading, saving and sharing never touch native wallet/old quiz saves');
@@ -143,6 +144,18 @@ async function inject(page){
    starter:x.share.opener?.length,question:x.share.question?.length,
    image:x.art
   })));
+  const artPool=await p.evaluate(()=>window.BUDailyDiscoveryImagePool);
+  assert.equal(artPool.length,8,'Curated image pool is a fixed reusable set');
+  assert.equal(new Set(artPool).size,artPool.length,'All images in the pool are distinct');
+  assert(artPool.every(path=>/^(?:daily-discovery-hero\\.webp|journey-art\\/.+\\.webp)$/.test(path)),
+   'Images must be local repository assets, not remote one-off photos');
+  const assetHealth=await p.evaluate(()=>Promise.all(window.BUDailyDiscoveryImagePool.map(src=>new Promise(resolve=>{
+    const img=new Image();img.onload=()=>resolve({src,ok:true});
+    img.onerror=()=>resolve({src,ok:false});img.src=src;
+  }))));
+  assert(assetHealth.every(x=>x.ok),'Every reusable image must load: '+JSON.stringify(assetHealth));
+  assert(audit.every((x,i)=>x.image===artPool[i%artPool.length]),
+   'Entries reuse the same pool, rather than having bespoke photos');
   const categories=new Set(audit.map(x=>x.cat));
   assert.equal(audit.length,18);assert(categories.size>=8);
   for(const c of audit){
@@ -150,8 +163,7 @@ async function inject(page){
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.source),c.id+' source');
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.share),c.id+' share');
    assert(c.moment>18&&c.starter>25&&c.question>24,c.id);
-   assert(c.image===''||/^(?:journey-art\/.+\.webp|family-worship-menu-art\/v1\/.+\.webp|scholar-research-assets\/.+\.webp|15-joseph-names-and-decisions\.jpg)$/.test(c.image)||
-    (c.id==='nile'&&c.image==='https://thumb.wikimedia.org/wikipedia/commons/thumb/b/bf/Nile_river_egypt.jpg/1280px-Nile_river_egypt.jpg'),c.id);
+   assert(artPool.includes(c.image),'Image must come from permanent local pool: '+c.id);
   }
   console.log('PASS_EDITED_CATALOG_18',JSON.stringify({count:audit.length,categories:[...categories]}));
   await ctx.close();
