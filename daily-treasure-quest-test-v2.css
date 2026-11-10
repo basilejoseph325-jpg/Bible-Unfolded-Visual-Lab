@@ -1,0 +1,118 @@
+/* Bible Unfolded · Treasure Quest V2 — TEST ONLY, all styles namespaced
+   Visual identity: warm luminous gold, deep marine blue, rich illustrated scenes,
+   celebratory star particles. Never touches real gameplay selectors outside launch card. */
+#bu-arcade-launch{--a-gold:#ffe6a6;isolation:isolate;box-sizing:border-box!important;position:relative!important;display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;min-height:132px!important;padding:15px 16px!important;border:2px solid #f6d588!important;border-radius:19px!important;overflow:hidden!important;cursor:pointer!important;text-align:left!important;color:#fff1cb!important;background:linear-gradient(94deg,#052333ed 4%,#173c4bc2 65%,#20394b90),url("journey-art/06_the_messiah.webp") center 35%/cover no-repeat!important;box-shadow:0 10px 24px #020c11a1,inset 0 1px 0 #fff3b2aa!important;transition:transform .15s,filter .15s!important}
+#bu-arcade-launch:after{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 78% 35%,#ffdc6259,transparent 40%);animation:buAGlow 4s ease-in-out infinite}
+#bu-arcade-launch:active{transform:scale(.98)!important}
+#bu-arcade-launch .bu-a-gift{flex:none;width:77px;height:77px;display:grid;place-items:center;background:radial-gradient(circle at 28% 20%,#fff5ce,#dca951 52%,#78450e);border:2px solid #ffe9af;border-radius:17px;box-shadow:0 7px 17px #001d2899,inset 0 2px #fffaed,0 0 20px #ffd46f69;transform:rotate(-6deg);animation:buAFloat 3.2s ease-in-out infinite}
+#bu-arcade-launch .bu-a-gift svg{height:52px;width:52px;filter:drop-shadow(0 2px 1px #4a320a80)}
+#bu-arcade-launch .bu-a-content{display:flex;flex:1;flex-direction:column;min-width:0;gap:4px}
+#bu-arcade-launch .bu-a-ribbon{width:max-content;max-width:100%;border:1px solid #ffdf8399;border-radius:99px;padding:4px 9px;background:linear-gradient(90deg,#934819,#bd7429);color:#fff4c7;font:900 10px system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+#bu-arcade-launch .bu-a-title{font:700 clamp(24px,5.8vw,36px)/1.08 Georgia,serif;color:#fff1c6;text-shadow:0 3px 8px #000e}
+#bu-arcade-launch .bu-a-sub{font:650 12px/1.25 system-ui,sans-serif;color:#fff5e2}
+#bu-arcade-launch .bu-a-chevron{font:700 28px Georgia,serif;color:#ffdfa0}
+#bu-arcade-launch .bu-a-twinkle{position:absolute;right:11%;top:15%;color:#ffe59e;font-size:25px;pointer-events:none;animation:buATwinkle 2.4s linear infinite}
+#bu-arcade-launch[data-aura="aurora"]{box-shadow:0 8px 25px #45d8cead,inset 0 1px #e7ffff!important;border-color:#78ffee!important}
+#bu-arcade-launch[data-aura="starfall"]{box-shadow:0 8px 30px #f9cd67d4,inset 0 1px #fff1af!important}
+#bu-arcade-launch[data-aura="royal"]{box-shadow:0 8px 30px #ca9be9dc,inset 0 1px #fff1af!important;border-color:#dd9aef!important}
+#bu-arcade-stage{position:fixed!important;inset:0!important;z-index:18000!important;display:grid!important;place-items:center!important;background:#06111ded!important;backdrop-filter:blur(12px)!important;padding:6px!important;box-sizing:border-box!important}
+#bu-arcade-stage *{box-sizing:border-box}
+#bu-arcade-stage button:focus-visible{outline:3px solid #fff7c5;outline-offset:3px}
+#bu-arcade-shell{--a-cream:#fff3d2;--a-gold:#f9d88e;--a-blue:#0b3548;position:relative;display:flex;flex-direction:column;width:min(100%,960px);height:min(100%,750px);max-height:calc(100dvh - 12px);border-radius:21px;overflow:hidden;color:var(--a-cream);background:radial-gradient(ellipse at top right,#17566c 0%,#082d40 45%,#061c2b 100%);border:2px solid #f0c67b;box-shadow:0 0 0 4px #482f1a,0 15px 80px #000d;font-family:system-ui,-apple-system,sans-serif}
+#bu-arcade-shell:before{content:"";position:absolute;inset:7px;border:1px solid #f6df9b40;pointer-events:none;z-index:0;border-radius:14px}
+#bu-arcade-shell .bu-a-hero{position:relative;flex:none;display:flex;align-items:center;justify-content:space-between;gap:9px;min-height:117px;padding:14px 55px 14px 20px;border-bottom:2px solid #e8be7299;background:linear-gradient(90deg,#061922e8 5%,#103b4ca6 62%,#09293396),url("journey-art/06_the_messiah.webp") 65% 32%/cover}
+#bu-arcade-shell h2{font:700 clamp(27px,6vw,44px)/1.04 Georgia,serif;margin:4px 0 3px;color:#ffeab5;text-shadow:0 3px 8px #000e}
+#bu-arcade-shell .bu-a-kicker{display:block;text-transform:uppercase;letter-spacing:.2em;font:900 10px system-ui,sans-serif;color:#ffe3a0}
+#bu-arcade-shell .bu-a-lead{font:600 12px system-ui,sans-serif;color:#fff4df;margin:0}
+#bu-arcade-shell .bu-a-wallet{flex:none;border-radius:13px;padding:7px 12px;border:1px solid #fae2b1aa;background:#061d29dc;text-align:right;min-width:88px}
+#bu-arcade-shell .bu-a-wallet strong{font:800 23px Georgia,serif;color:#ffda79;white-space:nowrap}
+#bu-arcade-shell .bu-a-wallet small{display:block;color:#f4dec5;font:700 9px system-ui,sans-serif;text-transform:uppercase}
+#bu-arcade-shell .bu-a-x{position:absolute;top:9px;right:9px;width:36px;height:36px;border-radius:50%;border:1px solid #ffe3ab;background:#071d29df;color:#ffebc1;font-size:25px;cursor:pointer}
+#bu-arcade-shell .bu-a-tabs{display:flex;gap:6px;justify-content:center;padding:7px 8px;background:#071c29b8;border-bottom:1px solid #ceac6b73}
+#bu-arcade-shell .bu-a-tab{border:1px solid #bc9c5c4d;background:#153b4b;color:#f6dc9e;border-radius:11px;padding:8px 14px;font:900 11px system-ui,sans-serif;cursor:pointer;min-width:76px}
+#bu-arcade-shell .bu-a-tab[aria-selected="true"]{background:linear-gradient(180deg,#fff0bd,#e4ad52);color:#17303b;border-color:#ffedca;box-shadow:0 2px 8px #0009}
+#bu-arcade-shell .bu-a-body{position:relative;flex:1;min-height:0;overflow:auto;overscroll-behavior:contain;padding:14px 16px 20px;scrollbar-color:#d3a355 #102b37}
+#bu-arcade-shell .bu-a-section{display:flex;flex-direction:column;gap:13px}
+#bu-arcade-shell .bu-a-main{position:relative;display:grid;grid-template-columns:1.1fr .9fr;gap:13px}
+#bu-arcade-shell .bu-a-panel{position:relative;overflow:hidden;border:1px solid #e4be78a1;border-radius:16px;padding:13px;background:linear-gradient(150deg,#1a5366ed,#0c2b3c 76%);box-shadow:0 8px 17px #0005,inset 0 1px #fff5c64a}
+#bu-arcade-shell .bu-a-panel h3{margin:4px 0 5px;color:#ffe9b5;font:700 clamp(22px,4.6vw,31px)/1.08 Georgia,serif;text-shadow:0 2px 4px #0008}
+#bu-arcade-shell .bu-a-panel p{font:600 12px/1.38 system-ui,sans-serif;color:#f5ead5;margin:5px 0}
+#bu-arcade-shell .bu-a-tiny{font:800 10px system-ui,sans-serif;letter-spacing:.13em;text-transform:uppercase;color:#f9d587}
+#bu-arcade-shell .bu-a-button{border:1px solid #fff0bc;background:linear-gradient(180deg,#fff1c3 0%,#f2c36d 56%,#bf813b 100%);color:#14333c;padding:11px 15px;border-radius:11px;cursor:pointer;font:900 12px system-ui,sans-serif;box-shadow:inset 0 1px #ffffffd2,0 5px 9px #0008;min-height:41px;text-shadow:0 1px #fff8;transition:transform .13s,filter .13s}
+#bu-arcade-shell .bu-a-button:active{transform:translateY(2px) scale(.985)}
+#bu-arcade-shell .bu-a-button.secondary{background:linear-gradient(#24637a,#103442);color:#fff0c5;text-shadow:none}
+#bu-arcade-shell .bu-a-button:disabled{opacity:.58;cursor:default}
+#bu-arcade-shell .bu-a-giant{width:100%;min-height:50px;font-size:14px;letter-spacing:.04em;animation:buAButtonBreathe 2.5s ease-in-out infinite}
+#bu-arcade-shell .bu-a-prize-art{height:117px;display:flex;align-items:center;justify-content:center;border-radius:12px;margin-bottom:9px;background:radial-gradient(ellipse at 55% 30%,#ffdb8348,transparent 49%),linear-gradient(#0d28354a,#0d2835d9),url("journey-art/01_the_beginning.webp") center 41%/cover;overflow:hidden}
+#bu-arcade-shell .bu-a-prize-art .bu-a-big-icon{font:700 64px Georgia,serif;color:#ffe4a0;text-shadow:0 0 19px #ffcf4c,0 5px 7px #001a20}
+#bu-arcade-shell .bu-a-steps{display:flex;gap:6px;justify-content:space-between;margin:9px 0}
+#bu-arcade-shell .bu-a-step{flex:1;min-width:0;height:10px;background:#071922;border:1px solid #8d8c7480;border-radius:12px;overflow:hidden}
+#bu-arcade-shell .bu-a-step.full{background:linear-gradient(90deg,#c18330,#fff3b9,#e9a947);border-color:#ffe5a0;box-shadow:0 0 7px #ffdc739c}
+#bu-arcade-shell .bu-a-badges{display:flex;gap:6px;flex-wrap:wrap}
+#bu-arcade-shell .bu-a-badge{padding:6px 8px;border-radius:8px;background:#1e5469;border:1px solid #f9db9a9e;color:#fff0b4;font:800 11px system-ui,sans-serif}
+#bu-arcade-shell .bu-a-reward-stats{display:flex;gap:9px;margin:8px 0}
+#bu-arcade-shell .bu-a-reward-stats strong{flex:1;padding:8px;border:1px solid #e4c18269;border-radius:10px;background:#092534c4;text-align:center;color:#ffe2a1;font:800 15px Georgia,serif}
+#bu-arcade-shell .bu-a-season{display:flex;align-items:center;gap:13px;padding:12px;border:1px solid #d2ac6880;border-radius:14px;background:linear-gradient(100deg,#123a4ce8,#102c37);cursor:pointer;text-align:left;color:#fff4d5;min-height:93px}
+#bu-arcade-shell .bu-a-season-art{flex:none;width:94px;height:67px;border-radius:10px;background:url("journey-art/06_the_messiah.webp") center/cover;border:1px solid #dfb66a;box-shadow:0 3px 9px #0008}
+#bu-arcade-shell .bu-a-season-copy{flex:1;min-width:0}
+#bu-arcade-shell .bu-a-season-copy strong{display:block;color:#ffe6aa;font:700 20px Georgia,serif}
+#bu-arcade-shell .bu-a-season-copy span{display:block;font:650 11px system-ui,sans-serif;margin-top:3px}
+#bu-arcade-shell .bu-a-starbar{height:15px;border:1px solid #ffdf9499;border-radius:25px;background:#061d2b;overflow:hidden;box-shadow:inset 0 2px 3px #0006}
+#bu-arcade-shell .bu-a-starbar span{display:block;height:100%;min-width:0;background:linear-gradient(90deg,#d58122,#ffeb83,#f5ba43);box-shadow:0 0 16px #f6cd63;transition:width .6s cubic-bezier(.22,1,.36,1)}
+#bu-arcade-shell .bu-a-milestones{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#bu-arcade-shell .bu-a-milestone{padding:12px 7px;border:1px solid #b98f4f;border-radius:14px;background:radial-gradient(circle at top,#2b6571,#0d2936);text-align:center;box-shadow:0 4px 12px #0005}
+#bu-arcade-shell .bu-a-milestone.earned{border-color:#ffdda2;background:radial-gradient(circle at top,#be8736,#27464c 75%);box-shadow:0 0 13px #ffe2a44a}
+#bu-arcade-shell .bu-a-milestone .icon{font:700 34px Georgia,serif;display:block;color:#ffe6a4;text-shadow:0 0 14px #f0be67}
+#bu-arcade-shell .bu-a-milestone strong{display:block;font:700 14px Georgia,serif;color:#ffe6b1}
+#bu-arcade-shell .bu-a-milestone small{display:block;margin-top:5px;font:750 10px system-ui,sans-serif;color:#e4d4b7}
+#bu-arcade-shell .bu-a-store{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+#bu-arcade-shell .bu-a-item{border:1px solid #d4ae72;border-radius:14px;background:#092a3b;overflow:hidden;display:flex;flex-direction:column}
+#bu-arcade-shell .bu-a-item-image{height:103px;display:grid;place-items:center;position:relative;background-position:center;background-size:cover}
+#bu-arcade-shell .bu-a-item-image:before{content:"";position:absolute;inset:0;background:linear-gradient(#011c2766,#04263266)}
+#bu-arcade-shell .bu-a-item-symbol{position:relative;z-index:1;font:700 46px Georgia,serif;color:#ffe8ac;text-shadow:0 3px 9px #001b25,0 0 13px #edcc6f}
+#bu-arcade-shell .bu-a-item-text{flex:1;display:flex;flex-direction:column;gap:6px;padding:10px}
+#bu-arcade-shell .bu-a-item-text strong{font:700 19px Georgia,serif;color:#ffdda2}
+#bu-arcade-shell .bu-a-item-text small{flex:1;font:600 11px/1.3 system-ui,sans-serif;color:#e5d9bd}
+#bu-arcade-shell .bu-a-item-text .bu-a-button{width:100%;padding:8px 7px;min-height:35px;font-size:11px}
+#bu-arcade-shell .bu-a-collection{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+#bu-arcade-shell .bu-a-collected{border-radius:12px;border:1px solid #cdab7b;background:#153747;text-align:center;padding:13px 5px}
+#bu-arcade-shell .bu-a-collected .icon{display:block;font-size:35px;color:#ffe4ae}
+#bu-arcade-shell .bu-a-collected strong{display:block;color:#f6dfaf;font:700 12px Georgia,serif;margin:5px 0}
+#bu-arcade-shell .bu-a-foot{display:flex;flex:none;justify-content:space-between;gap:8px;padding:6px 13px;border-top:1px solid #cea76778;background:#061c26;font:700 9px system-ui,sans-serif;color:#ebd7ad}
+#bu-arcade-shell .bu-a-notice{color:#f6d7a2;font:600 10px/1.3 system-ui,sans-serif}
+#bu-arcade-play{position:fixed;inset:0;z-index:19002;background:radial-gradient(ellipse at center,#23607c,#061b2c 70%);display:flex;align-items:center;justify-content:center;overflow:hidden;padding:11px}
+#bu-arcade-play .bu-a-play-panel{width:min(100%,660px);max-height:100%;position:relative;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;padding:14px 14px 11px;border-radius:17px;border:2px solid #fce1a0;background:linear-gradient(150deg,#0c3148,#102a37);box-shadow:0 0 27px #f7d2755b,0 15px 50px #000b;overflow:auto}
+#bu-arcade-play h3{font:700 clamp(22px,5vw,32px) Georgia,serif;color:#ffeab1;margin:0}
+#bu-arcade-play .bu-a-game-sub{font:650 11px system-ui,sans-serif;color:#f9e9d0;margin:0}
+#bu-arcade-play .bu-a-memory{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:min(100%,410px);margin:5px auto}
+#bu-arcade-play .bu-a-card{--card-size:83px;position:relative;border:2px solid #dfb46e;border-radius:13px;min-height:var(--card-size);background:linear-gradient(145deg,#c3873d,#f4de9a 48%,#996229);box-shadow:0 4px 8px #0008,inset 0 2px #fff8;cursor:pointer;overflow:hidden;transition:transform .24s}
+#bu-arcade-play .bu-a-card:after{content:"✦";position:absolute;inset:0;display:grid;place-items:center;color:#57371a;text-shadow:0 1px #fff8;font:700 41px Georgia,serif;background:radial-gradient(circle,#ffe7a2,#d7a655 72%);transition:opacity .2s}
+#bu-arcade-play .bu-a-card.open:after,#bu-arcade-play .bu-a-card.matched:after{opacity:0}
+#bu-arcade-play .bu-a-card .picture{position:absolute;inset:0;display:block;background-size:cover;background-position:center}
+#bu-arcade-play .bu-a-card.matched{border-color:#fff1b8;box-shadow:0 0 15px #ffd96eb9,inset 0 1px #fff9}
+#bu-arcade-play .bu-a-sparkline{min-height:23px;font:850 13px system-ui,sans-serif;color:#ffe39d}
+#bu-arcade-play .bu-a-chests{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;width:min(100%,440px);margin:7px auto}
+#bu-arcade-play .bu-a-chest{min-height:113px;border:2px solid #ffdc8b;border-radius:15px;background:linear-gradient(#6e381b,#bd7b37 55%,#e3a74f);color:#ffe6a9;font:700 52px Georgia,serif;box-shadow:inset 0 2px #fff6,0 7px 15px #0009;cursor:pointer;animation:buAFloat 3s ease-in-out infinite}
+#bu-arcade-play .bu-a-chest:nth-child(2){animation-delay:-.5s}
+#bu-arcade-play .bu-a-chest:nth-child(3){animation-delay:-1.2s}
+#bu-arcade-play .bu-a-chest:active{transform:scale(.94)}
+#bu-arcade-stage .bu-a-win{position:fixed;inset:0;z-index:19004;background:#061622e8;display:grid;place-items:center;padding:16px;backdrop-filter:blur(9px)}
+#bu-arcade-stage .bu-a-win-card{max-width:450px;width:100%;text-align:center;padding:23px 17px 20px;position:relative;z-index:2;border-radius:20px;border:2px solid #ffefa9;box-shadow:0 0 55px #ffd46797,0 18px 60px #000c;background:radial-gradient(circle at top,#c6933f 0%,#174961 40%,#061b2c 100%)}
+#bu-arcade-stage .bu-a-win-crest{display:block;font-size:85px;color:#fff0ad;filter:drop-shadow(0 0 20px #ffdb61);animation:buAPop 850ms both}
+#bu-arcade-stage .bu-a-win h3{margin:2px 0 7px;font:700 34px Georgia,serif;color:#fff0b7;text-shadow:0 3px 7px #001}
+#bu-arcade-stage .bu-a-win p{font:750 14px system-ui,sans-serif;color:#fff0d1}
+#bu-arcade-stage .bu-a-particles{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+#bu-arcade-stage .bu-a-particle{position:absolute;top:50%;left:50%;font-size:calc(15px + (var(--i) % 3)*8px);color:var(--color,#ffe3a0);text-shadow:0 0 12px #ffeb9c;animation:buABurst 1450ms ease-out var(--delay) both;--angle:0deg;--dist:130px}
+#bu-arcade-stage .bu-a-celebrate{animation:buAPop .3s both}
+#bu-arcade-stage .bu-a-toast{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:6;max-width:min(96%,400px);padding:10px 15px;border:1px solid #ffe8ab;border-radius:12px;background:#194858;color:#fff4c6;font:850 12px system-ui,sans-serif;text-align:center;box-shadow:0 7px 22px #0009}
+#bu-arcade-nudge{position:fixed;bottom:15px;left:50%;transform:translateX(-50%);z-index:12000;display:flex;align-items:center;gap:12px;width:min(94vw,420px);background:linear-gradient(120deg,#155268,#0c2b3e);color:#fff0c0;border:2px solid #f2ce80;border-radius:15px;padding:11px;box-shadow:0 6px 25px #000c;font:800 13px system-ui,sans-serif}
+#bu-arcade-nudge button{border:1px solid #fff2ba;background:#e0b46c;color:#123447;border-radius:9px;font:800 11px system-ui,sans-serif;padding:7px 11px;cursor:pointer}
+@keyframes buAButtonBreathe{50%{box-shadow:inset 0 1px #fff,0 0 24px #fbd47ea9,0 7px 10px #0008}}
+@keyframes buATwinkle{0%,100%{opacity:.35;transform:scale(.7) rotate(0)}50%{opacity:1;transform:scale(1.15) rotate(30deg)}}
+@keyframes buAFloat{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-5px) rotate(3deg)}}
+@keyframes buAGlow{50%{opacity:.2}}
+@keyframes buAPop{0%{opacity:0;transform:scale(.3) rotate(-12deg)}75%{opacity:1;transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes buABurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.35) rotate(0)}18%{opacity:1}100%{opacity:0;transform:translate(calc(-50% + cos(var(--angle)) * var(--dist)),calc(-50% + sin(var(--angle)) * var(--dist))) scale(.65) rotate(450deg)}}
+@media(max-width:620px){#bu-arcade-shell .bu-a-main{grid-template-columns:1fr}#bu-arcade-shell .bu-a-store{grid-template-columns:repeat(2,minmax(0,1fr))}#bu-arcade-shell .bu-a-hero{min-height:104px;padding:12px 51px 10px 13px}#bu-arcade-shell .bu-a-wallet{padding:7px}#bu-arcade-shell .bu-a-wallet strong{font-size:18px}#bu-arcade-shell .bu-a-body{padding:11px}#bu-arcade-launch .bu-a-gift{width:67px;height:67px}#bu-arcade-launch .bu-a-gift svg{width:47px;height:47px}}
+@media(max-height:470px){#bu-arcade-stage{padding:0!important}#bu-arcade-shell{height:100dvh;max-height:100dvh;border-radius:0}#bu-arcade-shell .bu-a-hero{min-height:72px;padding:5px 54px 5px 14px}#bu-arcade-shell h2{font-size:25px}#bu-arcade-shell .bu-a-wallet strong{font-size:17px}#bu-arcade-shell .bu-a-tabs{padding:4px}#bu-arcade-shell .bu-a-body{padding:8px}#bu-arcade-play .bu-a-play-panel{flex-direction:column;gap:4px;padding:5px 12px}#bu-arcade-play .bu-a-memory{max-width:400px;gap:6px;margin:0}#bu-arcade-play .bu-a-card{--card-size:57px}#bu-arcade-play .bu-a-chest{min-height:67px;font-size:34px}#bu-arcade-play h3{font-size:22px}#bu-arcade-play .bu-a-sparkline{min-height:15px;font-size:11px}#bu-arcade-play .bu-a-giant{min-height:33px;padding:6px}#bu-arcade-stage .bu-a-win-card{padding:12px}#bu-arcade-stage .bu-a-win-crest{font-size:50px}#bu-arcade-stage .bu-a-win h3{font-size:27px}}
+@media(prefers-reduced-motion:reduce){#bu-arcade-stage *,#bu-arcade-launch *,#bu-arcade-nudge *{animation:none!important;transition:none!important}}
