@@ -137,6 +137,16 @@ else install();
  const params=new URLSearchParams(location.search);
  const direct=params.get('wt_launch')==='native';
  if(!direct && location.hash!=='#word-trails')return;
+ // Owner-approved browser refresh must return to Bible Unfolded home. The
+ // crossword engine's existing localStorage save remains untouched and is
+ // loaded when the player next enters Word Trails from the home card.
+ // A fresh published deep link still opens Word Trails via wt_launch=native.
+ const nav=performance.getEntriesByType?.('navigation')?.[0];
+ const reloading=nav?.type==='reload'||performance.navigation?.type===1;
+ if(!direct && reloading && location.hash==='#word-trails'){
+  history.replaceState(history.state,'',location.pathname+location.search);
+  return;
+ }
  if(direct){
   params.delete('wt_launch');
   const query=params.toString();
