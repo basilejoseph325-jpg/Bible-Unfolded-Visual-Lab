@@ -117,6 +117,12 @@ async function state(page){return page.evaluate((keys)=>({
       text:document.querySelector('#play')?.textContent.slice(0,120)
     }));
     console.log('BOOST_STORY_'+viewport.width,JSON.stringify(story));
+    console.log('STORY_DEBUG_'+viewport.width,JSON.stringify(await page.evaluate(()=>{
+      const ids=['play','journey','bu3857-screen','scene-hint','hint','bu-boost-story-launch'];
+      return {mode,activeBook,stage,currentWord:BEATS?.[stage]?.word,
+        bu3857State:typeof bu3857State==='object'?JSON.stringify(bu3857State)?.slice(0,160):null,
+        screens:ids.map(id=>{const e=document.getElementById(id),r=e?.getBoundingClientRect(),s=e&&getComputedStyle(e);return {id,exists:!!e,hidden:e?.hidden,rect:r?[r.x,r.y,r.width,r.height]:null,display:s?.display,parent:e?.parentElement?.id}})};
+    })));
     assert(story.source&&story.source.length>2,'A native Story answer must be available');
     assert(story.mounted,'Letter Lens boost must mount in native Story when answer is available');
     await page.evaluate(()=>document.querySelector('#bu-boost-story-launch').click());
