@@ -47,6 +47,7 @@ function grantGift(n,num){
  n.inventory={...n.inventory,fifty:n.inventory.fifty+num};
  n.granted+=num;
 }
+function refresh(){renderShop();paintQuestion()}
 function reconcile(){
  const native=nowCoins(),delta=native-state.sourceCoins;
  const next={...state,inventory:{...state.inventory},earnedSet:[...state.earnedSet]};
