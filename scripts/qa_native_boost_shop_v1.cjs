@@ -108,7 +108,7 @@ async function state(page){return page.evaluate((keys)=>({
       // Enter through the ACTUAL native chapter controller, not a stale
       // hidden screen with manually replaced mode/stage variables.
       focusHome();
-      startChapter('genesis',true);
+      startChapter('genesis',true,true);
     });
     await wait(1700);
     const story=await page.evaluate(()=>({
