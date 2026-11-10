@@ -73,6 +73,15 @@ async function solve(page){
    assert(shell.x>=-1&&shell.y>=-1&&shell.w<=shell.vw+1&&shell.h<=shell.vh+1);
    assert.equal(shell.tabs,3);
    assert(shell.bonus.includes('PLAY FREE BONUS'));
+   const cta=await page.evaluate(()=>{
+     const b=document.querySelector('#bu-arcade-shell [data-action=start]');
+     const content=document.querySelector('#bu-arcade-shell .bu-a-body');
+     const r=b.getBoundingClientRect(),v=content.getBoundingClientRect();
+     return {top:r.top,bottom:r.bottom,visibleTop:v.top,visibleBottom:v.bottom};
+   });
+   console.log('TREASURE_CTA_FIRST_VIEW_'+vp.width,JSON.stringify(cta));
+   assert(cta.top>=cta.visibleTop-1&&cta.bottom<=cta.visibleBottom+1,
+      'Free bonus game CTA must be visible without scrolling the event menu');
    await page.screenshot({path:'/tmp/BUTreasure-V2-'+vp.width+'-event.png'});
    const before=await page.evaluate(()=>window.BUTreasureQuest.preview());
    await page.evaluate(()=>document.querySelector('[data-action=start]').click());
