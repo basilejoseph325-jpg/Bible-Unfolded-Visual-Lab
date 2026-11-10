@@ -116,8 +116,8 @@ async function solve(page){
    assert(artifacts>=11);
    await page.evaluate(()=>{
     const btn=document.querySelector('[data-action=buy][data-id=starfall]');
-    assert=!!btn;
-    btn?.click();
+    if(!btn)throw Error('Starfall must be purchasable in TEST');
+    btn.click();
    });
    await page.waitForSelector('#bu-arcade-win');
    await page.evaluate(()=>document.querySelector('#bu-arcade-win [data-action=close-win]').click());
