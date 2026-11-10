@@ -283,7 +283,9 @@ function boot(){
  const b=$('#bu375-home-cta'),d=$('#bu375-daily');
  if(!b||!d||!DATA().length)return false;
  state();
- document.addEventListener('click',click,true);\n window.addEventListener('pointerdown',silenceNativeTabPress,true);\n window.addEventListener('touchstart',silenceNativeTabPress,true);
+ document.addEventListener('click',click,true);
+ window.addEventListener('pointerdown',silenceNativeTabPress,true);
+ window.addEventListener('touchstart',silenceNativeTabPress,true);
  const back=$('#bu375-back');
  if(back)back.addEventListener('click',close,false);
  const status=$('#bu375-home-status');
