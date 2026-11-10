@@ -115,11 +115,12 @@ function play(phrase,{milestone=false,preview=false,queueIfBlocked=false}={}){
    // without changing the owner's voice, volume or Off preference. The
    // original native sample/preview path deliberately stops an older voice
    // instead of layering two announcer recordings over each other.
-   if(native.playVoice(phrase,{milestone}))return true;
    const chosen=native.voicePrefs?.();
    let rootPlayingWatch=false;
    try{rootPlayingWatch=!!(parent.document.getElementById('watch-player')&&!parent.document.getElementById('watch-player').hidden)}catch(_){}
+   // Do not even attempt playback if the player disabled announcers.
    if(!chosen||chosen.mode==='off'||chosen.volume<=0||document.hidden||rootPlayingWatch)return false;
+   if(native.playVoice(phrase,{milestone}))return true;
    return native.playVoice(phrase,{milestone:true,preview:true});
   }
   return native.playVoice(phrase,{milestone,preview});
