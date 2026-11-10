@@ -213,3 +213,18 @@ else install();
  data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
  document.head.append(data);
 })();
+
+
+/* TEST ONLY — James Return Loop: streak risk, collectible rewards, lives
+ * and Bible Books token unlock. The TEST ledger stays separate from LIVE
+ * canonical wallet because both repositories share their origin. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ if(document.getElementById('bu-james-return-loop-loader'))return;
+ const css=document.createElement('link');css.id='bu-james-return-loop-style';css.rel='stylesheet';
+ css.href='james-return-loop-test-v1.css?v=20261110-james-v1';
+ document.head.append(css);
+ const script=document.createElement('script');script.id='bu-james-return-loop-loader';script.defer=true;
+ script.src='james-return-loop-test-v1.js?v=20261110-james-v1';
+ document.head.append(script);
+})();
