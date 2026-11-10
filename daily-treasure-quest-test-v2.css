@@ -116,3 +116,11 @@
 @media(max-width:620px){#bu-arcade-shell .bu-a-main{grid-template-columns:1fr}#bu-arcade-shell .bu-a-store{grid-template-columns:repeat(2,minmax(0,1fr))}#bu-arcade-shell .bu-a-hero{min-height:104px;padding:12px 51px 10px 13px}#bu-arcade-shell .bu-a-wallet{padding:7px}#bu-arcade-shell .bu-a-wallet strong{font-size:18px}#bu-arcade-shell .bu-a-body{padding:11px}#bu-arcade-launch .bu-a-gift{width:67px;height:67px}#bu-arcade-launch .bu-a-gift svg{width:47px;height:47px}}
 @media(max-height:470px){#bu-arcade-stage{padding:0!important}#bu-arcade-shell{height:100dvh;max-height:100dvh;border-radius:0}#bu-arcade-shell .bu-a-hero{min-height:72px;padding:5px 54px 5px 14px}#bu-arcade-shell h2{font-size:25px}#bu-arcade-shell .bu-a-wallet strong{font-size:17px}#bu-arcade-shell .bu-a-tabs{padding:4px}#bu-arcade-shell .bu-a-body{padding:8px}#bu-arcade-play .bu-a-play-panel{flex-direction:column;gap:4px;padding:5px 12px}#bu-arcade-play .bu-a-memory{max-width:400px;gap:6px;margin:0}#bu-arcade-play .bu-a-card{--card-size:57px}#bu-arcade-play .bu-a-chest{min-height:67px;font-size:34px}#bu-arcade-play h3{font-size:22px}#bu-arcade-play .bu-a-sparkline{min-height:15px;font-size:11px}#bu-arcade-play .bu-a-giant{min-height:33px;padding:6px}#bu-arcade-stage .bu-a-win-card{padding:12px}#bu-arcade-stage .bu-a-win-crest{font-size:50px}#bu-arcade-stage .bu-a-win h3{font-size:27px}}
 @media(prefers-reduced-motion:reduce){#bu-arcade-stage *,#bu-arcade-launch *,#bu-arcade-nudge *{animation:none!important;transition:none!important}}
+
+/* Purchased scenic skins have an immediate, visible effect on the TEST Hall. */
+#bu-arcade-shell[data-scene="library"] .bu-a-hero{background-image:linear-gradient(90deg,#071b20ed,#254035a9),url("bible-book-art/19_psalms.webp")}
+#bu-arcade-shell[data-scene="promises"] .bu-a-hero{background-image:linear-gradient(90deg,#071b20ed,#254035a9),url("journey-art/08_revelation.webp")}
+#bu-arcade-shell[data-scene="deliverance"] .bu-a-hero{background-image:linear-gradient(90deg,#271e17ed,#6d381a91),url("journey-art/03_deliverance.webp")}
+#bu-arcade-shell[data-aura="aurora"]{box-shadow:0 0 0 4px #1e646d,0 10px 65px #56cfc891}
+#bu-arcade-shell[data-aura="starfall"]{box-shadow:0 0 0 4px #483110,0 10px 65px #f9cc6d99}
+#bu-arcade-shell[data-aura="royalglow"]{box-shadow:0 0 0 4px #5e447e,0 10px 65px #a89dea99}
