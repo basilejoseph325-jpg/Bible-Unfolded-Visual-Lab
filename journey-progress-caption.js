@@ -121,7 +121,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Visual Lab ONLY — excavated limestone V2 answers (same material on A–D).
    Fixes A-only V1 stripe artifact. Leaves gold controls, scoring and finale. */
-(()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5';document.head.appendChild(l)})();
 
 
 /* VISUAL LAB ONLY — Trivia explanation scroll (approved Daily V3 parchment and
@@ -209,4 +209,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   });
  };
  document.head.appendChild(script);
+})();
+
+/* TEST ONLY · Source-verified Genesis 1:29, 30 clarity edit.
+ * Correct the single original bank record, all choices, explanation and hint.
+ * Keep its original question identity for one-time reward integrity. */
+(()=>{'use strict';
+ if(document.getElementById('bu-trivia-genesis-food-clarity-v1'))return;
+ const sc=document.createElement('script');
+ sc.id='bu-trivia-genesis-food-clarity-v1';sc.defer=true;
+ sc.src='trivia-genesis-food-clarity-test-v1.js?v=20261110-genesis-food-clause-v1';
+ document.head.append(sc);
 })();
