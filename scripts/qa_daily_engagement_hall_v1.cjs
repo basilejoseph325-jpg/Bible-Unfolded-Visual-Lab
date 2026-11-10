@@ -57,6 +57,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    }));
    assert.equal(after.wallet.credits,before.credits-260);
    assert(after.wallet.owned.includes('library'));
+   assert.notEqual(after.storage.goal,'library','After unlocking savings goal, suggest the next collectible');
    assert.equal(after.scene,'library','Unlocking scene must change Hall background');
    assert.equal(after.native,initial.native,'Native currency save must remain unchanged');
    assert.equal(after.ownership,initial.ownership,'Native wheel ownership must remain unchanged');
