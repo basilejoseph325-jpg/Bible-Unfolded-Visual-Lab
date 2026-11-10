@@ -82,3 +82,62 @@
 @media(max-height:460px){#bu-boost-popover [data-power-act]{min-height:39px;padding:6px 9px}
  .bu-boost-lens-message{padding:10px 15px}.bu-boost-lens-message strong{font-size:36px}}
 @media(prefers-reduced-motion:reduce){#bu-native-boosters *,#bu-boost-celebration *,#bu-boost-popover *,#bu-boost-story-launch,#bu-boost-trivia-launch{animation:none!important;transition:none!important}}
+
+
+/* Visual Lab 2026-11-10: Boost icon, same approved metallic family as Bible/Hint/Eye.
+ * Root cause: the native Trivia toolbar hides button text (color:transparent,
+ * font-size:0) and shows glyphs through ::before. Boost had NO icon artwork,
+ * so its emoji was invisible and only faint tiny text remained.
+ * Keep the exact original Boost click handler and accessible label. */
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools {
+  display:grid!important;
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  align-items:stretch!important;
+  gap:clamp(3px,1vw,6px)!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button,
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > span {
+  box-sizing:border-box!important;
+  width:100%!important;
+  min-width:0!important;
+  max-width:100%!important;
+  margin:0!important;
+  grid-column:auto!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button#bu-boost-trivia-launch {
+  --bu-trivia-tool-art:url("assets/ui/trivia-gold-boost-v1.svg?v=20261110");
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  padding:3px 1px!important;
+  min-height:45px!important;
+  border:1.5px solid #cda76c!important;
+  border-radius:12px!important;
+  background:linear-gradient(150deg,#1c4d56,#082f3d 80%)!important;
+  color:transparent!important;
+  font-size:0!important;
+  box-shadow:inset 0 1px rgba(255,235,188,.30),0 3px 5px #00111c80!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button#bu-boost-trivia-launch::before {
+  content:""!important;
+  display:block!important;
+  flex:none!important;
+  width:clamp(29px,7.8vw,39px)!important;
+  height:clamp(29px,7.8vw,39px)!important;
+  background:transparent url("assets/ui/trivia-gold-boost-v1.svg?v=20261110") center/contain no-repeat!important;
+  filter:drop-shadow(0 1px 1px rgba(0,9,17,.7))
+         drop-shadow(0 0 2px rgba(245,182,62,.25))!important;
+  pointer-events:none!important;
+}
+#bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button#bu-boost-trivia-launch.armed {
+  border-color:#ffe9b0!important;
+  box-shadow:inset 0 1px #fff4c2,0 0 13px rgba(245,205,127,.76)!important;
+}
+@media(max-width:345px) {
+ #bu34-trivia #bu34-body.bu65-playing .bu3918-tools {
+  gap:2px!important;padding:3px!important;
+ }
+ #bu34-trivia #bu34-body.bu65-playing .bu3918-tools > button#bu-boost-trivia-launch{
+  padding:2px 0!important;
+ }
+}
