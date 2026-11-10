@@ -107,13 +107,17 @@ const executablePath=execSync('command -v google-chrome || command -v chromium',
       {timeout:12000});
   console.log('LEVEL_FINISHED_WITH_REAL_VOICE_ACTIVE',JSON.stringify(last));
   await page.waitForFunction(()=>window.__voiceDiag.results.some(x=>x.phrase==='chapter_complete'&&x.returned===true),
-      {timeout:22500});
+      {timeout:6000});
+  await page.waitForFunction(()=>window.__voiceDiag.audioHistory.filter(x=>x.tag==='AUDIO'&&x.resolved==='yes').length>=3,
+      {timeout:6000});
   const completed=await page.evaluate(()=>{
    const d=window.__voiceDiag;
-   return {ended:d.results.filter(x=>x.phrase==='chapter_complete'),audioStarts:d.audioHistory.length};
+   return {ended:d.results.filter(x=>x.phrase==='chapter_complete'),audioStarts:d.audioHistory.length,
+     acceptedAudio:d.audioHistory.filter(x=>x.tag==='AUDIO'&&x.resolved==='yes').length};
   });
   console.log('REAL_COMPLETION_RECORDING_NOT_LOST',JSON.stringify(completed));
   assert(completed.ended.some(x=>x.returned===true));
+  assert(completed.ended.at(-1).at-completed.ended[0].at<1000,'Completion must not wait a new 12-second cooldown');
 
   // Turn off original announcer, then reset the board voice session.
   // Neither a queued retry nor an existing clip may disregard native Off.
@@ -124,10 +128,11 @@ const executablePath=execSync('command -v google-chrome || command -v chromium',
    child.BUWTAnnouncer.resetProgress();
    const before=window.__voiceDiag.results.length;
    const request=child.BUWTAnnouncer.progress();
-   return {request,before,mode:child.BUWTAnnouncer.getMode(),after:window.__voiceDiag.results.length};
+   const completion=child.BUWTAnnouncer.play('chapter_complete',{milestone:true,queueIfBlocked:true});
+   return {request,completion,before,mode:child.BUWTAnnouncer.getMode(),after:window.__voiceDiag.results.length};
   });
   await new Promise(r=>setTimeout(r,1600));
-  assert.equal(disabled.mode,'off');assert.equal(disabled.request,false);
+  assert.equal(disabled.mode,'off');assert.equal(disabled.request,false);assert.equal(disabled.completion,false);
   assert.equal(disabled.before,disabled.after);
   assert.equal(await page.evaluate(()=>window.__voiceDiag.results.length),disabled.before);
   console.log('ORIGINAL_OFF_SETTING_PRESERVED',JSON.stringify(disabled));
