@@ -1,0 +1,44 @@
+name: QA Treasure Quest V2 TEST Bonus Game
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-treasure-quest-v2.yml'
+      - 'daily-treasure-quest-test-v2.css'
+      - 'daily-treasure-quest-test-v2.js'
+      - 'scripts/qa_treasure_quest_v2.cjs'
+      - 'visual-lab-test-banner.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check syntax, source assets and test-only loader
+        run: |
+          set -euo pipefail
+          node --check daily-treasure-quest-test-v2.js
+          node --check visual-lab-test-banner.js
+          node --check scripts/qa_treasure_quest_v2.cjs
+          grep -q 'bu-treasure-quest-v2-loader' visual-lab-test-banner.js
+          grep -q 'bu-treasure-quest-v2-test-only' daily-treasure-quest-test-v2.js
+          test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
+          test -f journey-art/06_the_messiah.webp
+          test -f journey-art/01_the_beginning.webp
+          test -f journey-art/02_faith_promises.webp
+          test -f journey-art/03_deliverance.webp
+      - name: Interactive mobile browser test — portrait and landscape
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-treasure-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8897 --bind 127.0.0.1 >/tmp/bu-treasure-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-treasure-qa/node_modules node scripts/qa_treasure_quest_v2.cjs
+      - name: Save actual test-phone screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: treasure-quest-v2-phone-previews
+          path: /tmp/BUTreasure-V2-*.png
+          if-no-files-found: ignore
