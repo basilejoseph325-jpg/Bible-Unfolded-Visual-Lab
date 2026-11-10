@@ -78,9 +78,16 @@ async function inject(page){
    }));
    console.log('INSIGHT_SHARE_'+v.width,JSON.stringify(share));
    assert.equal(share.tab,'share');assert(share.title.includes('Worth Sharing'));
-   assert(share.sections.length===5&&share.statements.every(x=>x.length>35));
+   assert(share.sections.length===3&&share.statements.every(x=>x.length>35));
    assert(share.jwLinks.length>0&&share.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
    assert.equal(share.quiz,0);
+   const shareLayout=await page.evaluate(()=>{
+     const view=document.getElementById('bu375-body').getBoundingClientRect();
+     const cards=[...document.querySelectorAll('#bu375-body .bu-insight-conversation')].map(e=>{const r=e.getBoundingClientRect();return {y:r.y,bottom:r.bottom}});
+     return {viewport:view,firstIdea:cards[0],secondIdea:cards[1]};
+   });
+   console.log('INSIGHT_SHARE_LAYOUT_'+v.width,JSON.stringify(shareLayout));
+   assert(shareLayout.firstIdea.y>=0&&shareLayout.firstIdea.y<v.height,'The first sharing idea must appear without scrolling');
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-share.png'});
    await page.evaluate(()=>document.querySelector('[data-insight-tab=today]').click());
    await page.evaluate(()=>document.querySelector('[data-insight-action=save]').click());
