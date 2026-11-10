@@ -4,6 +4,10 @@ on:
     paths:
       - '.github/workflows/qa-word-trails-real-voice.yml'
       - 'scripts/word_trails_real_voice_diagnostic.cjs'
+      - 'experiments/word-trails-announcer-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+      - 'word-trails-native-shell-v1.js'
 permissions: {contents: read}
 jobs:
   actual-recordings:
