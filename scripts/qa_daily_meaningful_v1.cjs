@@ -147,7 +147,7 @@ async function inject(page){
   const artPool=await p.evaluate(()=>window.BUDailyDiscoveryImagePool);
   assert.equal(artPool.length,8,'Curated image pool is a fixed reusable set');
   assert.equal(new Set(artPool).size,artPool.length,'All images in the pool are distinct');
-  assert(artPool.every(path=>/^(?:daily-discovery-hero\\.webp|journey-art\\/.+\\.webp)$/.test(path)),
+  assert(artPool.every(path=>path==='daily-discovery-hero.webp' || (path.startsWith('journey-art/')&&path.endsWith('.webp'))),
    'Images must be local repository assets, not remote one-off photos');
   const assetHealth=await p.evaluate(()=>Promise.all(window.BUDailyDiscoveryImagePool.map(src=>new Promise(resolve=>{
     const img=new Image();img.onload=()=>resolve({src,ok:true});
