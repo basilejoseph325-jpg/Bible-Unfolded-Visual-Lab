@@ -1,0 +1,56 @@
+name: Inspect Trivia and Story booster position geometry
+on:
+  push:
+    paths: ['.github/workflows/inspect-boost-gameplay-geometry.yml']
+permissions: {contents: read}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Report native clue/answer selectors and sizes only
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/boostloc puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8890 --bind 127.0.0.1 >/dev/null 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/boostloc/node_modules node <<'JS'
+          const p=require('puppeteer-core'),{execSync}=require('child_process');
+          (async()=>{let browser;try{
+           browser=await p.launch({headless:true,executablePath:execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim(),args:['--no-sandbox']});
+           for(const [w,h] of [[390,705],[832,384]]){
+            const context=await browser.createBrowserContext();const page=await context.newPage();
+            await page.setViewport({width:w,height:h,isMobile:true,hasTouch:true});
+            await page.goto('http://127.0.0.1:8890/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+            await page.waitForSelector('#home-trivia',{timeout:60000});
+            await page.evaluate(()=>{bu34Start('quick');document.getElementById('bu34-trivia').hidden=false;document.getElementById('home').hidden=true;});
+            console.log('TRIVIA_GEOMETRY_'+w,JSON.stringify(await page.evaluate(()=>{
+              const ls=['#bu34-trivia','#bu34-body','#bu383-hint','#bu383-info','#bu34-body [data-answer]','#bu34-body [data-answer] ~ button'];
+              return ls.map(sel=>{const e=document.querySelector(sel);if(!e)return{sel};const r=e.getBoundingClientRect(),p=e.parentElement,st=getComputedStyle(p);return{sel,id:e.id,parent:p.className,flex:st.display,position:st.position,rect:[r.x,r.y,r.width,r.height],parentHTML:p.outerHTML.slice(0,900)}})
+            })));
+            await page.evaluate(()=>{document.getElementById('bu34-trivia').hidden=true;focusHome();document.getElementById('home-story').click()});
+            await new Promise(r=>setTimeout(r,200));
+            console.log('STORY_GEOMETRY_'+w,JSON.stringify(await page.evaluate(()=>({
+             active:[...document.querySelectorAll('.screen')].filter(x=>!x.hidden).map(x=>x.id),
+             clue:document.querySelector('#play')?.textContent.slice(0,260),
+             globals:Object.fromEntries(['mode','activeBook','stage','storyBeats','STORY','STORY_BEATS','STORY_RIDDLES','bu3857Current','bu3857State'].map(k=>{try{const v=eval(k);return[k,typeof v==='object'?JSON.stringify(v).slice(0,450):String(v).slice(0,450)]}catch(e){return[k,e.message]}})),
+             actionButtons:[...document.querySelectorAll('#play button')].filter(x=>x.getBoundingClientRect().width>0).map(x=>({id:x.id,text:x.textContent.slice(0,35),rect:(()=>{const r=x.getBoundingClientRect();return [r.x,r.y,r.width,r.height]})()})).slice(0,18)
+            }))));
+            await context.close();
+           }
+          }catch(e){console.log('FAIL',e.stack);process.exitCode=1}finally{await browser?.close()}})();
+          JS
+      - name: Exact source around current Story hint and answer
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=''
+          for i in range(1,6):
+            d=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',d)
+            if m:s+=json.loads(m.group(1))
+          for v in ['function storyHint(beat)','function storyScene','function stageBeat','function bu34Choose','let bu34Quiz','function bu3857Current','function bu3857Render','function bu34Start','function openStory']:
+            i=s.find(v);print('SOURCE',v,i,repr(s[max(0,i-400):i+1100] if i>=0 else ''))
+          PY
