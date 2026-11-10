@@ -25,7 +25,7 @@ const PRODUCTS=Object.freeze([
 const BY_ID=Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
 function safeRaw(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(_){return null}}
 function nativeCoins(){try{const n=JSON.parse(localStorage.getItem(NATIVE_WALLET)||'null')?.coins;return Number.isSafeInteger(n)&&n>=0?n:0}catch(_){return 0}}
-const base=()=>({v:1,balance:Math.max(300,Math.min(900,nativeCoins())),lives:5,refillAt:0,pot:0,chain:0,best:0,totalCorrect:0,
+const base=()=>({v:1,balance:Math.max(500,Math.min(900,nativeCoins())),lives:5,refillAt:0,pot:0,chain:0,best:0,totalCorrect:0,
  owned:[],profile:null,insurance:0,mastery:{active:false,progress:0,awarded:[]},achievements:[],
  history:[],recentDay:'',created:Date.now()});
 const saneInt=(v,max=1e8)=>Number.isSafeInteger(v)&&v>=0&&v<=max;
