@@ -128,11 +128,21 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       native:window.BUWTNativeShell.active(),menu:!!document.querySelector('#game-menu')}));
     console.log('PUBLISHED_DIRECT_LINK_REAL_NATIVE_HOST',JSON.stringify(link));
     assert(link.native&&link.menu&&link.hash==='#word-trails'&&!link.query.includes('wt_launch'));
+    // The owner wants browser Refresh to go HOME even if Word Trails was open.
+    // Progress remains in localStorage; only the route is reset.
+    const saved=await deep.evaluate(()=>localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
     await deep.reload({waitUntil:'domcontentloaded',timeout:120000});
-    await deep.waitForFunction(()=>window.BUWTNativeShell?.active?.() &&
-      document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
-    console.log('ACTIVE_WORD_TRAILS_REFRESH_RESUMES_NATIVE_HOST',await deep.evaluate(()=>location.href));
-    await deep.evaluate(()=>window.BUWTNativeShell.close());
+    await deep.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&!window.BUWTNativeShell.active(),{timeout:60000});
+    const afterRefresh=await deep.evaluate(()=>({url:location.href,hash:location.hash,
+      home:!document.getElementById('home').hidden,
+      saved:localStorage.getItem('bu-visual-lab-wordtrails-next-v1')}));
+    assert(afterRefresh.home&&afterRefresh.hash==='');
+    assert.equal(afterRefresh.saved,saved);
+    console.log('ACTIVE_WORD_TRAILS_REFRESH_RETURNS_HOME',JSON.stringify({url:afterRefresh.url,home:afterRefresh.home}));
+    await deep.evaluate(()=>document.getElementById('home-cross').click());
+    await deep.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
+    await deep.evaluate(()=>document.getElementById('bu-wt-native-game').contentWindow.document.querySelector('#app .back').click());
+    await deep.waitForFunction(()=>!window.BUWTNativeShell.active());
     await deep.reload({waitUntil:'domcontentloaded',timeout:120000});
     await deep.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.(),{timeout:60000});
     assert.equal(await deep.evaluate(()=>window.BUWTNativeShell.active()),false);
