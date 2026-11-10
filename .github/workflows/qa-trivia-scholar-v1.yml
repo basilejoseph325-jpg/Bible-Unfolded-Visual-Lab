@@ -78,7 +78,9 @@ jobs:
           assert len(photograph)>600000 and photograph[:3]==bytes([255,216,255])
           v4=Path('trivia-photo-stone-tablets-v4.css').read_text()
           assert v4.count('{')==v4.count('}')
-          assert v4.count('--stone-y:')==5\n          assert 'content:none!important;display:none!important' in v4\n          assert 'background-blend-mode:normal,multiply!important' in v4
+          assert v4.count('--stone-y:')==5
+          assert 'content:none!important;display:none!important' in v4
+          assert 'background-blend-mode:normal,multiply!important' in v4
           assert 'trivia-real-rock-v4.jpg?v=1' in v4
           assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
           assert 'pointer-events:none!important' in v4
