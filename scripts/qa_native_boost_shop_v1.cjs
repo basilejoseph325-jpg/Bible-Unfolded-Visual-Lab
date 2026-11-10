@@ -69,6 +69,33 @@ async function state(page){return page.evaluate((keys)=>({
     });
     console.log('BOOST_TRIVIA_LAYOUT_'+viewport.width,JSON.stringify(layout));
     assert(layout.button.w>=30&&layout.button.h>=25);
+    // This is an icon-only gold toolbar control, not invisible BOOST lettering.
+    // It must fit ON THE SAME ROW as the other 3 controls and the progress count.
+    const boosted=await page.evaluate(async()=>{
+      const toolbar=document.querySelector('#bu34-body .bu3918-tools');
+      const boost=document.getElementById('bu-boost-trivia-launch');
+      const items=[...toolbar.children].filter(e=>e.tagName==='BUTTON'||e.tagName==='SPAN');
+      const positions=items.map(e=>{const r=e.getBoundingClientRect();return{id:e.id,x:r.x,y:r.y,w:r.width,h:r.height}});
+      const pseudo=getComputedStyle(boost,'::before');
+      const loaded=await new Promise(resolve=>{
+       const img=new Image();img.onload=()=>resolve([img.naturalWidth,img.naturalHeight]);
+       img.onerror=()=>resolve(null);img.src='assets/ui/trivia-gold-boost-v1.svg?v=20261110';
+      });
+      return {aria:boost.getAttribute('aria-label'),text:boost.textContent.trim(),
+       icon:pseudo.backgroundImage,iconSize:[pseudo.width,pseudo.height],
+       loaded,positions,toolbarWidth:toolbar.getBoundingClientRect().width,
+       overflow:document.documentElement.scrollWidth-innerWidth};
+    });
+    console.log('BOOST_GOLD_ICON_'+viewport.width,JSON.stringify(boosted));
+    assert.equal(boosted.aria,'Open Trivia power-ups');
+    assert.equal(boosted.text,'','Boost must be a true icon, not unreadable text');
+    assert(boosted.icon.includes('trivia-gold-boost-v1.svg'),'Boost icon must appear in actual computed CSS');
+    assert(boosted.loaded&&boosted.loaded[0]===64&&boosted.loaded[1]===64,'Metallic Boost artwork did not load');
+    assert.equal(boosted.positions.length,5,'Trivia toolbar must contain three native icons, Boost and count');
+    assert.equal(new Set(boosted.positions.map(x=>Math.round(x.y))).size,1,'All five Trivia tools must share one row');
+    assert(boosted.positions.every(x=>x.w>=45&&x.h>=35),'All tools must retain comfortable touch areas');
+    assert(boosted.positions.every(x=>x.x>=-1&&x.x+x.w<=viewport.width+1),'Toolbar item exceeds mobile viewport');
+    await page.screenshot({path:'/tmp/BU-NATIVE-BOOST-'+viewport.width+'-gold-toolbar.png'});
     await page.evaluate(()=>document.querySelector('#bu-boost-trivia-launch').click());
     await page.waitForSelector('#bu-boost-popover [data-power-act=fifty]');
     await page.screenshot({path:'/tmp/BU-NATIVE-BOOST-'+viewport.width+'-trivia.png'});
