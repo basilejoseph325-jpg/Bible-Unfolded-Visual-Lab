@@ -33,8 +33,8 @@ jobs:
           assert "addEventListener('pointerdown'" in js and 'passive:true' in js
           assert not any(t in js for t in ('preventDefault(', 'stopPropagation(', '.click()', 'dispatchEvent(', 'innerHTML', 'replaceWith'))
           assert 'trivia-stone-press-v1.css?v=' in loader and 'trivia-stone-press-v1.js?v=' in loader
-          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in loader
-          assert v4.count('trivia-real-rock-v4.jpg?v=1')==1
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5' in loader
+          assert v4.count('trivia-real-rock-v4.jpg?v=1')==2
           assert '#bu383-score' in v4 and 'flex:0 0 clamp(27px,3dvh,31px)' in v4
           print('PASS scoped press, judged colors, V4 photo and footer preserved')
           PY
