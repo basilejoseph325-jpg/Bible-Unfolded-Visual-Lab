@@ -71,7 +71,7 @@ async function inject(page){
    const share=await page.evaluate(()=>({
     tab:window.BUDailyInsightV1.inspect().tab,
     title:document.querySelector('#bu375-body .bu-insight-share-banner h3')?.textContent,
-    sections:[...document.querySelectorAll('#bu375-body .bu-insight-conversation h3')].map(x=>x.textContent),
+    sections:[...document.querySelectorAll('#bu375-body .bu-insight-conversation .number')].map(x=>x.textContent),
     statements:[...document.querySelectorAll('#bu375-body .bu-insight-conversation p')].map(x=>x.textContent),
     jwLinks:[...document.querySelectorAll('#bu375-body a')].map(x=>x.href),
     quiz:document.querySelectorAll('#bu375-body [data-bu375-answer]').length
