@@ -52,6 +52,23 @@ jobs:
              globalkeys:Object.keys(window).filter(x=>/trivia|quiz|daily|rewards/i.test(x)).slice(0,65)
             }));
             console.log('TRIVIA_GLOBALS',JSON.stringify(test));
+
+            console.log('SCREEN_GLOBALS',JSON.stringify(await page.evaluate(()=>{
+              const funcs=['bu34Quiz','bu34Draw','bu34Start','bu3857Current','bu3857State','BU_HQ_WORDS','economy','canSpend','BUTriviaQuestionView'];
+              return Object.fromEntries(funcs.map(k=>{try{return [k,eval('typeof '+k)]}catch(e){return [k,'ERR:'+e.message]}}));
+            })));
+            await page.evaluate(()=>{window.focusHome?.();const cards=[...document.querySelectorAll('#home .cinematic-cards button')];console.log('');});
+            console.log('HOME_CARD_IDS',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('#home .cinematic-cards button')].map(x=>({id:x.id,txt:x.textContent.slice(0,95)})))));
+            await page.evaluate(()=>document.getElementById('home-rewards').click());
+            await new Promise(r=>setTimeout(r,150));
+            await page.evaluate(()=>{window.bu34Start?.('quick')});
+            console.log('QUIZ_STATE',JSON.stringify(await page.evaluate(()=>{
+              const b=document.querySelector('#bu34-trivia');
+              return {active:!b.hidden,quiz:typeof bu34Quiz!=='undefined'?{step:bu34Quiz?.step,q:bu34Quiz?.items?.[0]?.q,
+                correct:bu34Quiz?.items?.[0]?.correct,choices:bu34Quiz?.items?.[0]?.choices}:null,
+                buttons:[...b.querySelectorAll('button')].slice(0,16).map(x=>({id:x.id,txt:x.textContent.slice(0,80),answer:x.getAttribute('data-answer'),html:x.outerHTML.slice(0,280)}))};
+            })));
+
            }catch(e){console.error('AUDIT_FAILED',e.stack);process.exitCode=1}
            finally{await browser?.close()}
           })();
