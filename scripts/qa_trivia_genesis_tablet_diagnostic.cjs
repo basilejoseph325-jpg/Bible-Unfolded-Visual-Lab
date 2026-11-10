@@ -35,5 +35,21 @@ const p=require('puppeteer-core'),{execSync}=require('child_process');
    if(!m)return resolve({error:'no-image'});const img=new Image();img.onload=()=>resolve({src:m[1],size:[img.naturalWidth,img.naturalHeight],ok:true});img.onerror=()=>resolve({src:m[1],error:true});img.src=m[1];
   }));
   console.log('DIAG_IMAGE',JSON.stringify(image));
+  const deeper=await page.evaluate(async()=>{
+   const fns={};for(const k of ['bu34Start','bu34Draw','bu34Choose','bu34Next','bu34RenderHome']){try{fns[k]=window[k]?.toString().slice(0,4800)}catch(e){fns[k]=String(e)}}
+   const globalNames=Object.keys(window).filter(x=>/BU_HQ|CREATION|TRIVIA|QUESTION|QUESTIONS|TOPIC|BANK|ITEMS|PACK/i.test(x)).slice(0,90);
+   const b=document.querySelector('#bu34-body [data-answer="3"]'),r=b.getBoundingClientRect();
+   const url=getComputedStyle(b,'::before').backgroundImage.match(/url\(["']?([^"')]+)/)?.[1];const img=new Image();img.src=url;await img.decode();
+   const widths=[r.width,r.height];const size=r.width,pos=[0,.33,.67,1];const stats=[];
+   for(const x of pos){
+    const c=document.createElement('canvas');c.width=widths[0];c.height=widths[1];const ctx=c.getContext('2d',{willReadFrequently:true});
+    ctx.drawImage(img,0,-(size-r.height)*x,size,size);
+    const pixels=ctx.getImageData(0,0,c.width,c.height).data;let avg=0,q=0,n=0;
+    for(let i=0;i<pixels.length;i+=16){const v=(pixels[i]+pixels[i+1]+pixels[i+2])/3;avg+=v;q+=v*v;n++}
+    avg/=n;stats.push({pos:x,mean:Math.round(avg),standardDeviation:Math.round(Math.sqrt(q/n-avg*avg))});
+   }
+   return {fns,globalNames,photoCropStats:stats};
+  });
+  console.log('DIAG_DEEP',JSON.stringify(deeper).slice(0,27000));
  }finally{await browser.close()}
 })();
