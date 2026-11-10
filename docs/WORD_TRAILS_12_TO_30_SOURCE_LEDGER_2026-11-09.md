@@ -91,3 +91,15 @@ This record identifies every Bible crossword and hidden-discovery item in levels
 
 ## November 9: repetitive-discovery revisions
 Fourteen new-level entries were revised using targeted New World Translation passages to present different angles on repeated answer words. No answer word, rack, crossword layout, reward amount, or progress key changed. These entries remain **pending independent human editorial signoff**, as do the other new-level items. Structural, URL, and gameplay tests must pass separately; do not treat source checks as proof of human signoff.
+
+## November 9: remaining editorial risk shortlist — do not mark LIVE-approved
+The following new-level items are **structurally playable** but appear weaker under the permanent source-first educational-content standard. These are editorial review flags, **not declarations that their Bible citations are false**, and have intentionally not been changed without a better source-first answer and any necessary rack/board design review:
+
+- **Level 15 · extra `SHE`:** a pronoun for Hannah tests grammar, not Bible knowledge. Replacing the target may require a rack/bonus/board redesign; do not force an artificial verse connection merely to keep a three-letter word.
+- **Level 25 · extra `GLEE`:** a synonym for happiness rather than a distinctive scriptural discovery from Psalm 126:2. Seek a more meaningful answer and verify it in the NWT.
+- **Level 14 · extra `DEN`:** Daniel 6:16 uses a pit of lions; "den" is a familiar synonym, but the current discovery adds little beyond general vocabulary.
+- **Level 23 · extra `NOISE`:** Acts 2:6 describes a sound drawing a crowd. The word "noise" is a broad paraphrase; verify whether another answer offers better insight.
+- **Level 12 · spark `SUE`:** Matthew 5:40 speaks about a person taking someone to court to obtain their garment; "sue" is plausible English but may be too thin as a Bible discovery without more context.
+- **Level 18 · extra `HEAL`:** 2 Kings 5:14 says Naaman became clean after following instructions. The current "What happened" clue points toward "was healed" rather than the infinitive "HEAL"; improve grammatical fit or choose another genuinely biblical angle.
+
+Before changing any target answer, preserve its level ID and existing purchases/progress, review rack feasibility and collisions, update the per-item ledger, and rerun full 30-level and mobile-browser QA. **Do not claim all 77 new-level Scripture items have independent human editorial approval** merely because 14 repeated clues were source-checked and revised.
