@@ -78,7 +78,7 @@ jobs:
           assert len(photograph)>600000 and photograph[:3]==bytes([255,216,255])
           v4=Path('trivia-photo-stone-tablets-v4.css').read_text()
           assert v4.count('{')==v4.count('}')
-          assert v4.count('--stone-y:')==4
+          assert v4.count('--stone-y:')==5\n          assert 'content:none!important;display:none!important' in v4\n          assert 'background-blend-mode:normal,multiply!important' in v4
           assert 'trivia-real-rock-v4.jpg?v=1' in v4
           assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
           assert 'pointer-events:none!important' in v4
@@ -86,10 +86,10 @@ jobs:
           assert '#bu34-body.bu65-playing > .bu34-question #bu383-score' in v4
           assert 'flex:0 0 clamp(27px,3dvh,31px)!important' in v4
           assert 'padding:8px 2px 0!important' in v4
-          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance' in l
-          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4' not in l.replace('trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4-footer-clearance','')
-          assert v4.count('trivia-real-rock-v4.jpg?v=1')==1
-          assert v4.count('--stone-y:')==4
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5' in l
+          assert 'trivia-photo-stone-tablets-v4.css?v=20261105-realstone-v4' not in l.replace('trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5','')
+          assert v4.count('trivia-real-rock-v4.jpg?v=1')==2
+          assert v4.count('--stone-y:')==5
           assert '.correct:disabled' in v4 and '.wrong:disabled' in v4
           print('PASS: four unique Trivia stone pieces, no old texture in loader, states preserved')
           PY
