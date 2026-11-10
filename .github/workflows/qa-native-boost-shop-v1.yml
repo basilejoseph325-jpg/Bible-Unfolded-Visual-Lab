@@ -1,0 +1,40 @@
+name: QA Native Power-Up Rewards TEST Integration
+on:
+  push:
+    paths:
+      - 'native-boost-shop-test-v1.js'
+      - 'native-boost-shop-test-v1.css'
+      - 'scripts/qa_native_boost_shop_v1.cjs'
+      - 'visual-lab-test-banner.js'
+      - '.github/workflows/qa-native-boost-shop-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate native source and isolated test-only economy
+        run: |
+          set -euo pipefail
+          node --check native-boost-shop-test-v1.js
+          node --check visual-lab-test-banner.js
+          node --check scripts/qa_native_boost_shop_v1.cjs
+          grep -q 'bu-native-boost-shop-v1-test-only' native-boost-shop-test-v1.js
+          test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
+          test -f journey-art/07_good_news_spreads.webp
+      - name: Actual mobile browser QA on Rewards, Trivia and Story
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-native-boost-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-native-boost-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-native-boost-qa/node_modules node scripts/qa_native_boost_shop_v1.cjs
+      - name: Save TEST screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-boost-shop-v1-mobile-screenshots
+          path: /tmp/BU-NATIVE-BOOST-*.png
+          if-no-files-found: ignore
