@@ -17,13 +17,43 @@ if(window.BUDailyInsightV1)return;
 const KEY='bu-daily-insight-test-v1';
 const Q=new URLSearchParams(location.search);
 const DATA=()=>window.BUDailyDiscoveryLibrary||[];
-// Optional illustrated-book proof of concept. Never alters the 30 source items,
-// their IDs, daily scheduling, saved progress, or the approved default layout.
-// Only the three specifically researched scene settings have custom artwork.
+// TEST only: a curated historical illustration for every existing lesson.
+// The first three are purpose-made realistic scene reconstructions. Other items
+// deliberately REUSE named art already present in the repository and are marked
+// 'Thematic illustration', never represented as the literal Bible event.
+// This is an editorial visual pilot: no lesson text, IDs, wallet, or saves change.
+const BOOK_ORIGINALS=new Set(['peter','nile','ruth']);
 const BOOK_SCENES=Object.freeze({
- peter:'assets/daily-book/peter-fishing.webp',
  nile:'assets/daily-book/nile-farmland.webp',
- ruth:'assets/daily-book/ruth-harvest.webp'
+ peter:'assets/daily-book/peter-fishing.webp',
+ 'early-students':'scholar-research-assets/witness-history.webp',
+ gleaning:'assets/daily-book/ruth-harvest.webp',
+ 'naaman-girl':'family-worship-menu-art/v1/topic-19-elisha.webp',
+ stars:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
+ radio:'scholar-research-assets/witness-history.webp',
+ philip:'journey-art/07_good_news_spreads.webp',
+ ruth:'assets/daily-book/ruth-harvest.webp',
+ joseph:'assets/daily-book/nile-farmland.webp',
+ samaritan:'family-worship-menu-art/v1/topic-23-jesus-illustrations.webp',
+ bereans:'journey-art/07_good_news_spreads.webp',
+ mustard:'family-worship-menu-art/v1/topic-23-jesus-illustrations.webp',
+ ezra:'journey-art/05_exile_return.webp',
+ 'paul-work':'family-worship-menu-art/v1/topic-26-paul-timothy.webp',
+ tears:'family-worship-menu-art/v1/topic-30-psalms.webp',
+ well:'family-worship-menu-art/v1/topic-38-jesus-ministry.webp',
+ abigail:'family-worship-menu-art/v1/topic-16-david.webp',
+ 'hezekiah-water':'journey-art/05_exile_return.webp',
+ 'jeremiah-field':'journey-art/05_exile_return.webp',
+ 'dorcas-clothes':'journey-art/07_good_news_spreads.webp',
+ 'lydia-purple':'journey-art/07_good_news_spreads.webp',
+ 'widow-coins':'family-worship-menu-art/v1/topic-23-jesus-illustrations.webp',
+ 'rahab-cord':'family-worship-menu-art/v1/topic-13-joshua-jericho.webp',
+ 'widow-oil':'family-worship-menu-art/v1/topic-19-elisha.webp',
+ 'nehemiah-builders':'family-worship-menu-art/v1/topic-29-nehemiah.webp',
+ 'paul-storm':'family-worship-menu-art/v1/topic-26-paul-timothy.webp',
+ sparrows:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
+ 'baruch-scroll':'journey-art/05_exile_return.webp',
+ 'amos-work':'assets/daily-book/ruth-harvest.webp'
 });
 const bookImage=x=>x&&Q.get('daily_book')==='1'?BOOK_SCENES[x.id]||null:null;
 const artFor=x=>bookImage(x)||x?.art||fallbackArt(x);
@@ -98,13 +128,17 @@ function bookPreviewPicker(){
  '<span class="bu-book-preview-caption">Explore the illustrations</span>'+
  '<div class="bu-book-preview-options">'+chapters.map(([id,label])=>
  '<button type="button" data-insight-preview="'+id+'" aria-pressed="'+String(item()?.id===id)+'">'+label+'</button>'
- ).join('')+'</div></nav>';
+ ).join('')+'</div>'+
+ '<label class="bu-book-select-label"><span>All 30 discoveries</span><select data-insight-book-select aria-label="Browse all 30 discoveries">'+
+ DATA().map((x,i)=>'<option value="'+escapeHTML(x.id)+'"'+(x.id===item()?.id?' selected':'')+'>'+
+ String(i+1).padStart(2,'0')+' · '+escapeHTML(x.title)+'</option>').join('')+
+ '</select></label></nav>';
 }
 function cover(x,kicker,compact=false){
  const art=artFor(x);
  return '<header class="bu-insight-cover'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'" data-illustration="'+escapeHTML(x.id)+'"'+(art?' style="background-image:url(&quot;'+escapeHTML(art)+'&quot;)"':'')+'>'+
  '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
- (bookImage(x)?'<span class="bu-book-scene-label">Artist’s reconstruction</span>':'')+
+ (bookImage(x)?'<span class="bu-book-scene-label">'+(BOOK_ORIGINALS.has(x.id)?'Artist’s reconstruction':'Thematic illustration')+'</span>':'')+
  '<h2>'+escapeHTML(x.title)+'</h2>'+
  '<p>'+escapeHTML(x.subtitle)+'</p>'+
  '</header>';
@@ -325,25 +359,29 @@ async function copy(){
   showToast('Opening idea copied — make it your own!');
  }catch(_){showToast('Copy unavailable here. Long-press the text to copy it.');}
 }
+function chooseBookChapter(id){
+ if(Q.get('daily_book')!=='1'||!BOOK_SCENES[id]||!getItem(id))return false;
+ if(view.id===id&&view.tab==='today')return true;
+ tabChime();
+ Q.set('daily_preview',id);
+ try{history.replaceState(history.state,'',location.pathname+'?'+Q.toString()+location.hash)}catch(_){}
+ view.id=id;view.tab='today';view.fromSaved=false;view.preview=true;
+ display();
+ return true;
+}
+function changeBookSelector(e){
+ const select=e.target?.closest?.('[data-insight-book-select]');
+ if(!select||!view.open||Q.get('daily_book')!=='1')return;
+ e.stopImmediatePropagation();e.stopPropagation();
+ chooseBookChapter(select.value);
+}
 function captureDailyControlClick(e){
  const el=dailyControl(e.target);
  if(!el)return;
  e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
  const saved=el.closest('[data-insight-open]');
  const preview=el.closest('[data-insight-preview]');
- if(preview){
-  const id=preview.dataset.insightPreview;
-  if(Q.get('daily_book')!=='1'||!BOOK_SCENES[id]||!getItem(id))return;
-  if(view.id===id&&view.tab==='today')return;
-  tabChime();
-  Q.set('daily_preview',id);
-  // Do not reload: keep the main game audio, settings and saves in place.
-  // The browser URL now identifies the visible art after refresh.
-  try{history.replaceState(history.state,'',location.pathname+'?'+Q.toString()+location.hash)}catch(_){}
-  view.id=id;view.tab='today';view.fromSaved=false;view.preview=true;
-  display();
-  return;
- }
+ if(preview){chooseBookChapter(preview.dataset.insightPreview);return;}
  tabChime();
  if(saved){
   view.id=saved.dataset.insightOpen;
@@ -390,6 +428,7 @@ function boot(){
  window.addEventListener('click',captureSourceClick,true);
  window.addEventListener('click',captureTabClick,true);
  window.addEventListener('click',captureDailyControlClick,true);
+ window.addEventListener('change',changeBookSelector,true);
  document.addEventListener('click',click,true);
  const back=$('#bu375-back');
  if(back)back.addEventListener('click',close,false);
@@ -409,7 +448,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.1.1-test-book-gallery',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.2.0-test-book-30-curated',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
