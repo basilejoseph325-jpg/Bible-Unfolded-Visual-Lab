@@ -93,6 +93,7 @@ function cover(x,kicker,compact=false){
  const art=artFor(x);
  return '<header class="bu-insight-cover'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'" data-illustration="'+escapeHTML(x.id)+'"'+(art?' style="background-image:url(&quot;'+escapeHTML(art)+'&quot;)"':'')+'>'+
  '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
+ (bookImage(x)?'<span class="bu-book-scene-label">Artist’s reconstruction</span>':'')+
  '<h2>'+escapeHTML(x.title)+'</h2>'+
  '<p>'+escapeHTML(x.subtitle)+'</p>'+
  '</header>';
