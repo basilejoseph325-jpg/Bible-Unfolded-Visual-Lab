@@ -1,0 +1,34 @@
+name: QA new Daily Discovery articles on narrow and wide phones
+on:
+  push:
+    paths:
+      - 'scripts/qa_daily_new_previews_nov11.cjs'
+      - '.github/workflows/qa-daily-new-previews-nov11.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Static sanity test
+        run: |
+          set -e
+          node --check scripts/qa_daily_new_previews_nov11.cjs
+          node --check daily-discovery-insights-content-test-v1.js
+          node --check daily-discovery-meaningful-test-v1.js
+      - name: Render new editorial previews on 320, 390 and 832 wide phones
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-daily-new-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8892 --bind 127.0.0.1 >/tmp/bu-daily-new-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-daily-new-qa/node_modules node scripts/qa_daily_new_previews_nov11.cjs
+      - name: Upload preview screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-discovery-batch-19-30-preview
+          path: /tmp/BU-DAILY-NEW-*.png
+          if-no-files-found: ignore
