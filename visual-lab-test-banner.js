@@ -222,9 +222,19 @@ else install();
  if(location.pathname.includes('/experiments/'))return;
  if(document.getElementById('bu-james-return-loop-loader'))return;
  const css=document.createElement('link');css.id='bu-james-return-loop-style';css.rel='stylesheet';
- css.href='james-return-loop-test-v1.css?v=20261110-james-v1';
+ css.href='james-return-loop-test-v1.css?v=20261110-recover-life-v2';
  document.head.append(css);
  const script=document.createElement('script');script.id='bu-james-return-loop-loader';script.defer=true;
- script.src='james-return-loop-test-v1.js?v=20261110-james-v1';
+ script.src='james-return-loop-test-v1.js?v=20261110-recover-life-v2';
  document.head.append(script);
+})();
+
+/* Visual Lab only — compact Word Builder score / feedback repair, V1. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ if(document.getElementById('bu-wb-score-layout-test-v1'))return;
+ const l=document.createElement('link');
+ l.id='bu-wb-score-layout-test-v1';l.rel='stylesheet';
+ l.href='word-builder-score-layout-test-v1.css?v=20261110-wb-score-fix-v1';
+ document.head.appendChild(l);
 })();
