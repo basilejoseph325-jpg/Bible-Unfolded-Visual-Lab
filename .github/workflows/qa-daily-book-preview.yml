@@ -1,0 +1,40 @@
+name: QA Daily illustrated book preview — TEST Only
+on:
+  push:
+    paths:
+      - 'scripts/qa_daily_book_preview.cjs'
+      - 'daily-discovery-meaningful-test-v1.js'
+      - 'daily-discovery-meaningful-test-v1.css'
+      - 'assets/daily-book/**'
+      - '.github/workflows/qa-daily-book-preview.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  book-scenes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify art and syntax
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_daily_book_preview.cjs
+          node --check daily-discovery-meaningful-test-v1.js
+          test -f assets/daily-book/peter-fishing.webp
+          test -f assets/daily-book/nile-farmland.webp
+          test -f assets/daily-book/ruth-harvest.webp
+          file assets/daily-book/*.webp
+      - name: Render book and approved original on phone viewports
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-book-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-book-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-book-qa/node_modules node scripts/qa_daily_book_preview.cjs
+      - name: Export Peter Nile Ruth book screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: daily-book-preview-three-scenes
+          path: /tmp/BU-DAILY-BOOK-*.png
+          if-no-files-found: ignore
