@@ -253,7 +253,7 @@ function dailySourceLink(target){
  const a=target?.closest?.('#bu375-body.bu-insight-reading a[href]');
  if(!a)return null;
  // Never interfere with navigation outside our active Daily screen.
- return a.protocol==='https:'&&/^(?:www\\.)?jw\\.org$/i.test(a.hostname)?a:null;
+ return a.protocol==='https:'&&/^(?:www\.)?jw\.org$/i.test(a.hostname)?a:null;
 }
 function silenceNativeDailyPress(e){
  if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)))return;
