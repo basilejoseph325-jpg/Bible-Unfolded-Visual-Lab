@@ -1,0 +1,63 @@
+name: Inspect TEST Trivia lives and Word Builder UI source
+on:
+  push:
+    paths: ['.github/workflows/inspect-trivia-wb-layout-20261110.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract focused source evidence, no gameplay changes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          s=Path('index.html').read_text(encoding='utf-8',errors='replace')
+          parts=[]
+          for n in range(1,6):
+            p=Path(f'bible_unfolded_core_part{n}.js')
+            if p.exists():
+              v=p.read_text(errors='replace')
+              for m in re.finditer(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',v):
+                try:parts.append(json.loads(m.group(1)))
+                except:pass
+          sources={'index.html':s, 'decoded-core':''.join(parts)}
+          patterns={
+            'LIVES_DISPLAY':r'Out of lives|Next life in|Refill in the Rewards|no lives|lives left|life refill|refill life',
+            'LIVES_FUNCTION':r'function\s+[\w$]*(?:Lives|Life|Hearts|Refill|Heart)[\w$]*\s*\(|(?:lives|hearts)[A-Za-z_]*\s*[:=]|(?:life|heart|lives)[\w$]{0,30}Interval',
+            'LIVES_STORE':r'life.?refill|refill.?life|heart.?refill|refill.?heart|life.?timer|life.?regen|lifecap',
+            'WB_NAMES':r'Player 2|11 pts|KILNS|Letter challenge|Turn 2/12',
+            'WB_MARKUP':r'(?i)(?:id|class)=["\x27][^"\x27]{0,110}(?:wb36|wb-|player-score|scoreboard|toast|turn-info|last-play)[^"\x27]*["\x27]',
+            'WB_UI_STRINGS':r'\bpts\b|\bpts\b|\blastWord\b|\bstatusLine\b|\blastMove\b|\bscoreToast\b|\bwb36Toast\b',
+            'WB_GAME_CSS':r'(?i)(?:#wb36|\.wb36-|\.wb-)[^{]{0,160}\{[^}]{0,650}\}'
+          }
+          limits={'LIVES_DISPLAY':10,'LIVES_FUNCTION':22,'LIVES_STORE':16,'WB_NAMES':12,'WB_MARKUP':55,'WB_UI_STRINGS':25,'WB_GAME_CSS':75}
+          out=['# Diagnostic: Word Builder display / Trivia life controls','Index len: '+str(len(s)),'Decoded-core len: '+str(len(sources['decoded-core']))]
+          for group,pat in patterns.items():
+            for name,src in sources.items():
+              hits=list(re.finditer(pat,src,re.I))
+              out.append(f'\\n## {group} :: {name} :: hits={len(hits)}')
+              for hit in hits[:limits[group]]:
+                pad=1000 if group in ('LIVES_DISPLAY','WB_NAMES') else 400
+                a=max(0,hit.start()-pad);b=min(len(src),hit.end()+pad)
+                excerpt=src[a:b]
+                out.append(f'\\n### offset={hit.start()}\\n```text\\n'+excerpt+'\\n```')
+          dest=Path('.github/diagnostics/trivia-wb-20261110.md')
+          dest.parent.mkdir(parents=True,exist_ok=True)
+          # cap diagnostic to 170KB, avoiding checked-in massive core content
+          dest.write_text('\\n'.join(out)[:165000],encoding='utf-8')
+          print('Report length:',dest.stat().st_size)
+          PY
+      - name: Commit diagnostic for external review
+        shell: bash
+        run: |
+          set -e
+          git add .github/diagnostics/trivia-wb-20261110.md
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST diagnostics: inspect lives flow and Word Builder positioning"
+          git push origin HEAD:main
