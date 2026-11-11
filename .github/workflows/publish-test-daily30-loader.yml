@@ -1,0 +1,44 @@
+name: Publish TEST Daily 30 bootstrap cache refresh
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-test-daily30-loader.yml'
+      - '.github/scripts/bust_daily_30_loader_nov11.py'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check scripts and Daily Discovery data
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check daily-discovery-insights-content-test-v1.js
+          node --check scripts/qa_daily_meaningful_v1.cjs
+          node --check visual-lab-test-banner.js
+          node --check journey-progress-caption.js
+          grep -q '20261111-sourced-thoughts-30-v3' visual-lab-test-banner.js
+          grep -q '20261111-daily-30-v3' journey-progress-caption.js
+          python3 .github/scripts/bust_daily_30_loader_nov11.py
+          python3 - <<'PY'
+          from pathlib import Path
+          page=Path('index.html').read_text()
+          assert page.count('journey-progress-caption.js?v=20261111-source-verified-daily-30-v3')==1
+          data=Path('daily-discovery-insights-content-test-v1.js').read_text()
+          assert data.count("category:")==30 and data.count(" id:'")==30
+          for id_ in ('hezekiah-water','jeremiah-field','dorcas-clothes','lydia-purple','widow-coins','rahab-cord','widow-oil','nehemiah-builders','paul-storm','sparrows','baruch-scroll','amos-work'):
+            assert ("id:'"+id_+"'") in data
+          print('PASS: 30 sourced items and cache chain')
+          PY
+      - name: Commit isolated TEST page version change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add index.html
+          if git diff --cached --quiet; then echo 'Already current'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST: force current 30-day Daily Discovery JS on phones"
+          git push origin HEAD:main
