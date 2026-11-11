@@ -1,0 +1,55 @@
+name: Diagnose Word Builder score and message clipping in TEST
+on:
+  push:
+    paths: ['.github/workflows/inspect-word-builder-score-v1.yml']
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Snapshot exact UI classes and Word Builder renderer
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          h=Path('index.html').read_text(errors='replace')
+          d=''
+          for i in range(1,6):
+            src=Path(f'bible_unfolded_core_part{i}.js').read_text(errors='replace')
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\]\s*=\s*("(?:\\.|[^"\\])*");',src)
+            if m:d+=json.loads(m.group(1))
+          out=['# Word Builder exact source diagnostic']
+          for needle,back,forward in [
+            ('function wb36GameUI',200,5800),('function wb36Scores',0,360),
+            ('function wb36Play',150,850),
+            ('wb36Message=\`',300,550),('wb36Message?',300,550)
+          ]:
+            m=re.search(needle,d,re.I)
+            out.extend(['\\n## CORE '+needle,'NONE' if not m else d[max(0,m.start()-back):m.start()+forward]])
+          terms=['wb36-players','wb36-player','wb37-mini-players','wb37-scorebar',
+                 'wb39-wallet','wb36-message','wb36-msg','wb36-last',
+                 'wb36-status','wb36-foot','wb36-board','wb36-main','wb36-rack']
+          for name,src in [('index',h),('decoded',d)]:
+            for term in terms:
+              hits=list(re.finditer(re.escape(term),src))
+              out.append(f'\\n## CSS / HTML {name} {term}: count={len(hits)}')
+              for m in hits[:11]:
+                out.append(src[max(0,m.start()-100):m.end()+470])
+          p=Path('.github/diagnostics/wb-score-exact-v1.md')
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text('\\n--SNIP--\\n'.join(out)[:79000])
+          print('Wrote',p.stat().st_size)
+          PY
+      - name: Commit investigation report
+        shell: bash
+        run: |
+          set -e
+          git add .github/diagnostics/wb-score-exact-v1.md
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST diagnose Word Builder scoreboard and result labels"
+          git push origin HEAD:main
