@@ -52,3 +52,43 @@ for p in [Path('experiments/word-trails-levels-12-30-v1.js'),Path('daily-discove
   for pattern in [r'\b(?:const|let)\s+(\w+)\s*=\s*\[',r'\bid:\s*["\x27]([^"\x27]+)',r'\blevel:\s*\d+']:
    matches=list(re.finditer(pattern,txt))
    print('PATTERN',repr(pattern),'MATCHES',len(matches),'SAMPLES',[m.group(0) for m in matches[:8]])
+
+# Focused machine-readable count pass, no code execution or writes.
+print('\n=== PRIMARY PACK COUNTS ===')
+for variable in ('CROSS_PACKS','TRAIL_PACKS','BU28_REVIEW','BU34_EXTRAS','BU3857_DATA'):
+ match=re.search(r'\b(?:const|let|var)\s+'+re.escape(variable)+r'\s*=\s*',core)
+ if not match:
+  print('BANK_NOT_FOUND',variable);continue
+ pos=match.end()
+ try:
+  data,_=json.JSONDecoder().raw_decode(core[pos:])
+  if isinstance(data,list):
+   print('PACK',variable,'COUNT',len(data))
+   print('PACK_NAMES',[(item.get('title') or item.get('bank'),len(item.get('words',[]))) for item in data[:50] if isinstance(item,dict)])
+  elif isinstance(data,dict):
+   print('OBJECT_BANK',variable,'COUNT',len(data),'TOPICS',list(data.keys())[:100])
+   print('TOPIC_COUNTS',{k:len(v) for k,v in data.items() if isinstance(v,(list,dict))})
+ except Exception as e:
+  print('BANK_NOT_JSON',variable,str(e)[:150])
+
+print('\n=== OTHER MODE CONTENT ===')
+for variable in ('BU35_TOPICS','BU35_STORY','BU384_NAMES','BU385_BIBLE_NAMES','BU34_NAMES','BU386_SECTIONS'):
+ m=re.search(r'\b(?:const|let|var)\s+'+re.escape(variable)+r'\s*=\s*',core)
+ if not m:print('UNFOUND',variable);continue
+ sample=core[m.end():m.end()+20000]
+ end=sample.find('\n};')
+ if end>=0:sample=sample[:end]
+ if sample.startswith('{'):
+  # Key:value or key:{ name: ... } names are only approximate where data is not JSON.
+  entries=re.findall(r'(?m)^\s*([a-zA-Z][-\w]*)\s*:',sample)
+  if not entries:entries=re.findall(r'([a-zA-Z][-\w]*)\s*:\s*\{',sample)
+  print('KEYS',variable,'COUNT',len(entries),'SAMPLE',entries[:100])
+ elif sample.startswith('['):
+  try:
+   arr,_=json.JSONDecoder().raw_decode(sample)
+   print('ARRAY',variable,len(arr))
+  except Exception as e:print('ARRAY_NOT_JSON',variable,str(e)[:90])
+ else:print('UNPARSED',variable,repr(sample[:80]))
+
+for story in ('genesis_ep07','genesis_ep08','genesis_ep09','exodus-10'):
+ print('STORY_ID',story,core.count(story))
