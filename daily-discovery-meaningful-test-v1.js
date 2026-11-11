@@ -9,7 +9,7 @@
  * IMPORTANT: The legacy v375 daily quiz state, its recovery copy, the
  * canonical v17 wallet, awards, daily checkmark, and all gameplay saves
  * are intentionally READ-ONLY / untouched by this TEST feature.
- * Pilot content cycles after 18 days; a sustainable editorial pipeline
+ * Pilot content cycles after the current 30 days; a sustainable editorial pipeline
  * must be added before claiming an unlimited daily library.
  */
 (()=>{'use strict';
@@ -232,10 +232,10 @@ function save(){
  if(!update({saved:[...set].slice(-150)})){showToast('Could not save this discovery.');return;}
  display();showToast(isSaved()?'♡ Added to saved discoveries':'Removed from saved discoveries');
 }
-/* Daily Discovery tabs use the game's ORIGINAL approved positive chime.
- * Crucially, intercept every press phase before native menu audio handlers.
- * The previous implementation played a custom tone but let touch/click
- * handlers farther up the tree play the old knock as well. */
+/* Daily Discovery tabs AND official JW.org source links use the approved
+ * positive chime. The native global UI listeners can play a loud menu knock
+ * on pointer/click bubbling. Stop those events at window capture, but never
+ * cancel a scripture link's browser default (opens JW.org in a new tab). */
 function tabChime(){
  try{
   if(typeof sfxOn!=='undefined'&&!sfxOn)return;
@@ -248,12 +248,28 @@ function tabChime(){
  }catch(_){}
 }
 const TAB_PRESS_EVENTS=['pointerdown','pointerup','touchstart','touchend','mousedown','mouseup'];
-function silenceNativeTabPress(e){
- if(!view.open||!e.target?.closest?.('[data-insight-tab]'))return;
- // Do NOT preventDefault here: Android still needs its normal click.
- // stopImmediatePropagation also protects from later same-node SFX handlers.
+function dailySourceLink(target){
+ if(!view.open)return null;
+ const a=target?.closest?.('#bu375-body.bu-insight-reading a[href]');
+ if(!a)return null;
+ // Never interfere with navigation outside our active Daily screen.
+ return a.protocol==='https:'&&/^(?:www\\.)?jw\\.org$/i.test(a.hostname)?a:null;
+}
+function silenceNativeDailyPress(e){
+ if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)))return;
+ // Preserve default Android tap/click and native anchor navigation.
+ // Stop older game-wide menu knock handlers on document and descendants.
  e.stopImmediatePropagation();
  e.stopPropagation();
+}
+function captureSourceClick(e){
+ const a=dailySourceLink(e.target);
+ if(!a)return;
+ // Intentionally no preventDefault: allow target=_blank, middle/modified clicks,
+ // browser back, accessibility activation and legitimate source reading.
+ e.stopImmediatePropagation();
+ e.stopPropagation();
+ if(e.button===0&&!e.ctrlKey&&!e.metaKey&&!e.altKey)tabChime();
 }
 function captureTabClick(e){
  if(!view.open)return;
@@ -317,7 +333,8 @@ function boot(){
  state();
  // Window capture prevents the legacy knock from reaching native handlers
  // on button, container or document, on both mouse and real Android touch.
- TAB_PRESS_EVENTS.forEach(type=>window.addEventListener(type,silenceNativeTabPress,true));
+ TAB_PRESS_EVENTS.forEach(type=>window.addEventListener(type,silenceNativeDailyPress,true));
+ window.addEventListener('click',captureSourceClick,true);
  window.addEventListener('click',captureTabClick,true);
  document.addEventListener('click',click,true);
  const back=$('#bu375-back');
