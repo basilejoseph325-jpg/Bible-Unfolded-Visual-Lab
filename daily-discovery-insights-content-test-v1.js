@@ -6,6 +6,8 @@
  * applications are framed as reflections, not invented Bible quotations.
  * The 30-item catalog is an editorial pilot, not an infinite library.
  * Days 19–30 are sourced in docs/DAILY_DISCOVERY_EDITORIAL_19_TO_30_2026-11-11.md.
+ * Nov 11 expressive conversational pass: see docs/CONVERSATIONAL_VOICE_STANDARD_2026-11-11.md.
+ * All IDs, order, source URLs, saves and reward mechanics remain unchanged.
  */
 (()=>{'use strict';
 const B='https://www.jw.org/en/library/bible/nwt/books/';
@@ -43,7 +45,7 @@ const items=[
  source:'Luke 5:8–11 — New World Translation',reference:'Luke 5:8–11',url:B+'luke/5/',
  body:[
  "When Peter saw that enormous catch of fish, he didn't start congratulating himself. Instead, he told Jesus he was a sinful man. At that moment, Peter could see his own imperfections all too clearly.",
- "But look at how Jesus responded! He didn't turn Peter away. He reassured him and gave him a meaningful work to do. Peter went on to follow him.",
+ "But look at how Jesus responded! He didn't turn Peter away. He reassured him and gave him meaningful work to do. Peter went on to follow him.",
  "Isn't that a comforting contrast? Peter saw his weaknesses, but Jesus could see what Peter might become. He didn't have to be perfect before he could do something worthwhile."
  ],takeaway:'Recognizing our shortcomings does not mean our efforts have no value.',
  reflect:'Am I sometimes so focused on what I lack that I overlook the good I can still do?',
@@ -126,7 +128,7 @@ const items=[
  subtitle:'Why one field became a place of kindness.',
  source:'Ruth 2:1–16 — New World Translation',reference:'Ruth 2:1–16',url:B+'ruth/2/',
  body:[
- "When Ruth arrived in Bethlehem, she was a Moabite woman caring for her mother-in-law, Naomi. She needed food, so she went into the fields to gather grain that harvesters had left behind. Imagine how unfamiliar everything must have been!",
+ "When Ruth arrived in Bethlehem, she was a Moabite woman caring for her mother-in-law, Naomi. She needed food, so she went into the fields to gather grain the harvesters had left behind. She was building a new life in a place she hadn't grown up.",
  'Boaz noticed her. He offered protection, allowed her to stay near his workers, and made sure she could get water. His kindness reached someone who might otherwise have felt like an outsider.',
  "What makes Boaz's kindness stand out? He didn't just say something nice. He helped Ruth feel safer and made it easier for her to get what she needed."
  ],takeaway:'Noticing someone who feels like an outsider can be the beginning of real kindness.',
