@@ -240,6 +240,82 @@ const items=[
  reflect:'When tension rises, what helps me speak clearly without making things worse?',
  share:{moment:'When someone mentions arguments, misunderstandings, or difficult family conversations.',opener:'There is a Bible account about a woman whose calm words helped prevent a terrible decision.',thought:'Abigail approached an angry David with courage, respect, and a thoughtful appeal.',question:'Have you ever seen a calm response change the direction of a disagreement?',bridge:'The story is at 1 Samuel 25:14–35.',reference:'1 Samuel 25:14–35',url:B+'1-samuel/25/'}
 }
+,
+{
+ id:'hezekiah-water',category:'ANCIENT ENGINEERING',title:'The King Who Had to Think About Water',
+ subtitle:'An easy-to-miss detail from ancient Jerusalem.',
+ source:'2 Kings 20:20; 2 Chronicles 32:1–8, 30 — New World Translation',
+ reference:'2 Kings 20:20; 2 Chronicles 32:1–8, 30',url:B+'2-chronicles/32/',
+ body:[
+  'Imagine trying to protect a city when an enemy army was approaching. Food and walls mattered, but so did something people used every day: water.',
+  'King Hezekiah made preparations to protect Jerusalem. The Bible describes how he arranged to bring water into the city and stop outside sources from helping the invaders. It even mentions a pool and a water channel.',
+  'That little detail puts us right into the practical side of Bible history. Facing a threat involved courage, trust in Jehovah, and thoughtful work.'
+ ],takeaway:'Faith and practical preparation can go hand in hand.',
+ reflect:'When I face a difficult problem, what useful step can I take while I pray for help?',
+ share:{moment:'When someone likes engineering, history, or ancient cities.',opener:'Did you know that an ancient king in the Bible had a major water-supply problem to solve?',thought:'Hezekiah arranged for water to reach Jerusalem while the city faced a threat.',question:'Does it surprise you how many everyday engineering details the Bible preserves?',bridge:'The account is in 2 Chronicles 32 and 2 Kings 20.',reference:'2 Kings 20:20; 2 Chronicles 32:1–8, 30',url:B+'2-kings/20/'}
+},
+{
+ id:'jeremiah-field',category:'HOPE IN DIFFICULT TIMES',title:'Why Buy a Field During a Siege?',
+ subtitle:'Jeremiah made a strange-looking purchase for a reason.',
+ source:'Jeremiah 32:1–15 — New World Translation',reference:'Jeremiah 32:1–15',url:B+'jeremiah/32/',
+ body:[
+  'Jerusalem was surrounded by an army. Jeremiah was being held under guard. That hardly sounds like the right moment to buy real estate. Yet Jehovah told him to buy a field from a relative.',
+  'Jeremiah paid for the field, arranged for witnesses, and had the purchase documents stored in a clay jar. It was a real transaction, not just a symbolic speech.',
+  'Jehovah explained why: people would one day buy houses, fields, and vineyards in that land again. Even while the present looked frightening, the purchase pointed to a future beyond it.'
+ ],takeaway:'A hard chapter in life does not have to be the final chapter.',
+ reflect:'What promise from Jehovah helps me look beyond a difficult situation right now?',
+ share:{moment:'When someone talks about feeling uncertain about the future.',opener:'Here is an unusual Bible detail: Jeremiah bought land while Jerusalem was under siege.',thought:'Jehovah used that ordinary purchase to show that life in the land would not always be as it was then.',question:'Have you ever found hope in a promise when present circumstances looked discouraging?',bridge:'Jeremiah 32:1–15 gives the background.',reference:'Jeremiah 32:1–15',url:B+'jeremiah/32/'}
+},
+{
+ id:'dorcas-clothes',category:'FIRST-CENTURY LIFE',title:'The Clothes That Told a Story',
+ subtitle:'What people held up when they remembered Dorcas.',
+ source:'Acts 9:36–42 — New World Translation',reference:'Acts 9:36–42',url:B+'acts/9/',
+ body:[
+  'When Dorcas died in Joppa, the widows who knew her were deeply upset. When Peter arrived, they showed him the garments and robes she had made.',
+  'Think about what they chose to show him. Not a long list of achievements or a grand speech, but actual clothes that had helped real people. The Bible says she was known for good deeds and gifts of mercy.',
+  'Peter later raised Dorcas from the dead. But even before that wonderful event, the account had already shown why she was so loved.'
+ ],takeaway:'The kindness we show can leave a lasting impression on people.',
+ reflect:'What small, practical kindness could make someone feel cared for this week?',
+ share:{moment:'When someone enjoys sewing, volunteering, or helping neighbors.',opener:'There is a woman in Acts whose kindness was remembered through the clothes she made.',thought:'When Dorcas died, widows showed Peter the garments she had made for them.',question:'Is there a simple act of kindness someone did for you that you still remember?',bridge:'You can read that moving scene at Acts 9:36–42.',reference:'Acts 9:36–42',url:B+'acts/9/'}
+},
+{
+ id:'lydia-purple',category:'EVERYDAY LIFE IN BIBLE TIMES',title:'A Purple-Cloth Seller by the River',
+ subtitle:'A little trade detail from the first-century congregation.',
+ source:'Acts 16:11–15, 40 — New World Translation; Insight on the Scriptures · Lydia',
+ reference:'Acts 16:11–15, 40',url:B+'acts/16/',
+ body:[
+  'Lydia was a seller of purple goods from Thyatira. The city was known for dyeing, and purple cloth was an important trade. She was living in Philippi when Paul arrived.',
+  'Paul met her near a river, where women had gathered for prayer. Lydia listened, accepted what she learned, and invited Paul and his companions to stay in her home.',
+  'Those details make her feel like a real person with a livelihood, a home, and a generous spirit. Her story is also a reminder that a good conversation can begin in an ordinary place.'
+ ],takeaway:'Everyday routines can lead to meaningful conversations and friendships.',
+ reflect:'Where in my normal routine could I show someone genuine interest or hospitality?',
+ share:{moment:'When someone talks about clothing, old trades, or the world of the first Christians.',opener:'Did you know that one of the first people Paul met in Philippi sold purple goods?',thought:'Lydia was at a riverside place of prayer when Paul spoke with her, and she later welcomed the visitors into her home.',question:'What everyday detail makes that Bible account come alive for you?',bridge:'Acts 16:11–15 tells how they met.',reference:'Acts 16:11–15',url:B+'acts/16/'}
+},
+{
+ id:'widow-coins',category:'JESUS’ TEACHINGS',title:'Two Small Coins, and Someone Who Noticed',
+ subtitle:'Why Jesus drew attention to a quiet contribution.',
+ source:'Mark 12:41–44 — New World Translation',reference:'Mark 12:41–44',url:B+'mark/12/',
+ body:[
+  'Jesus was watching people put money into the temple treasury. Many wealthy people gave large amounts. Then a poor widow dropped in just two very small coins.',
+  'Most people might barely have noticed her. Jesus did. He called his disciples over and explained that her gift represented a far greater personal sacrifice than the larger gifts given out of surplus.',
+  'This is not a reason to pressure people who are struggling to give away money. The moving part of the account is how Jesus saw the person and the effort behind a gift, not just the amount.'
+ ],takeaway:'A modest effort can mean far more than its outward size suggests.',
+ reflect:'Do I sometimes judge my efforts by their size instead of by the care behind them?',
+ share:{moment:'When someone feels that their little contribution cannot matter.',opener:'Jesus once stopped to talk about a donation that amounted to only two tiny coins.',thought:'He noticed the effort of a poor widow when many larger donations were being made.',question:'Is it reassuring to know that the value of a kind act is not always measured by its size?',bridge:'The account is at Mark 12:41–44.',reference:'Mark 12:41–44',url:B+'mark/12/'}
+},
+{
+ id:'rahab-cord',category:'COURAGE AND FAITH',title:'A Red Cord in a Window',
+ subtitle:'One small visible detail in the account of Rahab.',
+ source:'Joshua 2:8–21; 6:22–25 — New World Translation',reference:'Joshua 2:8–21; 6:22–25',url:B+'joshua/2/',
+ body:[
+  'In Jericho, Rahab hid two Israelite spies and told them she believed Jehovah had given the land to Israel. She asked that her family be spared when the city fell.',
+  'The spies told her to tie a scarlet cord in her window and gather her family inside the house. Rahab tied the cord in place. Later, the spies brought her family out safely.',
+  'A little cord was not magic. It was the agreed sign in a promise that Rahab took seriously. Her faith was shown by what she did.'
+ ],takeaway:'Courage often becomes visible through a practical step.',
+ reflect:'Is there a good decision I know I should make but have been putting off?',
+ share:{moment:'When someone likes the small, vivid details in Bible history.',opener:'Do you remember why there was a red cord hanging from a window in Jericho?',thought:'It was the sign the spies arranged with Rahab so she and her family could be identified when the city fell.',question:'What do you think her quick action tells us about her faith?',bridge:'Joshua 2 gives the promise, and Joshua 6 tells what happened afterward.',reference:'Joshua 2:8–21; 6:22–25',url:B+'joshua/6/'}
+}
+
 ];
 window.BUDailyDiscoveryImagePool=ROTATING_ART;
 window.BUDailyDiscoveryLibrary=Object.freeze(items.map((x,i)=>Object.freeze({
