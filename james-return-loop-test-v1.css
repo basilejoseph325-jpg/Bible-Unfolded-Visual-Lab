@@ -50,3 +50,9 @@
  #bu-james-quiz-bar .bu-james-bar-buttons button{font-size:9px}
 }
 @media(prefers-reduced-motion:reduce){#bu-james-toast{transition:none!important}#bu-james-rewards button[data-buj-action]:active{transform:none}}
+
+/* TEST life-recovery bar v2 — stable, visible zero-lives action. */
+#bu-james-quiz-bar .bu-james-refill-actions{align-items:center;gap:7px}
+#bu-james-quiz-bar .bu-james-refill-actions button{flex:1 1 60%;font-size:11px;min-height:34px;padding:6px 5px}
+#bu-james-quiz-bar .bu-james-wait{flex:1 1 35%;color:#ffe0a1;font:800 11px/1.2 system-ui,sans-serif;text-align:center;white-space:normal}
+@media(max-width:365px){#bu-james-quiz-bar .bu-james-refill-actions button{font-size:10px}}
