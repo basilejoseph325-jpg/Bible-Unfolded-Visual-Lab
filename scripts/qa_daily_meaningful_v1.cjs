@@ -201,7 +201,7 @@ async function inject(page){
       'JW source and reference: '+entry.id);
     assert(entry.share.moment&&entry.share.opener&&entry.share.thought&&
       entry.share.question&&entry.share.bridge&&entry.share.reference&&
-      /^https:\\/\\/www\\.jw\\.org\\/en\\//.test(entry.share.url),
+      entry.share.url.startsWith('https://www.jw.org/en/'),
       'Natural, sourced Share the Thought: '+entry.id);
   }
   console.log('PASS_NEW_12_DISCOVERIES',JSON.stringify({new:next.length,uniqueTotal:ids.length}));
