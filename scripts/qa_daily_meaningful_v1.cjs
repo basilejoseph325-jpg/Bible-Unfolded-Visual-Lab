@@ -69,6 +69,35 @@ async function inject(page){
    assert.equal(opening.oldModes,0,'Deep Dive quiz chooser removed from new experience');
    assert(opening.title.length>12&&opening.bodyText.includes('MOMENT'));
    assert(opening.jwLinks.length>0&&opening.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
+
+   // A real JW.org source link must open normally, without forwarding any
+   // pointer or click phase to the legacy document menu-knock listeners.
+   const sourceTone=await page.evaluate(()=>{
+     const a=document.querySelector('#bu375-body.bu-insight-reading .bu-insight-source');
+     if(!a)return {missing:true};
+     const leak=[];
+     for(const type of ['pointerdown','pointerup','mousedown','mouseup','click']){
+       document.addEventListener(type,e=>{
+         if(e.target?.closest?.('.bu-insight-source'))leak.push(type);
+       },true);
+     }
+     const opts={bubbles:true,cancelable:true,composed:true};
+     a.dispatchEvent(new PointerEvent('pointerdown',{...opts,pointerId:7,pointerType:'touch'}));
+     a.dispatchEvent(new PointerEvent('pointerup',{...opts,pointerId:7,pointerType:'touch'}));
+     a.dispatchEvent(new MouseEvent('mousedown',opts));
+     a.dispatchEvent(new MouseEvent('mouseup',opts));
+     const click=new MouseEvent('click',{...opts,button:0});
+     a.dispatchEvent(click);
+     return {leak,defaultPreserved:!click.defaultPrevented,
+       url:a.href,target:a.target,source:a.textContent.trim()};
+   });
+   console.log('DAILY_SOURCE_TONE_'+v.width,JSON.stringify(sourceTone));
+   assert(!sourceTone.missing,'Read the source button exists');
+   assert.deepEqual(sourceTone.leak,[],'JW.org source link must bypass document knock handlers');
+   assert(sourceTone.defaultPreserved,'Source click must not block normal anchor navigation');
+   assert(sourceTone.url.startsWith('https://www.jw.org/en/'),'Source URL stays official JW.org');
+   assert.equal(sourceTone.target,'_blank','Source opens in new tab');
+
    await page.evaluate(()=>document.getElementById('bu40-daily-confetti')?.remove());
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-today.png'});
    // Trap every native-document press; all Daily tabs must be handled at
