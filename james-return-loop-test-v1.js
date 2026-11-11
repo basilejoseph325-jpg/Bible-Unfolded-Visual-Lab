@@ -51,7 +51,13 @@ function commit(next,action){
  try{const v=JSON.stringify(n);localStorage.setItem(KEY,v);if(localStorage.getItem(KEY)!==v)return false;state=n;window.dispatchEvent(new CustomEvent('bu-james-economy-change',{detail:{action}}));return true}catch(e){console.warn('[James TEST Economy] Cannot save',e);return false}
 }
 function freshLives(){
- if(state.lives>=LIMIT||!state.refillAt)return state;
+ // Recover from legacy saves with 0-4 lives but no running timer.
+ // Never mark zero lives "Full"; start the standard 15-minute recovery.
+ if(state.lives>=LIMIT)return state;
+ if(!state.refillAt){
+  commit({...state,refillAt:Date.now()+REFILL_MS},'refill:timer-repair');
+  return state;
+ }
  const now=Date.now();if(now<state.refillAt)return state;
  const gained=1+Math.floor((now-state.refillAt)/REFILL_MS),lives=Math.min(LIMIT,state.lives+gained);
  const next={...state,lives,refillAt:lives>=LIMIT?0:state.refillAt+gained*REFILL_MS};
@@ -142,9 +148,10 @@ function recordWrong(){
  paint();
 }
 function nextRefill(){
- freshLives();if(!state.refillAt||state.lives===LIMIT)return 'Full';
+ freshLives();if(state.lives>=LIMIT)return 'Full';
+ if(!state.refillAt)return '15 min';
  const n=Math.max(0,Math.ceil((state.refillAt-Date.now())/60000));
- return n+' min';
+ return Math.max(1,n)+' min';
 }
 function listCards(){
  return PRODUCTS.map(p=>{
@@ -209,9 +216,11 @@ function mountBar(){
  let bar=$('#bu-james-quiz-bar');
  if(!bar){bar=document.createElement('div');bar.id='bu-james-quiz-bar';bar.setAttribute('role','status');body.prepend(bar)}
  bar.innerHTML='<div class="bu-james-bar-top"><span>♥ '+state.lives+'/5</span><span>🔥 '+state.chain+' correct</span><span>◈ '+fmt(state.pot)+' at risk</span></div>'+
- '<div class="bu-james-bar-buttons"><button data-buj-action="bank"'+(!state.pot?' disabled':'')+'>Bank now</button>'+
- '<button data-buj-action="risk">Risk & continue</button>'+
- '<button data-buj-action="insurance">Insure · 60</button></div>';
+ (state.lives===0
+  ?'<div class="bu-james-bar-buttons bu-james-refill-actions"><button data-buj-action="lives">Refill all 5 · ◈75 TEST</button><span class="bu-james-wait">Next life: '+nextRefill()+'</span></div>'
+  :'<div class="bu-james-bar-buttons"><button data-buj-action="bank"'+(!state.pot?' disabled':'')+'>Bank now</button>'+
+   '<button data-buj-action="risk">Risk & continue</button>'+
+   '<button data-buj-action="insurance">Insure · 60</button></div>');
 }
 function paint(){freshLives();mountShop();mountBar()}
 function gateBooks(e){
@@ -272,7 +281,7 @@ function onQuizAnswer(e){
  freshLives();
  if(state.lives<=0){
   e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
-  feedback('Out of lives! Next life in '+nextRefill()+'. Refill in the Rewards room.');paint();return;
+  feedback('Out of lives! Next life in '+nextRefill()+'. Use Refill all 5 above (75 TEST tokens) or open Rewards.');paint();return;
  }
  const answer=Number(button.dataset.answer);
  if(!Number.isInteger(answer))return;
