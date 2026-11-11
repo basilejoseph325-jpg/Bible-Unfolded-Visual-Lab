@@ -1,0 +1,47 @@
+name: Install TEST Trivia uniform stone styling v7
+on:
+  push:
+    paths:
+      - '.github/workflows/install-trivia-uniform-v7.yml'
+      - '.github/scripts/install_trivia_uniform_v7.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Install deterministic stone stylesheet and force phone cache refresh
+        run: python3 .github/scripts/install_trivia_uniform_v7.py
+      - name: Verify isolated paint-only override and the page reference
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          h=Path('index.html').read_text()
+          c=Path('trivia-stone-uniform-v7.css').read_text()
+          assert 'bu-trivia-uniform-v7-css' in h
+          assert 'journey-progress-caption.js?v=20261110-trivia-uniform-v7-7' in h
+          assert c.count('{')==c.count('}')
+          assert 'background-size:100% 100%,100% 100%!important' in c
+          assert 'background-blend-mode:normal,normal!important' in c
+          assert '.bu34-answer[data-answer]:not(.correct):not(.wrong)' in c
+          assert '.bu3922-eliminated' in c
+          print('PASS: new version cached bust; four neutral tiles share one photo and sizing; status feedback unchanged')
+          PY
+      - name: Commit TEST index entry point without touching the LIVE repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "TEST index already current"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST: load uniform Trivia tile styling directly and refresh loader"
+          git push origin HEAD:main
