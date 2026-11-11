@@ -11,7 +11,7 @@ pat=re.compile(r'(?P<stem><script\b[^>]*\bsrc\s*=\s*["\x27][^"\x27]*?journey-pro
 matches=list(pat.finditer(html))
 assert len(matches)==1, f"Expected exactly one external Journey/bootstrap script tag; got {len(matches)}"
 before=matches[0].group(0)
-after=matches[0].group("stem")+"?v=20261111-book-optional-v6"+matches[0].group("end")
+after=matches[0].group("stem")+"?v=20261111-book-switcher-v7"+matches[0].group("end")
 if before==after:
  print("Bootstrap already versioned for Daily 30")
 else:
