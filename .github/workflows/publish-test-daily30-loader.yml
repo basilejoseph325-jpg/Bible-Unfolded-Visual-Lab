@@ -1,4 +1,4 @@
-name: Publish TEST Daily 30 bootstrap cache refresh
+name: Publish TEST Daily source-chime cache-safe loader
 on:
   push:
     paths:
@@ -19,13 +19,13 @@ jobs:
           node --check scripts/qa_daily_meaningful_v1.cjs
           node --check visual-lab-test-banner.js
           node --check journey-progress-caption.js
-          grep -q '20261111-sourced-thoughts-30-v3' visual-lab-test-banner.js
-          grep -q '20261111-daily-30-v3' journey-progress-caption.js
+          grep -q '20261111-source-chime-v4' visual-lab-test-banner.js
+          grep -q '20261111-source-chime-v4' journey-progress-caption.js
           python3 .github/scripts/bust_daily_30_loader_nov11.py
           python3 - <<'PY'
           from pathlib import Path
           page=Path('index.html').read_text()
-          assert page.count('journey-progress-caption.js?v=20261111-source-verified-daily-30-v3')==1
+          assert page.count('journey-progress-caption.js?v=20261111-source-chime-v4')==1
           data=Path('daily-discovery-insights-content-test-v1.js').read_text()
           assert data.count("category:")==30 and data.count(" id:'")==30
           for id_ in ('hezekiah-water','jeremiah-field','dorcas-clothes','lydia-purple','widow-coins','rahab-cord','widow-oil','nehemiah-builders','paul-storm','sparrows','baruch-scroll','amos-work'):
