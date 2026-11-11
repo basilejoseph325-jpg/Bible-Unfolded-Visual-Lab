@@ -5578,11 +5578,24 @@ window.BUScholarHintInformationController.install({
   nav.append(prev,label,next);
  }
  function startGroup(key){if(!groups[key])return;syncBalances();currentCategory=key;
- if(!state.sessions[key]){const arr=questions.filter(q=>q.category===key).map(q=>q.id);state.sessions[key]={order:shuffle(arr),index:0};save()}
- if(state.sessions[key].index>=state.sessions[key].order.length){state.sessions[key].index=0;state.sessions[key].order=shuffle(state.sessions[key].order);save()}
+ const chapterQuestions=questions.filter(q=>q.category===key);
+ if(!state.sessions[key]){const arr=chapterQuestions.map(q=>q.id);state.sessions[key]={order:shuffle(arr),index:0};save()}
+ // Completed chapters replay fresh. Unfinished chapters resume saved question.
+ // Mastery, one-time awards and purchased hints are preserved unchanged.
+ const completed=chapterQuestions.length>0&&chapterQuestions.every(q=>state.done[q.id]===true);
+ const session=state.sessions[key];
+ if(completed||session.index>=session.order.length){
+  session.index=0;session.order=shuffle(session.order);
+  for(const q of chapterQuestions)delete state.wrongChoices[q.id];
+  save();
+ }
  hideAll();closeMenu();closeDialog();$b('play').hidden=false;$b('play-title').textContent=groups[key].short;nextQuestion();document.title='Bible Unfolded · Behind the Name';syncMusic()}
  function nextQuestion(){syncBalances();const st=state.sessions[currentCategory];if(!st)return pick();if(st.index>=st.order.length){showFinish(st);return}
  active=questions.find(q=>q.id===st.order[st.index]);if(!active){st.index++;save();return nextQuestion()}
+ // Wrong selections are temporary feedback for the current attempt.
+ // Resume/replay never re-displays old wrong answers, but a wrong answer
+ // chosen now still stays red until this question is correctly answered.
+ if(Object.prototype.hasOwnProperty.call(state.wrongChoices,active.id))delete state.wrongChoices[active.id];
  selected=-1;answered=false;hintsUsed={};options=shuffle(active.answers.map((value,index)=>({text:value,correct:index===0})));
  $b('kind').textContent=groups[currentCategory].title;$b('step').textContent='Discovery '+(st.index+1)+' of '+st.order.length;$b('progress').textContent=(st.index+1)+'/'+st.order.length;
  $b('points').textContent=state.done[active.id]?'✓ Played before':'✦ One-time reward';$b('meter').style.width=(100*st.index/st.order.length)+'%';
