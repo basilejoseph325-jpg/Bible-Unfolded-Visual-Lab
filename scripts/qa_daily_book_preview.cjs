@@ -63,8 +63,38 @@ const scenes={
     assert.equal(await page.evaluate(()=>document.querySelector('.bu-insight-cover')?.getAttribute('data-illustration')),id);
     assert(await page.evaluate(()=>!!document.querySelector('[data-insight-action=copy]')));
     assert(!await page.evaluate(()=>!!document.querySelector('[data-insight-action=read]')),'No redundant remember button');
+    // Every editorial example must offer the same one-tap selector,
+    // including after entering Share and Saved. No extra browser links needed.
+    const chapters=await page.evaluate(()=>[...document.querySelectorAll('[data-insight-preview]')].map(b=>b.dataset.insightPreview));
+    assert.deepEqual(chapters,['peter','nile','ruth'],'Explicit preview navigation always available');
    }
-   assert.deepEqual(errors,[],'No runtime exceptions in 3 scenes');
+   // User reports that opening three links seemed to show the same Nile page.
+   // Verify in-app buttons independently select all three, update the URL,
+   // and keep their correct individual photos in a single browser tab.
+   for(const id of ['peter','nile','ruth']){
+    await page.evaluate(id=>document.querySelector('[data-insight-preview='+id+']').click(),id);
+    const selected=await page.evaluate(()=>({
+     id:window.BUDailyInsightV1.inspect().id,
+     tab:window.BUDailyInsightV1.inspect().tab,
+     picture:document.querySelector('.bu-insight-cover')?.style.backgroundImage,
+     url:new URL(location.href).searchParams.get('daily_preview'),
+     pressed:[...document.querySelectorAll('[data-insight-preview][aria-pressed=true]')].map(e=>e.dataset.insightPreview),
+     text:document.querySelector('.bu-insight-story p')?.textContent
+    }));
+    assert.equal(selected.id,id,'One tap must select actual '+id+' discovery');
+    assert.equal(selected.tab,'today','Chapter picker opens the selected illustrated article');
+    assert(selected.picture.includes(scenes[id]),'One tap must show correct '+id+' illustration');
+    assert.equal(selected.url,id,'Preview query reflects the visible chapter');
+    assert.deepEqual(selected.pressed,[id],'Only selected preview is highlighted');
+    assert(selected.text.length>55,'Each preview shows meaningful individual content');
+    console.log('BOOK_PICKER_'+width+'_'+id,JSON.stringify(selected));
+   }
+   await page.reload({waitUntil:'domcontentloaded',timeout:120000});
+   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+   await page.evaluate(()=>window.BUDailyInsightV1.open());
+   assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().id),'ruth',
+     'Refresh restores the last selected preview using its URL');
+   assert.deepEqual(errors,[],'No runtime exceptions in 3 scenes and navigation');
    await ctx.close();
   }
   // Approved default must remain unaltered, even for one of the art-enabled IDs.
@@ -75,11 +105,13 @@ const scenes={
   const plain=await p.evaluate(()=>({
     active:document.getElementById('bu375-body').classList.contains('bu-daily-book-preview'),
     image:document.querySelector('.bu-insight-cover')?.style.backgroundImage,
-    key:window.BUDailyInsightV1.inspect().id
+    key:window.BUDailyInsightV1.inspect().id,
+    picker:!!document.querySelector('[data-insight-preview]')
   }));
   assert.equal(plain.key,'peter');assert.equal(plain.active,false);
+  assert.equal(plain.picker,false,'Regular Daily Discovery never shows preview controls');
   assert(!plain.image.includes('assets/daily-book/'),'Original design and art remain default');
-  console.log('PASS_DAILY_BOOK_PREVIEW: 3 illustrations, three phone viewports, saved/share and original default preserved');
+  console.log('PASS_DAILY_BOOK_PREVIEW: 3 illustrations, one-tap in-app switch, browser URL/refresh, phone viewports, saves and original default preserved');
  }catch(e){console.error('FAIL_DAILY_BOOK_PREVIEW',e.stack||e);process.exitCode=1}
  finally{await browser?.close()}
 })();
