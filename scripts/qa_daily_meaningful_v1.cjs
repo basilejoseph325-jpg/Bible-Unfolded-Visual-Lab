@@ -197,7 +197,7 @@ async function inject(page){
     assert(entry.takeaway.length>=30&&entry.reflection.length>=35,'Reflection and takeaway: '+entry.id);
     assert(entry.source.includes('New World Translation')||entry.source.includes('Study Bible'),
       'JW Bible/source grounded: '+entry.id);
-    assert(entry.reference&&/^https:\\/\\/www\\.jw\\.org\\/en\\//.test(entry.url),
+    assert(entry.reference&&entry.url.startsWith('https://www.jw.org/en/'),
       'JW source and reference: '+entry.id);
     assert(entry.share.moment&&entry.share.opener&&entry.share.thought&&
       entry.share.question&&entry.share.bridge&&entry.share.reference&&
