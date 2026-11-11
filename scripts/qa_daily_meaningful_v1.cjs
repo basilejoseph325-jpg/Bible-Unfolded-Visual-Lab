@@ -112,6 +112,24 @@ async function inject(page){
      },true);
     }
    });
+   const todayButtons=await page.evaluate(()=>({
+    save:document.querySelector('[data-insight-action=save]')?.textContent?.trim(),
+    share:document.querySelector('[data-insight-action=share]')?.textContent?.trim(),
+    read:document.querySelector('[data-insight-action=read]')?.textContent?.trim()
+   }));
+   assert.match(todayButtons.save,/^(♡ Save|♥ Saved)$/,'Save button concise');
+   assert.equal(todayButtons.share,'◈ Share the Thought','Share matches tab name');
+   assert.equal(todayButtons.read,'✓ Mark as Read','Read action has a clear meaning');
+   // No old document-level menu knock may receive Daily action click or
+   // preceding touch/pointer phases (includes copy, save, read, saved row).
+   await page.evaluate(()=>{
+     window.__buDailyControlLeak=[];
+     for(const type of ['pointerdown','pointerup','touchstart','touchend','mousedown','mouseup','click'])
+      document.addEventListener(type,e=>{
+       if(e.target?.closest?.('[data-insight-action],[data-insight-open]'))
+        window.__buDailyControlLeak.push(type);
+      },true);
+   });
    await page.evaluate(()=>document.querySelector('[data-insight-action=share]').click());
    const share=await page.evaluate(()=>({
     tab:window.BUDailyInsightV1.inspect().tab,
@@ -126,6 +144,21 @@ async function inject(page){
    assert(share.sections.length===3&&share.statements.every(x=>x.length>35));
    assert(share.jwLinks.length>0&&share.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
    assert.equal(share.quiz,0);
+   const shareButtons=await page.evaluate(()=>({
+    copy:document.querySelector('[data-insight-action=copy]')?.textContent?.trim(),
+    copyAria:document.querySelector('[data-insight-action=copy]')?.getAttribute('aria-label'),
+    back:document.querySelector('[data-insight-action=today]')?.textContent?.trim(),
+    redundantRemember:!!document.querySelector('[data-insight-action=read]'),
+    copyWidth:Math.round(document.querySelector('[data-insight-action=copy]')?.getBoundingClientRect().width||0),
+    viewport:document.getElementById('bu375-body').clientWidth
+   }));
+   assert.equal(shareButtons.copy,'♡ Copy','Copy is short and uses heart');
+   assert.equal(shareButtons.copyAria,'Copy the sharing idea','Clear accessible copy label');
+   assert.equal(shareButtons.back,'‹ Today','Clear navigation');
+   assert.equal(shareButtons.redundantRemember,false,'Misleading Remember action removed');
+   assert(shareButtons.copyWidth>=76&&shareButtons.copyWidth<=150,
+     'Copy button is visibly compact: '+JSON.stringify(shareButtons));
+   console.log('DAILY_ACTIONS_'+v.width,JSON.stringify(shareButtons));
    const shareLayout=await page.evaluate(()=>{
      const view=document.getElementById('bu375-body').getBoundingClientRect();
      const cards=[...document.querySelectorAll('#bu375-body .bu-insight-conversation')].map(e=>{const r=e.getBoundingClientRect();return {y:r.y,bottom:r.bottom}});
@@ -137,8 +170,15 @@ async function inject(page){
    await page.tap('[data-insight-tab=today]');
    assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'today',
      'Real mobile touch should switch from Share to Today');
+   // Reading/saving mid-article must not fling the reader to the top.
+   await page.evaluate(()=>{const b=document.getElementById('bu375-body');b.style.scrollBehavior='auto';b.scrollTop=Math.min(350,b.scrollHeight-b.clientHeight)});
+   const beforePosition=await page.evaluate(()=>document.getElementById('bu375-body').scrollTop);
    await page.evaluate(()=>document.querySelector('[data-insight-action=save]').click());
+   const afterSavePosition=await page.evaluate(()=>document.getElementById('bu375-body').scrollTop);
+   assert(Math.abs(afterSavePosition-beforePosition)<4,'Save must keep the reader in place');
    await page.evaluate(()=>document.querySelector('[data-insight-action=read]')?.click());
+   const afterReadPosition=await page.evaluate(()=>document.getElementById('bu375-body').scrollTop);
+   assert(Math.abs(afterReadPosition-beforePosition)<4,'Mark Read must keep the reader in place');
    const saved=await page.evaluate(()=>window.BUDailyInsightV1.inspect());
    assert.equal(saved.saved.length,1);assert(saved.read.includes(saved.today));
    assert(saved.shared.includes(saved.today));
@@ -151,6 +191,8 @@ async function inject(page){
    await page.tap('[data-insight-tab=saved]');
    assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'saved',
      'Real mobile touch should switch back to Saved');
+   const oldActionLeaks=await page.evaluate(()=>window.__buDailyControlLeak);
+   assert.deepEqual(oldActionLeaks,[],'Daily action taps must not reach native knock handlers');
    const oldAudioLeaks=await page.evaluate(()=>window.__buDailyTabLeak);
    assert.deepEqual(oldAudioLeaks,[],'Daily tab presses must NEVER reach native document knock handlers');
    const savedView=await page.evaluate(()=>({rows:document.querySelectorAll('.bu-insight-saved-row').length,
@@ -158,6 +200,14 @@ async function inject(page){
     imageCount:document.querySelectorAll('.bu-insight-saved-row img[data-insight-image]').length}));
    assert.equal(savedView.rows,1);
    assert.equal(savedView.imageCount,1,'Saved thought must have a real image with fallback');
+   const styleTone=await page.evaluate(()=>({
+     background:getComputedStyle(document.getElementById('bu375-body')).backgroundImage,
+     savedBackground:getComputedStyle(document.querySelector('.bu-insight-archive')).backgroundImage
+   }));
+   assert(styleTone.background.includes('44, 117, 132')||styleTone.background.includes('#2c7584'),
+     'Daily has the lighter lagoon background');
+   assert(styleTone.savedBackground.includes('44, 118, 133')||styleTone.savedBackground.includes('#2c7685'),
+     'Saved has the warm lagoon backdrop');
    await page.waitForFunction(()=>[...document.querySelectorAll('.bu-insight-saved-row img')].every(i=>i.complete&&i.naturalWidth>0),{timeout:12000});
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-saved.png'});
    const protectedAfter=await page.evaluate(keys=>keys.map(k=>localStorage.getItem(k)),protectedKeys);
