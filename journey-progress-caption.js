@@ -121,7 +121,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Visual Lab ONLY — excavated limestone V2 answers (same material on A–D).
    Fixes A-only V1 stripe artifact. Leaves gold controls, scoring and finale. */
-(()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-photo-stone-tablets-v4.css?v=20261110-stable-rock-no-flicker-v5';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-trivia-ancient-tablets-v2'))return;const l=document.createElement('link');l.id='bu-trivia-ancient-tablets-v2';l.rel='stylesheet';l.href='trivia-photo-stone-tablets-v4.css?v=20261110-uniform-stone-v6';document.head.appendChild(l)})();
 
 
 /* VISUAL LAB ONLY — Trivia explanation scroll (approved Daily V3 parchment and
