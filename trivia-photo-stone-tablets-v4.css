@@ -166,3 +166,31 @@
 #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:disabled:not(.correct):not(.wrong):not(.bu3922-eliminated){
  opacity:.90!important;filter:none!important;
 }
+
+
+/* TEST 2026-11-10 — neutral stone color parity V6.
+ * Every unanswered tablet must retain the SAME photograph position and warm
+ * tone throughout play. Prior per-choice 0/33/67/82% offsets sampled very
+ * different portions of the source photo (some nearly white).
+ * This is paint-only; preserve answer geometry, native click logic, feedback
+ * red/green, hint elimination, press depression, and scroll clearance. */
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]{
+ --stone-y:50%!important;
+ --stone-warm:#dec99e!important;
+ -webkit-tap-highlight-color:transparent!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+ background-color:#dec99e!important;
+ background-position:center center,center center!important;
+ background-size:100% 100%,100% 100%!important;
+ transition:transform .09s ease-out,box-shadow .09s ease-out!important;
+}
+#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:disabled:not(.correct):not(.wrong):not(.bu3922-eliminated){
+ opacity:1!important;
+ filter:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+ #bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+  transition:none!important;
+ }
+}
