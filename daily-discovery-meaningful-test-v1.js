@@ -103,18 +103,17 @@ function renderToday(){
  '<section class="bu-insight-reflect" aria-label="Personal reflection"><span class="bu-insight-kicker">♡ A MOMENT TO REFLECT</span>'+
  '<p>'+escapeHTML(x.reflect)+'</p></section>'+
  '<div class="bu-insight-next">'+
- iconButton(isSaved()?'♥ Saved to My Discoveries':'♡ Save this Discovery','save','secondary')+
- iconButton('◈ See Today’s Sharing Idea ›','share')+
+ iconButton(isSaved()?'♥ Saved':'♡ Save','save','secondary','aria-label="Save or remove this discovery"')+
+ iconButton('◈ Share the Thought','share')+
  '</div>'+
  (!preview&&!state().read.includes(localDay())?
-  '<div class="bu-insight-next">'+iconButton('✓ Mark today’s discovery as read','read','secondary')+'</div>':
-  !preview?'<p class="bu-insight-note">✓ Today’s discovery enjoyed. You can return to it whenever you like.</p>':'')+
+  '<div class="bu-insight-next">'+iconButton('✓ Mark as Read','read','secondary')+'</div>':
+  !preview?'<p class="bu-insight-note">✓ Read today. You can return to it anytime.</p>':'')+
  footerNote()+'</div>';
 }
 function renderShare(){
  const x=item();if(!x)return '';
  const s=x.share;
- const saved=!isCurrentToday()||view.preview;
  return cover(x,'◈ SHARE THE THOUGHT · '+x.category,true)+
  '<div class="bu-insight-section bu-insight-share-page">'+
  '<div class="bu-insight-share-banner"><h3>A Thought Worth Sharing</h3>'+
@@ -129,10 +128,9 @@ function renderShare(){
  '<div class="bu-insight-sources"><p>'+escapeHTML(s.bridge)+' '+
  link(s.url,s.reference)+'. There is no need to continue if the person is not interested.</p></div>'+
  '<div class="bu-insight-next">'+
- iconButton('‹ Back to the Discovery','today','secondary')+
- iconButton('✦ Copy the Sharing Idea','copy')+
+ iconButton('‹ Today','today','secondary')+
+ iconButton('♡ Copy','copy','copy-compact','aria-label="Copy the sharing idea"')+
  '</div>'+
- (!saved?'<div class="bu-insight-next">'+iconButton('✓ Remember today’s thought','read','secondary')+'</div>':'')+
  footerNote()+'</div>';
 }
 function renderSaved(){
@@ -144,8 +142,8 @@ function renderSaved(){
  '<button class="bu-insight-saved-row" type="button" data-insight-open="'+escapeHTML(x.id)+'" aria-label="Read '+escapeHTML(x.title)+'">'+
  '<span class="bu-insight-thumb"><img data-insight-image="'+escapeHTML(x.id)+'" src="'+escapeHTML(x.art||fallbackArt(x))+'" alt="" loading="eager" decoding="async"></span>'+
  '<span><strong>'+escapeHTML(x.title)+'</strong><small>'+escapeHTML(x.category)+'</small></span></button>'
- ).join(''):'<div class="bu-insight-empty">Nothing saved yet. Open today’s thought and tap “Save this Discovery” to start your collection.</div>')+
- '<div class="bu-insight-next">'+iconButton('✦ Open Today’s Discovery','current')+'</div>'+
+ ).join(''):'<div class="bu-insight-empty">Nothing saved yet. Open today’s thought and tap “Save” to start your collection.</div>')+
+ '<div class="bu-insight-next">'+iconButton('✦ Today','current')+'</div>'+
  footerNote()+'</section>';
 }
 function showToast(message){
@@ -184,14 +182,15 @@ function hydrateIllustrations(){
   probe.src=x.art;
  }
 }
-function display(){
+function display(preserveScroll=false){
  if(!view.open)return;
  const root=$('#bu375-daily'),body=$('#bu375-body');
  if(!root||!body)return;
  root.classList.add('bu-insight-active');body.classList.add('bu-insight-reading');
+ const previousScroll=preserveScroll?body.scrollTop:0;
  body.innerHTML='<div class="bu-insight-wrap">'+tabs()+
  (view.tab==='today'?renderToday():view.tab==='share'?renderShare():renderSaved())+'</div>';
- body.scrollTop=0;
+ body.scrollTop=previousScroll;
  hydrateIllustrations();
 }
 function open(){
@@ -222,7 +221,7 @@ function read(){
  if(!state().read.includes(localDay())){
   if(!update({read:[...state().read,localDay()].slice(-120)})){showToast('Could not save. Please check browser storage.');return}
  }
- display();updateHome();showToast('✓ A thought to carry with you today');
+ display(true);updateHome();showToast('✓ Marked as read');
 }
 function save(){
  const id=item()?.id;
@@ -230,7 +229,7 @@ function save(){
  const set=new Set(state().saved);
  if(set.has(id))set.delete(id);else set.add(id);
  if(!update({saved:[...set].slice(-150)})){showToast('Could not save this discovery.');return;}
- display();showToast(isSaved()?'♡ Added to saved discoveries':'Removed from saved discoveries');
+ display(true);showToast(isSaved()?'♡ Saved':'Removed from Saved');
 }
 /* Daily Discovery tabs AND official JW.org source links use the approved
  * positive chime. The native global UI listeners can play a loud menu knock
@@ -255,8 +254,12 @@ function dailySourceLink(target){
  // Never interfere with navigation outside our active Daily screen.
  return a.protocol==='https:'&&/^(?:www\.)?jw\.org$/i.test(a.hostname)?a:null;
 }
+function dailyControl(target){
+ if(!view.open)return null;
+ return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-action],#bu375-body.bu-insight-reading [data-insight-open]')||null;
+}
 function silenceNativeDailyPress(e){
- if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)))return;
+ if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)&&!dailyControl(e.target)))return;
  // Preserve default Android tap/click and native anchor navigation.
  // Stop older game-wide menu knock handlers on document and descendants.
  e.stopImmediatePropagation();
@@ -296,6 +299,28 @@ async function copy(){
   showToast('Opening idea copied — make it your own!');
  }catch(_){showToast('Copy unavailable here. Long-press the text to copy it.');}
 }
+function captureDailyControlClick(e){
+ const el=dailyControl(e.target);
+ if(!el)return;
+ e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
+ const saved=el.closest('[data-insight-open]');
+ tabChime();
+ if(saved){
+  view.id=saved.dataset.insightOpen;
+  view.fromSaved=true;
+  view.preview=false;
+  switchTab('today');
+  return;
+ }
+ switch(el.dataset.insightAction){
+ case 'save':save();break;
+ case 'today':switchTab('today');break;
+ case 'share':switchTab('share');break;
+ case 'read':read();break;
+ case 'copy':copy();break;
+ case 'current':view.id=current().id;view.fromSaved=false;view.preview=!!Q.get('daily_preview');switchTab('today');break;
+ }
+}
 function click(e){
  const home=e.target.closest?.('#bu375-home-cta');
  if(home){
@@ -313,19 +338,7 @@ function click(e){
  }
  const tab=e.target.closest?.('[data-insight-tab]');
  if(tab){captureTabClick(e);return}
- const saved=e.target.closest?.('[data-insight-open]');
- if(saved){view.id=saved.dataset.insightOpen;view.fromSaved=true;view.preview=false;switchTab('today');return}
- const b=e.target.closest?.('[data-insight-action]');
- if(!b)return;
- e.preventDefault();
- switch(b.dataset.insightAction){
- case 'save':save();break;
- case 'today':switchTab('today');break;
- case 'share':switchTab('share');break;
- case 'read':read();break;
- case 'copy':copy();break;
- case 'current':view.id=current().id;view.fromSaved=false;view.preview=!!Q.get('daily_preview');switchTab('today');break;
- }
+
 }
 function boot(){
  const b=$('#bu375-home-cta'),d=$('#bu375-daily');
@@ -336,6 +349,7 @@ function boot(){
  TAB_PRESS_EVENTS.forEach(type=>window.addEventListener(type,silenceNativeDailyPress,true));
  window.addEventListener('click',captureSourceClick,true);
  window.addEventListener('click',captureTabClick,true);
+ window.addEventListener('click',captureDailyControlClick,true);
  document.addEventListener('click',click,true);
  const back=$('#bu375-back');
  if(back)back.addEventListener('click',close,false);
@@ -355,7 +369,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.0.1-test-chime-nav',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.0.2-test-bright-clarity',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
