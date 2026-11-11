@@ -1,10 +1,11 @@
 /* Bible Unfolded · Meaningful Daily Discovery · editorial TEST collection
- * Each source link was checked against the actual NWT (2013) or official
- * JW.org history/Insight source on 2026-11-10.
+ * Each source was checked against the NWT (2013), JW.org Study Bible,
+ * or official Insight/history material on 2026-11-10 and 2026-11-11.
  * This is freshly written synopsis/reflect/share copy, NOT Bible quotation.
  * Historical statements are explicitly identified as such, and personal
  * applications are framed as reflections, not invented Bible quotations.
- * The 18-item catalog is a working editorial pilot, not an infinite library.
+ * The 30-item catalog is an editorial pilot, not an infinite library.
+ * Days 19–30 are sourced in docs/DAILY_DISCOVERY_EDITORIAL_19_TO_30_2026-11-11.md.
  */
 (()=>{'use strict';
 const B='https://www.jw.org/en/library/bible/nwt/books/';
