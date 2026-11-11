@@ -89,6 +89,63 @@ const scenes={
     assert(selected.text.length>55,'Each preview shows meaningful individual content');
     console.log('BOOK_PICKER_'+width+'_'+id,JSON.stringify(selected));
    }
+   // The approved three-demo buttons remain, and a compact select now offers
+   // each existing lesson without adding 30 individual buttons on a phone.
+   const catalog=await page.evaluate(()=>[...document.querySelectorAll('[data-insight-book-select] option')]
+      .map(o=>({id:o.value,title:o.textContent.trim()})));
+   assert.equal(catalog.length,30,'One browse option per existing Daily Discovery');
+   assert.equal(new Set(catalog.map(o=>o.id)).size,30,'Every chapter selection uses a unique saved-data ID');
+   const regularIDs=await page.evaluate(()=>window.BUDailyDiscoveryLibrary.map(d=>d.id));
+   assert.deepEqual(catalog.map(o=>o.id),regularIDs,'Picker preserves original editorial order');
+   // All 30 must actually render with an existing local image; visual matches
+   // are explained by the visible artist/thematic illustration labels.
+   if(width===390){
+    const allArt=await page.evaluate(async()=>{
+      const results=[];
+      const dropdown=document.querySelector('[data-insight-book-select]');
+      for(const choice of [...dropdown.options]){
+       dropdown.value=choice.value;
+       dropdown.dispatchEvent(new Event('change',{bubbles:true}));
+       const id=window.BUDailyInsightV1.inspect().id;
+       const picture=document.querySelector('.bu-insight-cover')?.style.backgroundImage||'';
+       const label=document.querySelector('.bu-book-scene-label')?.textContent||'';
+       const src=picture.match(/url\(["']?([^"')]+)["']?\)/)?.[1]||'';
+       const ok=await new Promise(resolve=>{
+        const img=new Image();img.onload=()=>resolve(img.naturalWidth>=600);
+        img.onerror=()=>resolve(false);img.src=src;
+       });
+       results.push({id,src,ok,label,heading:document.querySelector('.bu-insight-cover h2')?.textContent});
+      }
+      return results;
+    });
+    assert.equal(allArt.length,30);
+    assert(allArt.every((r,i)=>r.id===catalog[i].id),'All chapters navigate independently');
+    assert(allArt.every(r=>r.ok),'All 30 artwork URLs resolve to usable images: '+JSON.stringify(allArt.filter(r=>!r.ok)));
+    assert(allArt.every(r=>['Artist’s reconstruction','Thematic illustration'].includes(r.label)),
+      'Every historical setting has an honest source label');
+    assert.equal(new Set(allArt.map(r=>r.src)).size,16,'Curated 16-image library, not 30 random illustrations');
+    console.log('BOOK_CURATED_30',JSON.stringify(allArt.map(x=>({id:x.id,art:x.src,label:x.label}))));
+   }
+   // Realistic Android-style native select opens on a tap: test no click
+   // cancellation or leakage into old global document-level knock handlers.
+   const inputAudit=await page.evaluate(()=>{
+      const dropdown=document.querySelector('[data-insight-book-select]');
+      const oldClick=[];
+      const catchOld=e=>{if(e.target===dropdown)oldClick.push(e.type)};
+      document.addEventListener('pointerdown',catchOld,true);
+      document.addEventListener('click',catchOld,true);
+      const down=new PointerEvent('pointerdown',{bubbles:true,pointerId:9,pointerType:'touch'});
+      dropdown.dispatchEvent(down);
+      const ev=new MouseEvent('click',{bubbles:true,cancelable:true});
+      dropdown.dispatchEvent(ev);
+      return {oldClick,defaultAllowed:!ev.defaultPrevented};
+   });
+   assert.deepEqual(inputAudit.oldClick,[],'No inherited document-level knock on dropdown');
+   assert(inputAudit.defaultAllowed,'Native selector click must remain functional');
+   await page.evaluate(()=>{
+     const select=document.querySelector('[data-insight-book-select]');
+     select.value='ruth';select.dispatchEvent(new Event('change',{bubbles:true}));
+   });
    await page.reload({waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
    await page.evaluate(()=>window.BUDailyInsightV1.open());
