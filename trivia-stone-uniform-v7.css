@@ -1,0 +1,45 @@
+/* TEST ONLY — Bible Trivia stone consistency hotfix V7.
+ * Every unanswered A/B/C/D has the SAME photo, sizing, placement, tint, and
+ * opacity. No JS changes to game logic, scoring, results, or audio.
+ * Higher specificity than dynamically appended legacy tablet styles.
+ * The native real-stone source stays licensed and locally hosted.
+ */
+#bu34-trivia#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+  background-color:#d4be94!important;
+  background-image:
+    linear-gradient(145deg,rgba(243,221,183,.35),rgba(211,185,141,.27)),
+    url("assets/ui/trivia-real-rock-v4.jpg?v=1")!important;
+  background-size:100% 100%,100% 100%!important;
+  background-position:center center,center center!important;
+  background-repeat:no-repeat,no-repeat!important;
+  background-blend-mode:normal,normal!important;
+  background-attachment:scroll,scroll!important;
+  opacity:1!important;
+  filter:none!important;
+  -webkit-tap-highlight-color:transparent!important;
+  transition:transform .09s ease-out,box-shadow .09s ease-out!important;
+}
+/* Remove legacy per-answer photo overlays and filtered GPU compositing. */
+#bu34-trivia#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong)::before{
+  content:none!important;
+  display:none!important;
+  background:none!important;
+  opacity:0!important;
+  filter:none!important;
+  mix-blend-mode:normal!important;
+}
+/* Hint-eliminated answers remain distinctly muted. */
+#bu34-trivia#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer].bu3922-eliminated:not(.correct):not(.wrong){
+  opacity:.32!important;
+  filter:grayscale(.4)!important;
+}
+/* Preserve status feedback, never leave photo visible over green/red. */
+#bu34-trivia#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:is(.correct,.wrong)::before{
+  content:none!important;
+  display:none!important;
+}
+@media(prefers-reduced-motion:reduce){
+ #bu34-trivia#bu34-trivia #bu34-body.bu65-playing > .bu34-question > .bu34-answer[data-answer]:not(.correct):not(.wrong){
+  transition:none!important;
+ }
+}
