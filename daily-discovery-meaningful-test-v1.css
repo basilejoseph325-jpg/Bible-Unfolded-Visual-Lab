@@ -341,3 +341,169 @@
    min-width:84px;padding-inline:11px;
  }
 }
+
+
+/* Optional living-history book preview — ?daily_book=1&daily_preview=peter|nile|ruth.
+   Intentional proof-of-concept only: approved teal reader unchanged by default.
+   Warm physical-page illusion inside the game's ocean-blue frame, no giant
+   fixed book prop or fake physical page-turn that would hinder scrolling. */
+#bu375-body.bu-insight-reading.bu-daily-book-preview{
+ background:
+  radial-gradient(ellipse at 92% 5%,rgba(255,224,165,.27),transparent 47%),
+  linear-gradient(160deg,#317b8b 0%,#225c70 51%,#194c62 100%)!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-wrap{
+ padding-bottom:28px;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover{
+ margin:14px 14px 0;
+ border:8px solid #eddcb8!important;
+ border-bottom:0!important;
+ border-radius:15px 15px 0 0;
+ outline:1px solid #9a783f;
+ box-shadow:0 8px 20px #092c3e70,inset 0 0 0 2px #fff2ce;
+ background-position:center!important;
+ min-height:clamp(245px,67vw,350px);
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover::before{
+ background:linear-gradient(180deg,#0a292d22 0%,#10272528 35%,#082330e3 100%),
+ radial-gradient(ellipse at 80% 14%,#ffe5b320,transparent 58%)!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover::after{
+ opacity:.78;top:12px;right:13px;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover h2{
+ color:#fff2d4;font-size:clamp(26px,6.8vw,43px)!important;
+ text-shadow:0 3px 12px #00151dec;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-scene-label{
+ position:absolute;top:14px;left:14px;
+ display:inline-flex;max-width:calc(100% - 75px);
+ padding:4px 8px;border-radius:5px;
+ background:#113b47c9;border:1px solid #f3dca089;
+ color:#ffe8b9;
+ font:700 9px/1.2 system-ui,sans-serif;
+ letter-spacing:.075em;text-transform:uppercase;z-index:1;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover .bu-insight-datestamp{
+ color:#ffe3a0;text-shadow:0 1px 6px #000;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-section:not(.bu-insight-archive){
+ position:relative;
+ margin:0 14px 18px;
+ padding:24px 17px 24px!important;
+ border:8px solid #eddbb8;
+ border-top:0;
+ border-radius:0 0 15px 15px;
+ outline:1px solid #9a783f;
+ background:
+  radial-gradient(ellipse at 8% 5%,#fffbeba8,transparent 48%),
+  repeating-linear-gradient(94deg,#f7ead500 0 16px,#8e734808 17px,#f7ead500 18px 34px),
+  linear-gradient(170deg,#f7ebd2 0%,#f1e1bf 53%,#ead5ad 100%)!important;
+ box-shadow:0 10px 22px #0b2c3866,inset 0 0 0 1px #fff7e1;
+ color:#342d24;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-section:not(.bu-insight-archive)::before{
+ content:"❧";
+ position:absolute;right:23px;top:9px;
+ color:#977342;opacity:.35;font:23px Georgia,serif;
+ pointer-events:none;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-lead{
+ padding-bottom:11px;margin-bottom:15px;
+ border-bottom:1px solid #b6966180;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-category{
+ color:#795927!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-story{
+ padding:0 4px 7px!important;
+ border:0!important;border-radius:0!important;
+ background:transparent!important;
+ box-shadow:none!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-story p{
+ color:#362d23!important;
+ font:400 clamp(16px,3.65vw,19px)/1.64 Georgia,'Times New Roman',serif!important;
+ letter-spacing:0;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-insight{
+ background:linear-gradient(125deg,#f0d49a 0%,#f6e3b6 58%,#e6c480 100%)!important;
+ border:1px solid #ad894d!important;
+ color:#372b19;
+ box-shadow:0 3px 7px #73572430;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-reflect{
+ background:linear-gradient(125deg,#ecdfc4,#e8d2a7)!important;
+ color:#3b3022!important;border:1px solid #bea170!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-reflect .bu-insight-kicker{
+ color:#76501d!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-reflect p{
+ color:#51402c!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-source{
+ background:linear-gradient(160deg,#2d6b76,#1e5967)!important;
+ color:#fff1cf!important;border:1px solid #927342!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-note{
+ color:#5b4d39!important;font-size:11px;line-height:1.5;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-page{
+ background:
+  radial-gradient(ellipse at 80% 2%,rgba(255,252,233,.7),transparent 52%),
+  linear-gradient(170deg,#f7ecd5,#ecd7b3)!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-page::before{
+ color:#976731!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-banner{
+ border-bottom-color:#a88b65a8!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-banner h3{
+ color:#503b23!important;text-shadow:none!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-banner p,
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-conversation p,
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-sources p{
+ color:#413424!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-conversation{
+ border-bottom-color:#b19a7188!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-conversation .number{
+ color:#7e5927!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-share-page .bu-insight-conversation.question p{
+ color:#68401c!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-extra{
+ color:#4d3a26!important;border-left-color:#a8793a!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-extra b{
+ color:#7b501e!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-sources a{
+ color:#78501c!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-archive .bu-insight-saved-row{
+ background:linear-gradient(116deg,#f3e2bc,#e5cd9a)!important;
+ border-color:#a77f43!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-saved-row strong{
+ color:#3b2c1d!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-saved-row small{
+ color:#7a5325!important;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-archive .bu-insight-note{
+ color:#f9ebcf!important;
+}
+@media(max-width:390px){
+ #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-cover{margin-inline:9px;border-width:6px}
+ #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-section:not(.bu-insight-archive){
+  margin-inline:9px;padding:19px 13px 21px!important;border-width:6px;
+ }
+ #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-story p{font-size:16px!important}
+}
