@@ -1,0 +1,35 @@
+name: Apply scoped Behind the Name resume/replay fix — TEST only
+on:
+  push:
+    paths:
+      - 'scripts/patch_behind_name_auto_resume_replay_v1.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: bn-index-patch-test
+  cancel-in-progress: false
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+          fetch-depth: 1
+      - name: Apply exact two-hunk patch with fail-closed checks
+        run: |
+          set -euo pipefail
+          python3 scripts/patch_behind_name_auto_resume_replay_v1.py
+          git diff --check
+          git diff --stat
+          test "$(git diff --name-only)" = "index.html"
+      - name: Commit scoped Visual Lab controller fix
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- index.html
+          git commit -m "TEST Behind the Name: resume unfinished chapter; replay mastered chapter with clean answers"
+          git push origin HEAD:main
