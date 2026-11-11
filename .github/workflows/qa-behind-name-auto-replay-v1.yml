@@ -1,0 +1,35 @@
+name: QA Behind the Name smart resume and clean replay — TEST
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'scripts/qa_behind_name_auto_resume_replay_v1.cjs'
+      - '.github/workflows/qa-behind-name-auto-replay-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check QA source and native Behind the Name controller
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_behind_name_auto_resume_replay_v1.cjs
+          grep -q 'id="btn3926-controller"' index.html
+          grep -q 'bible-unfolded-behind-name-v1' index.html
+      - name: Test resume/replay and save integrity with real mobile browser
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-name-resume-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-name-resume-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-name-resume-qa/node_modules node scripts/qa_behind_name_auto_resume_replay_v1.cjs
+      - name: Save phone evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: name-auto-replay-phone-qa
+          path: /tmp/BU-NAME-RESUME-REPLAY-*.png
+          if-no-files-found: ignore
