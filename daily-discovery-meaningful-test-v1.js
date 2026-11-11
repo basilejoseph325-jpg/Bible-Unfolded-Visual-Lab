@@ -89,6 +89,17 @@ function tabs(){
  '<button type="button" class="bu-insight-tab" role="tab" data-insight-tab="'+id+'" aria-selected="'+String(view.tab===id)+'">'+l+'</button>').join('')+
  '</nav>';
 }
+/* Only opt-in book previews get a chapter switcher; ordinary Daily Discovery
+   remains exactly as approved. Keep URL synchronized for refresh/share links. */
+function bookPreviewPicker(){
+ if(Q.get('daily_book')!=='1'||!view.preview||!BOOK_SCENES[item()?.id])return '';
+ const chapters=[['peter','Peter'],['nile','Nile'],['ruth','Ruth']];
+ return '<nav class="bu-book-preview-picker" aria-label="Illustrated discovery previews">'+
+ '<span class="bu-book-preview-caption">Explore the illustrations</span>'+
+ '<div class="bu-book-preview-options">'+chapters.map(([id,label])=>
+ '<button type="button" data-insight-preview="'+id+'" aria-pressed="'+String(item()?.id===id)+'">'+label+'</button>'
+ ).join('')+'</div></nav>';
+}
 function cover(x,kicker,compact=false){
  const art=artFor(x);
  return '<header class="bu-insight-cover'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'" data-illustration="'+escapeHTML(x.id)+'"'+(art?' style="background-image:url(&quot;'+escapeHTML(art)+'&quot;)"':'')+'>'+
@@ -203,7 +214,7 @@ function display(preserveScroll=false){
  root.classList.toggle('bu-daily-book-preview',illustrated);
  body.classList.toggle('bu-daily-book-preview',illustrated);
  const previousScroll=preserveScroll?body.scrollTop:0;
- body.innerHTML='<div class="bu-insight-wrap">'+tabs()+
+ body.innerHTML='<div class="bu-insight-wrap">'+tabs()+bookPreviewPicker()+
  (view.tab==='today'?renderToday():view.tab==='share'?renderShare():renderSaved())+'</div>';
  body.scrollTop=previousScroll;
  hydrateIllustrations();
@@ -271,7 +282,7 @@ function dailySourceLink(target){
 }
 function dailyControl(target){
  if(!view.open)return null;
- return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-action],#bu375-body.bu-insight-reading [data-insight-open]')||null;
+ return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-action],#bu375-body.bu-insight-reading [data-insight-open],#bu375-body.bu-insight-reading [data-insight-preview]')||null;
 }
 function silenceNativeDailyPress(e){
  if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)&&!dailyControl(e.target)))return;
@@ -319,6 +330,20 @@ function captureDailyControlClick(e){
  if(!el)return;
  e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
  const saved=el.closest('[data-insight-open]');
+ const preview=el.closest('[data-insight-preview]');
+ if(preview){
+  const id=preview.dataset.insightPreview;
+  if(Q.get('daily_book')!=='1'||!BOOK_SCENES[id]||!getItem(id))return;
+  if(view.id===id&&view.tab==='today')return;
+  tabChime();
+  Q.set('daily_preview',id);
+  // Do not reload: keep the main game audio, settings and saves in place.
+  // The browser URL now identifies the visible art after refresh.
+  try{history.replaceState(history.state,'',location.pathname+'?'+Q.toString()+location.hash)}catch(_){}
+  view.id=id;view.tab='today';view.fromSaved=false;view.preview=true;
+  display();
+  return;
+ }
  tabChime();
  if(saved){
   view.id=saved.dataset.insightOpen;
@@ -384,7 +409,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.1.0-test-book-optional',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.1.1-test-book-gallery',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
