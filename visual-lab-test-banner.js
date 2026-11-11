@@ -207,7 +207,7 @@ else install();
  data.onload=()=>{
   if(document.getElementById('bu-daily-insight-app-loader'))return;
   const app=document.createElement('script');app.id='bu-daily-insight-app-loader';
-  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261111-sourced-thoughts-30-v3';
+  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261111-source-chime-v4';
   document.head.append(app);
  };
  data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
