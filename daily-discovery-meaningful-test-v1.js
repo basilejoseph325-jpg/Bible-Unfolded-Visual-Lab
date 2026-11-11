@@ -42,7 +42,7 @@ const BOOK_SCENES=Object.freeze({
  tears:'family-worship-menu-art/v1/topic-30-psalms.webp',
  well:'family-worship-menu-art/v1/topic-38-jesus-ministry.webp',
  abigail:'family-worship-menu-art/v1/topic-16-david.webp',
- 'hezekiah-water':'journey-art/05_exile_return.webp',
+ 'hezekiah-water':'journey-art/04_judges_kings.webp',
  'jeremiah-field':'journey-art/05_exile_return.webp',
  'dorcas-clothes':'journey-art/07_good_news_spreads.webp',
  'lydia-purple':'journey-art/07_good_news_spreads.webp',
@@ -318,8 +318,12 @@ function dailyControl(target){
  if(!view.open)return null;
  return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-action],#bu375-body.bu-insight-reading [data-insight-open],#bu375-body.bu-insight-reading [data-insight-preview]')||null;
 }
+function bookSelectControl(target){
+ if(!view.open||Q.get('daily_book')!=='1')return null;
+ return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-book-select]')||null;
+}
 function silenceNativeDailyPress(e){
- if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)&&!dailyControl(e.target)))return;
+ if(!view.open||(!e.target?.closest?.('[data-insight-tab]')&&!dailySourceLink(e.target)&&!dailyControl(e.target)&&!bookSelectControl(e.target)))return;
  // Preserve default Android tap/click and native anchor navigation.
  // Stop older game-wide menu knock handlers on document and descendants.
  e.stopImmediatePropagation();
@@ -368,6 +372,12 @@ function chooseBookChapter(id){
  view.id=id;view.tab='today';view.fromSaved=false;view.preview=true;
  display();
  return true;
+}
+function silenceBookSelectClick(e){
+ if(!bookSelectControl(e.target))return;
+ // Never preventDefault here: Android's native select picker must still open.
+ // Only stop legacy document-level knock handlers for its activation.
+ e.stopImmediatePropagation();e.stopPropagation();
 }
 function changeBookSelector(e){
  const select=e.target?.closest?.('[data-insight-book-select]');
@@ -428,6 +438,7 @@ function boot(){
  window.addEventListener('click',captureSourceClick,true);
  window.addEventListener('click',captureTabClick,true);
  window.addEventListener('click',captureDailyControlClick,true);
+ window.addEventListener('click',silenceBookSelectClick,true);
  window.addEventListener('change',changeBookSelector,true);
  document.addEventListener('click',click,true);
  const back=$('#bu375-back');
