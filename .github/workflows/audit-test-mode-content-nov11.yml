@@ -1,0 +1,13 @@
+name: Audit TEST game counts and level inventory (read-only)
+on:
+  push:
+    paths: ['.github/workflows/audit-test-mode-content-nov11.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read-only inspect of existing mode content and level definitions
+        run: python3 .github/scripts/audit_modes_inventory_nov11.py
