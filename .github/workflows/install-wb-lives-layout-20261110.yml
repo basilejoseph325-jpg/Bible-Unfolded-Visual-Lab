@@ -44,7 +44,9 @@ jobs:
           from pathlib import Path
           h=Path('index.html').read_text()
           assert h.count('id="bu-wb-score-layout-test-v1"')==1
-          assert 'visual-lab-test-banner.js?v=20261110-wb-lives-layout-v2' in h
+          assert h.count('id="bu-james-life-direct-style-v2"')==1
+          assert h.count('id="bu-james-life-direct-script-v2"')==1
+          assert 'james-return-loop-test-v1.js?v=20261110-recover-life-v2' in h
           assert 'trivia-stone-uniform-v7.css' in h
           print('PASS: new TEST styles loaded and prior Trivia visual fix preserved')
           PY
