@@ -242,3 +242,102 @@
  width:100%;height:100%;display:block;object-fit:cover;object-position:center;
  border-radius:inherit;filter:saturate(.94) contrast(1.04)
 }
+
+
+/* Daily Discovery sunshine palette v3 — TEST ONLY, Nov 11 2026.
+   Lighter ocean/lagoon and a touch of warm amber light, NOT a white-page redesign.
+   Scoped entirely to the reimagined Daily reader; original modes unaffected. */
+#bu375-daily.bu-insight-active{
+  background:linear-gradient(155deg,#317c8b 0%,#276477 48%,#1c4d60 100%)!important;
+}
+#bu375-daily.bu-insight-active .bu34-top{
+  background:linear-gradient(105deg,#20566b 0%,#2e6d7e 55%,#24576a 100%)!important;
+  border-bottom-color:#e2ba79;
+  box-shadow:0 4px 12px #052b3859;
+}
+#bu375-body.bu-insight-reading{
+  background:
+   radial-gradient(ellipse at 92% 10%,rgba(249,213,139,.21),transparent 46%),
+   radial-gradient(ellipse at -12% 60%,rgba(96,187,180,.24),transparent 50%),
+   linear-gradient(155deg,#2c7584 0%,#1d6274 45%,#184c60 100%)!important;
+  scrollbar-color:#e1bc78 #22596b;
+}
+#bu375-body.bu-insight-reading .bu-insight-tabs{
+  background:linear-gradient(180deg,#256b7f 68%,#256b7ff3)!important;
+  border-bottom-color:#e5c28582;
+  box-shadow:0 3px 10px #0c3c4a5c;
+}
+#bu375-body.bu-insight-reading .bu-insight-tab{
+  background:linear-gradient(170deg,#28677d,#205c70);
+  color:#fff0d0;border-color:#e4c18280;
+}
+#bu375-body.bu-insight-reading .bu-insight-tab[aria-selected="true"]{
+  background:linear-gradient(180deg,#fff1b9,#ecc581 80%,#daab60);
+  color:#173942;box-shadow:0 3px 10px #093c4a65;
+}
+#bu375-body.bu-insight-reading .bu-insight-story{
+  background:linear-gradient(130deg,#28758a 0%,#1d5e72 82%)!important;
+  border-color:#f0cf90b5;box-shadow:0 9px 18px #0b334c52,inset 0 1px #ffecb250;
+}
+#bu375-body.bu-insight-reading .bu-insight-story p{color:#fff4db}
+#bu375-body.bu-insight-reading .bu-insight-reflect{
+  background:linear-gradient(125deg,#347d8d,#215c70 94%)!important;
+  border-color:#efce9670;
+}
+#bu375-body.bu-insight-reading .bu-insight-source{
+  background:linear-gradient(160deg,#32788b,#21576b)!important;
+  border-color:#e7c387a0;color:#fff1cd;
+}
+#bu375-body.bu-insight-reading .bu-insight-button.secondary{
+  background:linear-gradient(180deg,#327c91,#205a6d 87%)!important;
+  border-color:#e5c78cab;color:#ffedc7;
+}
+#bu375-body.bu-insight-reading .bu-insight-button{box-shadow:0 3px 8px #123f4f72,inset 0 1px #fff7ce}
+#bu375-body.bu-insight-reading .bu-insight-next .bu-insight-button.copy-compact{
+  flex:0 0 auto!important;min-width:90px;max-width:122px;
+  padding-inline:17px;white-space:nowrap;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page{
+  background:
+   radial-gradient(ellipse at 86% 0%,rgba(255,220,153,.25),transparent 44%),
+   radial-gradient(ellipse at -14% 72%,rgba(108,191,186,.26),transparent 47%),
+   linear-gradient(166deg,#307b87 0%,#246779 48%,#1b5369 100%)!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-share-banner h3{
+  color:#fff0c9!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-share-banner p,
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-conversation p,
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-sources p{
+  color:#fff3dc!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-share-page .bu-insight-extra{color:#fff0da}
+#bu375-body.bu-insight-reading .bu-insight-archive{
+  min-height:calc(100dvh - 165px);
+  background:
+   radial-gradient(ellipse at 86% 10%,rgba(249,213,146,.25),transparent 46%),
+   radial-gradient(ellipse at 12% 68%,rgba(117,195,183,.24),transparent 54%),
+   linear-gradient(155deg,#2c7685 0%,#256a7a 42%,#1a5266 100%)!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-archive h2{color:#fff0c6!important}
+#bu375-body.bu-insight-reading .bu-insight-archive>p{color:#f7e9ce!important}
+#bu375-body.bu-insight-reading .bu-insight-saved-row{
+  background:linear-gradient(112deg,#337b8a 0%,#205b72 100%)!important;
+  border-color:#f2d091b8!important;
+  box-shadow:0 6px 15px #0b384851,inset 0 1px 0 #fff4!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-saved-row:active{
+  background:linear-gradient(112deg,#3c8896,#25677b)!important;
+}
+#bu375-body.bu-insight-reading .bu-insight-empty{
+  background:linear-gradient(135deg,#367b89,#225f71)!important;
+  border-color:#ecd09a;
+}
+#bu375-body.bu-insight-reading .bu-insight-note{
+  color:#f1e9d8;font-size:11px;line-height:1.5;
+}
+@media(max-width:380px){
+ #bu375-body.bu-insight-reading .bu-insight-next .bu-insight-button.copy-compact{
+   min-width:84px;padding-inline:11px;
+ }
+}
