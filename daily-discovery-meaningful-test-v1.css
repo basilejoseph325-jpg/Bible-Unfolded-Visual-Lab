@@ -507,3 +507,41 @@
  }
  #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-insight-story p{font-size:16px!important}
 }
+
+/* TEST-only chapter picker: accessible, small, and part of the teal frame.
+   Shown only for explicit ?daily_book=1 editorial previews. */
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-preview-picker{
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+ gap:8px 13px;padding:9px 12px 10px;margin:0 auto;
+ background:linear-gradient(120deg,#2a7181,#1e586b);
+ border-bottom:1px solid #e4c68c9c;color:#f5ddb0;
+ box-shadow:inset 0 1px #ffe8ba24;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-preview-caption{
+ font:750 10px/1.3 system-ui,sans-serif;text-transform:uppercase;letter-spacing:.095em;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-preview-options{
+ display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:nowrap;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview [data-insight-preview]{
+ appearance:none;min-height:35px;min-width:66px;padding:7px 11px;
+ border:1px solid #d0b07b;border-radius:9px;
+ background:linear-gradient(#246378,#194b5f);color:#ffe8b7;
+ font:800 12px/1.2 system-ui,sans-serif;cursor:pointer;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview [data-insight-preview][aria-pressed="true"]{
+ background:linear-gradient(#fff0be,#deb56e);color:#213c41;
+ border-color:#fff3cf;box-shadow:0 2px 6px #07334270;
+}
+#bu375-body.bu-insight-reading.bu-daily-book-preview [data-insight-preview]:focus-visible{
+ outline:3px solid #fff0a7;outline-offset:2px;
+}
+@media(max-width:365px){
+ #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-preview-picker{
+  gap:5px;padding:7px 6px 9px;
+ }
+ #bu375-body.bu-insight-reading.bu-daily-book-preview .bu-book-preview-caption{font-size:9px}
+ #bu375-body.bu-insight-reading.bu-daily-book-preview [data-insight-preview]{
+  min-width:65px;min-height:34px;padding:6px 9px;font-size:11px
+ }
+}
