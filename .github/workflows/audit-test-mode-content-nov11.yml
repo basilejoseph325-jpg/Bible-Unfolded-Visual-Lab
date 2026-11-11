@@ -1,7 +1,9 @@
 name: Audit TEST game counts and level inventory (read-only)
 on:
   push:
-    paths: ['.github/workflows/audit-test-mode-content-nov11.yml']
+    paths:
+      - '.github/workflows/audit-test-mode-content-nov11.yml'
+      - '.github/scripts/audit_modes_inventory_nov11.py'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
