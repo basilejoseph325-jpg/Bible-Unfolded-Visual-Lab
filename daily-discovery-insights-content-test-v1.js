@@ -316,6 +316,81 @@ const items=[
  share:{moment:'When someone likes the small, vivid details in Bible history.',opener:'Do you remember why there was a red cord hanging from a window in Jericho?',thought:'It was the sign the spies arranged with Rahab so she and her family could be identified when the city fell.',question:'What do you think her quick action tells us about her faith?',bridge:'Joshua 2 gives the promise, and Joshua 6 tells what happened afterward.',reference:'Joshua 2:8–21; 6:22–25',url:B+'joshua/6/'}
 }
 
+,
+{
+ id:'widow-oil',category:'JEHOVAH’S CARE',title:'What Was Left in the House?',
+ subtitle:'A widow had almost nothing, but Elisha asked a question.',
+ source:'2 Kings 4:1–7 — New World Translation',reference:'2 Kings 4:1–7',url:B+'2-kings/4/',
+ body:[
+  'A widow was worried that a creditor would take her two sons as slaves. She asked Elisha for help. His first question was simple: What do you have in the house?',
+  'All she had was a jar of oil. Elisha told her to borrow empty containers from her neighbors. As her sons handed them over, she kept pouring. The oil continued until there were no more containers.',
+  'Elisha told her to sell the oil, pay her debts, and live on what remained. The account is striking because the help addressed the actual problem the family faced.'
+ ],takeaway:'Jehovah cares about the everyday burdens people carry.',
+ reflect:'What practical concern could I bring to Jehovah in prayer today?',
+ share:{moment:'When someone is worried about providing for their family.',opener:'There is a beautiful Bible account that starts with a widow saying she has almost nothing left.',thought:'Elisha helped her, and the account specifically mentions paying her debt and caring for her sons.',question:'Do you like that the Bible records concern for practical family problems?',bridge:'You can read the seven-verse account at 2 Kings 4:1–7.',reference:'2 Kings 4:1–7',url:B+'2-kings/4/'}
+},
+{
+ id:'nehemiah-builders',category:'ANCIENT JERUSALEM',title:'Goldsmiths, Families, and a City Wall',
+ subtitle:'The surprising variety of people who helped rebuild Jerusalem.',
+ source:'Nehemiah 3:1–32 — New World Translation',reference:'Nehemiah 3:1–32',url:B+'nehemiah/3/',
+ body:[
+  'Nehemiah chapter 3 may look like a long list of names. But read it slowly and you will find a whole community at work on Jerusalem’s wall.',
+  'Priests worked on one gate. Goldsmiths and makers of ointment repaired other sections. A man named Shallum worked alongside his daughters. Some people repaired a stretch close to their own home.',
+  'These were not all professional builders. Different people took responsibility for different parts. The result was a shared effort, and the Bible remembered many of their names.'
+ ],takeaway:'There is value in doing the part we are able to do.',
+ reflect:'What strength or skill could I use to support people around me?',
+ share:{moment:'When a friend talks about teamwork, family projects, or volunteering.',opener:'Did you know Jerusalem’s wall was repaired by people with very different jobs?',thought:'Nehemiah mentions priests, goldsmiths, ointment makers, and even a family whose daughters helped.',question:'Does that change how you picture the work of rebuilding an ancient city?',bridge:'The details are tucked into Nehemiah chapter 3.',reference:'Nehemiah 3:1–32',url:B+'nehemiah/3/'}
+},
+{
+ id:'paul-storm',category:'COURAGE UNDER PRESSURE',title:'The Most Encouraging Meal on a Stormy Ship',
+ subtitle:'Paul gave people a reason to eat when they were terrified.',
+ source:'Acts 27:20–38 — New World Translation',reference:'Acts 27:20–38',url:B+'acts/27/',
+ body:[
+  'A fierce storm battered the ship carrying Paul toward Rome. For days there was no sun or starlight, and the people on board feared they might not survive.',
+  'Paul told them to take courage. He explained that God had assured him their lives would be spared, although the ship would be lost. Then, after many anxious days, he urged everyone to eat, gave thanks to God, and began eating himself.',
+  'The account says the others took courage and ate too. Sometimes encouragement is a hopeful word. Sometimes it also includes helping someone take the next practical step.'
+ ],takeaway:'Hope can steady us enough to care for our immediate needs.',
+ reflect:'When someone is overwhelmed, could a reassuring word and practical help make a difference?',
+ share:{moment:'When someone is stressed, frightened, or going through a crisis.',opener:'Have you ever noticed that Paul encouraged people on a storm-tossed ship to do something very ordinary—eat?',thought:'After explaining why they could have hope, he gave thanks and shared a moment of calm in the middle of danger.',question:'Why do you think a small practical action can help when people are afraid?',bridge:'Acts 27:20–38 tells the whole scene.',reference:'Acts 27:20–38',url:B+'acts/27/'}
+},
+{
+ id:'sparrows',category:'JEHOVAH’S QUALITIES',title:'The Fifth Sparrow',
+ subtitle:'A little marketplace detail behind Jesus’ comforting words.',
+ source:'Luke 12:6–7 — New World Translation; Study Bible note on Luke 12:6',
+ reference:'Luke 12:6–7',url:'https://www.jw.org/en/library/bible/study-bible/books/luke/12/',
+ body:[
+  'Jesus once used a little market purchase to teach something tender. He said five sparrows could be bought for two coins of small value. The Study Bible explains that the fifth bird may have been added at no extra cost.',
+  'Sparrows were not expensive or impressive. Yet Jesus said that not one of them was forgotten by God. Then he told his disciples that they were worth far more than many sparrows.',
+  'What a gentle way to make the point. He used something familiar and small to help people feel that they mattered.'
+ ],takeaway:'We are never too ordinary to matter to Jehovah.',
+ reflect:'When I feel overlooked, what does Jesus’ comparison remind me about my worth?',
+ share:{moment:'When someone enjoys birds, nature, or little facts from ancient daily life.',opener:'Did you know Jesus once mentioned five sparrows being sold for just two small coins?',thought:'He used that familiar scene to remind his listeners that God does not overlook even a small bird.',question:'How might that thought help someone who feels forgotten?',bridge:'Luke 12:6–7 is brief but really comforting.',reference:'Luke 12:6–7',url:B+'luke/12/'}
+},
+{
+ id:'baruch-scroll',category:'BIBLE HISTORY AND WRITING',title:'A Scroll Was Burned. The Message Was Not Lost.',
+ subtitle:'A remarkable moment involving Jeremiah and his secretary Baruch.',
+ source:'Jeremiah 36:1–32 — New World Translation',reference:'Jeremiah 36:1–32',url:B+'jeremiah/36/',
+ body:[
+  'Before printing presses, a message could be written by hand on a scroll. Jeremiah dictated words from Jehovah, and Baruch wrote them down in ink and later read the scroll aloud.',
+  'The message eventually reached King Jehoiakim. He cut up the scroll and threw the pieces into a fire. That sounds like the end of the document, but it was not the end of the account.',
+  'Jehovah told Jeremiah to take another scroll. Baruch wrote the words again, and more were added. The event reminds us that destroying the paper was not the same as silencing the message.'
+ ],takeaway:'Truth does not lose its worth when someone refuses to hear it.',
+ reflect:'What helps me remain calm when something important to me is dismissed?',
+ share:{moment:'When someone talks about old books, writing, or how ancient texts survived.',opener:'There is a surprising Bible story about a king who burned a scroll while it was being read.',thought:'Jeremiah later dictated the message again, and Baruch put it on another scroll.',question:'Does that make you curious about how people preserved important words before printing presses?',bridge:'Jeremiah 36 gives the details.',reference:'Jeremiah 36:1–32',url:B+'jeremiah/36/'}
+},
+{
+ id:'amos-work',category:'BIBLE PEOPLE AND THEIR WORK',title:'The Prophet Who Looked After Fig Trees',
+ subtitle:'Amos had a very ordinary job before being sent to speak.',
+ source:'Amos 7:10–15 — New World Translation',reference:'Amos 7:10–15',url:B+'amos/7/',
+ body:[
+  'When you picture a prophet, you might imagine someone who had spent his whole life in a special position. Amos described a different background.',
+  'He said that he was a herdsman and that he cared for sycamore fig trees. Then Jehovah took him from following the flock and told him to prophesy to Israel. Later, when a priest tried to send him away, Amos explained how he had received his assignment.',
+  'His story is a memorable reminder that a person’s earlier job or social position does not tell us everything about what they can do.'
+ ],takeaway:'A humble background does not limit the good a person can accomplish.',
+ reflect:'Could I be underestimating someone because of the work they do or where they started?',
+ share:{moment:'When someone discusses jobs, farming, or feeling unqualified.',opener:'Here is a Bible detail I did not expect: one prophet used to care for sycamore fig trees.',thought:'Amos said he had been a herdsman before Jehovah sent him to speak to Israel.',question:'Doesn’t that challenge the idea that someone must have an impressive background to make a difference?',bridge:'Amos 7:10–15 tells us how he described his work.',reference:'Amos 7:10–15',url:B+'amos/7/'}
+}
+
 ];
 window.BUDailyDiscoveryImagePool=ROTATING_ART;
 window.BUDailyDiscoveryLibrary=Object.freeze(items.map((x,i)=>Object.freeze({
