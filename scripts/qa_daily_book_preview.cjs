@@ -102,9 +102,10 @@ const scenes={
    if(width===390){
     const allArt=await page.evaluate(async()=>{
       const results=[];
-      const dropdown=document.querySelector('[data-insight-book-select]');
-      for(const choice of [...dropdown.options]){
-       dropdown.value=choice.value;
+      const ids=[...document.querySelector('[data-insight-book-select]').options].map(o=>o.value);
+      for(const selectedId of ids){
+       const dropdown=document.querySelector('[data-insight-book-select]');
+       dropdown.value=selectedId;
        dropdown.dispatchEvent(new Event('change',{bubbles:true}));
        const id=window.BUDailyInsightV1.inspect().id;
        const picture=document.querySelector('.bu-insight-cover')?.style.backgroundImage||'';
