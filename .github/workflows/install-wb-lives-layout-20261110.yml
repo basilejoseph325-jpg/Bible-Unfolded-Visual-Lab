@@ -1,0 +1,60 @@
+name: Install Word Builder score and Trivia lives recovery fixes (TEST)
+on:
+  push:
+    paths:
+      - '.github/workflows/install-wb-lives-layout-20261110.yml'
+      - '.github/scripts/install_wb_lives_20261110.py'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax QA and bounded gameplay assertions
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check james-return-loop-test-v1.js
+          node --check visual-lab-test-banner.js
+          python3 - <<'PY'
+          from pathlib import Path
+          js=Path('james-return-loop-test-v1.js').read_text()
+          css=Path('word-builder-score-layout-test-v1.css').read_text()
+          loader=Path('visual-lab-test-banner.js').read_text()
+          assert js.count('const LIMIT=5,REFILL_MS=15*60*1000;')==1
+          assert 'refill:timer-repair' in js
+          assert "if(state.lives>=LIMIT)return 'Full';" in js
+          assert "state.lives===0" in js and 'Refill all 5 · ◈75 TEST' in js
+          assert "const KEY='bu-james-return-loop-v1-test-only'" in js
+          assert 'function restoreLives()' in js and "return spend(75,'buy:lives'" in js
+          assert '.wb36-players.wb37-mini-players .wb36-player small' in css
+          assert '.wb36-status.has-message' in css
+          assert '.wb37-scorebar' in css and '.wb39-wallet' in css
+          assert css.count('{')==css.count('}')
+          assert 'james-return-loop-test-v1.js?v=20261110-recover-life-v2' in loader
+          print('PASS: timer repair, 15-min and 75 TEST-token rules, score label layout, no native wallet mutation')
+          PY
+      - name: Install versioned direct TEST page stylesheet and loader
+        run: python3 .github/scripts/install_wb_lives_20261110.py
+      - name: Check page safely changed (no other game markup modified)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          h=Path('index.html').read_text()
+          assert h.count('id="bu-wb-score-layout-test-v1"')==1
+          assert 'visual-lab-test-banner.js?v=20261110-wb-lives-layout-v2' in h
+          assert 'trivia-stone-uniform-v7.css' in h
+          print('PASS: new TEST styles loaded and prior Trivia visual fix preserved')
+          PY
+      - name: Commit TEST index entry point
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add index.html
+          if git diff --cached --quiet; then echo 'already installed'; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "TEST: load Word Builder HUD and recovered James life timer"
+          git push origin HEAD:main
