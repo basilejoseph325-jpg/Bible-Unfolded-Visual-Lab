@@ -15,7 +15,7 @@ async function inject(page){
  await page.addStyleTag({url:root+'daily-discovery-meaningful-test-v1.css'});
  await page.addScriptTag({url:root+'daily-discovery-insights-content-test-v1.js'});
  await page.addScriptTag({url:root+'daily-discovery-meaningful-test-v1.js'});
- await page.waitForFunction(()=>window.BUDailyInsightV1&&window.BUDailyInsightV1.libraryCount()===18,{timeout:10000});
+ await page.waitForFunction(()=>window.BUDailyInsightV1&&window.BUDailyInsightV1.libraryCount()===30,{timeout:10000});
 }
 (async()=>{
  let browser;
@@ -28,7 +28,7 @@ async function inject(page){
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    await page.goto(root+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForSelector('#bu375-home-cta',{timeout:60000});
-   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===18,{timeout:25000});
+   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:25000});
    assert(await page.evaluate(()=>!!document.getElementById('bu-daily-insight-app-loader')),
       'New Daily Discovery must be loaded by native TEST loader without manual injection');
    // User can dismiss the original daily checkmark popup; never modify it.
@@ -178,8 +178,36 @@ async function inject(page){
   assert(assetHealth.every(x=>x.ok),'Every reusable image must load: '+JSON.stringify(assetHealth));
   assert(audit.every((x,i)=>x.image===artPool[i%artPool.length]),
    'Entries reuse the same pool, rather than having bespoke photos');
+
+  // Dedicated new-batch checks: no duplicate ids, stable original entries,
+  // reliable source links, and varied subjects without changing native saves.
+  const ids=await p.evaluate(()=>window.BUDailyDiscoveryLibrary.map(x=>x.id));
+  const expectedNew=['hezekiah-water','jeremiah-field','dorcas-clothes','lydia-purple',
+    'widow-coins','rahab-cord','widow-oil','nehemiah-builders','paul-storm',
+    'sparrows','baruch-scroll','amos-work'];
+  assert.equal(new Set(ids).size,30,'Every discovery has a unique durable save id');
+  assert.deepEqual(ids.slice(18),expectedNew,'Original 18 index positions and new batch order are stable');
+  assert.equal(ids[0],'nile');assert.equal(ids[17],'abigail');
+  const next=await p.evaluate(()=>window.BUDailyDiscoveryLibrary.slice(18).map(x=>({
+    id:x.id,body:x.body.join(' '),source:x.source,reference:x.reference,
+    url:x.url,takeaway:x.takeaway,reflection:x.reflect,share:x.share
+  })));
+  for(const entry of next){
+    assert(entry.body.length>350&&entry.body.length<1300,'Warm clear explanation length: '+entry.id);
+    assert(entry.takeaway.length>=30&&entry.reflection.length>=35,'Reflection and takeaway: '+entry.id);
+    assert(entry.source.includes('New World Translation')||entry.source.includes('Study Bible'),
+      'JW Bible/source grounded: '+entry.id);
+    assert(entry.reference&&/^https:\\/\\/www\\.jw\\.org\\/en\\//.test(entry.url),
+      'JW source and reference: '+entry.id);
+    assert(entry.share.moment&&entry.share.opener&&entry.share.thought&&
+      entry.share.question&&entry.share.bridge&&entry.share.reference&&
+      /^https:\\/\\/www\\.jw\\.org\\/en\\//.test(entry.share.url),
+      'Natural, sourced Share the Thought: '+entry.id);
+  }
+  console.log('PASS_NEW_12_DISCOVERIES',JSON.stringify({new:next.length,uniqueTotal:ids.length}));
+
   const categories=new Set(audit.map(x=>x.cat));
-  assert.equal(audit.length,18);assert(categories.size>=8);
+  assert.equal(audit.length,30);assert(categories.size>=8);
   for(const c of audit){
    assert(c.title&&c.para>=2&&c.len>260,c.id);
    assert(/^https:\/\/www\.jw\.org\/en\//.test(c.source),c.id+' source');
@@ -187,7 +215,7 @@ async function inject(page){
    assert(c.moment>18&&c.starter>25&&c.question>24,c.id);
    assert(artPool.includes(c.image),'Image must come from permanent local pool: '+c.id);
   }
-  console.log('PASS_EDITED_CATALOG_18',JSON.stringify({count:audit.length,categories:[...categories]}));
+  console.log('PASS_EDITED_CATALOG_30',JSON.stringify({count:audit.length,categories:[...categories]}));
   await ctx.close();
  }catch(e){console.error('FAIL_MEANINGFUL_DAILY',e.stack||e);process.exitCode=1}
  finally{await browser?.close()}
