@@ -49,6 +49,7 @@ const url='http://127.0.0.1:8899/index.html',key='bible-unfolded-behind-name-v1'
    status:document.querySelector('#btn3926-step')?.textContent
   }));
   console.log('BN_RESUME_'+vp.width,JSON.stringify({status:resumed.status,wrong:resumed.wrong,disabled:resumed.disabled,active:resumed.active}));
+  assert.equal(resumed.state.sessions.people.order.length,10,'Resume must preserve the same chapter question collection');
   assert.equal(resumed.active,known,'An unfinished chapter must resume on saved question');
   assert.equal(resumed.state.sessions.people.index,8);
   assert.equal(resumed.wrong,0,'Resumed question must not display old red wrong answers');
