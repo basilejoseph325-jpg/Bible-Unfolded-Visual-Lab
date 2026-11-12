@@ -55,7 +55,11 @@ const BOOK_SCENES=Object.freeze({
  'baruch-scroll':'journey-art/05_exile_return.webp',
  'amos-work':'assets/daily-book/ruth-harvest.webp'
 });
-const bookImage=x=>x&&Q.get('daily_book')==='1'?BOOK_SCENES[x.id]||null:null;
+// Book view is now TEST's normal Daily experience. Special URLs are no longer
+// required when Chrome or an external app strips their query parameters.
+// ?daily_book=0 is a reversible, read-only visual comparison to the old look.
+const bookEnabled=()=>Q.get('daily_book')!=='0';
+const bookImage=x=>x&&bookEnabled()?BOOK_SCENES[x.id]||null:null;
 const artFor=x=>bookImage(x)||x?.art||fallbackArt(x);
 const $=s=>document.querySelector(s);
 const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -119,10 +123,10 @@ function tabs(){
  '<button type="button" class="bu-insight-tab" role="tab" data-insight-tab="'+id+'" aria-selected="'+String(view.tab===id)+'">'+l+'</button>').join('')+
  '</nav>';
 }
-/* Only opt-in book previews get a chapter switcher; ordinary Daily Discovery
-   remains exactly as approved. Keep URL synchronized for refresh/share links. */
+/* TEST's book chapter picker is available from normal Daily Discovery too.
+   Preview selections never mark a different day's thought as read. */
 function bookPreviewPicker(){
- if(Q.get('daily_book')!=='1'||!view.preview||!BOOK_SCENES[item()?.id])return '';
+ if(!bookEnabled()||!BOOK_SCENES[item()?.id])return '';
  const chapters=[['peter','Peter'],['nile','Nile'],['ruth','Ruth']];
  return '<nav class="bu-book-preview-picker" aria-label="Illustrated discovery previews">'+
  '<span class="bu-book-preview-caption">Explore the illustrations</span>'+
@@ -319,7 +323,7 @@ function dailyControl(target){
  return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-action],#bu375-body.bu-insight-reading [data-insight-open],#bu375-body.bu-insight-reading [data-insight-preview]')||null;
 }
 function bookSelectControl(target){
- if(!view.open||Q.get('daily_book')!=='1')return null;
+ if(!view.open||!bookEnabled())return null;
  return target?.closest?.('#bu375-body.bu-insight-reading [data-insight-book-select]')||null;
 }
 function silenceNativeDailyPress(e){
@@ -344,6 +348,17 @@ function captureTabClick(e){
  if(!tab)return;
  e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
  const next=tab.dataset.insightTab;
+ // The TEST gallery may display a past lesson. The top Today tab always
+ // returns to the real scheduled thought; Share/Saved continue as normal.
+ if(next==='today'&&view.preview){
+  tabChime();
+  Q.delete('daily_preview');
+  try{history.replaceState(history.state,'',location.pathname+
+   (Q.toString()?'?'+Q.toString():'')+location.hash)}catch(_){}
+  view.id=activeForDate(localDay())?.id||null;
+  view.preview=false;view.fromSaved=false;view.tab='today';
+  display();return;
+ }
  if(next===view.tab)return;
  tabChime();
  switchTab(next);
@@ -364,7 +379,7 @@ async function copy(){
  }catch(_){showToast('Copy unavailable here. Long-press the text to copy it.');}
 }
 function chooseBookChapter(id){
- if(Q.get('daily_book')!=='1'||!BOOK_SCENES[id]||!getItem(id))return false;
+ if(!bookEnabled()||!BOOK_SCENES[id]||!getItem(id))return false;
  if(view.id===id&&view.tab==='today')return true;
  tabChime();
  Q.set('daily_preview',id);
@@ -381,7 +396,7 @@ function silenceBookSelectClick(e){
 }
 function changeBookSelector(e){
  const select=e.target?.closest?.('[data-insight-book-select]');
- if(!select||!view.open||Q.get('daily_book')!=='1')return;
+ if(!select||!view.open||!bookEnabled())return;
  e.stopImmediatePropagation();e.stopPropagation();
  chooseBookChapter(select.value);
 }
@@ -459,7 +474,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.2.0-test-book-30-curated',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.2.1-test-book-default-chrome',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
