@@ -199,7 +199,7 @@ else install();
  if(document.getElementById('bu-daily-insight-content-loader'))return;
  const css=document.createElement('link');
  css.rel='stylesheet';css.id='bu-daily-insight-style';
- css.href='daily-discovery-meaningful-test-v1.css?v=20261111-book-30-curated-v8';
+ css.href='daily-discovery-meaningful-test-v1.css?v=20261112-book-default-chrome-v9';
  document.head.append(css);
  const data=document.createElement('script');
  data.id='bu-daily-insight-content-loader';data.async=false;
@@ -207,7 +207,7 @@ else install();
  data.onload=()=>{
   if(document.getElementById('bu-daily-insight-app-loader'))return;
   const app=document.createElement('script');app.id='bu-daily-insight-app-loader';
-  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261111-book-30-curated-v8';
+  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261112-book-default-chrome-v9';
   document.head.append(app);
  };
  data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
