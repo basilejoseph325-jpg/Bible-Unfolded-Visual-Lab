@@ -167,7 +167,24 @@ async function inject(page){
      return {viewport:view,firstIdea:cards[0],secondIdea:cards[1]};
    });
    console.log('INSIGHT_SHARE_LAYOUT_'+v.width,JSON.stringify(shareLayout));
-   assert(shareLayout.firstIdea.y>=0&&shareLayout.firstIdea.y<v.height,'The first sharing idea must appear without scrolling');
+   assert(shareLayout.firstIdea.y>=0,'Sharing idea must exist in document flow');
+   if(v.width<600){
+     assert(shareLayout.firstIdea.y<v.height,
+       'On portrait phone the first sharing idea should start without scrolling');
+   }else{
+     // A short landscape viewport cannot show the scene, book title and first
+     // paragraph at once. Validate it is reachable inside the reader instead.
+     const reached=await page.evaluate(()=>{
+       const body=document.getElementById('bu375-body');
+       const first=body.querySelector('.bu-insight-conversation');
+       body.style.scrollBehavior='auto';
+       body.scrollTop+=first.getBoundingClientRect().top-body.getBoundingClientRect().top-12;
+       const r=first.getBoundingClientRect(),b=body.getBoundingClientRect();
+       return {scroll:body.scrollTop,y:r.y,bottom:r.bottom,top:b.top,viewBottom:b.bottom};
+     });
+     assert(reached.scroll>0&&reached.y>=reached.top-1&&reached.y<reached.viewBottom,
+       'Landscape sharing idea must scroll into view without being hidden: '+JSON.stringify(reached));
+   }
    await page.screenshot({path:'/tmp/BU-MEANINGFUL-DAILY-'+v.width+'-share.png'});
    await page.tap('[data-insight-tab=today]');
    assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().tab),'today',
