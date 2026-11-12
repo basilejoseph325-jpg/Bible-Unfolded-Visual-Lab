@@ -155,9 +155,39 @@ const scenes={
    assert.deepEqual(errors,[],'No runtime exceptions in 3 scenes and navigation');
    await ctx.close();
   }
-  // Approved default must remain unaltered, even for one of the art-enabled IDs.
+  // The exact reported bug: Chrome opened the ordinary game URL and got the
+  // blue old screen, because URL query flags had been discarded on handoff.
+  // Opening the real home tile on a clean URL must now show the book as normal.
   const c=await browser.createBrowserContext(),p=await c.newPage();
-  await p.goto(root+'index.html?daily_preview=peter',{waitUntil:'domcontentloaded',timeout:120000});
+  await p.setViewport({width:390,height:705,deviceScaleFactor:2,isMobile:true,hasTouch:true});
+  await p.goto(root+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
+  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+  await p.evaluate(()=>{document.getElementById('daily-continue')?.click();document.querySelector('#bu375-home-cta').click()});
+  await p.waitForSelector('#bu375-body.bu-daily-book-preview .bu-insight-story',{timeout:12000});
+  const regular=await p.evaluate(()=>({
+    open:window.BUDailyInsightV1.inspect().open,
+    id:window.BUDailyInsightV1.inspect().id,
+    expected:window.BUDailyDiscoveryLibrary.find(x=>x.id===window.BUDailyInsightV1.inspect().id)?.id,
+    book:document.getElementById('bu375-body').classList.contains('bu-daily-book-preview'),
+    picker:document.querySelectorAll('[data-insight-book-select] option').length,
+    picture:document.querySelector('.bu-insight-cover').style.backgroundImage,
+    query:location.search,
+    textColor:getComputedStyle(document.querySelector('.bu-insight-story p')).color
+  }));
+  console.log('BOOK_CHROME_NORMAL',JSON.stringify(regular));
+  assert(regular.open&&regular.book,'Chrome normal Daily tile opens parchment without special URL');
+  assert.equal(regular.picker,30,'Chrome normal Daily tile includes 30-lesson browser');
+  assert.equal(regular.textColor,'rgb(54, 45, 35)','Book reading text is dark on parchment');
+  assert(regular.picture.includes('scholar-research-assets/')||
+   regular.picture.includes('assets/daily-book/')||
+   regular.picture.includes('journey-art/')||
+   regular.picture.includes('family-worship-menu-art/'),'Normal daily has a curated illustration');
+  assert.equal(regular.query,'','No preview query parameter necessary');
+  await p.screenshot({path:'/tmp/BU-DAILY-BOOK-default-chrome.png'});
+
+  // The old approved blue theme remains available for direct comparison and
+  // rollback in TEST with an explicit opt-out. Nothing touches LIVE.
+  await p.goto(root+'index.html?daily_book=0&daily_preview=peter',{waitUntil:'domcontentloaded',timeout:120000});
   await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
   await p.evaluate(()=>{document.getElementById('daily-continue')?.click();window.BUDailyInsightV1.open()});
   const plain=await p.evaluate(()=>({
@@ -167,9 +197,9 @@ const scenes={
     picker:!!document.querySelector('[data-insight-preview]')
   }));
   assert.equal(plain.key,'peter');assert.equal(plain.active,false);
-  assert.equal(plain.picker,false,'Regular Daily Discovery never shows preview controls');
-  assert(!plain.image.includes('assets/daily-book/'),'Original design and art remain default');
-  console.log('PASS_DAILY_BOOK_PREVIEW: 3 illustrations, one-tap in-app switch, browser URL/refresh, phone viewports, saves and original default preserved');
+  assert.equal(plain.picker,false,'Explicit old-theme comparison hides preview controls');
+  assert(!plain.image.includes('assets/daily-book/'),'Original design remains available via daily_book=0');
+  console.log('PASS_DAILY_BOOK_PREVIEW: 3 original scenes, 30 browser options, regular Chrome opens book, original visual fallback preserved');
  }catch(e){console.error('FAIL_DAILY_BOOK_PREVIEW',e.stack||e);process.exitCode=1}
  finally{await browser?.close()}
 })();
