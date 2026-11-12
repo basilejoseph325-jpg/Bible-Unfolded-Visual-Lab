@@ -54,6 +54,7 @@ async function inject(page){
       tabs,questions:body.querySelectorAll('[data-bu375-answer]').length,
       oldModes:body.querySelectorAll('[data-bu375-mode]').length,
       title:body.querySelector('h2')?.textContent,
+      actualKicker:body.querySelector('.bu-insight-category')?.textContent,
       bodyText:body.textContent.slice(0,550),
       jwLinks:[...body.querySelectorAll('a')].map(x=>x.href),
       naturalSource:typeof bu375Open
@@ -67,7 +68,8 @@ async function inject(page){
    assert(opening.tabs.some(t=>t.includes('Share the Thought')));
    assert.equal(opening.questions,0,'No trivia-answer buttons in Daily Discovery');
    assert.equal(opening.oldModes,0,'Deep Dive quiz chooser removed from new experience');
-   assert(opening.title.length>12&&opening.bodyText.includes('MOMENT'));
+   assert(opening.title.length>12&&opening.actualKicker.includes('MOMENT'),
+     'Discovery section is present even when all 30 dropdown options precede it');
    assert(opening.jwLinks.length>0&&opening.jwLinks.every(url=>url.startsWith('https://www.jw.org/en/')));
 
    // Check touch/mouse press interception without activating the external
@@ -204,8 +206,9 @@ async function inject(page){
      background:getComputedStyle(document.getElementById('bu375-body')).backgroundImage,
      savedBackground:getComputedStyle(document.querySelector('.bu-insight-archive')).backgroundImage
    }));
-   assert(styleTone.background.includes('44, 117, 132')||styleTone.background.includes('#2c7584'),
-     'Daily has the lighter lagoon background');
+   assert(styleTone.background.includes('44, 117, 132')||styleTone.background.includes('49, 123, 139')||
+     styleTone.background.includes('#2c7584')||styleTone.background.includes('#317b8b'),
+     'Daily has either approved lagoon blue or the approved book-reader gradient');
    assert(styleTone.savedBackground.includes('44, 118, 133')||styleTone.savedBackground.includes('#2c7685'),
      'Saved has the warm lagoon backdrop');
    await page.waitForFunction(()=>[...document.querySelectorAll('.bu-insight-saved-row img')].every(i=>i.complete&&i.naturalWidth>0),{timeout:12000});
