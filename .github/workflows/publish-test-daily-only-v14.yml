@@ -1,0 +1,51 @@
+name: Publish Daily-only reader UI TEST only
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-test-daily-only-v14.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-minimal-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate daily-only source and cache chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/bust_daily_only_v14.py
+          node --check daily-discovery-meaningful-test-v1.js
+          node --check visual-lab-test-banner.js
+          node --check journey-progress-caption.js
+          node --check scripts/qa_daily_book_preview.cjs
+          grep -q 'bu-book-art-only' daily-discovery-meaningful-test-v1.js
+          grep -q 'TEST art-first cover v13' daily-discovery-meaningful-test-v1.css
+          grep -q '20261113-daily-only-v14' visual-lab-test-banner.js
+          grep -q '20261113-daily-only-v14' journey-progress-caption.js
+      - name: Commit one isolated TEST index script version change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/bust_daily_only_v14.py
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'PASS: Daily-only bootstrap already published to TEST'
+              exit 0
+            fi
+            git commit -m 'TEST Daily: publish clean-art cover loader v13'
+            if git push origin HEAD:main; then
+              echo 'PASS: Art-first cover bootstrap committed to Visual Lab only'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Failed safe concurrent publish; untouched LIVE' >&2
+          exit 1
