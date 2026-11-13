@@ -21,9 +21,13 @@ const expected=[
    await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
    page.on('pageerror',e=>errors.push(e.message.slice(0,150)));
    await page.goto(site+'index.html?verify=wt-editorial-20261113-v18',{waitUntil:'domcontentloaded',timeout:120000});
-   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:120000});
+   // Native menu readiness does NOT mean the separate deferred home-card launcher is installed.
+   // The launcher injects #wt-next-launch-style only after its capture-phase click router exists.
+   // Clicking earlier enters the old selector and falsely looks like a small-screen failure.
+   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.() &&
+     !!document.getElementById('wt-next-launch-style'),{timeout:120000});
    const indexVersion=await page.evaluate(()=>[...document.scripts].find(x=>x.src.includes('journey-progress-caption.js'))?.src);
-   assert(indexVersion?.includes('20261113-wt-editorial-v18'),'Published ROOT bootstrap is not v17');
+   assert(indexVersion?.includes('20261113-wt-editorial-v18'),'Published ROOT bootstrap is not v18');
    await page.evaluate(()=>document.getElementById('home-cross').click());
    await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
      !!document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:70000});
