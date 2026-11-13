@@ -1,0 +1,27 @@
+name: QA Word Trails TEST-only explicit-consent migration candidate
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-migration-consent-candidate.yml'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+      - 'scripts/qa_word_trails_consent_migration_candidate.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  synthetic-migration-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate isolated migration with no LIVE writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-live-consent-migration-candidate-v1.js
+          node --check scripts/qa_word_trails_consent_migration_candidate.cjs
+          node scripts/qa_word_trails_consent_migration_candidate.cjs
+          if grep -Rl 'word-trails-live-consent-migration-candidate-v1.js' index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html; then
+            echo 'STOP: migration candidate must NOT be loaded automatically' >&2
+            exit 1
+          fi
+          echo 'PASS: Candidate exists only for TEST QA; no automatic player migration or LIVE modifications'
