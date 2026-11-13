@@ -6,7 +6,7 @@ from pathlib import Path
 import re
 p=Path("index.html")
 html=p.read_text(encoding="utf-8")
-pat=re.compile(r'(?P<stem><script\\b[^>]*\\bsrc\\s*=\\s*["\\x27][^"\\x27]*?journey-progress-caption\\.js)(?:\\?[^"\\x27]*)?(?P<end>["\\x27])',re.I)
+pat=re.compile(r'(?P<stem><script\b[^>]*\bsrc\s*=\s*["\x27][^"\x27]*?journey-progress-caption\.js)(?:\?[^"\x27]*)?(?P<end>["\x27])',re.I)
 matches=list(pat.finditer(html))
 assert len(matches)==1, f"Expected exactly one Journey bootstrap script, got {len(matches)}"
 old=matches[0].group(0)
