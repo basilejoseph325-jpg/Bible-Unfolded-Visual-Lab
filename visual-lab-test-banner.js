@@ -238,3 +238,16 @@ else install();
  l.href='word-builder-score-layout-test-v1.css?v=20261110-wb-score-fix-v1';
  document.head.appendChild(l);
 })();
+
+/* TEST ONLY: noninvasive link from real native Settings save area to the
+   standalone MOCK Word Trails checkpoint rehearsal. No save import or
+   genuine user-data access is enabled by this link. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ if(document.getElementById('bu-wt-checkpoint-settings-practice-loader'))return;
+ const script=document.createElement('script');
+ script.id='bu-wt-checkpoint-settings-practice-loader';
+ script.src='word-trails-checkpoint-native-settings-practice-v1.js?v=20261113-wt-practice-v1';
+ script.defer=true;
+ document.head.appendChild(script);
+})();
