@@ -1,0 +1,53 @@
+name: QA Word Trails progress transfer consent screen (mock storage only)
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-progress-transfer-demo-v1.yml'
+      - 'experiments/word-trails-progress-transfer-demo-v1.html'
+      - 'experiments/word-trails-progress-transfer-demo-v1.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+      - 'scripts/qa_word_trails_progress_transfer_demo_browser.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  safe-consent-rehearsal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and production-isolation safety checks
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-live-consent-migration-candidate-v1.js
+          node --check experiments/word-trails-progress-transfer-demo-v1.js
+          node --check scripts/qa_word_trails_progress_transfer_demo_browser.cjs
+          node scripts/qa_word_trails_consent_migration_candidate.cjs
+          if grep -n -E '(^|[^.a-zA-Z])localStorage[[:space:]]*(\.|\[)' experiments/word-trails-progress-transfer-demo-v1.js; then
+            echo 'STOP: preview controller may not access real localStorage' >&2
+            exit 1
+          fi
+          if grep -Rl -F 'word-trails-progress-transfer-demo-v1' index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html; then
+            echo 'STOP: demo must never be wired into current gameplay automatically' >&2
+            exit 1
+          fi
+          echo 'PASS: progress-transfer rehearsal is standalone and uses injected fake saves only'
+      - name: Install Chromium browser driver and serve isolated local TEST repo
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-wt-consent-browser puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-consent-http.log 2>&1 &
+          sleep 1
+      - name: Test preview, decline, consent, existing-save, corrupt/stale data and zero real storage writes on phones
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-wt-consent-browser/node_modules node scripts/qa_word_trails_progress_transfer_demo_browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: word-trails-migration-rehearsal-phone-preview
+          path: /tmp/BU-WT-CONSENT-DEMO-390.png
+          if-no-files-found: ignore
+          retention-days: 5
