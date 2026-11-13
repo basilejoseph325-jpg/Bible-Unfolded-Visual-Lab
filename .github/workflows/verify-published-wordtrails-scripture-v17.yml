@@ -1,0 +1,32 @@
+name: Verify deployed TEST Word Trails Scripture v17 remote browser
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-scripture-v17.yml'
+      - 'scripts/qa_published_word_trails_scripture_v17.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-android-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install browser test runner
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_published_word_trails_scripture_v17.cjs
+          npm install --prefix /tmp/bu-wt-published-check puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Test actual published Visual Lab webpage in 2 Android-sized browser viewports
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-wt-published-check/node_modules node scripts/qa_published_word_trails_scripture_v17.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-word-trails-source-v17-published-phone
+          path: /tmp/WT-SCRIPTURE-V17-PUBLISHED-390.png
+          if-no-files-found: ignore
+          retention-days: 5
