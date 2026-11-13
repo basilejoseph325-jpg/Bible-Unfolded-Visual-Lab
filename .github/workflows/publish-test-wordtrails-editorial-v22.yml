@@ -1,0 +1,61 @@
+name: Publish TEST Word Trails editorial v22 phone bootstrap
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-test-wordtrails-editorial-v22.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-exact-index-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify official-source puzzle and full loader chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/bust_wordtrails_editorial_v22.py
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node --check word-trails-native-shell-v1.js
+          node --check visual-lab-test-banner.js
+          node --check journey-progress-caption.js
+          node scripts/word_trails_quality_gate.mjs
+          node scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/qa_word_trails_editorial_levels_12_16.mjs
+          node scripts/qa_word_trails_editorial_levels_17_21.mjs
+          node scripts/qa_word_trails_editorial_levels_22_26.mjs
+          node scripts/qa_word_trails_editorial_levels_27_30.mjs
+          grep -q 'word-trails-levels-12-30-v1.js?v=source-review6-20261113-v22' experiments/word-trails-next-v1.html
+          grep -q 'word-trails-next-v1.html?v=source-review6-20261113-v22' word-trails-native-shell-v1.js
+          grep -q 'word-trails-native-shell-v1.js?v=source-review6-20261113-v22' visual-lab-test-banner.js
+          grep -q 'visual-lab-test-banner.js?v=20261113-wt-editorial-v22' journey-progress-caption.js
+          grep -q '"word":"HEAR","clue":"Paul asked how people could develop faith' experiments/word-trails-levels-12-30-v1.js
+          grep -q 'Matthew calls the part she touched the fringe' experiments/word-trails-levels-12-30-v1.js
+          test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
+      - name: Make exact one-query TEST homepage change (with concurrent-write guard)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/bust_wordtrails_editorial_v22.py
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'PASS: v22 TEST homepage bootstrap was already updated'
+              exit 0
+            fi
+            test "$(git diff --cached --name-only)" = "index.html"
+            git commit -m 'TEST Word Trails: load levels 27–30 editorial v22 on mobile'
+            if git push origin HEAD:main; then
+              echo 'PASS: Updated ONLY TEST root script query; no LIVE edits'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'STOP: Could not publish safely after concurrent updates' >&2
+          exit 1
