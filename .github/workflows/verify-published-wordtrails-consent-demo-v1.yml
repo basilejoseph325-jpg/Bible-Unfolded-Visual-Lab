@@ -1,0 +1,53 @@
+name: Verify deployed TEST Word Trails consent rehearsal on phone browsers
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-consent-demo-v1.yml'
+      - 'experiments/word-trails-progress-transfer-demo-v1.html'
+      - 'experiments/word-trails-progress-transfer-demo-v1.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+      - 'scripts/qa_word_trails_progress_transfer_demo_browser.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-safe-consent-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check source and install headless Chrome test driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_progress_transfer_demo_browser.cjs
+          npm install --prefix /tmp/bu-wt-public-consent puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Ensure the public TEST rehearsal and latest candidate storage adapter are deployed
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments'
+          for i in $(seq 1 40); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-progress-transfer-demo-v1.html?verify-v2=$i" | grep -F 'Simulation only.' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-live-consent-migration-candidate-v1.js?verify-v2=$i" | grep -F 'createForStorage' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-progress-transfer-demo-v1.js?verify-v2=$i" | grep -F '__BUWTProgressTransferDemo' >/dev/null; then
+              echo 'PASS: latest published TEST-only consent demo and memory storage adapter available'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'FAILED: public rehearsal missing or outdated; not claiming deployment success' >&2
+          exit 1
+      - name: Rehearse every opt-in/refusal and protected storage scenario on actual hosted TEST page
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_WT_CONSENT_DEMO_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments/word-trails-progress-transfer-demo-v1.html' \
+            NODE_PATH=/tmp/bu-wt-public-consent/node_modules \
+            node scripts/qa_word_trails_progress_transfer_demo_browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: published-word-trails-progress-transfer-preview
+          path: /tmp/BU-WT-CONSENT-DEMO-390.png
+          if-no-files-found: ignore
+          retention-days: 5
