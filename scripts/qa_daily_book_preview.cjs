@@ -163,6 +163,21 @@ const scenes={
       },id);
       await page.screenshot({path:'/tmp/BU-DAILY-BOOK-'+id+'.png'});
     }
+    // Editorial audit only: export actual displayed mobile covers for each
+    // remaining thematic chapter. This does not change game code or artwork.
+    const thematicIDs=['stars','radio','samaritan','mustard','ezra','paul-work','tears','hezekiah-water','jeremiah-field','sparrows'];
+    for(const selectedId of thematicIDs){
+      await page.evaluate(id=>{
+        const dropdown=document.querySelector('[data-insight-book-select]');
+        dropdown.value=id;
+        dropdown.dispatchEvent(new Event('change',{bubbles:true}));
+      },selectedId);
+      const state=await page.evaluate(()=>({id:window.BUDailyInsightV1.inspect().id,cover:document.querySelector('.bu-insight-cover')?.style.backgroundImage||'',label:document.querySelector('.bu-book-scene-label')?.textContent||''}));
+      assert.equal(state.id,selectedId,'Thematic audit selector must show requested Bible discovery');
+      assert.equal(state.label,'Thematic illustration','Remaining ten use accurately labeled reused artwork');
+      assert(state.cover.includes('.webp'),'Thematic cover must still display an image');
+      await page.screenshot({path:'/tmp/BU-DAILY-BOOK-audit-'+selectedId+'.png'});
+    }
    }
    // Realistic Android-style native select opens on a tap: test no click
    // cancellation or leakage into old global document-level knock handlers.
