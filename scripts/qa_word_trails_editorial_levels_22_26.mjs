@@ -62,5 +62,5 @@ assert(at(26,'board','ESTHER').clue.includes('Hadassah'),'Avoid repeated Esther 
 assert(at(26,'board','RUTH').insight.includes('change of life'),'Ruth story sensitivity');
 assert(at(26,'spark','REST').insight.includes('declared it sacred'),'Seventh-day rest explained');
 assert(at(26,'extra','THREE').insight.includes('sea became calm'),'Jonah additional story detail');
-assert(ledger.includes('61 entries (levels 12–26)')&&ledger.includes('remaining 16 entries'),'Cumulative review count');
-console.log('PASS 20 items, 17 improved, 3 retained; NWT chapters and ledger match; 61/77 first-pass, 16 remaining. No independent human signoff.');
+assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('54 revised and 23 retained'),'Latest cumulative source review count');
+console.log('PASS 20 items, 17 improved, 3 retained; NWT chapters and ledger match; 77/77 AI-assisted first-pass, human signoff pending. No independent human signoff.');
