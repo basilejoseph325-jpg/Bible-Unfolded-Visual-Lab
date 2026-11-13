@@ -90,7 +90,7 @@ function fake(options={}){
 (async()=>{
  const old=fake();vm.runInContext(oldJs,old.context,{timeout:1500});
  assert.deepEqual(old.writes,['set:'+LIVE],
-  'Existing LIVE auto-import must be reproduced — don't assume it is consented');
+  'Existing LIVE auto-import must be reproduced; it is not consented');
  assert.equal(JSON.parse(old.map.get(LIVE)).coins,60);
  old.intact();
  const next=fake();for(const source of s)vm.runInContext(source,next.context,{timeout:1500});
