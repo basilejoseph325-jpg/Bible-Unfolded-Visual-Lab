@@ -1,0 +1,52 @@
+name: Verify public TEST Word Trails checkpoint and recovery practice screen v2
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-checkpoint-rehearsal-v2.yml'
+      - 'experiments/word-trails-checkpoint-rehearsal-v2.html'
+      - 'experiments/word-trails-checkpoint-rehearsal-v2.js'
+      - 'scripts/qa_word_trails_checkpoint_rehearsal_v2_browser.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  public-rehearsal-safe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check browser test syntax and install Chrome driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_checkpoint_rehearsal_v2_browser.cjs
+          npm install --prefix /tmp/bu-wt-published-checkpoint-v2 puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Confirm public TEST serves all expected rehearsal sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments'
+          for attempt in $(seq 1 35); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-checkpoint-rehearsal-v2.html?check-v2=$attempt" | grep -F 'Practice only — no real saves involved.' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-checkpoint-rehearsal-v2.js?check-v2=$attempt" | grep -F '__BUWTCheckpointRehearsal' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-recovery-checkpoint-candidate-v3.js?check-v2=$attempt" | grep -F 'backupMustBeSavedBeforeApplying' >/dev/null; then
+              echo 'PASS: online TEST is serving current checkpoint UI and v3 validator'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'FAILED: public TEST page has not deployed all current rehearsal code' >&2
+          exit 1
+      - name: Re-run actual file download/upload, consent and recovery on hosted TEST
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_WT_CHECKPOINT_REHEARSAL_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments/word-trails-checkpoint-rehearsal-v2.html' \
+          NODE_PATH=/tmp/bu-wt-published-checkpoint-v2/node_modules \
+          node scripts/qa_word_trails_checkpoint_rehearsal_v2_browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: public-test-word-trails-checkpoint-v2-phone-preview
+          path: /tmp/BU-WT-CHECKPOINT-REHEARSAL-V2-390.png
+          if-no-files-found: ignore
+          retention-days: 5
