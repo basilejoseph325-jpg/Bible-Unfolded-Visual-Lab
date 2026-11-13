@@ -26,6 +26,9 @@ function cueBoost(kind){
 let pendingRewardSounds=new Set();
 const last=new Map();let activeCount=0,gestureTick=0;
 const $=id=>document.getElementById(id);
+// In the native game, the original Bible Unfolded Settings owns shared audio.
+// Do not offer a second persistent sound-settings owner inside the crossword.
+const nativeHost=()=>{try{return parent!==window&&parent.BUWTNativeShell?.active?.()?parent.BUWTNativeShell:null}catch(_){return null}};
 const safeReduced=()=>!!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 const motion=()=>!!pref.motion&&!safeReduced();
 const active=()=>!document.hidden;
@@ -331,6 +334,17 @@ function state(){return {...pref}}
 // must not write a second persistent copy. Standalone TEST controls still save.
 function change(name,value,{silent=false,persist=true}={}){
  if(!Object.prototype.hasOwnProperty.call(DEF,name))return;
+ const native=nativeHost();
+ // Only native Settings may persist shared audio or motion. Parent sync calls
+ // setPreference(...,{silent:true,persist:false}) and are unaffected.
+ if(native&&persist&&['music','sfx','musicVolume','sfxVolume','motion'].includes(name)){
+  const shared=native.audioPrefs?.()||{};
+  for(const key of ['music','sfx','musicVolume','sfxVolume','motion']){
+   if(!Object.prototype.hasOwnProperty.call(shared,key))continue;
+   pref[key]=key.endsWith('Volume')?bound(shared[key]):!!shared[key];
+  }
+  sync();return;
+ }
  if(name.endsWith('Volume'))pref[name]=bound(value);else pref[name]=!!value;
  if(persist)save();sync();
  if(name==='music'||name==='musicVolume')onMusicChange();
@@ -338,6 +352,9 @@ function change(name,value,{silent=false,persist=true}={}){
  if(!silent&&name==='sfxVolume')cue('touch');
 }
 function settings(){
+ // Native home always opens its REAL Settings. The local Sound & Feel dialog
+ // remains available only for the isolated standalone QA experience.
+ const native=nativeHost();if(native)return native.openSettings();
  const dlg=$('wt-feel-settings');if(!dlg)return;
  sync();if(!dlg.open)dlg.showModal();
 }
