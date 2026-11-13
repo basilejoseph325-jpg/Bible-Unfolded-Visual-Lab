@@ -1,0 +1,52 @@
+name: Publish Word Trails source corrections cache in TEST
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-test-wordtrails-source-v15.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-minimal-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the Word Trails source and loader chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/bust_wordtrails_source_v15.py
+          node --check visual-lab-test-banner.js
+          node --check journey-progress-caption.js
+          node --check word-trails-native-shell-v1.js
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node scripts/word_trails_quality_gate.mjs
+          grep -q 'word-trails-levels-12-30-v1.js?v=source-heal-noise-20261113' experiments/word-trails-next-v1.html
+          grep -q 'word-trails-next-v1.html?v=source-heal-noise-20261113' word-trails-native-shell-v1.js
+          grep -q 'word-trails-native-shell-v1.js?v=source-heal-noise-20261113' visual-lab-test-banner.js
+          grep -q 'visual-lab-test-banner.js?v=20261113-trails-source-v15' journey-progress-caption.js
+      - name: Safely publish one root loader version change
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/bust_wordtrails_source_v15.py
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'PASS: Word Trails cache v15 already published to TEST'
+              exit 0
+            fi
+            git commit -m 'TEST Word Trails: enable source-checked HEAL and NOISE on mobile v15'
+            if git push origin HEAD:main; then
+              echo 'PASS: TEST root cache advanced to v15, LIVE unmodified'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Could not publish safely due to concurrent TEST updates' >&2
+          exit 1
