@@ -1,0 +1,34 @@
+name: QA Word Trails cross-tab exclusive consent boundary v2 (TEST only)
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-exclusive-consent-v2.yml'
+      - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+      - 'scripts/qa_word_trails_exclusive_consent_boundary_v2.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  check-exclusive-cross-tab-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and real-game isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-exclusive-consent-boundary-v2.js
+          node --check scripts/qa_word_trails_exclusive_consent_boundary_v2.cjs
+          node --check experiments/word-trails-live-consent-migration-candidate-v1.js
+          if grep -Rl -F 'word-trails-exclusive-consent-boundary-v2.js' index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html; then
+            echo 'STOP: prototype must never auto-run in a real page or simulation' >&2
+            exit 1
+          fi
+          echo 'PASS: v2 code is unlinked and cannot auto-import production progress'
+      - name: Test two-tab lock contention, stale data and fail-closed recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_consent_migration_candidate.cjs
+          node scripts/qa_word_trails_exclusive_consent_boundary_v2.cjs
