@@ -1,0 +1,37 @@
+name: QA Word Trails v3 real browser checkpoint, consent and recovery
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-recovery-v3-real-browser.yml'
+      - 'scripts/qa_word_trails_checkpoint_v3_real_browser.cjs'
+      - 'experiments/word-trails-recovery-checkpoint-candidate-v3.js'
+      - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  real-browser-checkpoint-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax and ensure the recovery candidate is NOT loaded in the real game
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_checkpoint_v3_real_browser.cjs
+          node --check experiments/word-trails-recovery-checkpoint-candidate-v3.js
+          node scripts/qa_word_trails_recovery_checkpoint_v3.cjs
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html; do
+            if grep -F 'word-trails-recovery-checkpoint-candidate-v3.js' "$f"; then
+              echo 'STOP: unapproved recovery candidate loaded by real game or mock page' >&2
+              exit 1
+            fi
+          done
+      - name: Run fresh isolated Chromium browser and same-origin two-tab fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/wordtrails-checkpoint-v3-browser puppeteer-core@24 --silent --no-audit --no-fund
+          python3 -m http.server 8898 --bind 127.0.0.1 >/tmp/wt-checkpoint-v3-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/wordtrails-checkpoint-v3-browser/node_modules node scripts/qa_word_trails_checkpoint_v3_real_browser.cjs
