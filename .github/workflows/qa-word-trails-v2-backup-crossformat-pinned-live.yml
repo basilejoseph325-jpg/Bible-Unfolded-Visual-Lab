@@ -1,0 +1,31 @@
+name: QA pinned LIVE and TEST v2 Word Trails backups, rollback and compatibility
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-v2-backup-crossformat-pinned-live.yml'
+      - 'scripts/qa_word_trails_backup_v2_crossformat_and_recovery.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  real-v2-save-contract-readonly:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate TEST source and pinned LIVE coordinator
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_word_trails_backup_v2_crossformat_and_recovery.cjs
+          curl -fLsS --retry 3 --max-time 35 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/bu-platform-saves-v2.js \
+            -o /tmp/bu-wt-live-v2-pinned.js
+          test -s /tmp/bu-wt-live-v2-pinned.js
+          node --check /tmp/bu-wt-live-v2-pinned.js
+      - name: Audit exact v2 source behavior in isolated Node VM fake browser stores
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_backup_v2_crossformat_and_recovery.cjs /tmp/bu-wt-live-v2-pinned.js
+          echo 'PASS: pinned LIVE code was tested read-only; original LIVE repo untouched'
