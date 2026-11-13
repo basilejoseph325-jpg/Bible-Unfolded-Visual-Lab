@@ -14,6 +14,7 @@ const oldPath=process.argv[2],oldHtmlPath=process.argv[3];
 assert(oldPath&&oldHtmlPath,'Usage: node qa_word_trails_live_auto_import_retirement_v4.cjs OLD_LIVE_JS OLD_LIVE_HTML');
 const oldJs=fs.readFileSync(oldPath,'utf8');
 const oldHtml=fs.readFileSync(oldHtmlPath,'utf8');
+const legacyShim=fs.readFileSync('experiments/word-trails-legacy-autoimport-retirement-shim-v4.js','utf8');
 const PINS={
  js:'52d0a564a16a964daf70e156e46e7d7866480c81',
  html:'3ad4ba766ccf986a575ea24a2eb6b1dd758cb104'
@@ -93,6 +94,14 @@ function fake(options={}){
   'Existing LIVE auto-import must be reproduced; it is not consented');
  assert.equal(JSON.parse(old.map.get(LIVE)).coins,60);
  old.intact();
+ // Future approved release must ALSO replace the old LIVE script CONTENTS,
+ // not merely remove its reference from fresh HTML. Otherwise stale HTML
+ // can still request the unsafe file at the previous URL.
+ const retired=fake();vm.runInContext(legacyShim,retired.context,{timeout:1500});
+ assert.equal(retired.reads.length,0,'Future no-op shim must read no storage');
+ assert.equal(retired.writes.length,0,'Future no-op shim must write no storage');
+ assert.equal(retired.win.BUWTLegacyAutoImportRetiredV4.disabled,true);
+ retired.intact();
  const next=fake();for(const source of s)vm.runInContext(source,next.context,{timeout:1500});
  assert.equal(next.writes.length,0,'Opt-in replacement chain must have ZERO writes on evaluation');
  assert.equal(next.reads.length,0,'Opt-in replacement chain must have ZERO storage reads on evaluation');
@@ -158,6 +167,8 @@ function fake(options={}){
  console.log('PASS_WORD_TRAILS_LIVE_AUTOIMPORT_RETIREMENT_V4',JSON.stringify({
   pinnedLiveMigrationBlob:PINS.js,pinnedLiveHtmlBlob:PINS.html,
   previouslySilentImportReproduced:true,
+  proposedOldFilenameCompatibilityShimReads:0,
+  proposedOldFilenameCompatibilityShimWrites:0,
   proposedHtmlDiff:'one old script tag replaced by ordered four vetted opt-in scripts',
   proposedScriptOnLoadReads:0,proposedScriptOnLoadWrites:0,
   refusesWithoutPermissionOrBackup:true,
