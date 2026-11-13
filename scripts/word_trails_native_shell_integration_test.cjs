@@ -67,6 +67,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       assert(before.hostActive,'Settings should not unload Word Trails');
       // Change one native setting and prove that exact child engine reads it.
       const sync=await page.evaluate(async()=>{
+        const feelBefore=localStorage.getItem('bu-wt-next-feel-v2');
+        const mirroredBefore=localStorage.getItem('bu-platform-audio-preferences-v1');
         const node=document.getElementById('setting-sfx'),original=node.checked;
         node.checked=!original;
         node.dispatchEvent(new Event('change',{bubbles:true}));
@@ -75,11 +77,15 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
         const during=child.BUWTPolish.state().sfx;
         node.checked=original;node.dispatchEvent(new Event('change',{bubbles:true}));
         await new Promise(resolve=>setTimeout(resolve,45));
-        return {nativeToggled:!original,childDuring:during,restored:child.BUWTPolish.state().sfx===original};
+        return {nativeToggled:!original,childDuring:during,restored:child.BUWTPolish.state().sfx===original,
+          feelUnchanged:localStorage.getItem('bu-wt-next-feel-v2')===feelBefore,
+          mirroredUnchanged:localStorage.getItem('bu-platform-audio-preferences-v1')===mirroredBefore};
       });
       console.log('NATIVE_AUDIO_PROPAGATION',JSON.stringify(sync));
       assert.equal(sync.childDuring,sync.nativeToggled);
       assert(sync.restored);
+      assert(sync.feelUnchanged,'Native settings must not persist a duplicate Word Trails global audio snapshot');
+      assert(sync.mirroredUnchanged,'Native settings must not write the old shared-audio shadow key');
       // Native selected announcer API, not child-generated imitation.
       const voice=await page.evaluate(()=>{
         const child=document.getElementById('bu-wt-native-game').contentWindow;
@@ -149,7 +155,31 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
     console.log('EXITED_WORD_TRAILS_REFRESH_STAYS_HOME',await deep.evaluate(()=>location.href));
     await deep.close();
 
-    console.log('PASS Native Word Trails menu / Settings / original voice / return for portrait and landscape');
+    // On the standalone QA-only route, test preferences must stay in Word Trails.
+    // Never let the fallback UI overwrite a second pseudo-global audio record.
+    const standalone=await browser.newPage();
+    await standalone.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+    await standalone.goto('http://127.0.0.1:8891/experiments/word-trails-next-v1.html?standalone=qa',
+      {waitUntil:'domcontentloaded',timeout:120000});
+    await standalone.waitForFunction(()=>!!window.BUWTMainSettings?.open&&!!window.BUWTPolish?.state,
+      {timeout:60000});
+    const fallback=await standalone.evaluate(()=>{
+      const shared='bu-platform-audio-preferences-v1',local='bu-wt-next-feel-v2';
+      const before=localStorage.getItem(shared),original=window.BUWTPolish.state().sfx;
+      window.BUWTMainSettings.open();
+      const input=document.getElementById('wt-native-sfx');
+      input.checked=!original;input.dispatchEvent(new Event('change',{bubbles:true}));
+      const newValue=window.BUWTPolish.state().sfx;
+      const localValue=JSON.parse(localStorage.getItem(local)||'null')?.sfx;
+      const globallyUnchanged=localStorage.getItem(shared)===before;
+      return {newValue,localValue,globallyUnchanged,expected:!original};
+    });
+    assert.equal(fallback.newValue,fallback.expected);
+    assert.equal(fallback.localValue,fallback.expected,'Standalone QA still saves its isolated FEEL key');
+    assert(fallback.globallyUnchanged,'Standalone QA must not overwrite pseudo-global audio preferences');
+    await standalone.close();
+    console.log('PASS Word Trails single owner of global audio, isolated fallback settings, native voices/menu and return');
+
   }catch(e){failures++;console.error('NATIVE_SHELL_QA_FAILED',e.stack||e);process.exitCode=1}
   finally{await browser.close()}
 })();
