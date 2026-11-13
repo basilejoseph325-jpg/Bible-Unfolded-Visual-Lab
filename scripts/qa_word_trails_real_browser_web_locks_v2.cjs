@@ -43,7 +43,13 @@ const snapshot=()=>Object.fromEntries(Object.entries(seeds));
 
   // Start a consented transfer from the first tab, but hold the actual
   // browser lock *before* its callback executes. The second tab must fail.
-  const ongoing=first.evaluate(async()=>{
+  // Start the consent flow inside the page as a detached promise, and return
+  // to Puppeteer immediately. Do not await a held lock across a CDP evaluate:
+  // that would queue the later release command behind the pending evaluation.
+  await first.evaluate(()=>{
+    window.__qaFirstHasLock=false;
+    window.__qaResult=null;
+    window.__qaError=null;
     const wrapped={
       request:(name,opts,cb)=>navigator.locks.request(name,opts,async lock=>{
         if(lock){
@@ -55,9 +61,14 @@ const snapshot=()=>Object.fromEntries(Object.entries(seeds));
     };
     const x=window.BUWTExclusiveConsentBoundaryV2.createForStorage(localStorage,wrapped);
     const p=x.preview();if(!p.available)throw Error('First tab missing synthetic source');
-    return await x.acceptWithExclusiveLock({approved:true,sourceRaw:p.sourceRaw});
+    x.acceptWithExclusiveLock({approved:true,sourceRaw:p.sourceRaw})
+      .then(value=>{window.__qaResult=value})
+      .catch(error=>{window.__qaError=String(error)});
+    return true;
   });
-  await first.waitForFunction(()=>window.__qaFirstHasLock===true,{timeout:30000});
+  await first.waitForFunction(()=>window.__qaFirstHasLock===true||window.__qaError!==null||window.__qaResult!==null,{timeout:15000});
+  const locked=await first.evaluate(()=>({held:window.__qaFirstHasLock,result:window.__qaResult,error:window.__qaError}));
+  assert.equal(locked.held,true,'First tab failed to acquire browser lock: '+JSON.stringify(locked));
   const secondResponse=await second.evaluate(async()=>{
     const x=window.BUWTExclusiveConsentBoundaryV2.createForStorage(localStorage,navigator.locks);
     const p=x.preview();
@@ -68,9 +79,12 @@ const snapshot=()=>Object.fromEntries(Object.entries(seeds));
     'Second real browser tab must be refused until exclusive Web Lock is released');
   assert.equal(await second.evaluate(key=>localStorage.getItem(key),L),null,
     'The second tab must not prematurely create a LIVE progress key');
-  await first.evaluate(()=>window.__qaReleaseFirst());
-  const accepted=await ongoing;
-  assert.equal(accepted.ok,true);assert.equal(accepted.via,'exclusive-browser-lock-v2');
+  await first.evaluate(()=>{window.__qaReleaseFirst();return true});
+  await first.waitForFunction(()=>window.__qaResult!==null||window.__qaError!==null,{timeout:20000});
+  const accepted=await first.evaluate(()=>({result:window.__qaResult,error:window.__qaError}));
+  assert.equal(accepted.error,null,'First tab failed: '+accepted.error);
+  assert.equal(accepted.result.ok,true);
+  assert.equal(accepted.result.via,'exclusive-browser-lock-v2');
 
   const state=await second.evaluate(({live,test,wallet,wheel,voice})=>({
     live:localStorage.getItem(live),test:localStorage.getItem(test),
