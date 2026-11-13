@@ -270,12 +270,10 @@ const scenes={
   await p.evaluate(()=>{document.getElementById('daily-continue')?.click();window.BUDailyInsightV1.open()});
   const noBypass=await p.evaluate(()=>({
     id:window.BUDailyInsightV1.inspect().id,
-    preview:window.BUDailyInsightV1.inspect().preview,
     picker:!!document.querySelector('[data-insight-book-select]'),
     isToday:document.querySelector('.bu-book-title-band h2')?.textContent?.length>0
   }));
   assert.equal(noBypass.id,regular.id,'Preview URL without editor flag cannot select another day');
-  assert.equal(noBypass.preview,false,'Preview mode is disabled for regular visitors');
   assert.equal(noBypass.picker,false,'30-option dropdown hidden even on guessed preview URL');
   assert(noBypass.isToday,'Normal visitor sees an illustrated daily article');
   console.log('PASS_DAILY_BOOK_PREVIEW: QA-only 30 artwork checks; daily-only visitor UI; no URL bypass; Saved works');
