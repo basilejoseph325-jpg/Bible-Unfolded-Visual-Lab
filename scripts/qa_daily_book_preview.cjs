@@ -128,7 +128,17 @@ const scenes={
       'early-students':'assets/daily-book/early-students-1870.webp',
       'naaman-girl':'assets/daily-book/naaman-servant-girl.webp',
       well:'assets/daily-book/samaritan-at-well.webp',
-      'paul-storm':'assets/daily-book/paul-breaking-bread.webp'
+      'paul-storm':'assets/daily-book/paul-breaking-bread.webp',
+      'philip':'assets/daily-book/philip.webp',
+      'bereans':'assets/daily-book/bereans.webp',
+      'abigail':'assets/daily-book/abigail.webp',
+      'dorcas-clothes':'assets/daily-book/dorcas-clothes.webp',
+      'lydia-purple':'assets/daily-book/lydia-purple.webp',
+      'widow-coins':'assets/daily-book/widow-coins.webp',
+      'rahab-cord':'assets/daily-book/rahab-cord.webp',
+      'widow-oil':'assets/daily-book/widow-oil.webp',
+      'nehemiah-builders':'assets/daily-book/nehemiah-builders.webp',
+      'baruch-scroll':'assets/daily-book/baruch-scroll.webp'
     };
     for(const [id,path] of Object.entries(approvedNew)){
       const scene=allArt.find(r=>r.id===id);
@@ -140,7 +150,7 @@ const scenes={
     const goodSamaritan=allArt.find(r=>r.id==='samaritan');
     assert(goodSamaritan&&!goodSamaritan.src.includes('samaritan-at-well'),
       'Keep two different Samaritan accounts distinct');
-    assert.equal(new Set(allArt.map(r=>r.src)).size,19,'Four new scenes plus existing art should yield 19 distinct images');
+    assert.equal(new Set(allArt.map(r=>r.src)).size,24,'17 approved original images plus remaining thematic art should yield 24 distinct images');
     console.log('BOOK_CURATED_30',JSON.stringify(allArt.map(x=>({id:x.id,art:x.src,label:x.label}))));
     // Save visual evidence for the four newly installed Bible account covers.
     // The source images were already editorially reviewed; this verifies

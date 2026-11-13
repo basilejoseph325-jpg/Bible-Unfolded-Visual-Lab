@@ -84,3 +84,6 @@ These image candidates are **artist's reconstructions**, not authenticated histo
 - Thematic / needs review: **10 / 30 lessons**
 
 **LIVE:** untouched. **GitHub:** this inventory file is documentation only; it does not install missing artwork or change the game layout.
+
+## Batch-2 automatic TEST import
+10 approved original images installed, 30 lesson IDs and saved progress unchanged, 24 unique visible image paths. Verified by SHA-256 against approved package. The protected LIVE game remains untouched.
