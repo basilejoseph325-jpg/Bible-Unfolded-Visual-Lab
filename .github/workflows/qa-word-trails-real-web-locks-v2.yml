@@ -1,0 +1,39 @@
+name: QA actual same-origin two-tab Word Trails Web Locks in TEST
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-real-web-locks-v2.yml'
+      - 'scripts/qa_word_trails_real_browser_web_locks_v2.cjs'
+      - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  real-browser-cross-tab-collision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check safe unlinked prototype and browser test syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_real_browser_web_locks_v2.cjs
+          node --check experiments/word-trails-exclusive-consent-boundary-v2.js
+          node scripts/qa_word_trails_exclusive_consent_boundary_v2.cjs
+          if grep -Rl -F 'word-trails-exclusive-consent-boundary-v2.js' index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html; then
+            echo 'STOP: experimental lock code must not be auto-loaded' >&2
+            exit 1
+          fi
+      - name: Install browser runner and serve test source locally
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-locks-v2-browser puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8897 --bind 127.0.0.1 >/tmp/bu-wt-lock-browser.log 2>&1 &
+          sleep 1
+      - name: Use actual Chromium Web Locks across two same-origin tabs and assert wallet preservation
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-locks-v2-browser/node_modules node scripts/qa_word_trails_real_browser_web_locks_v2.cjs
