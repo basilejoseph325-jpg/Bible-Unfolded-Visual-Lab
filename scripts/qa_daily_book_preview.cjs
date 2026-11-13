@@ -32,7 +32,10 @@ const scenes={
       label:document.querySelector('.bu-book-scene-label')?.textContent,
       paperTextColor:getComputedStyle(document.querySelector('.bu-insight-story p')).color,
       wrap:(()=>{const r=document.querySelector('.bu-insight-section').getBoundingClientRect();return {x:r.x,right:r.right,width:r.width}})(),
-      imageIsThere:document.querySelector('.bu-insight-cover')?.getBoundingClientRect().height>200,
+      imageIsThere:document.querySelector('.bu-insight-cover')?.getBoundingClientRect().height>135,
+       star:getComputedStyle(document.querySelector('.bu-insight-cover'),'::after').content,
+       photoChildCount:document.querySelector('.bu-insight-cover').children.length,
+       chapterTitle:document.querySelector('.bu-book-title-band h2')?.textContent,
       source:document.querySelector('.bu-insight-source')?.href,
       save:document.querySelector('[data-insight-action=save]')?.textContent,
       share:document.querySelector('[data-insight-action=share]')?.textContent
@@ -41,7 +44,10 @@ const scenes={
     assert.equal(info.id,id);
     assert(info.active&&info.image.includes(scenes[id]),'Custom art must belong to selected Bible scene');
     assert(info.imageIsThere);
-    assert.equal(info.label,'Artist’s reconstruction');
+    assert.equal(info.label,undefined,'No reconstruction badge printed on the artwork');
+     assert.equal(info.star,'none','No decorative star covering the artwork');
+     assert.equal(info.photoChildCount,0,'The image is free of text overlays');
+     assert(info.chapterTitle?.length>3,'Discovery title appears below the artwork');
     assert.equal(info.paperTextColor,'rgb(54, 45, 35)');
     assert(info.wrap.x>=0&&info.wrap.right<=width+1,'Paper must fit phone');
     assert(info.source.startsWith('https://www.jw.org/en/'));
@@ -115,15 +121,15 @@ const scenes={
         const img=new Image();img.onload=()=>resolve(img.naturalWidth>=600);
         img.onerror=()=>resolve(false);img.src=src;
        });
-       results.push({id,src,ok,label,heading:document.querySelector('.bu-insight-cover h2')?.textContent});
+       results.push({id,src,ok,label,heading:document.querySelector('.bu-book-title-band h2')?.textContent});
       }
       return results;
     });
     assert.equal(allArt.length,30);
     assert(allArt.every((r,i)=>r.id===catalog[i].id),'All chapters navigate independently');
     assert(allArt.every(r=>r.ok),'All 30 artwork URLs resolve to usable images: '+JSON.stringify(allArt.filter(r=>!r.ok)));
-    assert(allArt.every(r=>['Artist’s reconstruction','Thematic illustration'].includes(r.label)),
-      'Every historical setting has an honest source label');
+    assert(allArt.every(r=>!r.label&&r.heading?.length>3),
+      'All 30 covers display no distracting badge and retain readable chapter titles below their artwork');
     const approvedNew={
       'early-students':'assets/daily-book/early-students-1870.webp',
       'naaman-girl':'assets/daily-book/naaman-servant-girl.webp',
@@ -152,7 +158,7 @@ const scenes={
     for(const [id,path] of Object.entries(approvedNew)){
       const scene=allArt.find(r=>r.id===id);
       assert(scene&&scene.src.endsWith(path),'Approved new artwork must match its source Bible lesson: '+id);
-      assert.equal(scene.label,'Artist’s reconstruction');
+      assert(!scene.label&&scene.heading,'Original chapter art and its heading remain properly separated');
     }
     // Jesus at the well (John 4) must not leak into the GOOD Samaritan
     // illustration (Luke 10), which is an entirely different account!
@@ -183,7 +189,7 @@ const scenes={
       },selectedId);
       const state=await page.evaluate(()=>({id:window.BUDailyInsightV1.inspect().id,cover:document.querySelector('.bu-insight-cover')?.style.backgroundImage||'',label:document.querySelector('.bu-book-scene-label')?.textContent||''}));
       assert.equal(state.id,selectedId,'Thematic audit selector must show requested Bible discovery');
-      assert.equal(state.label,'Thematic illustration','Remaining ten use accurately labeled reused artwork');
+      assert.equal(state.label,'','Remaining thematic art also has no on-image label');
       assert(state.cover.includes('.webp'),'Thematic cover must still display an image');
       await page.screenshot({path:'/tmp/BU-DAILY-BOOK-audit-'+selectedId+'.png'});
     }
