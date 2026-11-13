@@ -1,0 +1,45 @@
+name: Verify published TEST Word Trails editorial v22 in phone browsers
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-editorial-v22.yml'
+      - 'scripts/qa_published_word_trails_editorial_v22.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-mobile-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check editorial v22 browser QA script
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_published_word_trails_editorial_v22.cjs
+          npm install --prefix /tmp/bu-wt-published-check puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Ensure root TEST site serves new bootstrap before browser test
+        shell: bash
+        run: |
+          set -euo pipefail
+          for i in $(seq 1 35); do
+            if curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/index.html?check-editorial-v22=$i" | grep -F 'journey-progress-caption.js?v=20261113-wt-editorial-v22' > /dev/null; then
+              echo 'PASS: published TEST root is v22'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'FAILED: published TEST root not yet updated to v22' >&2
+          exit 1
+      - name: Test real deployed TEST app in 390x705 and 320x568 simulated phone viewports
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-wt-published-check/node_modules node scripts/qa_published_word_trails_editorial_v22.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-word-trails-editorial-v22-published-phone
+          path: /tmp/WT-EDITORIAL-V22-PUBLISHED-390.png
+          if-no-files-found: ignore
+          retention-days: 5
