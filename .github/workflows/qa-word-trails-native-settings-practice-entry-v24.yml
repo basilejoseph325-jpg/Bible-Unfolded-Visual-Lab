@@ -1,0 +1,44 @@
+name: QA safe Word Trails recovery practice link in original native TEST Settings
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-native-settings-practice-entry-v24.yml'
+      - 'word-trails-checkpoint-native-settings-practice-v1.js'
+      - 'visual-lab-test-banner.js'
+      - 'scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  native-settings-practice-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert safe native Settings link, single loader and syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check word-trails-checkpoint-native-settings-practice-v1.js
+          node --check visual-lab-test-banner.js
+          node --check scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs
+          grep -F "word-trails-checkpoint-native-settings-practice-v1.js?v=20261113-wt-practice-v1" visual-lab-test-banner.js
+          if grep -n -E '(^|[^.a-zA-Z])localStorage[[:space:]]*(\.|\[)' word-trails-checkpoint-native-settings-practice-v1.js; then
+            echo 'STOP: practice link must not access browser storage' >&2
+            exit 1
+          fi
+          if grep -E 'live-migration-consent-gate-v4|legacy-autoimport-retirement-shim-v4' word-trails-checkpoint-native-settings-practice-v1.js; then
+            echo 'STOP: a practice link must not trigger real migration logic' >&2
+            exit 1
+          fi
+      - name: Install Chrome runner and serve real TEST game
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-wt-native-practice puppeteer-core@24 --silent --no-audit --no-fund
+          python3 -m http.server 8892 --bind 127.0.0.1 >/tmp/wt-native-practice-http.log 2>&1 &
+          sleep 1
+      - name: Open native Settings and separate mock recovery tab in two mobile viewports
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-wt-native-practice/node_modules node scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs
