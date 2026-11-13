@@ -13,7 +13,7 @@ old=matches[0].group(0)
 stem=matches[0].group("stem")
 ending=matches[0].group("end")
 new=stem+"?v=20261113-daily-only-v14"+ending
-assert old==new or "20261113-book-approved-batch3-v12" in old, "Unexpected concurrent Daily bootstrap revision"
+assert old==new or "20261113-book-art-first-v13" in old, "Unexpected concurrent Daily bootstrap revision"
 assert html.count(old)==1
 updated=html.replace(old,new,1)
 assert updated.replace(new,old,1)==html, "Unexpected modification beyond one bootstrap tag"
