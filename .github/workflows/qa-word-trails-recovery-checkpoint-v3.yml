@@ -1,0 +1,40 @@
+name: QA Word Trails TEST-only recovery checkpoint v3
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-recovery-checkpoint-v3.yml'
+      - 'experiments/word-trails-recovery-checkpoint-candidate-v3.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+      - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
+      - 'scripts/qa_word_trails_recovery_checkpoint_v3.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  checkpoint-recovery-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax and prevent accidental production wiring
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in experiments/word-trails-live-consent-migration-candidate-v1.js experiments/word-trails-exclusive-consent-boundary-v2.js experiments/word-trails-recovery-checkpoint-candidate-v3.js scripts/qa_word_trails_recovery_checkpoint_v3.cjs; do node --check "$f"; done
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html; do
+            if grep -F 'word-trails-recovery-checkpoint-candidate-v3.js' "$f"; then
+              echo 'STOP: v3 prototype must stay unlinked from all real and mock gameplay' >&2
+              exit 1
+            fi
+          done
+          echo 'PASS: recovery candidate is inert and not loaded by any player page'
+      - name: Regression test prior explicit-consent and exclusive-lock protections
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_consent_migration_candidate.cjs
+          node scripts/qa_word_trails_exclusive_consent_boundary_v2.cjs
+      - name: Test exported backup checkpoint and safe rollback across isolated failures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_recovery_checkpoint_v3.cjs
