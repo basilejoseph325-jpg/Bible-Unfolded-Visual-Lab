@@ -64,7 +64,8 @@ assert anchor in s,'QA source map changed'
 if "'philip':'assets/daily-book/philip.webp'" not in s:
  s=s.replace(anchor,anchor+',\n'+',\n'.join(f"      '{id}':'assets/daily-book/{id}.webp'" for id in SCENES))
 p.write_text(s)
-for name in ['visual-lab-test-banner.js','journey-progress-caption.js','.github/scripts/bust_daily_30_loader_nov11.py','.github/workflows/publish-test-daily30-loader.yml']:
+# Preserve protected .github/workflows/* files: GitHub Actions push tokens lack workflow permission.
+for name in ['visual-lab-test-banner.js','journey-progress-caption.js','.github/scripts/bust_daily_30_loader_nov11.py']:
  p=Path(name);s=p.read_text()
  assert OLD in s or NEW in s,('Version tag missing',name)
  p.write_text(s.replace(OLD,NEW))
