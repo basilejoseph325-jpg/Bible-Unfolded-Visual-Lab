@@ -138,7 +138,16 @@ const scenes={
       'rahab-cord':'assets/daily-book/rahab-cord.webp',
       'widow-oil':'assets/daily-book/widow-oil.webp',
       'nehemiah-builders':'assets/daily-book/nehemiah-builders.webp',
-      'baruch-scroll':'assets/daily-book/baruch-scroll.webp'
+      'baruch-scroll':'assets/daily-book/baruch-scroll.webp',
+      'samaritan':'assets/daily-book/samaritan.webp',
+      'mustard':'assets/daily-book/mustard.webp',
+      'paul-work':'assets/daily-book/paul-work.webp',
+      'radio':'assets/daily-book/radio.webp',
+      'ezra':'assets/daily-book/ezra.webp',
+      'hezekiah-water':'assets/daily-book/hezekiah-water.webp',
+      'jeremiah-field':'assets/daily-book/jeremiah-field.webp',
+      'stars':'assets/daily-book/stars.webp',
+      'sparrows':'assets/daily-book/sparrows.webp'
     };
     for(const [id,path] of Object.entries(approvedNew)){
       const scene=allArt.find(r=>r.id===id);
@@ -150,7 +159,7 @@ const scenes={
     const goodSamaritan=allArt.find(r=>r.id==='samaritan');
     assert(goodSamaritan&&!goodSamaritan.src.includes('samaritan-at-well'),
       'Keep two different Samaritan accounts distinct');
-    assert.equal(new Set(allArt.map(r=>r.src)).size,24,'17 approved original images plus remaining thematic art should yield 24 distinct images');
+    assert.equal(new Set(allArt.map(r=>r.src)).size,27,'26 distinct original illustrations plus one remaining older thematic picture');
     console.log('BOOK_CURATED_30',JSON.stringify(allArt.map(x=>({id:x.id,art:x.src,label:x.label}))));
     // Save visual evidence for the four newly installed Bible account covers.
     // The source images were already editorially reviewed; this verifies
@@ -165,7 +174,7 @@ const scenes={
     }
     // Editorial audit only: export actual displayed mobile covers for each
     // remaining thematic chapter. This does not change game code or artwork.
-    const thematicIDs=['stars','radio','samaritan','mustard','ezra','paul-work','tears','hezekiah-water','jeremiah-field','sparrows'];
+    const thematicIDs=['tears'];
     for(const selectedId of thematicIDs){
       await page.evaluate(id=>{
         const dropdown=document.querySelector('[data-insight-book-select]');

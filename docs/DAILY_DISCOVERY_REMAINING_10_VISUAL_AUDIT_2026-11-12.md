@@ -46,3 +46,6 @@ New scenes must be 16:9, single continuous illustration, appropriate NWT/JW.org 
 - [2 Chronicles 32:1–8,30 waterworks](https://www.jw.org/en/library/bible/nwt/books/2-chronicles/32/)
 
 **Audit output only, Visual Lab TEST. LIVE untouched.**
+
+## Batch-3 approved illustration integration into TEST
+Nine topic-matched original scenes installed and SHA-256 verified. David's Tears remains thematic. There are 26 unique original image files serving 29 of 30 lessons, plus the retained Tears image (27 distinct image paths). The 30 discovery IDs, lessons, saves and rewards are unchanged. Protected LIVE untouched.

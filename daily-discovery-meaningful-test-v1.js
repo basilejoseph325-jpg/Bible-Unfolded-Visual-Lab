@@ -22,28 +22,28 @@ const DATA=()=>window.BUDailyDiscoveryLibrary||[];
 // deliberately REUSE named art already present in the repository and are marked
 // 'Thematic illustration', never represented as the literal Bible event.
 // This is an editorial visual pilot: no lesson text, IDs, wallet, or saves change.
-const BOOK_ORIGINALS=new Set(['peter','nile','ruth','early-students','naaman-girl','well','paul-storm','philip','bereans','abigail','dorcas-clothes','lydia-purple','widow-coins','rahab-cord','widow-oil','nehemiah-builders','baruch-scroll']);
+const BOOK_ORIGINALS=new Set(['peter','nile','ruth','early-students','naaman-girl','well','paul-storm','philip','bereans','abigail','dorcas-clothes','lydia-purple','widow-coins','rahab-cord','widow-oil','nehemiah-builders','baruch-scroll','samaritan','mustard','paul-work','radio','ezra','hezekiah-water','jeremiah-field','stars','sparrows']);
 const BOOK_SCENES=Object.freeze({
  nile:'assets/daily-book/nile-farmland.webp',
  peter:'assets/daily-book/peter-fishing.webp',
  'early-students':'assets/daily-book/early-students-1870.webp',
  gleaning:'assets/daily-book/ruth-harvest.webp',
  'naaman-girl':'assets/daily-book/naaman-servant-girl.webp',
- stars:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
- radio:'scholar-research-assets/witness-history.webp',
+ stars:'assets/daily-book/stars.webp',
+ radio:'assets/daily-book/radio.webp',
  philip:'assets/daily-book/philip.webp',
  ruth:'assets/daily-book/ruth-harvest.webp',
  joseph:'assets/daily-book/nile-farmland.webp',
- samaritan:'family-worship-menu-art/v1/topic-23-jesus-illustrations.webp',
+ samaritan:'assets/daily-book/samaritan.webp',
  bereans:'assets/daily-book/bereans.webp',
- mustard:'family-worship-menu-art/v1/topic-23-jesus-illustrations.webp',
- ezra:'journey-art/05_exile_return.webp',
- 'paul-work':'family-worship-menu-art/v1/topic-26-paul-timothy.webp',
+ mustard:'assets/daily-book/mustard.webp',
+ ezra:'assets/daily-book/ezra.webp',
+ 'paul-work':'assets/daily-book/paul-work.webp',
  tears:'family-worship-menu-art/v1/topic-30-psalms.webp',
  well:'assets/daily-book/samaritan-at-well.webp',
  abigail:'assets/daily-book/abigail.webp',
- 'hezekiah-water':'journey-art/04_judges_kings.webp',
- 'jeremiah-field':'journey-art/05_exile_return.webp',
+ 'hezekiah-water':'assets/daily-book/hezekiah-water.webp',
+ 'jeremiah-field':'assets/daily-book/jeremiah-field.webp',
  'dorcas-clothes':'assets/daily-book/dorcas-clothes.webp',
  'lydia-purple':'assets/daily-book/lydia-purple.webp',
  'widow-coins':'assets/daily-book/widow-coins.webp',
@@ -51,7 +51,7 @@ const BOOK_SCENES=Object.freeze({
  'widow-oil':'assets/daily-book/widow-oil.webp',
  'nehemiah-builders':'assets/daily-book/nehemiah-builders.webp',
  'paul-storm':'assets/daily-book/paul-breaking-bread.webp',
- sparrows:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
+ sparrows:'assets/daily-book/sparrows.webp',
  'baruch-scroll':'assets/daily-book/baruch-scroll.webp',
  'amos-work':'assets/daily-book/ruth-harvest.webp'
 });
