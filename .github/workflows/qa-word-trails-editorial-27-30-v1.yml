@@ -1,0 +1,28 @@
+name: QA Word Trails final 16 NWT editorial items, all 77 source records
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-editorial-27-30-v1.yml'
+      - 'scripts/qa_word_trails_editorial_levels_27_30.mjs'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+      - 'docs/WORD_TRAILS_12_TO_30_SOURCE_LEDGER_2026-11-09.md'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate-bible-puzzles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate all 77 reviewed entries, complete source ledger and protected puzzle mechanics
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node --check scripts/qa_word_trails_editorial_levels_27_30.mjs
+          node scripts/qa_word_trails_editorial_levels_27_30.mjs
+          node scripts/qa_word_trails_editorial_levels_22_26.mjs
+          node scripts/qa_word_trails_editorial_levels_17_21.mjs
+          node scripts/qa_word_trails_editorial_levels_12_16.mjs
+          node scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/word_trails_quality_gate.mjs
