@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>Word Trails | Save & Recovery Practice — Bible Unfolded TEST</title>
+<style>
+:root{color-scheme:dark;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;--warm:#f6dfae;--paper:#f3eee4;--muted:#bcd3d5;--line:#b9986473}
+*{box-sizing:border-box}
+html{background:#081e28}
+body{margin:0;min-height:100svh;background:radial-gradient(ellipse at 50% -20%,#27657b 0,transparent 60%),linear-gradient(145deg,#09212f,#153747 55%,#061820);color:var(--paper);padding:clamp(10px,3vw,32px)}
+main{max-width:780px;margin:0 auto;border:1px solid #d4b87896;border-radius:22px;background:linear-gradient(155deg,#194555f5,#08232ff5);box-shadow:0 18px 45px #0007;padding:clamp(17px,5vw,35px)}
+.kicker{color:var(--warm);text-transform:uppercase;letter-spacing:.15em;font-weight:850;font-size:11px;margin:0 0 13px}
+h1{font:700 clamp(26px,7vw,39px)/1.13 Georgia,serif;margin:0 0 12px}
+.lead{color:#e2e5db;line-height:1.55;margin:0 0 17px}
+.safety{background:#114f4d6b;border:1px solid #85c9c690;border-radius:14px;padding:13px 15px;color:#e4faf1;font-size:13px;line-height:1.55}
+.safety strong{color:#b8f8d1}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin:23px 0 14px}
+.step{border:1px solid #c6af8290;border-radius:999px;padding:7px 10px;color:#ead8af;font-size:11px;font-weight:800;background:#e1b67516}
+section{border-top:1px solid #d8bc8b41;padding-top:20px;margin-top:20px}
+h2{font:700 21px/1.25 Georgia,serif;margin:0 0 11px}
+p{line-height:1.5}
+.small{color:var(--muted);font-size:12px;line-height:1.5;margin:9px 0 13px}
+label{display:block;color:#e1d1a6;font-size:13px;font-weight:750}
+select,input[type=file]{width:100%;margin-top:7px;border:1px solid #b3cad170;border-radius:11px;background:#103b4b;color:#f7ead3;padding:12px;font-size:14px}
+button{cursor:pointer;touch-action:manipulation;min-height:46px;border-radius:12px;border:1px solid #afc7c0a0;background:#134355;color:#eef7ef;font:750 13px/1.3 system-ui;padding:12px 15px}
+button.primary{background:linear-gradient(180deg,#ffe8b7,#c1a065);border:1px solid #ffe2a7;color:#122f3a}
+button.danger{border-color:#e2ada4;background:#583a3d;color:#ffe5dc}
+button:disabled{opacity:.42;cursor:not-allowed}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #fce4a9;outline-offset:2px}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.actions>*{flex:1;min-width:145px}
+.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:13px 0}
+.stat{border:1px solid #acc7c258;background:#1642518a;border-radius:13px;padding:15px 12px}
+.stat strong{display:block;color:#ffdf9c;font-size:29px;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat span{display:block;color:#d1e4dc;font-size:12px;margin-top:5px}
+.excludes{color:#dddfd3;font-size:12px}
+.rowcheck{display:flex;gap:10px;align-items:flex-start;margin:15px 0;line-height:1.45;color:#f3e7d1;font-size:13px;font-weight:500}
+.rowcheck input{width:20px;height:20px;accent-color:#d4bd86;flex:none;margin:0}
+.result{margin-top:14px;border:1px solid #b9d6bf98;background:#0b333cbb;color:#d9f6e0;border-radius:12px;padding:13px;line-height:1.5;font-size:13px}
+.result[data-kind=blocked]{border-color:#e2ac93;color:#ffdbcc}
+[hidden]{display:none!important}
+.footer{font-size:11px;color:#b4c8c9;text-align:center;border-top:1px solid #c8bb9e3f;padding-top:16px;margin-top:22px}
+@media(max-width:380px){.actions>*{min-width:125px}.steps{gap:5px}.step{font-size:10px;padding:6px 8px}}
+</style>
+</head>
+<body>
+<main>
+<p class="kicker">Bible Unfolded · Visual Lab · Safety rehearsal</p>
+<h1>Protect your Word Trails progress.</h1>
+<p class="lead">Before we ever move saved puzzles, we'll make a recovery checkpoint and give you a clear choice. Here's a safe practice run.</p>
+<div class="safety" role="note"><strong>Practice only — no real saves involved.</strong> This separate page uses made-up crossword progress held in temporary memory. It can't change your real Bible Unfolded game, Insight Tokens, purchased Ocean Glow wheel, voices, or settings. You can save a <em>sample</em> checkpoint file to see the process.</div>
+<div class="steps" aria-label="Four steps"><span class="step">1. Preview</span><span class="step">2. Save checkpoint</span><span class="step">3. Choose transfer</span><span class="step">4. Recover if needed</span></div>
+<section>
+<h2>1. Check the example</h2>
+<label for="scenario">Try a situation
+<select id="scenario">
+<option value="ready">TEST progress, no LIVE crossword save</option>
+<option value="existing">Existing LIVE crossword progress is protected</option>
+<option value="invalid">Damaged TEST progress</option>
+<option value="changed">TEST progress changes after the preview</option>
+</select></label>
+<p id="status" class="small" aria-live="polite"></p>
+<div id="summary" class="statgrid">
+<div class="stat"><strong id="completed">—</strong><span>Sample puzzles completed</span></div>
+<div class="stat"><strong id="unlocked">—</strong><span>Sample levels unlocked</span></div>
+</div>
+<p class="excludes">Only crossword progress is considered. Temporary TEST coins won't become real Insight Tokens or Points. Existing purchases, voices, music and all other game modes stay separate.</p>
+</section>
+<section>
+<h2>2. Save a recovery checkpoint</h2>
+<p class="small">A checkpoint lets you recover an unchanged sample import later. It isn't a complete Bible Unfolded backup, and a real checkpoint would contain private crossword progress.</p>
+<div class="actions">
+<button id="download" class="primary" type="button">Download sample checkpoint</button>
+</div>
+<label class="rowcheck"><input id="saved" type="checkbox" disabled><span>I saved the checkpoint file somewhere safe. (This is a practice file.)</span></label>
+<p id="backup-status" class="small" aria-live="polite">Preview a valid sample to begin.</p>
+</section>
+<section>
+<h2>3. Choose whether to transfer</h2>
+<p class="small">No one gets moved automatically. The practice transfer won't start without both a checkpoint and your clear permission.</p>
+<label class="rowcheck"><input id="approve" type="checkbox" disabled><span>Yes, I want to try transferring this sample crossword progress.</span></label>
+<div class="actions">
+<button id="decline" type="button">No thanks</button>
+<button id="transfer" class="primary" type="button" disabled>Try sample transfer</button>
+</div>
+<div id="transfer-result" class="result" role="status" aria-live="polite" hidden></div>
+</section>
+<section>
+<h2>4. Practice a safe recovery</h2>
+<p class="small">Select the checkpoint file from this practice run. We'll check that it matches the original import before offering to undo it. If you've played more puzzles since transferring, recovery must <strong>never erase that newer progress.</strong></p>
+<label for="checkpoint-file">Choose your sample checkpoint file
+<input id="checkpoint-file" type="file" accept=".json,application/json"></label>
+<p id="file-status" class="small" aria-live="polite">No file selected.</p>
+<label class="rowcheck"><input id="recover-approve" type="checkbox" disabled><span>I want to undo only the unchanged sample import. Don't erase any newer progress.</span></label>
+<div class="actions">
+<button id="advance" type="button" disabled>Simulate another completed puzzle</button>
+<button id="recover" class="danger" type="button" disabled>Try safe recovery</button>
+</div>
+<div id="recovery-result" class="result" role="status" aria-live="polite" hidden></div>
+</section>
+<p class="footer">TEST design review only · Mock saves in memory · No LIVE migration authorized · Physical Android/iPhone testing still required</p>
+</main>
+<script src="word-trails-live-consent-migration-candidate-v1.js?v=checkpoint-ui-v1"></script>
+<script src="word-trails-exclusive-consent-boundary-v2.js?v=checkpoint-ui-v1"></script>
+<script src="word-trails-recovery-checkpoint-candidate-v3.js?v=checkpoint-ui-v1"></script>
+<script src="word-trails-checkpoint-rehearsal-v2.js?v=checkpoint-ui-v1" defer></script>
+</body>
+</html>
