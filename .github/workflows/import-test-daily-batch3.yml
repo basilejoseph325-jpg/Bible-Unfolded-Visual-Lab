@@ -1,0 +1,65 @@
+name: Import nine approved Daily Discovery illustrations into TEST
+on:
+  push:
+    paths:
+      - 'BU_Daily_Approved_9_TEST.zip'
+      - '.github/workflows/import-test-daily-batch3.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verified-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify owner-approved art and import into protected TEST only
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f BU_Daily_Approved_9_TEST.zip ]; then
+            echo "The 9-scene ZIP has not been uploaded to TEST yet; no game files changed."
+            exit 0
+          fi
+          echo 'f7d6a05d651adc30167d0421658ca5823f740e85d77cc4eceb2aa76fab5bd04e  BU_Daily_Approved_9_TEST.zip' | sha256sum -c -
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 -m pip install Pillow -q
+          npm install --prefix /tmp/bu-book-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-book-http.log 2>&1 &
+          sleep 2
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/import_test_daily_batch3.py
+            python3 -m py_compile .github/scripts/import_test_daily_batch3.py
+            node --check daily-discovery-meaningful-test-v1.js
+            node --check scripts/qa_daily_book_preview.cjs
+            node --check visual-lab-test-banner.js
+            node --check journey-progress-caption.js
+            python3 - <<'PY'
+          from PIL import Image
+          from pathlib import Path
+          ids=['samaritan','mustard','paul-work','radio','ezra','hezekiah-water','jeremiah-field','stars','sparrows']
+          for id in ids:
+            p=Path('assets/daily-book')/(id+'.webp')
+            assert Image.open(p).size==(960,540), ('Bad art dimensions', id)
+          print('PASS nine original 960x540 scenes')
+          PY
+            NODE_PATH=/tmp/bu-book-qa/node_modules node scripts/qa_daily_book_preview.cjs
+            git add assets/daily-book daily-discovery-meaningful-test-v1.js scripts/qa_daily_book_preview.cjs visual-lab-test-banner.js journey-progress-caption.js index.html docs/DAILY_DISCOVERY_REMAINING_10_VISUAL_AUDIT_2026-11-12.md
+            git rm -f -- BU_Daily_Approved_9_TEST.zip
+            if git diff --cached --quiet; then
+              echo "All nine approved scenes are already integrated."
+              exit 0
+            fi
+            git commit -m "TEST Daily: integrate nine approved originals; preserve 30 lessons and tears"
+            if git push origin HEAD:main; then
+              echo "SUCCESS: Nine original illustrations mapped and published to Visual Lab TEST; LIVE untouched."
+              exit 0
+            fi
+            echo "TEST changed concurrently, retrying safely"
+            sleep 3
+          done
+          echo "Could not safely publish TEST changes" >&2
+          exit 1
