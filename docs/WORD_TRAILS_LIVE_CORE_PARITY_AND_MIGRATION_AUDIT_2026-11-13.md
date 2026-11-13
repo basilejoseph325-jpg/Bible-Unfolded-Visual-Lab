@@ -34,7 +34,7 @@ The TEST-only read-only audit `scripts/qa_word_trails_live_migration_boundary_20
 ## Safe development work started in TEST (not installed in any game page)
 
 - A new unused candidate `experiments/word-trails-live-consent-migration-candidate-v1.js` supplies **read-only preview**, rejects overwrite when LIVE progress already exists, and requires `acceptExplicitly({approved:true,sourceRaw:<unchanged preview source>})` to apply. It copies **only** the LIVE crossword progress key, resets quarantined TEST puzzle currencies, and leaves existing TEST, wallet, wheel purchase and voice records untouched.
-- A dedicated synthetic suite `scripts/qa_word_trails_consent_migration_candidate.cjs` covers zero writes on load/preview/refusal, explicit opt-in import, no duplicated import, existing-LIVE protection, changed/corrupt source rejection and storage-write failures.
+- A dedicated synthetic suite `scripts/qa_word_trails_consent_migration_candidate.cjs` covers zero writes on load/preview/refusal, explicit opt-in import, no duplicated import, existing-LIVE protection, changed/corrupt source rejection and storage-write failures. GitHub Actions run `43522124480` **PASSED** on eight synthetic scenarios; this is not a public UI or device acceptance.
 - The candidate is **not referenced by** `index.html`, `journey-progress-caption.js`, `visual-lab-test-banner.js`, `word-trails-native-shell-v1.js`, or `experiments/word-trails-next-v1.html`; it is intentionally inert and cannot modify an actual user's data. This is engineering preparation only—not an authorized replacement for the current LIVE script.
 - The candidate still requires a native **player-facing confirmation UI**, clear distinction between TEST progress and real Insight Tokens, write-race/rollback review, integration QA and explicit user approval before it can become LIVE behavior.
 
@@ -42,7 +42,7 @@ The TEST-only read-only audit `scripts/qa_word_trails_live_migration_boundary_20
 
 1. Design and test a genuine native confirmation screen for importing TEST progress only when no LIVE crossword save exists. Show what transfers and what does **not** (real coins, points, purchases, voices, daily streak). An existing LIVE save always wins.
 2. Compare native audio ownership and settings sync on the actual home-card route and *standalone/direct URL* route. Eliminate unintended duplicate writers without disrupting Word Trails' approved SFX; verify original announcer clips and Ocean Glow (curved trace, mist, glitter).
-3. Verify SAVE v1/v2 import/export and profile state across real LIVE/TEXT schema boundaries using **synthetic and consented** fixtures, including partial puzzles and reward-once ledgers. Do not bulk-import entire native TEST wallet/settings backups into LIVE.
+3. Verify SAVE v1/v2 import/export and profile state across real LIVE/TEST schema boundaries using **synthetic and consented** fixtures, including partial puzzles and reward-once ledgers. Do not bulk-import entire native TEST wallet/settings backups into LIVE.
 4. Run complete 30-level and cross-mode regression in TEST, freeze release candidate and restorable LIVE checkpoint. Physical Samsung Android and James's iPhone Safari QA are still needed, followed by explicit owner authorization for this specific LIVE promotion.
 
 **Status: RELEASE BLOCKED.** Human testing not requested yet. The owner does not need to do anything during this safe TEST audit. Native LIVE game, its existing save keys and source commit remain unchanged.
