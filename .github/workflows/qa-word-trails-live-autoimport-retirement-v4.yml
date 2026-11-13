@@ -1,0 +1,47 @@
+name: QA TEST-only proposed retirement of Word Trails LIVE silent auto-import v4
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-live-autoimport-retirement-v4.yml'
+      - 'scripts/qa_word_trails_live_auto_import_retirement_v4.cjs'
+      - 'experiments/word-trails-live-migration-consent-gate-v4.js'
+      - 'experiments/word-trails-recovery-checkpoint-candidate-v3.js'
+      - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
+      - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  pinned-live-script-slot-no-silent-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate candidate, dependency chain and no player-page integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_live_auto_import_retirement_v4.cjs
+          for f in experiments/word-trails-live-consent-migration-candidate-v1.js experiments/word-trails-exclusive-consent-boundary-v2.js experiments/word-trails-recovery-checkpoint-candidate-v3.js experiments/word-trails-live-migration-consent-gate-v4.js; do node --check "$f"; done
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html experiments/word-trails-checkpoint-rehearsal-v2.html; do
+            if grep -F 'word-trails-live-migration-consent-gate-v4.js' "$f"; then
+              echo 'STOP: v4 proposal must remain separate from player-facing TEST pages' >&2
+              exit 1
+            fi
+          done
+      - name: Download pinned original LIVE files for synthetic read-only comparison
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments'
+          curl -fLsS --retry 3 --max-time 30 "$BASE/word-trails-live-migration-v1.js" -o /tmp/bu-pinned-wordtrails-autoimport-v1.js
+          curl -fLsS --retry 3 --max-time 30 "$BASE/word-trails-next-v1.html" -o /tmp/bu-pinned-wordtrails-live-v1.html
+          test -s /tmp/bu-pinned-wordtrails-autoimport-v1.js
+          test -s /tmp/bu-pinned-wordtrails-live-v1.html
+      - name: Prove original silent import and zero-write consented v4 script-slot proposal
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_live_auto_import_retirement_v4.cjs \
+            /tmp/bu-pinned-wordtrails-autoimport-v1.js \
+            /tmp/bu-pinned-wordtrails-live-v1.html
+          echo 'PASS: no LIVE repository files or player browser records were changed'
