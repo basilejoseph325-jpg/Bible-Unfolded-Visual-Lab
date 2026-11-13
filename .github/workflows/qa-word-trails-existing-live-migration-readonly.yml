@@ -1,0 +1,33 @@
+name: Audit existing LIVE Word Trails migration on synthetic saves only
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-existing-live-migration-readonly.yml'
+      - 'scripts/qa_word_trails_live_migration_boundary_20261113.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  audit-readonly-existing-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify audit script syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_live_migration_boundary_20261113.cjs
+      - name: Download EXACT pinned public LIVE migration source (read only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 --max-time 30 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments/word-trails-live-migration-v1.js \
+            -o /tmp/word-trails-live-migration-pinned.js
+          test -s /tmp/word-trails-live-migration-pinned.js
+      - name: Verify migration using only isolated synthetic wallet, wheel and game fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_live_migration_boundary_20261113.cjs /tmp/word-trails-live-migration-pinned.js
+          echo 'NOTE: Audit succeeding does NOT remove detected consent/migration release blocker'
