@@ -36,9 +36,24 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add index.html
-          if git diff --cached --quiet; then echo 'Already current'; exit 0; fi
+          # The owner may be editing TEST while this job starts. Rebuild the
+          # isolated index.html cache tag on the *latest* remote head before
+          # each attempt; never force-push or overwrite another commit.
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "TEST: force current 30-day Daily Discovery JS on phones"
-          git push origin HEAD:main
+          for attempt in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/bust_daily_30_loader_nov11.py
+            git add index.html
+            if git diff --cached --quiet; then echo 'Bootstrap already current'; exit 0; fi
+            git commit -m "TEST: publish approved Daily book artwork loader v10"
+            if git push origin HEAD:main; then
+              echo 'TEST bootstrap version committed safely'
+              exit 0
+            fi
+            echo "Concurrent TEST update detected; rebuilding on latest head (attempt ${attempt})"
+            sleep 3
+          done
+          echo 'Unable to update TEST bootstrap without conflict' >&2
+          exit 1
