@@ -23,7 +23,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{if(document.getElementById('bu-daily-question-visual'))return;const l=document.createElement('link');l.id='bu-daily-question-visual';l.rel='stylesheet';l.href='daily-discovery-question-premium.css?v=20261104-stone-feedback-v4';document.head.appendChild(l)})();
 
 /* Visual Lab ONLY: home screen TEST label; no layout or input interception. */
-(()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=20261113-wt-editorial-v22';document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=20261113-wt-audio-v23';document.head.appendChild(s)})();
 
 /* Visual Lab ONLY — four Daily Discovery polish refinements (no other game modes). */
 (()=>{if(document.getElementById('bu-daily-polish-test'))return;const l=document.createElement('link');l.id='bu-daily-polish-test';l.rel='stylesheet';l.href='daily-discovery-polish-test.css?v=20261104-metallic-art-v3';document.head.appendChild(l)})();
