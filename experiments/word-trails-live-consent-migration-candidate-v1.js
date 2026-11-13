@@ -38,10 +38,12 @@ function normalize(raw){
     migration:{version:2,source:'User-approved Word Trails TEST progress',
       temporaryCoinsExcluded:true,temporaryPointsExcluded:true}};
 }
+function createForStorage(storage){
+ if(!storage||typeof storage.getItem!=='function'||typeof storage.setItem!=='function')throw new Error('Storage adapter unavailable');
 function preview(){
  try{
-  if(localStorage.getItem(LIVE)!==null)return Object.freeze({available:false,reason:'live-progress-exists'});
-  const raw=localStorage.getItem(TEST);
+  if(storage.getItem(LIVE)!==null)return Object.freeze({available:false,reason:'live-progress-exists'});
+  const raw=storage.getItem(TEST);
   if(raw===null)return Object.freeze({available:false,reason:'no-test-progress'});
   const proposed=normalize(raw);
   if(!proposed)return Object.freeze({available:false,reason:'invalid-test-progress'});
@@ -54,21 +56,26 @@ function preview(){
 function acceptExplicitly({approved,sourceRaw}={}){
  if(approved!==true||typeof sourceRaw!=='string')return Object.freeze({ok:false,reason:'consent-required'});
  try{
-  if(localStorage.getItem(LIVE)!==null)return Object.freeze({ok:false,reason:'live-progress-exists'});
-  const current=localStorage.getItem(TEST);
+  if(storage.getItem(LIVE)!==null)return Object.freeze({ok:false,reason:'live-progress-exists'});
+  const current=storage.getItem(TEST);
   if(current===null||current!==sourceRaw)return Object.freeze({ok:false,reason:'test-progress-changed'});
   const safeSave=normalize(current);
   if(!safeSave)return Object.freeze({ok:false,reason:'invalid-test-progress'});
   const body=JSON.stringify(safeSave);
   // Only the LIVE Word Trails progress key is written. No wallet, voice,
   // wheel ownership, Settings, TEST record or global state is modified.
-  localStorage.setItem(LIVE,body);
-  if(localStorage.getItem(LIVE)!==body)throw Error('save-verification-failed');
+  storage.setItem(LIVE,body);
+  if(storage.getItem(LIVE)!==body)throw Error('save-verification-failed');
   return Object.freeze({ok:true,completedCount:safeSave.completed.length,
     tempCoinsExcluded:true,realWalletUntouched:true});
  }catch(_){return Object.freeze({ok:false,reason:'save-failed'})}
 }
+ return Object.freeze({preview,acceptExplicitly});
+}
 window.BUWTConsentMigrationCandidateV1=Object.freeze({
- version:'1.0.0-test-only-not-wired',preview,acceptExplicitly
+ version:'1.1.0-test-only-not-wired',
+ preview:()=>createForStorage(window.localStorage).preview(),
+ acceptExplicitly:args=>createForStorage(window.localStorage).acceptExplicitly(args),
+ createForStorage
 });
 })();
