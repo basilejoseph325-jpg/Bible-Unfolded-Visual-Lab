@@ -38,6 +38,21 @@ The TEST-only read-only audit `scripts/qa_word_trails_live_migration_boundary_20
 - The candidate is **not referenced by** `index.html`, `journey-progress-caption.js`, `visual-lab-test-banner.js`, `word-trails-native-shell-v1.js`, or `experiments/word-trails-next-v1.html`; it is intentionally inert and cannot modify an actual user's data. This is engineering preparation only—not an authorized replacement for the current LIVE script.
 - The candidate still requires a native **player-facing confirmation UI**, clear distinction between TEST progress and real Insight Tokens, write-race/rollback review, integration QA and explicit user approval before it can become LIVE behavior.
 
+## November 13 — Test-only player-facing confirmation rehearsal
+
+Implemented a standalone, **unlinked** TEST interface at `experiments/word-trails-progress-transfer-demo-v1.html` with a companion `word-trails-progress-transfer-demo-v1.js`. It uses the **same migration validation/preview logic** as the experimental candidate through `createForStorage(fakeStorage)`, with an isolated in-memory Map. It **does not** read/write the browser's actual `localStorage`, and the LIVE progress key, native wallet, purchased Ocean Glow ownership and voice settings remain untouched by the page interactions.
+
+The page demonstrates:
+- A human-readable preview with completed puzzles, levels unlocked and exactly which crossword fields are considered.
+- A prominent disclosure that **no real data is transferred** in this rehearsal, and TEST coins, native Insight Tokens, Points, wheel purchases and voice/settings do not transfer.
+- Separate **No thanks**, **Cancel**, checkbox acknowledgment and **Simulate transfer** controls.
+- A refused transfer if the synthetic LIVE progress already exists, if the synthetic TEST save is invalid, or if a second tab changes the synthetic source after preview.
+- An idempotent synthetic import result that cannot double-pay or overwrite existing LIVE progress.
+
+**QA:** [GitHub Actions 43523190995](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43523190995) **SUCCESS**. Browser interactions passed at **390×705** and **320×568** simulated phone viewports with no horizontal overflow or JS exceptions. The browser test pre-seeds real browser `localStorage` in the isolated CI profile with native-wallet, purchased-wheel, voice, TEST and LIVE save sentinels and verifies that **all keys and values remain byte-for-byte unchanged** after every rehearsal scenario. Prior synthetic candidate tests also passed [43523106921](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43523106921) after the storage-injection refactor.
+
+**NOT DONE / DO NOT MISREPRESENT:** This is an independent safe visual/UI prototype, not a released import mechanism. No production page loads it, no real user data is migrated, the existing LIVE auto-migration script is unchanged. Before any real activation, a genuine platform consent action, robust cross-tab collision handling, rollback path and LIVE existing-progress tests must pass, plus owner's physical-phone checks and explicit release authorization. Browser QA used Chromium simulations, **not Samsung or iPhone Safari**.
+
 ## Required next gates (all remain blocked)
 
 1. Design and test a genuine native confirmation screen for importing TEST progress only when no LIVE crossword save exists. Show what transfers and what does **not** (real coins, points, purchases, voices, daily streak). An existing LIVE save always wins.
