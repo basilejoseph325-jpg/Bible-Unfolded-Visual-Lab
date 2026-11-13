@@ -26,6 +26,9 @@ const expected=[
    await page.evaluate(()=>document.getElementById('home-cross').click());
    await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
      !!document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:70000});
+   // UnifiedMenu is registered before the deferred 19-level content file runs.
+   // Wait for the ACTUAL Bible level pack, not merely for the menu to exist.
+   await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTAdditionalLevels?.length===19,{timeout:60000});
    const state=await page.evaluate(()=>{
     const frame=document.getElementById('bu-wt-native-game');
     const child=frame.contentWindow,levels=child.BUWTAdditionalLevels||[];
