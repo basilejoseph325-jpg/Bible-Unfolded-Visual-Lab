@@ -15,7 +15,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.setViewport({...vp,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-  await page.goto('http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+  await page.goto(process.env.BU_WT_NATIVE_PARITY_URL||'http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:90000});
   await page.evaluate(()=>document.getElementById('home-cross').click());
   await page.waitForFunction(()=>{
