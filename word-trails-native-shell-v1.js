@@ -24,7 +24,7 @@ function applyAudio(){
  const prefs=audioPrefs(),child=frame?.contentWindow;
  if(!prefs||!child?.BUWTPolish)return;
  for(const [k,v] of Object.entries(prefs))
-  child.BUWTPolish.setPreference(k,v,{silent:true});
+  child.BUWTPolish.setPreference(k,v,{silent:true,persist:false});
  child.BUWTMainSettings?.draw?.();
  pauseHome();
 }
