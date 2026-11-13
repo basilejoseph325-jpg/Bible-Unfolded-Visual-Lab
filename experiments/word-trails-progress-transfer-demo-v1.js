@@ -1,5 +1,5 @@
 /* Word Trails TEST — consent screen REHEARSAL ONLY.
-   Synthetic Map-based storage; never refers to real browser localStorage.
+   Synthetic Map-based storage; never calls real browser persistence APIs.
    Does not run, apply, or grant consent for an actual LIVE migration. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
