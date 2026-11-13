@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - '.github/workflows/verify-published-wordtrails-editorial-v18.yml'
+      - 'scripts/qa_published_word_trails_editorial_v18.cjs'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
