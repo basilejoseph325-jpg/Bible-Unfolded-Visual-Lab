@@ -23,6 +23,8 @@ New **inert** TEST-only module: `experiments/word-trails-recovery-checkpoint-can
 
 **Verified source-level tests:** [QA #43527775842](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43527775842) **SUCCESS**, with **18 synthetic v3 checkpoint/recovery scenarios**, plus 8 older v1 consent scenarios and 10 v2 lock/fault scenarios. The new implementation has not been enabled for the actual game.
 
+**Real browser integration QA:** [GitHub Actions #43528158252](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43528158252) **SUCCESS**. `scripts/qa_word_trails_checkpoint_v3_real_browser.cjs` opened **two tabs in one isolated Chromium browser context**. It confirmed explicit backup+consent before synthetic import, a 4-completed-puzzle crossword import with quarantined TEST coins, rejection of an attempted rollback after the second tab recorded a newer completed puzzle, refusal while the native Web Lock was held, and a successful optional rollback only when the imported target was again exactly unchanged. It verified untouched native wallet, purchased Ocean Glow entitlement, voice settings, and the now-updated TEST crossword source. **This is not a physical Samsung or iPhone Safari test, and no actual user profile or LIVE data was accessed.**
+
 ## What still has to happen before LIVE
 
 1. **User-facing checkpoint export/download and guarded restore integration:** TEST mock confirmation UI currently uses fake memory and has no v3 file-download and recovery button. Do **not** enable a real-data import or recovery option until this is intentionally designed and tested under native Settings with an explicit player action.
