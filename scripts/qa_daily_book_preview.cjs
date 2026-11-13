@@ -142,6 +142,17 @@ const scenes={
       'Keep two different Samaritan accounts distinct');
     assert.equal(new Set(allArt.map(r=>r.src)).size,19,'Four new scenes plus existing art should yield 19 distinct images');
     console.log('BOOK_CURATED_30',JSON.stringify(allArt.map(x=>({id:x.id,art:x.src,label:x.label}))));
+    // Save visual evidence for the four newly installed Bible account covers.
+    // The source images were already editorially reviewed; this verifies
+    // title overlays and phone cropping in the real running TEST page.
+    for(const id of Object.keys(approvedNew)){
+      await page.evaluate(selectedId=>{
+        const select=document.querySelector('[data-insight-book-select]');
+        select.value=selectedId;
+        select.dispatchEvent(new Event('change',{bubbles:true}));
+      },id);
+      await page.screenshot({path:'/tmp/BU-DAILY-BOOK-'+id+'.png'});
+    }
    }
    // Realistic Android-style native select opens on a tap: test no click
    // cancellation or leakage into old global document-level knock handlers.
