@@ -1,0 +1,26 @@
+name: QA Word Trails editorial levels 22–26 NWT and original 30-level game
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-editorial-22-26-v1.yml'
+      - 'scripts/qa_word_trails_editorial_levels_22_26.mjs'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+      - 'docs/WORD_TRAILS_12_TO_30_SOURCE_LEDGER_2026-11-09.md'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  validate-bible-puzzle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify all 61 reviewed Bible items and crossword data identity
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node --check scripts/qa_word_trails_editorial_levels_22_26.mjs
+          node scripts/qa_word_trails_editorial_levels_22_26.mjs
+          node scripts/qa_word_trails_editorial_levels_17_21.mjs
+          node scripts/qa_word_trails_editorial_levels_12_16.mjs
+          node scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/word_trails_quality_gate.mjs
