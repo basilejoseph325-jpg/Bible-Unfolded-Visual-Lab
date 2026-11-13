@@ -140,12 +140,20 @@ function bookPreviewPicker(){
 }
 function cover(x,kicker,compact=false){
  const art=artFor(x);
- return '<header class="bu-insight-cover'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'" data-illustration="'+escapeHTML(x.id)+'"'+(art?' style="background-image:url(&quot;'+escapeHTML(art)+'&quot;)"':'')+'>'+
- '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
- (bookImage(x)?'<span class="bu-book-scene-label">'+(BOOK_ORIGINALS.has(x.id)?'Artist’s reconstruction':'Thematic illustration')+'</span>':'')+
- '<h2>'+escapeHTML(x.title)+'</h2>'+
- '<p>'+escapeHTML(x.subtitle)+'</p>'+
- '</header>';
+ const attr=' data-illustration="'+escapeHTML(x.id)+'"'+(art?' style="background-image:url(&quot;'+escapeHTML(art)+'&quot;)"':'');
+ // The illustrated book is artwork-first: show the full image with no star,
+ // editorial banner, reconstruction badge, headline, or subtitle ON the art.
+ // Put only the chapter title below, on the book's parchment.
+ if(bookImage(x)){
+  return '<header class="bu-insight-cover bu-book-art-only'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'"'+attr+' role="img" aria-label="Illustration for '+escapeHTML(x.title)+'"></header>'+
+   '<div class="bu-book-title-band"><h2>'+escapeHTML(x.title)+'</h2></div>';
+ }
+ // Keep the original design available for the explicit TEST ?daily_book=0 fallback.
+ return '<header class="bu-insight-cover'+(art?'':' no-art')+(compact?' bu-insight-compact':'')+'"'+attr+'>'+
+  '<div class="bu-insight-datestamp">'+escapeHTML(kicker)+'</div>'+
+  '<h2>'+escapeHTML(x.title)+'</h2>'+
+  '<p>'+escapeHTML(x.subtitle)+'</p>'+
+  '</header>';
 }
 function footerNote(){
  return '<p class="bu-insight-note">Based on the linked New World Translation or an official JW.org publication. Reflections and conversation ideas are suggestions, not Bible quotations. TEST version · original Daily Discovery quiz saves and rewards unchanged.</p>';
