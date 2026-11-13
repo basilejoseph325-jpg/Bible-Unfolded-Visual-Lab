@@ -54,3 +54,21 @@ The top **Today** tab now resets an editorial preview to the real dated discover
 **QA:** The book workflow now explicitly launches ordinary `index.html` and clicks the actual `#bu375-home-cta` button in a phone-size browser, asserting the parchment styles, art, and all-30 selector show **without any query string**. It also asserts the `daily_book=0` comparison still renders the original teal design. General Daily Discovery acceptance also tests page navigation and saved-state isolation. Physical Android Chrome / iPhone Safari signoff remains separate.
 
 **LIVE:** no changes; promote only after artwork review, device checks and explicit owner authorization.
+
+
+## November 12, 2026 — Reviewed art batch #1, TEST only
+
+After the owner approved the imagery, four newly generated, reviewed source scenes were optimized to 760×428 WebP and committed in `assets/daily-book/`:
+
+| Daily Discovery ID | Source | File | Notes |
+| --- | --- | --- | --- |
+| `early-students` | Historical Bible Students study group, Pittsburgh area, 1870 | `early-students-1870.webp` | Younger group; artistic representation, not a portrait of a documented meeting or exact individuals |
+| `naaman-girl` | 2 Kings 5:2–3 | `naaman-servant-girl.webp` | Young Israelite servant speaking to Naaman's wife; revised to remove queen-like dress |
+| `well` | John 4:6–15 | `samaritan-at-well.webp` | Jesus and the Samaritan woman at the well; **not** the parable of the good Samaritan in Luke 10 (`samaritan` ID) |
+| `paul-storm` | Acts 27:33–36 | `paul-breaking-bread.webp` | Paul sharing bread and encouragement on the storm-tossed ship |
+
+These are **artist's reconstructions**, not archaeological photos or verified face likenesses. The user approved the revised Naaman scene and inspected the other candidates in prior turns. The WBBR and older-Russell study-room images were deliberately **not integrated** pending historical corrections; the existing WBBR thematic image stays in place.
+
+The book layout and all 30 lesson IDs remain unchanged. Saved discoveries and Share the Thought cards automatically use the mapped illustration, so the correct photo travels with the selected lesson; the mapped inventory rises from 16 to **19 distinct images** (not 20, as the old `well` theme image was used by no other mapped lesson).
+
+QA updates specifically verify local image loads, 19 distinct art paths, all 30 lesson IDs, original image captions and separation of John 4's woman at the well from Luke 10's good Samaritan. The v10 Android cache-chain refresh allows the standard TEST home entry to pick up the new photos. This is *not* a LIVE release; Samsung/iPhone physical acceptance and remaining art review are still needed.
