@@ -15,7 +15,7 @@ SCENES={
  'jeremiah-field':'journey-art/05_exile_return.webp',
  'stars':'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
  'sparrows':'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp'}
-assert ZIP.is_file(),'Upload BU_Daily_Approved_10_TEST.zip to TEST repository root'
+assert ZIP.is_file(),'Upload BU_Daily_Approved_9_TEST.zip to TEST repository root'
 with zipfile.ZipFile(ZIP) as z:
  data=json.loads(z.read('manifest.json'))
  assert data['scope']=='Bible-Unfolded-Visual-Lab TEST ONLY' and data['version']==NEW
