@@ -55,6 +55,16 @@ The page demonstrates:
 
 **NOT DONE / DO NOT MISREPRESENT:** This is an independent safe visual/UI prototype, not a released import mechanism. No production page loads it, no real user data is migrated, the existing LIVE auto-migration script is unchanged. Before any real activation, a genuine platform consent action, robust cross-tab collision handling, rollback path and LIVE existing-progress tests must pass, plus owner's physical-phone checks and explicit release authorization. Browser QA used Chromium simulations, **not Samsung or iPhone Safari**.
 
+## November 13 — Web Locks two-tab collision safety (TEST-only prototype)
+
+A second **unlinked** migration candidate `experiments/word-trails-exclusive-consent-boundary-v2.js` adds a cooperative exclusive browser Web Lock around v1's existing source/target validation. It **fails closed** if locks are missing, held by a second tab, or throw; any ambiguous post-write storage readback is flagged for recovery review rather than deleting a potentially valid new save. It has no automatic import on page load and does not appear in the real game or the published mock consent UI.
+
+- [Ten synthetic failure/lock scenarios #43524160773](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43524160773) **SUCCESS**.
+- [Actual two-tab native Chromium Web Locks QA #43524558022](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43524558022) **SUCCESS**: second tab was refused while first held the browser lock; only one synthetic crossword save committed, with quarantined test currency and unchanged real-wallet/ownership/voice fixture values. The first harness-only run was corrected after an asynchronous CDP wait deadlock; the passing rerun uses proper detached browser-page orchestration.
+- See [WORD_TRAILS_CROSS_TAB_CONSENT_RELEASE_GATE_2026-11-13.md](WORD_TRAILS_CROSS_TAB_CONSENT_RELEASE_GATE_2026-11-13.md) for exact risk analysis, test evidence and release blockers.
+
+**Crucial limitation:** the existing LIVE automatic migration script is not lock-aware, so this does **NOT** make LIVE safe or ready. All existing LIVE automatic import pathways must be retired/reconciled **as part of an explicitly approved future release**; iPhone Safari support, actual-device QA, rollback and native backup import remain unresolved.
+
 ## Required next gates (all remain blocked)
 
 1. Design and test a genuine native confirmation screen for importing TEST progress only when no LIVE crossword save exists. Show what transfers and what does **not** (real coins, points, purchases, voices, daily streak). An existing LIVE save always wins.
