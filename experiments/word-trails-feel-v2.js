@@ -327,10 +327,12 @@ function celebrateWin(){
  winTimers.push(cleanup);
 }
 function state(){return {...pref}}
-function change(name,value,{silent=false}={}){
+// Native homepage owns shared music/SFX preferences; its one-way frame sync
+// must not write a second persistent copy. Standalone TEST controls still save.
+function change(name,value,{silent=false,persist=true}={}){
  if(!Object.prototype.hasOwnProperty.call(DEF,name))return;
  if(name.endsWith('Volume'))pref[name]=bound(value);else pref[name]=!!value;
- save();sync();
+ if(persist)save();sync();
  if(name==='music'||name==='musicVolume')onMusicChange();
  if(!silent&&name==='sfx'&&pref.sfx)cue('correct');
  if(!silent&&name==='sfxVolume')cue('touch');
