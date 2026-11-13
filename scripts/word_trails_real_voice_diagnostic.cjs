@@ -50,7 +50,18 @@ const executablePath=execSync('command -v google-chrome || command -v chromium',
   })}));
   await page.evaluate(()=>window.BUWTNativeShell.close());
   await page.evaluate(()=>window.BUWTNativeShell.launch());
-  await page.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.document?.getElementById('solved-count'));
+  // The HTML contains #solved-count before the dynamic wheel is hydrated.
+  // A reload/reentry can therefore reach the old wait while ZERO letter
+  // buttons exist, producing a misleading "Missing letter A" failure.
+  // Wait for the actual ACTION rack and fresh first board, not just markup.
+  await page.waitForFunction(()=>{
+    const frame=document.getElementById('bu-wt-native-game')?.contentWindow;
+    const doc=frame?.document;
+    if(!frame?.BUWTAnnouncer||!doc)return false;
+    const letters=[...doc.querySelectorAll('.wheel-letter')].map(x=>x.textContent.trim());
+    return letters.length===6 && ['A','C','T','I','O','N'].every(ch=>letters.includes(ch)) &&
+      doc.getElementById('solved-count')?.textContent?.trim()==='0 / 4';
+  },{timeout:60000});
   const board=await page.evaluate(()=>{
    const f=document.getElementById('bu-wt-native-game').contentWindow.document;
    const solve=word=>{
