@@ -5,18 +5,10 @@
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const nativeShell=()=>{try{return parent!==window&&parent.BUWTNativeShell?.active?.()?parent.BUWTNativeShell:null}catch(_){return null}};
-const SHARED_AUDIO='bu-platform-audio-preferences-v1';
-const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}};
 const pct=x=>Math.max(0,Math.min(100,Number(x)||0));
 function current(){return window.BUWTPolish?.state?.()||{}}
-function saveShared(){
- if(nativeShell())return; // Parent's actual Settings owns shared preferences.
- const s=current();
- try{localStorage.setItem(SHARED_AUDIO,JSON.stringify({
-  music:!!s.music,sfx:!!s.sfx,musicVolume:pct(s.musicVolume),
-  sfxVolume:pct(s.sfxVolume),updated:Date.now(),source:'trails'
- }))}catch(_){}
-}
+// Standalone QA settings are deliberately LOCAL to Word Trails.
+// Native Bible Unfolded Settings alone owns global music/SFX preferences.
 function draw(){
  if(!$('wt-main-settings'))return;
  const state=current();
@@ -34,15 +26,6 @@ function draw(){
   $('wt-voice-status').textContent=window.BUWTAnnouncer.available()?
    'Original Bible Unfolded voices · noncommercial testing only.':
    'Original voice recordings are being loaded.';
- }
-}
-function applySharedInitial(){
- if(nativeShell())return; // Native parent sends its current controls after frame load.
- const a=read(SHARED_AUDIO);
- if(!a||!window.BUWTPolish?.setPreference)return;
- for(const name of ['music','sfx','musicVolume','sfxVolume']){
-  if(Object.prototype.hasOwnProperty.call(a,name))
-   window.BUWTPolish.setPreference(name,a[name],{silent:true});
  }
 }
 function open(){
@@ -94,7 +77,6 @@ function make(){
   if(el&&el.type==='range'){
    window.BUWTPolish?.setPreference?.(el.dataset.wtSetting,Number(el.value));
    $('wt-native-'+el.dataset.wtSetting+'-display').textContent=el.value+'%';
-   saveShared();
   }
  });
  d.addEventListener('change',e=>{
@@ -102,7 +84,7 @@ function make(){
   if(el){
    const val=el.type==='checkbox'?el.checked:Number(el.value);
    window.BUWTPolish?.setPreference?.(el.dataset.wtSetting,el.dataset.invert? !val:val);
-   saveShared();draw();
+   draw();
   }
  });
  $('wt-preview-chime').onclick=()=>window.BUWTPolish?.cue?.('correct');
@@ -118,8 +100,8 @@ function make(){
  $('wt-more-sounds').onclick=()=>{close();window.BUWTPolish?.openSettings?.()};
  $('wt-open-main-settings').onclick=()=>{close();location.assign('../index.html?wt_nav=settings')};
  window.addEventListener('bu-wt-voice-change',draw);
- applySharedInitial();draw();
+ draw();
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',make,{once:true});else make();
-window.BUWTMainSettings=Object.freeze({open,close,draw,sharedAudioKey:SHARED_AUDIO});
+window.BUWTMainSettings=Object.freeze({open,close,draw});
 })();
