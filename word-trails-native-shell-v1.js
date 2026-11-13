@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=scripture-batch1-20261113';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=source-review2-20261113-v18';
 let shell=null,frame=null,opening=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
