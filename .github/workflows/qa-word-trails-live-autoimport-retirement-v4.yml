@@ -5,6 +5,7 @@ on:
       - '.github/workflows/qa-word-trails-live-autoimport-retirement-v4.yml'
       - 'scripts/qa_word_trails_live_auto_import_retirement_v4.cjs'
       - 'experiments/word-trails-live-migration-consent-gate-v4.js'
+      - 'experiments/word-trails-legacy-autoimport-retirement-shim-v4.js'
       - 'experiments/word-trails-recovery-checkpoint-candidate-v3.js'
       - 'experiments/word-trails-exclusive-consent-boundary-v2.js'
       - 'experiments/word-trails-live-consent-migration-candidate-v1.js'
@@ -21,7 +22,7 @@ jobs:
         run: |
           set -euo pipefail
           node --check scripts/qa_word_trails_live_auto_import_retirement_v4.cjs
-          for f in experiments/word-trails-live-consent-migration-candidate-v1.js experiments/word-trails-exclusive-consent-boundary-v2.js experiments/word-trails-recovery-checkpoint-candidate-v3.js experiments/word-trails-live-migration-consent-gate-v4.js; do node --check "$f"; done
+          for f in experiments/word-trails-live-consent-migration-candidate-v1.js experiments/word-trails-exclusive-consent-boundary-v2.js experiments/word-trails-recovery-checkpoint-candidate-v3.js experiments/word-trails-live-migration-consent-gate-v4.js experiments/word-trails-legacy-autoimport-retirement-shim-v4.js; do node --check "$f"; done
           for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-progress-transfer-demo-v1.html experiments/word-trails-checkpoint-rehearsal-v2.html; do
             if grep -F 'word-trails-live-migration-consent-gate-v4.js' "$f"; then
               echo 'STOP: v4 proposal must remain separate from player-facing TEST pages' >&2
