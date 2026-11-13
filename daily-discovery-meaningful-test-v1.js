@@ -18,17 +18,17 @@ const KEY='bu-daily-insight-test-v1';
 const Q=new URLSearchParams(location.search);
 const DATA=()=>window.BUDailyDiscoveryLibrary||[];
 // TEST only: a curated historical illustration for every existing lesson.
-// The first three are purpose-made realistic scene reconstructions. Other items
+// Seven now use purpose-made, reviewed artistic reconstructions. Other items
 // deliberately REUSE named art already present in the repository and are marked
 // 'Thematic illustration', never represented as the literal Bible event.
 // This is an editorial visual pilot: no lesson text, IDs, wallet, or saves change.
-const BOOK_ORIGINALS=new Set(['peter','nile','ruth']);
+const BOOK_ORIGINALS=new Set(['peter','nile','ruth','early-students','naaman-girl','well','paul-storm']);
 const BOOK_SCENES=Object.freeze({
  nile:'assets/daily-book/nile-farmland.webp',
  peter:'assets/daily-book/peter-fishing.webp',
- 'early-students':'scholar-research-assets/witness-history.webp',
+ 'early-students':'assets/daily-book/early-students-1870.webp',
  gleaning:'assets/daily-book/ruth-harvest.webp',
- 'naaman-girl':'family-worship-menu-art/v1/topic-19-elisha.webp',
+ 'naaman-girl':'assets/daily-book/naaman-servant-girl.webp',
  stars:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
  radio:'scholar-research-assets/witness-history.webp',
  philip:'journey-art/07_good_news_spreads.webp',
@@ -40,7 +40,7 @@ const BOOK_SCENES=Object.freeze({
  ezra:'journey-art/05_exile_return.webp',
  'paul-work':'family-worship-menu-art/v1/topic-26-paul-timothy.webp',
  tears:'family-worship-menu-art/v1/topic-30-psalms.webp',
- well:'family-worship-menu-art/v1/topic-38-jesus-ministry.webp',
+ well:'assets/daily-book/samaritan-at-well.webp',
  abigail:'family-worship-menu-art/v1/topic-16-david.webp',
  'hezekiah-water':'journey-art/04_judges_kings.webp',
  'jeremiah-field':'journey-art/05_exile_return.webp',
@@ -50,7 +50,7 @@ const BOOK_SCENES=Object.freeze({
  'rahab-cord':'family-worship-menu-art/v1/topic-13-joshua-jericho.webp',
  'widow-oil':'family-worship-menu-art/v1/topic-19-elisha.webp',
  'nehemiah-builders':'family-worship-menu-art/v1/topic-29-nehemiah.webp',
- 'paul-storm':'family-worship-menu-art/v1/topic-26-paul-timothy.webp',
+ 'paul-storm':'assets/daily-book/paul-breaking-bread.webp',
  sparrows:'family-worship-menu-art/v1/topic-37-jehovah-s-qualities.webp',
  'baruch-scroll':'journey-art/05_exile_return.webp',
  'amos-work':'assets/daily-book/ruth-harvest.webp'
@@ -474,7 +474,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.2.1-test-book-default-chrome',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.2.2-test-book-art-4',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
