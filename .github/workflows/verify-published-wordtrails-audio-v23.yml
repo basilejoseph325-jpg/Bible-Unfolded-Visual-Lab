@@ -1,0 +1,45 @@
+name: Verify published TEST Word Trails native audio and Ocean Glow v23
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-audio-v23.yml'
+      - 'scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-phone-audio-and-wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify browser QA syntax and install browser driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs
+          npm install --prefix /tmp/bu-wt-native-audio-v23-published puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Verify public TEST v23 root and all updated loader files are served
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 40); do
+            if curl -fsSL --retry 2 --max-time 40 -H 'Cache-Control: no-cache' "$BASE/index.html?check-wt-audio-v23=$attempt" | grep -F 'journey-progress-caption.js?v=20261113-wt-audio-v23' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 40 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?check-wt-audio-v23=$attempt" | grep -F 'visual-lab-test-banner.js?v=20261113-wt-audio-v23' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 40 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?check-wt-audio-v23=$attempt" | grep -F 'word-trails-native-shell-v1.js?v=shared-audio-20261113-v23' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 40 -H 'Cache-Control: no-cache' "$BASE/word-trails-native-shell-v1.js?check-wt-audio-v23=$attempt" | grep -F 'word-trails-next-v1.html?v=shared-audio-20261113-v23' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 40 -H 'Cache-Control: no-cache' "$BASE/experiments/word-trails-next-v1.html?check-wt-audio-v23=$attempt" | grep -F 'word-trails-feel-v2.js?v=native-settings-owner-20261113-v23' >/dev/null; then
+              echo 'PASS: full public TEST bootstrap reaches current native audio owner v23'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'FAILED: published TEST root is not consistently serving audio ownership v23' >&2
+          exit 1
+      - name: Exercise actual public Word Trails native Settings, original voice and Ocean Glow
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_WT_NATIVE_PARITY_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/index.html' \
+          NODE_PATH=/tmp/bu-wt-native-audio-v23-published/node_modules \
+          node scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs
