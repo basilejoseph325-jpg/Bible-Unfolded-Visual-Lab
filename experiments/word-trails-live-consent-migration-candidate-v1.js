@@ -74,8 +74,8 @@ function acceptExplicitly({approved,sourceRaw}={}){
 }
 window.BUWTConsentMigrationCandidateV1=Object.freeze({
  version:'1.1.0-test-only-not-wired',
- preview:()=>createForStorage(window.localStorage).preview(),
- acceptExplicitly:args=>createForStorage(window.localStorage).acceptExplicitly(args),
+ preview:()=>createForStorage(localStorage).preview(),
+ acceptExplicitly:args=>createForStorage(localStorage).acceptExplicitly(args),
  createForStorage
 });
 })();
