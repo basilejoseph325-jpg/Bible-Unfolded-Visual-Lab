@@ -124,7 +124,23 @@ const scenes={
     assert(allArt.every(r=>r.ok),'All 30 artwork URLs resolve to usable images: '+JSON.stringify(allArt.filter(r=>!r.ok)));
     assert(allArt.every(r=>['Artist’s reconstruction','Thematic illustration'].includes(r.label)),
       'Every historical setting has an honest source label');
-    assert.equal(new Set(allArt.map(r=>r.src)).size,16,'Curated 16-image library, not 30 random illustrations');
+    const approvedNew={
+      'early-students':'assets/daily-book/early-students-1870.webp',
+      'naaman-girl':'assets/daily-book/naaman-servant-girl.webp',
+      well:'assets/daily-book/samaritan-at-well.webp',
+      'paul-storm':'assets/daily-book/paul-breaking-bread.webp'
+    };
+    for(const [id,path] of Object.entries(approvedNew)){
+      const scene=allArt.find(r=>r.id===id);
+      assert(scene&&scene.src.endsWith(path),'Approved new artwork must match its source Bible lesson: '+id);
+      assert.equal(scene.label,'Artist’s reconstruction');
+    }
+    // Jesus at the well (John 4) must not leak into the GOOD Samaritan
+    // illustration (Luke 10), which is an entirely different account!
+    const goodSamaritan=allArt.find(r=>r.id==='samaritan');
+    assert(goodSamaritan&&!goodSamaritan.src.includes('samaritan-at-well'),
+      'Keep two different Samaritan accounts distinct');
+    assert.equal(new Set(allArt.map(r=>r.src)).size,19,'Four new scenes plus existing art should yield 19 distinct images');
     console.log('BOOK_CURATED_30',JSON.stringify(allArt.map(x=>({id:x.id,art:x.src,label:x.label}))));
    }
    // Realistic Android-style native select opens on a tap: test no click
@@ -199,7 +215,7 @@ const scenes={
   assert.equal(plain.key,'peter');assert.equal(plain.active,false);
   assert.equal(plain.picker,false,'Explicit old-theme comparison hides preview controls');
   assert(!plain.image.includes('assets/daily-book/'),'Original design remains available via daily_book=0');
-  console.log('PASS_DAILY_BOOK_PREVIEW: 3 original scenes, 30 browser options, regular Chrome opens book, original visual fallback preserved');
+  console.log('PASS_DAILY_BOOK_PREVIEW: 7 original scenes, 30 browser options, regular Chrome opens book, original visual fallback preserved');
  }catch(e){console.error('FAIL_DAILY_BOOK_PREVIEW',e.stack||e);process.exitCode=1}
  finally{await browser?.close()}
 })();
