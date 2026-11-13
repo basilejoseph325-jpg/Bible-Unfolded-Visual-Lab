@@ -8,8 +8,8 @@ const {execSync}=require('node:child_process');
 const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 (async()=>{
  const browser=await puppeteer.launch({headless:true,executablePath:chrome,
-  args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required'],
-  protocolTimeout:120000});
+  args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--disable-gpu','--autoplay-policy=no-user-gesture-required'],
+  timeout:90000,protocolTimeout:120000});
  try{
  for(const vp of [{width:390,height:705},{width:320,height:568}]){
   const page=await browser.newPage(),errors=[];
