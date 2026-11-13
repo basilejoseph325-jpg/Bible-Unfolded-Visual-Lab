@@ -1,0 +1,56 @@
+name: Publish TEST Word Trails Scripture batch1 mobile bootstrap
+on:
+  push:
+    paths:
+      - '.github/workflows/publish-test-wordtrails-scripture-v17.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  publish-only-one-index-script-version:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Scripture batch, old game protection and all mobile loader links
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/bust_wordtrails_scripture_v17.py
+          node --check journey-progress-caption.js
+          node --check visual-lab-test-banner.js
+          node --check word-trails-native-shell-v1.js
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node --check scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/word_trails_quality_gate.mjs
+          grep -q 'word-trails-levels-12-30-v1.js?v=scripture-batch1-20261113' experiments/word-trails-next-v1.html
+          grep -q 'word-trails-next-v1.html?v=scripture-batch1-20261113' word-trails-native-shell-v1.js
+          grep -q 'word-trails-native-shell-v1.js?v=scripture-batch1-20261113' visual-lab-test-banner.js
+          grep -q 'visual-lab-test-banner.js?v=20261113-wt-scripture-v17' journey-progress-caption.js
+          test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
+      - name: Commit exact single TEST homepage script version and publish
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/bust_wordtrails_scripture_v17.py
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'PASS: TEST v17 bootstrap already published'
+              exit 0
+            fi
+            test "$(git diff --cached --name-only)" = "index.html"
+            git commit -m 'TEST Word Trails: publish six NWT-backed discovery improvements on mobile v17'
+            if git push origin HEAD:main; then
+              echo 'PASS: Published only approved TEST new source loader; LIVE was not touched'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Refusing unsafe publish after repeated concurrent branch updates' >&2
+          exit 1
