@@ -1,0 +1,55 @@
+name: Import 10 approved Daily Discovery images into TEST
+on:
+  push:
+    paths:
+      - 'BU_Daily_Approved_10_TEST.zip'
+      - '.github/workflows/import-test-daily-batch2.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  verified-import:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify and import approved images into Visual Lab only
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f BU_Daily_Approved_10_TEST.zip ]; then
+            echo "The approved image ZIP is not in the TEST repository yet; no game files changed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python3 -m pip install Pillow -q
+          npm install --prefix /tmp/bu-book-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-book-http.log 2>&1 &
+          sleep 2
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/import_test_daily_batch2.py
+            node --check daily-discovery-meaningful-test-v1.js
+            node --check scripts/qa_daily_book_preview.cjs
+            node --check visual-lab-test-banner.js
+            node --check journey-progress-caption.js
+            python3 -c "from PIL import Image; from pathlib import Path; ids=['philip','bereans','abigail','dorcas-clothes','lydia-purple','widow-coins','rahab-cord','widow-oil','nehemiah-builders','baruch-scroll']; assert all(Image.open(Path('assets/daily-book')/(id+'.webp')).size==(960,540) for id in ids); print('PASS ten 960x540 pictures')"
+            NODE_PATH=/tmp/bu-book-qa/node_modules node scripts/qa_daily_book_preview.cjs
+            git add assets/daily-book daily-discovery-meaningful-test-v1.js scripts/qa_daily_book_preview.cjs visual-lab-test-banner.js journey-progress-caption.js .github/scripts/bust_daily_30_loader_nov11.py .github/workflows/publish-test-daily30-loader.yml index.html docs/DAILY_DISCOVERY_ARTWORK_AUDIT_2026-11-12.md
+            git rm -f -- BU_Daily_Approved_10_TEST.zip
+            if git diff --cached --quiet; then
+              echo "Approved art already installed"
+              exit 0
+            fi
+            git commit -m "TEST Daily: integrate ten approved book illustrations safely"
+            if git push origin HEAD:main; then
+              echo "SUCCESS: approved art integrated into TEST. Protected LIVE unchanged."
+              exit 0
+            fi
+            echo "Concurrent TEST edit found; retrying against latest head"
+            sleep 3
+          done
+          echo "Could not publish safely because TEST changed concurrently" >&2
+          exit 1
