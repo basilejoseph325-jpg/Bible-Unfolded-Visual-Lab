@@ -1,0 +1,37 @@
+name: QA Word Trails stale LIVE tab risk in isolated two-tab browser v5
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-stale-tab-race-v5.yml'
+      - 'scripts/qa_word_trails_stale_live_tab_race_v5.cjs'
+      - 'experiments/word-trails-live-migration-consent-gate-v4.js'
+      - 'experiments/word-trails-legacy-autoimport-retirement-shim-v4.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  negative-old-tab-collision:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check JS and ensure old LIVE source is only read for test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_stale_live_tab_race_v5.cjs
+          node --check experiments/word-trails-live-migration-consent-gate-v4.js
+          node --check experiments/word-trails-legacy-autoimport-retirement-shim-v4.js
+          curl -fLsS --retry 3 --max-time 30 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments/word-trails-live-migration-v1.js \
+            -o /tmp/bu-wordtrails-pinned-live-importer-v1.js
+          test -s /tmp/bu-wordtrails-pinned-live-importer-v1.js
+      - name: Two-tab browser reproduction of dangerous old onload after new rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/wt-stale-tab-v5 puppeteer-core@24 --silent --no-audit --no-fund
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/wt-stale-tab-v5-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/wt-stale-tab-v5/node_modules node scripts/qa_word_trails_stale_live_tab_race_v5.cjs \
+            /tmp/bu-wordtrails-pinned-live-importer-v1.js
+          echo 'PASS means the stale-tab RELEASE BLOCKER was reproduced; it is NOT fixed in LIVE'
