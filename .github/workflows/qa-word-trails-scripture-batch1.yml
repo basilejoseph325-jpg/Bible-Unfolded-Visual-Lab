@@ -1,0 +1,23 @@
+name: QA Word Trails six Scripture-reviewed hidden discoveries
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-scripture-batch1.yml'
+      - 'scripts/qa_word_trails_scripture_batch1.mjs'
+      - 'docs/WORD_TRAILS_12_TO_30_SOURCE_LEDGER_2026-11-09.md'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  check-words-sources-and-original-puzzles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source ledger, rack playability, insight and save-safe level layout
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_scripture_batch1.mjs
+          node --check experiments/word-trails-levels-12-30-v1.js
+          node scripts/qa_word_trails_scripture_batch1.mjs
+          node scripts/word_trails_quality_gate.mjs
