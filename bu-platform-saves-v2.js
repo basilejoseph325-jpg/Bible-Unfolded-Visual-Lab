@@ -685,6 +685,14 @@ function install(){
  // old v1 handler. Capture-phase intercept blocks ordinary bubbling or
  // onchange property handlers while the updated TEST page is loaded.
  btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();download()},true);
+ const importButton=document.getElementById('save-import');
+ if(importButton){
+  // A normal user clicking native Import now opens the safe review, rather
+  // than activating the older file-selection/restore route.
+  importButton.addEventListener('click',e=>refuseLegacySettingsImport(null,e),true);
+  importButton.setAttribute('aria-label','Review TEST backups; restore is temporarily disabled');
+  importButton.setAttribute('title','Review backups safely. No saved progress will be imported.');
+ }
  picker.addEventListener('change',e=>refuseLegacySettingsImport(picker,e),true);
  picker.onchange=e=>refuseLegacySettingsImport(picker,e);
  getStatus();
