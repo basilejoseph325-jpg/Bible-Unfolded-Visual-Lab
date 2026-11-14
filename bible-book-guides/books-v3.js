@@ -1,5 +1,5 @@
 /* Bible Unfolded: standalone, no-overlay Bible Books reading library.
-   Supports Genesis, Exodus and Leviticus in independent storage slots.
+   Supports Genesis, Exodus, Leviticus and Numbers in independent storage slots.
    No native game handlers, wallet, scores, audio, or Story Adventure writes. */
 (()=>{'use strict';
 const names='Genesis|Exodus|Leviticus|Numbers|Deuteronomy|Joshua|Judges|Ruth|1 Samuel|2 Samuel|1 Kings|2 Kings|1 Chronicles|2 Chronicles|Ezra|Nehemiah|Esther|Job|Psalms|Proverbs|Ecclesiastes|Song of Solomon|Isaiah|Jeremiah|Lamentations|Ezekiel|Daniel|Hosea|Joel|Amos|Obadiah|Jonah|Micah|Nahum|Habakkuk|Zephaniah|Haggai|Zechariah|Malachi|Matthew|Mark|Luke|John|Acts|Romans|1 Corinthians|2 Corinthians|Galatians|Ephesians|Philippians|Colossians|1 Thessalonians|2 Thessalonians|1 Timothy|2 Timothy|Titus|Philemon|Hebrews|James|1 Peter|2 Peter|1 John|2 John|3 John|Jude|Revelation'.split('|');
@@ -7,7 +7,8 @@ const books=names.map((name,i)=>({name,i,slug:name.toLowerCase().replaceAll(' ',
 const guides={
   genesis:{file:'genesis-draft.json',parts:23,chapters:50,subtitle:'From creation to Joseph in Egypt'},
   exodus:{file:'exodus-draft.json',parts:30,chapters:40,subtitle:"From slavery in Egypt to Jehovah's presence in the wilderness"},
-  leviticus:{file:'leviticus-draft.json',parts:27,chapters:27,subtitle:"How a freed nation learned to worship Jehovah and care for people"}
+  leviticus:{file:'leviticus-draft.json',parts:27,chapters:27,subtitle:"How a freed nation learned to worship Jehovah and care for people"},
+  numbers:{file:'numbers-draft.json',parts:36,chapters:36,subtitle:"A nation on the move, a new generation, and the road to the Promised Land"}
 };
 const $=id=>document.getElementById(id);
 const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n};
@@ -51,7 +52,7 @@ async function showReader(){
  }
  let data;
  try{
-   const response=await fetch(guide.file+'?v=20261114-leviticus-27parts-v1',{cache:'no-store'});
+   const response=await fetch(guide.file+'?v=20261114-numbers-36parts-v1',{cache:'no-store'});
    if(!response.ok)throw Error('Reading guide unavailable');
    data=await response.json();
    if(data.book!==book.name||data.chapterCount!==guide.chapters||data.sections?.length!==guide.parts)throw Error('Guide metadata incomplete');
@@ -101,7 +102,9 @@ async function showReader(){
    $('completion').hidden=!finished;
    if(finished){
      $('completion').querySelector('h2').textContent="You finished "+book.name+"! ✨";
-     $('completion').querySelector('p').textContent=book.slug==='leviticus'?
+     $('completion').querySelector('p').textContent=book.slug==='numbers'?
+      "You've followed Israel from Sinai, through the wilderness, to the edge of the Promised Land. Deuteronomy continues with Moses' final messages.":
+      book.slug==='leviticus'?
       "You've discovered why Israel's sacrifices, priesthood, cleanness laws, festivals, and Jubilee mattered. Numbers continues the journey in the wilderness.":
       book.slug==='exodus'?
       "From slavery in Egypt to the tabernacle filled with Jehovah's glory—you've followed the whole story. Leviticus continues Israel's journey.":

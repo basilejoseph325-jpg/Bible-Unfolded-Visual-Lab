@@ -46,7 +46,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
        pageWidth:document.documentElement.scrollWidth,windowWidth:innerWidth};
    });
    assert.equal(shelf.total,66);
-   assert.deepEqual(shelf.ready,['Genesis','Exodus','Leviticus']);
+   assert.deepEqual(shelf.ready,['Genesis','Exodus','Leviticus','Numbers']);
    assert(shelf.caption.includes('Leviticus'));
    assert(shelf.titleClearsHeader);
    assert(shelf.pageWidth<=shelf.windowWidth+3);

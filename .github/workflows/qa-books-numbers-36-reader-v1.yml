@@ -1,0 +1,29 @@
+name: QA Numbers 36 chapters — Chrome reader and refresh
+on:
+  push:
+    branches: [feature/numbers-36-chapters-readable-guide-20261114, main]
+    paths:
+      - 'bible-book-guides/**'
+      - 'scripts/qa_books_numbers_36_reader_v1.cjs'
+      - '.github/workflows/qa-books-numbers-36-reader-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  numbers-reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check manuscript and script syntax
+        run: |
+          node --check bible-book-guides/books-v3.js
+          node --check scripts/qa_books_numbers_36_reader_v1.cjs
+          python3 -m json.tool bible-book-guides/numbers-draft.json >/dev/null
+      - name: Chrome mobile portrait, narrow, landscape and Numbers progress isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-numbers-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-numbers-server.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-numbers-qa/node_modules node scripts/qa_books_numbers_36_reader_v1.cjs
