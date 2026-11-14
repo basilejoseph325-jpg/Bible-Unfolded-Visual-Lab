@@ -132,9 +132,7 @@ const passed=label=>{n++;console.log('PASS_NATIVE_TRUSTED_PLAN_V27_'+n,label)};
  c.storage.setItem(W,stringify({coins:2222,points:-3,purchases:['seawheel'],equippedWheel:'seawheel'}));
  const stale=await c.v7.apply({
   approved:true,backupConfirmed:true,
-  plan:c.v7.preview(p.writes.map(e=>({key:e.key,after:e.after})).ok
-   ?{format:'BibleUnfoldedFullBackupPlanV7',version:7,steps:p.writes}:{
-      format:'BibleUnfoldedFullBackupPlanV7',version:7,steps:p.writes}
+  plan:{format:'BibleUnfoldedFullBackupPlanV7',version:7,steps:p.writes}
  });
  assert.equal(stale.reason,'preview-stale-no-writes');
  assert.equal(JSON.parse(c.data.get(W)).coins,2222);
