@@ -14,7 +14,7 @@ assert.equal(count,77,'Retain all 77 NWT-backed Bible answers and discoveries');
 const targets=[
  {level:12,kind:'spark',word:'SUE',ref:'Matthew 5:40',chapter:'matthew/5',basis:'inner garment'},
  {level:14,kind:'extra',word:'END',ref:'Isaiah 9:6, 7',chapter:'isaiah/9',basis:'peace'},
- {level:15,kind:'extra',word:'HEM',ref:'Matthew 9:20-22',chapter:'matthew/9',basis:'fringe'},
+ {level:15,kind:'extra',word:'HEM',ref:'Exodus 28:33-35',chapter:'exodus/28',basis:'all around its hem'},
  {level:20,kind:'spark',word:'AMON',ref:'2 Kings 21:18-24',chapter:'2-kings/21',basis:'two years'},
  {level:25,kind:'extra',word:'AGE',ref:'Psalm 92:12-15',chapter:'psalms/92',basis:'flourishing trees'},
  {level:27,kind:'extra',word:'SLAP',ref:'Matthew 5:39',chapter:'matthew/5',basis:'cheek'}

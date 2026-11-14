@@ -32,10 +32,12 @@ jobs:
           BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments'
           for attempt in $(seq 1 30); do
             if curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-next-v1.html?editorial-check-v23=$attempt" |
-               grep -F 'word-trails-levels-12-30-v1.js?v=job39-eagle-clue-20261113-v23' >/dev/null &&
-               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-clue-20261113-v23&check=$attempt" |
-               grep -F 'Which bird does Jehovah describe nesting high on a cliff when speaking to Job?' >/dev/null; then
-              echo 'PASS: actual public TEST displays versioned Job 39 eagle clue; no LIVE files checked or changed'
+               grep -F 'word-trails-levels-12-30-v1.js?v=job39-eagle-exodus28-hem-20261113-v24' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-exodus28-hem-20261113-v24&check=$attempt" |
+               grep -F 'Which bird does Jehovah describe nesting high on a cliff when speaking to Job?' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-exodus28-hem-20261113-v24&hem=$attempt" |
+               grep -F 'Exodus says gold bells and colorful pomegranates went around what part of Aaron's sleeveless coat?' >/dev/null; then
+              echo 'PASS: actual public TEST displays Job 39 eagle AND Exodus 28 hem in versioned source; LIVE untouched'
               break
             fi
             if [ "$attempt" = 30 ]; then

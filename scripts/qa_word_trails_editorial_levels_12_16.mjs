@@ -43,7 +43,7 @@ assert.equal(changed.size,9,'Exactly nine editorial modifications tracked');
 const rest=levels[1],mose=levels[3];
 assert(rest.spark==='REST'&&rest.reference==='Matthew 11:28-30'&&rest.insight.includes('refreshment'), 'NWT refreshment vs ordinary-language REST distinction');
 const hem=mose.extraSparks.find(x=>x.word==='HEM');
-assert(hem&&hem.reference==='Matthew 9:20-22'&&hem.insight.includes('fringe, not a hem specifically'), 'Never claim NWT calls the fringe a hem');
+assert(hem&&hem.reference==='Exodus 28:33-35'&&hem.insight.includes('all around its hem')&&hem.clue.includes("Aaron's sleeveless coat"), 'HEM directly anchored to the exact NWT Exodus 28:33-35 coat detail');
 const home=mose.spark==='HOME'&&mose.reference==='Luke 8:38, 39';
 assert(home,'Man sent home in full Luke context');
 assert(levels[4].bibleBoard.find(x=>x.word==='SIN')?.insight.includes('gift'),'Romans 6:23 lesson is genuinely informative');
