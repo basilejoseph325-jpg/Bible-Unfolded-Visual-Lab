@@ -252,5 +252,5 @@ else install();
  document.head.appendChild(script);
 })();
 
-/* Genesis book reader: TEST only, all other game modes unchanged. */
-(()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-genesis-guide-loader'))return;const s=document.createElement('script');s.id='bu-genesis-guide-loader';s.src='bible-book-guides/reader.js?v=20261114-phone-test-v2';s.defer=true;document.head.appendChild(s)})();
+/* TEST-only standalone Bible Books route; no overlays, no Story Adventure modifications. */
+(()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-books-fullpage-nav-v3'))return;const s=document.createElement('script');s.id='bu-books-fullpage-nav-v3';s.src='bible-book-guides/mode-navigation-v3.js?v=20261114-v3';s.defer=true;document.head.appendChild(s)})();
