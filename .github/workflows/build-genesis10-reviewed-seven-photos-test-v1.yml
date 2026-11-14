@@ -63,7 +63,8 @@ jobs:
             assert all(id not in before and id in after for id in paths)
             assert all(id in before for id in ('g10-d01','g10-d03','g10-d04'))
           assert previous.replace(start_art, '')!=updated.replace(start_art, '')
-          assert 'bible-unfolded-genesis-adventure-v3860' in updated
+          assert 'BU_EP10_SCENE_ART[d.id]' in updated
+          assert 'BU_EP10_SCENE_ALT[d.id]' in updated
           unchanged=subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()
           assert sorted(unchanged)==['bible_unfolded_core_part5.js','index.html'],unchanged
           print('PASS_SCOPE only native part5 scene map and one HTML cache URL modified')
