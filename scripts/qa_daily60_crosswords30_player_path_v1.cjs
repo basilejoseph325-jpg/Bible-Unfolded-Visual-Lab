@@ -81,5 +81,55 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    touchedOriginalLiveRepo:false,physicalPhoneCertified:false,
    editorialHumanApproved:false
   }));
+
+  // Reproduce the owner's Samsung issue: refresh, tap Daily before the
+  // replacement content JS finishes downloading. Old Trivia MUST NOT open.
+  const cold=await browser.newPage(),coldErrors=[];
+  await cold.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+  await cold.setRequestInterception(true);
+  let slowDailySeen=false;
+  cold.on('pageerror',e=>coldErrors.push(e.message));
+  cold.on('request',req=>{
+   if(req.url().includes('daily-discovery-insights-content-test-v1.js')&&!slowDailySeen){
+    slowDailySeen=true;
+    setTimeout(()=>req.continue().catch(()=>{}),5000);
+   }else req.continue().catch(()=>{});
+  });
+  await cold.goto('http://127.0.0.1:8898/index.html',{waitUntil:'domcontentloaded',timeout:110000});
+  await cold.waitForSelector('#bu375-home-cta',{timeout:30000});
+  await cold.evaluate(()=>document.getElementById('daily-continue')?.click());
+  await cold.waitForFunction(()=>document.getElementById('bu375-home-cta')?.getClientRects().length>0,{timeout:30000});
+  assert.equal(await cold.evaluate(()=>!!window.BUDailyInsightV1),false,
+   'Five-second delayed editorial content should keep new reader pending');
+  await cold.evaluate(()=>{
+   const button=document.getElementById('bu375-home-cta');
+   button.click();button.click(); // rapid double tap must be idempotent
+  });
+  const early=await cold.evaluate(()=>({
+   pending:document.getElementById('bu375-home-cta')?.getAttribute('aria-busy'),
+   nativeQuizVisible:!document.getElementById('bu375-daily')?.hidden,
+   bodyIsModern:document.getElementById('bu375-body')?.classList.contains('bu-insight-reading')
+  }));
+  assert.equal(early.pending,'true','Early tap is queued, not lost');
+  assert.equal(early.nativeQuizVisible,false,'Old five-question Daily quiz must not launch during load');
+  assert.equal(early.bodyIsModern,false,'New reader opens only after its content is available');
+  await cold.waitForFunction(()=>window.BUDailyInsightV1?.inspect()?.open===true&&
+   document.querySelectorAll('[data-insight-book-select] option').length===60&&
+   !!document.querySelector('#bu375-body.bu-daily-book-preview .bu-insight-story'),{timeout:70000});
+  const recovered=await cold.evaluate(()=>({
+   originalQuizHidden:!!document.getElementById('bu375-body')?.classList.contains('bu-insight-reading'),
+   picker:document.querySelectorAll('[data-insight-book-select] option').length,
+   question:window.BUDailyDiscoveryLibrary.find(x=>x.id==='stephen-mercy')?.share?.question,
+   pending:document.getElementById('bu375-home-cta')?.hasAttribute('aria-busy')
+  }));
+  assert.equal(recovered.picker,60,'Slow-loading Daily opens with all 60 choices');
+  assert.equal(recovered.question,'Why is it sometimes easier to get angry than to show mercy?');
+  assert.equal(recovered.pending,false,'Queued button has returned to ready state');
+  assert.deepEqual(coldErrors,[],'No page exceptions during slow-load recovery');
+  assert(slowDailySeen,'Cold-start test really delayed the new editorial script');
+  console.log('PASS_DAILY_FAST_REFRESH_TAP',JSON.stringify({oldQuizBlocked:true,
+   delayedContentMs:5000,modernBookOpened:true,dropdown:recovered.picker,
+   mercyQuestionClear:true,noPageErrors:true}));
+  await cold.close();
  }finally{await browser.close()}
 })().catch(e=>{console.error('FAIL_DAILY60_CROSSWORDS30_REAL_PLAYER_PATH',e.stack||e);process.exitCode=1});
