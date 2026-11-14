@@ -92,18 +92,39 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
         const during=child.BUWTPolish.state().sfx;
         node.checked=original;node.dispatchEvent(new Event('change',{bubbles:true}));
         await new Promise(resolve=>setTimeout(resolve,45));
+        // The original/native root intentionally persists this compatibility
+        // record on Settings changes, including an updated timestamp.
+        // A byte-for-byte check is wrong: compare actual setting values and
+        // ensure the child iframe NEVER writes the root's preference record.
+        const mirrorAfter=localStorage.getItem('bu-platform-audio-preferences-v1');
+        const oldMirror=JSON.parse(mirroredBefore||'null');
+        const newMirror=JSON.parse(mirrorAfter||'null');
+        const fields=['music','sfx','musicVolume','sfxVolume','motion'];
+        const payloadRestored=!!oldMirror&&!!newMirror&&
+          fields.every(k=>oldMirror[k]===newMirror[k]);
+        const parentWrites=(window.__qaAudioShadowWrites||[]).slice(-2);
+        const childWrites=(child.__qaAudioShadowWrites||[]);
+        const rootOwned=parentWrites.length===2 &&
+          parentWrites.every(w=>w.stack.includes('visual-lab-test-banner.js')) &&
+          childWrites.length===0;
+        const toggledThenRestored=parentWrites.length===2 &&
+          JSON.parse(parentWrites[0].value).sfx===!original &&
+          JSON.parse(parentWrites[1].value).sfx===original;
         return {nativeToggled:!original,childDuring:during,restored:child.BUWTPolish.state().sfx===original,
           feelUnchanged:localStorage.getItem('bu-wt-next-feel-v2')===feelBefore,
-          mirroredUnchanged:localStorage.getItem('bu-platform-audio-preferences-v1')===mirroredBefore,
-          mirroredBefore,mirroredAfter:localStorage.getItem('bu-platform-audio-preferences-v1'),
-          parentShadowWrites:window.__qaAudioShadowWrites?.slice(-5),
-          childShadowWrites:child.__qaAudioShadowWrites?.slice(-5)};
+          mirrorPayloadRestored:payloadRestored,rootOwned,toggledThenRestored,
+          mirrorTimestampAdvanced:Number(newMirror?.updated)>Number(oldMirror?.updated),
+          childShadowWriteCount:childWrites.length,
+          parentShadowWriteSources:parentWrites.map(w=>w.stack.split('\\n')[2]||'')};
       });
       console.log('NATIVE_AUDIO_PROPAGATION',JSON.stringify(sync));
       assert.equal(sync.childDuring,sync.nativeToggled);
       assert(sync.restored);
       assert(sync.feelUnchanged,'Native settings must not persist a duplicate Word Trails global audio snapshot');
-      assert(sync.mirroredUnchanged,'Native settings must not write the old shared-audio shadow key');
+      assert(sync.mirrorPayloadRestored,'Native audio setting values must return to their original state');
+      assert(sync.rootOwned,'Only the original Settings owner may update shared audio preferences');
+      assert(sync.toggledThenRestored,'The parent must persist both SFX changes, then restore the original');
+      assert.equal(sync.childShadowWriteCount,0,'Embedded Word Trails must not write shared audio storage');
       // Native selected announcer API, not child-generated imitation.
       const voice=await page.evaluate(()=>{
         const child=document.getElementById('bu-wt-native-game').contentWindow;
