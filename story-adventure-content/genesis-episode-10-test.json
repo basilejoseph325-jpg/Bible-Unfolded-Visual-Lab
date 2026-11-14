@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "contentStatus": "draft_in_progress_not_playable",
+  "contentStatus": "editorial_draft_complete_requires_gameplay_and_source_review",
   "chapterId": "genesis_ep10",
   "chapterNumber": 10,
   "title": "Jacob and Esau",
@@ -328,6 +328,334 @@
         }
       ],
       "explanation": "Genesis 26:1–6 describes the famine, Jehovah's direction to Isaac, and the promise that all nations would receive a blessing through his offspring.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d06",
+      "sequence": 6,
+      "title": "The Wells of Gerar",
+      "narration": "Isaac prospers, but some of his neighbors begin to envy him. They stop up wells dug in Abraham's day. Even after fresh wells lead to quarrels, Isaac keeps moving and digging until his servants find water without another dispute.",
+      "scripture": [
+        {
+          "reference": "Genesis 26:12–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/26/"
+        }
+      ],
+      "interaction": {
+        "type": "order_cards",
+        "data": {
+          "cards": [
+            {
+              "id": "s0",
+              "label": "Isaac prospers, and the Philistines envy him"
+            },
+            {
+              "id": "s1",
+              "label": "Wells from Abraham's day are stopped up"
+            },
+            {
+              "id": "s2",
+              "label": "Isaac's servants dig wells that people dispute"
+            },
+            {
+              "id": "s3",
+              "label": "At Rehoboth there is no quarrel over the new well"
+            }
+          ]
+        },
+        "solution": {
+          "order": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ]
+        },
+        "prompt": "Put these moments in the order the Bible gives them.",
+        "accessibleAlternative": "Every event is a labeled button; no dragging required."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The troubles start after Isaac becomes prosperous."
+        },
+        {
+          "level": 2,
+          "text": "The blocked wells are followed by arguments over new ones."
+        },
+        {
+          "level": 3,
+          "text": "The final well in this sequence is called Rehoboth."
+        }
+      ],
+      "explanation": "Genesis 26:12–22 describes Isaac's prosperity, the wells stopped up by the Philistines, disputes over water, and a well Isaac named Rehoboth.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d07",
+      "sequence": 7,
+      "title": "Peace After the Disputes",
+      "narration": "At Beer-sheba, Jehovah reassures Isaac. Isaac builds an altar there. Later, Abimelech arrives with companions to make an agreement, and Isaac's servants bring good news: they've found water!",
+      "scripture": [
+        {
+          "reference": "Genesis 26:23–33",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/26/"
+        }
+      ],
+      "interaction": {
+        "type": "order_cards",
+        "data": {
+          "cards": [
+            {
+              "id": "s0",
+              "label": "Jehovah reassures Isaac at Beer-sheba"
+            },
+            {
+              "id": "s1",
+              "label": "Isaac builds an altar there"
+            },
+            {
+              "id": "s2",
+              "label": "Abimelech and his companions come to make an agreement"
+            },
+            {
+              "id": "s3",
+              "label": "Isaac's servants report they have found water"
+            }
+          ]
+        },
+        "solution": {
+          "order": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ]
+        },
+        "prompt": "Put these moments in the order the Bible gives them.",
+        "accessibleAlternative": "Every event is a labeled button; no dragging required."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Read Genesis 26:23–25 for the first two moments."
+        },
+        {
+          "level": 2,
+          "text": "The visitors arrive after Isaac builds the altar."
+        },
+        {
+          "level": 3,
+          "text": "The news about the well comes after the agreement."
+        }
+      ],
+      "explanation": "Genesis 26:23–33 tells us about Jehovah's reassurance, Isaac's altar, the peaceful agreement, and a newly found well.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d08",
+      "sequence": 8,
+      "title": "A Blessing and a Disguise",
+      "narration": "Isaac has grown old, and his eyesight is weak. He sends Esau to hunt and prepare food. Rebekah overhears him and prepares another plan for Jacob. Things are about to become complicated for this family.",
+      "scripture": [
+        {
+          "reference": "Genesis 27:1–17",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/27/"
+        }
+      ],
+      "interaction": {
+        "type": "find_hotspots",
+        "data": {
+          "hotspots": [
+            {
+              "id": "f0",
+              "label": "Isaac asks Esau to bring him wild game"
+            },
+            {
+              "id": "f1",
+              "label": "Rebekah overhears Isaac's request"
+            },
+            {
+              "id": "f2",
+              "label": "Rebekah prepares food and uses goatskins for Jacob"
+            },
+            {
+              "id": "f3",
+              "label": "Isaac can clearly see Jacob entering the room"
+            }
+          ],
+          "requiredCount": 3
+        },
+        "solution": {
+          "targetIds": [
+            "f0",
+            "f1",
+            "f2"
+          ]
+        },
+        "prompt": "Which details really belong in this Bible account?",
+        "accessibleAlternative": "All details can be selected as labeled buttons."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "What does the Bible tell us about Isaac's eyesight?"
+        },
+        {
+          "level": 2,
+          "text": "Rebekah hears the request and makes preparations for Jacob."
+        },
+        {
+          "level": 3,
+          "text": "Choose the request, Rebekah's preparations, and the goatskins—not Isaac seeing clearly."
+        }
+      ],
+      "explanation": "Genesis 27:1–17 describes Isaac's weak eyesight, the request he makes to Esau, and Rebekah's preparations for Jacob.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d09",
+      "sequence": 9,
+      "title": "Esau Returns Too Late",
+      "narration": "Jacob receives Isaac's blessing while pretending to be Esau. Then Esau returns. When he learns what happened, he cries out in distress. Later he decides to kill Jacob, and Rebekah urges Jacob to leave for a time. It's a painful turn for the whole family.",
+      "scripture": [
+        {
+          "reference": "Genesis 27:18–46",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/27/"
+        }
+      ],
+      "interaction": {
+        "type": "connect_pairs",
+        "data": {
+          "left": [
+            {
+              "id": "k0",
+              "label": "What Jacob tells Isaac"
+            },
+            {
+              "id": "k1",
+              "label": "What Isaac does before Esau returns"
+            },
+            {
+              "id": "k2",
+              "label": "What Esau decides afterward"
+            }
+          ],
+          "right": [
+            {
+              "id": "v0",
+              "label": "He says he is Esau, the firstborn"
+            },
+            {
+              "id": "v1",
+              "label": "He gives Jacob the blessing"
+            },
+            {
+              "id": "v2",
+              "label": "He plans to kill Jacob"
+            }
+          ]
+        },
+        "solution": {
+          "pairs": [
+            [
+              "k0",
+              "v0"
+            ],
+            [
+              "k1",
+              "v1"
+            ],
+            [
+              "k2",
+              "v2"
+            ]
+          ]
+        },
+        "prompt": "Connect the details that belong together.",
+        "accessibleAlternative": "Each pair can be selected using labeled buttons."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Jacob answers his father's question in verse 19."
+        },
+        {
+          "level": 2,
+          "text": "Isaac has already given the blessing when Esau arrives."
+        },
+        {
+          "level": 3,
+          "text": "Esau's threat is recorded in verse 41."
+        }
+      ],
+      "explanation": "Genesis 27:18–46 records Jacob pretending to be Esau, Isaac's blessing, Esau's reaction, and Rebekah's concern for Jacob's safety.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d10",
+      "sequence": 10,
+      "title": "A Promise on the Journey",
+      "narration": "Jacob leaves Beer-sheba and travels toward Haran. He stops for the night and has a remarkable dream. Jehovah reassures him and repeats the promise made to Abraham and Isaac. When Jacob wakes, he names the place Bethel.",
+      "scripture": [
+        {
+          "reference": "Genesis 28:1–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/28/"
+        }
+      ],
+      "interaction": {
+        "type": "order_cards",
+        "data": {
+          "cards": [
+            {
+              "id": "s0",
+              "label": "Jacob leaves Beer-sheba and heads toward Haran"
+            },
+            {
+              "id": "s1",
+              "label": "He stops to sleep, resting his head on a stone"
+            },
+            {
+              "id": "s2",
+              "label": "He dreams of a stairway and hears Jehovah's promise"
+            },
+            {
+              "id": "s3",
+              "label": "He names the place Bethel"
+            }
+          ]
+        },
+        "solution": {
+          "order": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ]
+        },
+        "prompt": "Put these moments in the order the Bible gives them.",
+        "accessibleAlternative": "Every event is a labeled button; no dragging required."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Genesis 28:10 starts with Jacob's journey."
+        },
+        {
+          "level": 2,
+          "text": "The dream happens while Jacob sleeps."
+        },
+        {
+          "level": 3,
+          "text": "Jacob names Bethel only after waking."
+        }
+      ],
+      "explanation": "Genesis 28:10–22 describes Jacob's journey, the dream, Jehovah's promise to remain with him, and Jacob naming the place Bethel.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     }
