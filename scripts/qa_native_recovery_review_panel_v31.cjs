@@ -98,7 +98,7 @@ const pass=x=>{passed.push(x);console.log('PASS_NATIVE_RECOVERY_REVIEW_V31_'+pas
   assert.equal(f.confirmCalls,0,'No import authorization dialog during quarantine');
   assert.deepEqual([...f.store],[...before],'Quarantined import changed storage');
   assert.equal(f.writes.length,events);
-  assert(status.textContent.includes('Imports are blocked'));
+  assert(status.textContent.includes('RESTORE is temporarily disabled'));
   assert.strictEqual(f.document.getElementById('bu-wt-recovery-review'),panel,'Duplicate panel');
   pass('v'+ver+' file picker refuses old journal before any handler, wallet change or prompt');
  }
@@ -112,10 +112,12 @@ const pass=x=>{passed.push(x);console.log('PASS_NATIVE_RECOVERY_REVIEW_V31_'+pas
  const v1=JSON.stringify({format:'BibleUnfoldedSave',version:1,keys:{[W]:baselineWallet}});
  clean.picker.files=[{size:v1.length,text:async()=>v1}];
  await clean.picker.onchange({});
- assert.equal(clean.nativeCalls,1,'Native v1 import delegation must remain available on healthy TEST page');
- pass('healthy native Settings stays clean; approved native v1 handler still delegates as before');
+ assert.equal(clean.nativeCalls,0,'Native v1 original handler must NEVER run, even on a healthy TEST page');
+ assert.equal(clean.confirmCalls,0,'Import confirmation cannot be shown before a safe transaction exists');
+ assert.equal(clean.writes.length,0,'Healthy TEST must not accept old native v1 import');
+ pass('healthy native Settings stays clean and v1 import is now suspended safely');
  console.log('PASS_NATIVE_RECOVERY_REVIEW_V31',JSON.stringify({cases:passed.length,
-  nativeSettingsPanel:true,unresolvedV1AndV2ImportsBlocked:true,
+  nativeSettingsPanel:true,unresolvedV1AndV2ImportsBlocked:true,healthyV1ImportSuspended:true,
   currentProgressBackupOnly:true,liveCrosswordExcluded:true,
   noDestructiveAction:true,noRealPlayerDataAccessed:true}));
 })().catch(e=>{console.error('FAIL_NATIVE_RECOVERY_REVIEW_V31',e.stack||e);process.exitCode=1});
