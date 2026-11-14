@@ -1,0 +1,27 @@
+name: QA Bible Books Chrome header + refresh to home
+on:
+  push:
+    branches: [fix/books-header-refresh-test-20261114, main]
+    paths:
+      - 'bible-book-guides/index.html'
+      - 'bible-book-guides/books-v3.css'
+      - 'scripts/qa_books_header_refresh_v2.cjs'
+      - '.github/workflows/qa-books-header-refresh-v2.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  chrome-header-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax
+        run: node --check scripts/qa_books_header_refresh_v2.cjs
+      - name: Chrome portrait, narrow screen, landscape, Exodus and reload
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-books-head-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-books-head-http.log 2>&1 &
+          sleep 2
+          EXODUS_READY=1 NODE_PATH=/tmp/bu-books-head-qa/node_modules node scripts/qa_books_header_refresh_v2.cjs
