@@ -114,7 +114,16 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
     notice:document.getElementById('bu-wt-save-status')?.textContent||'',
     review:window.BUPlatformSaves.recoverPending().needsManualReview
    }),{OLD,TEST,LIVE});
-   assert.equal(cold.wallet,syntheticWallet,'Cold TEST startup overwrote a newer native wallet');
+   // This is the REAL game: an ordinary daily login may award native Points
+   // or Insight Tokens and normalize the wallet shape on startup. That is
+   // distinct from the old journal restoring a much smaller BEFORE wallet.
+   // Require the newer balances and paid ownership NOT to be reduced, while
+   // independently requiring the unfinished journal to remain quarantined.
+   const restoredWallet=JSON.parse(cold.wallet||'null');
+   assert(restoredWallet&&restoredWallet.coins>=98765,
+    'Cold TEST startup lost the newer native Insight Token balance');
+   assert(restoredWallet.points>=-22,'Cold TEST startup lost newer native Points');
+   assert(restoredWallet.purchases?.includes('seawheel'),'Owned wheel vanished after cold restart');
    assert.equal(cold.trail,wordTrails,'Cold TEST startup rewound crossword progress');
    assert.equal(cold.live,fakeLive,'Cold TEST startup touched LIVE progress');
    assert.equal(cold.journal,interrupted,'Cold startup deleted the journal needed for manual review');
