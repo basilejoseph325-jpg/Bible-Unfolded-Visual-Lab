@@ -5,6 +5,7 @@ on:
       - '.github/workflows/qa-word-trails-native-backup-bridge-v8.yml'
       - 'experiments/word-trails-native-backup-bridge-candidate-v8.js'
       - 'scripts/qa_word_trails_native_backup_bridge_v8.cjs'
+      - 'scripts/qa_word_trails_native_backup_bridge_v8_real_browser.cjs'
       - 'bu-platform-saves-v2.js'
       - 'experiments/word-trails-native-full-backup-transaction-v7.js'
   workflow_dispatch:
@@ -12,7 +13,7 @@ permissions: {contents: read}
 jobs:
   synthetic-v2-v7-integration:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
       - name: Validate syntax and ensure migration prototype is not in any game page
@@ -34,3 +35,23 @@ jobs:
           set -euo pipefail
           node scripts/qa_word_trails_native_backup_bridge_v8.cjs
           echo 'PASS: no production save data, LIVE writes, or player import UI involved'
+      - name: Get pinned LIVE autoimport source for read-only regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fLsS --retry 3 --max-time 30 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments/word-trails-live-migration-v1.js \
+            -o /tmp/wt-v8-pinned-live-importer.js
+          test -s /tmp/wt-v8-pinned-live-importer.js
+      - name: Install isolated headless Chrome driver for disposable browser profiles
+        run: npm install --prefix /tmp/wt-v8-real-tabs puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Two genuine same-origin tabs and native Web Locks, plus negative stale LIVE script
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_native_backup_bridge_v8_real_browser.cjs
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/wt-v8-tabs-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/wt-v8-real-tabs/node_modules node scripts/qa_word_trails_native_backup_bridge_v8_real_browser.cjs \
+            /tmp/wt-v8-pinned-live-importer.js
+          echo 'PASS: native browser locks tested; existing cached LIVE autoimport remains a release BLOCKER'
