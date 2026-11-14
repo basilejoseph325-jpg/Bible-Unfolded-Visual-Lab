@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v27 (seven gates)
+name: QA Bible Unfolded TEST full pre-release regression v29 (eight groups)
 on:
   push:
     paths:
@@ -6,6 +6,12 @@ on:
       - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
       - '.github/workflows/qa-native-backup-live-key-isolation-v26.yml'
       - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
+      - '.github/workflows/qa-test-trivia-family-visuals-v29.yml'
+      - '.github/workflows/qa-trivia-scholar-v1.yml'
+      - '.github/workflows/qa-trivia-wrong-tone-v1.yml'
+      - '.github/workflows/qa-trivia-answer-scroll-v1.yml'
+      - '.github/workflows/qa-family-worship-picker-gallery-v3.yml'
+      - 'journey-progress-caption.js'
       - 'scripts/qa_native_test_backup_readonly_plan_v27.cjs'
       - 'scripts/qa_native_test_backup_live_word_trails_key_isolation_v26.cjs'
       - 'experiments/word-trails-native-full-backup-transaction-v7.js'
@@ -30,6 +36,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  approved-trivia-and-family-visuals:
+    name: Trivia sounds/scroll/stone art and Family Worship mobile interaction
+    uses: ./.github/workflows/qa-test-trivia-family-visuals-v29.yml
   native-readonly-restore-parity:
     name: Read-only native restore preview must match v2 and safe v7 candidate
     uses: ./.github/workflows/qa-native-test-backup-restore-preview-v27.yml
