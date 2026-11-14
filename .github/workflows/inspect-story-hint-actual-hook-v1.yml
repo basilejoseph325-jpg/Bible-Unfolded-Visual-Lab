@@ -1,0 +1,21 @@
+name: Inspect Story hint wrapper precise callbacks
+on:
+  push:
+    branches: [fix/genesis10-quality-art-hints-20261114]
+    paths: ['.github/workflows/inspect-story-hint-actual-hook-v1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract exact live hint wrapper and buttons from original native index
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf8')
+          for n in ['function hintPopup(', 'function hintMenu()', 'hintPopup(', "const hintWindowId=", 'const bu3864OriginalNewHint','bu3857Hint=function','bu3857Hint =','window.bu3857Hint','Story Adventure unchanged.']:
+            at=s.find(n)
+            print('ANCHOR',repr(n),at)
+            if at>=0:print('BLOCK',repr(s[at:at+5400])[:5700])
+          PY
