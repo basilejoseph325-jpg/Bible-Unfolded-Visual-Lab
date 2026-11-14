@@ -22,9 +22,9 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    script:document.getElementById('bu-crossword-extra-packs-loader')?.src||null,
    extraHomeCard:!!document.getElementById('home-crossword-packs'),
    crossScripts:[...document.scripts].map(x=>x.src).filter(x=>x.includes('crossword')),
-   errors
+   loaded:document.readyState
   }));
-  console.log('CROSSWORDS_RUNTIME_DIAGNOSTIC',JSON.stringify(diag));
+  console.log('CROSSWORDS_RUNTIME_DIAGNOSTIC',JSON.stringify({...diag,pageErrors:errors}));
   await page.waitForFunction(()=>window.BUCrosswordExpanded30?.packCount?.()===30,{timeout:12000});
   await page.waitForSelector('#home-crossword-packs',{timeout:30000});
   const before=await page.evaluate(()=>{
