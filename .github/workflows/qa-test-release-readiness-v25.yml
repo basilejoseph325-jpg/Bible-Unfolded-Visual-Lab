@@ -5,6 +5,8 @@ on:
       - '.github/workflows/qa-test-release-readiness-v25.yml'
       - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
       - '.github/workflows/qa-native-backup-live-key-isolation-v26.yml'
+      - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
+      - 'scripts/qa_native_test_backup_readonly_plan_v27.cjs'
       - 'scripts/qa_native_test_backup_live_word_trails_key_isolation_v26.cjs'
       - 'experiments/word-trails-native-full-backup-transaction-v7.js'
       - 'scripts/qa_word_trails_native_full_backup_transaction_v7.cjs'
@@ -28,6 +30,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  native-readonly-restore-parity:
+    name: Read-only native restore preview must match v2 and safe v7 candidate
+    uses: ./.github/workflows/qa-native-test-backup-restore-preview-v27.yml
   native-test-vs-live-backup-isolation:
     name: TEST backup exports and restores cannot overwrite LIVE Word Trails
     uses: ./.github/workflows/qa-native-backup-live-key-isolation-v26.yml
