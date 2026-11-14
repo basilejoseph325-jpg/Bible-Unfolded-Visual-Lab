@@ -1,0 +1,94 @@
+name: QA Bible Unfolded TEST pre-release regression sweep v25
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-test-release-readiness-v25.yml'
+      - 'scripts/visual_lab_all_mode_smoke_test.cjs'
+      - 'scripts/word_trails_native_shell_integration_test.cjs'
+      - 'scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs'
+      - 'scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs'
+      - 'scripts/word_trails_save_v2_browser_test.cjs'
+      - 'scripts/qa_word_trails_full_backup_journal_guard_v6.cjs'
+      - 'bu-platform-saves-v2.js'
+      - 'bu-platform-rewards-v1.js'
+      - 'visual-lab-test-banner.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'word-trails-next-launcher.js'
+      - 'word-trails-checkpoint-native-settings-practice-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-feel-v2.js'
+      - 'experiments/word-trails-full-backup-journal-guard-v6.js'
+      - 'experiments/word-trails-levels-12-30-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  original-modes-and-word-trails-navigation:
+    name: Original modes + Word Trails portrait/landscape
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated Chrome driver
+        run: npm install --prefix /tmp/bu-release-modes puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Browser navigation, gameplay shells, rewards and no JS errors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8895 --bind 127.0.0.1 >/tmp/bu-release-allmodes-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-release-modes/node_modules node scripts/visual_lab_all_mode_smoke_test.cjs
+  native-menu-audio-and-wheel:
+    name: Native Settings, menu, voice, SFX, Ocean Glow and back/refresh
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated Chrome driver
+        run: npm install --prefix /tmp/bu-release-audio puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Native menu, original Settings, audio ownership, announcer and navigation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8891 --bind 127.0.0.1 >/tmp/bu-release-menu-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-release-audio/node_modules node scripts/word_trails_native_shell_integration_test.cjs
+      - name: Native audio owner, voice delegate, wheel effects and touch sizing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-release-wheel-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-release-audio/node_modules node scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs
+  native-backup-practice-and-crossword-safe-progress:
+    name: Native practice entry, export/import and guarded save regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax, content quality and synthetic full-backup race
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check experiments/word-trails-full-backup-journal-guard-v6.js
+          node --check scripts/word_trails_save_v2_browser_test.cjs
+          node --check scripts/qa_word_trails_full_backup_journal_guard_v6.cjs
+          node scripts/word_trails_quality_gate.mjs
+          node scripts/word_trails_shared_rewards_integration_test.mjs
+          node scripts/qa_word_trails_full_backup_journal_guard_v6.cjs
+      - name: Install isolated Chrome driver
+        run: npm install --prefix /tmp/bu-release-saves puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Real TEST save/export/restore in synthetic browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-release-saves-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-release-saves/node_modules node scripts/word_trails_save_v2_browser_test.cjs
+      - name: Original Settings safe recovery rehearsal (fake data only)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8892 --bind 127.0.0.1 >/tmp/bu-release-rehearsal-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-release-saves/node_modules node scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs
