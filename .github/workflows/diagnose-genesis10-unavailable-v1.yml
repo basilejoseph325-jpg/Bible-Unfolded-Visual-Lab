@@ -1,0 +1,32 @@
+name: Diagnose Genesis Episode 10 Puzzle unavailable (read-only)
+on:
+  push:
+    paths:
+      - '.github/workflows/diagnose-genesis10-unavailable-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trace exact engine "Puzzle unavailable" and answer render paths
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          full=''.join(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',Path(f'bible_unfolded_core_part{i}.js').read_text(),re.S).group(1)) for i in range(1,6))
+          terms=['Puzzle unavailable','puzzle unavailable','bu3868Genesis','bu3868Step','bu3868Render','bu3857Render(){','BU3868_QUESTIONS','g09-d01','g10-d01','BU_GENESIS_SCENE_ART','BU3857_SCENE_ART']
+          for term in terms:
+            matches=list(re.finditer(re.escape(term),full,re.I))
+            print('TERM',term,'HITS',len(matches))
+            for m in matches[-4:]:
+              p=m.start()
+              pre=2400 if term.lower().startswith('puzzle unavailable') else 500
+              post=4200 if term.lower().startswith('puzzle unavailable') or term in ('bu3868Step','bu3868Genesis') else 1200
+              print('SNIP',term,repr(full[max(0,p-pre):p+post])[:7600])
+          for term in ['function bu3857Render(){','function bu3868Step(){','function bu3868Render(){','function bu3868Genesis(){']:
+            p=full.find(term)
+            if p>=0: print('FUNCTION',term,repr(full[p:p+7000])[:7500])
+          PY
