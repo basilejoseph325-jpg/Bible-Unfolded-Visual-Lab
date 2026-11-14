@@ -1,0 +1,30 @@
+name: QA TEST native backup never carries LIVE crossword progress v26
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-backup-live-key-isolation-v26.yml'
+      - 'bu-platform-saves-v2.js'
+      - 'scripts/qa_native_test_backup_live_word_trails_key_isolation_v26.cjs'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  test-test-backup-live-storage-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax, fetch pinned previous TEST coordinator read only
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_test_backup_live_word_trails_key_isolation_v26.cjs
+          curl -fLsS --retry 3 --max-time 35             https://raw.githubusercontent.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/b8069f02c0db952896b36df996f6a5c899d2df1f/bu-platform-saves-v2.js             -o /tmp/bu-old-native-test-v2.js
+          test -s /tmp/bu-old-native-test-v2.js
+      - name: Reproduce old cross-origin leakage and assert upgraded native TEST export/import isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_native_test_backup_live_word_trails_key_isolation_v26.cjs             /tmp/bu-old-native-test-v2.js
+          echo 'PASS means old unsafe behavior was reproduced only in fake storage, and current TEST code protects LIVE crossword key'
