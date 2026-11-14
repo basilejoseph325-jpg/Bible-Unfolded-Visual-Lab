@@ -104,11 +104,22 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
     localStorage.setItem('bu-visual-lab-import-rollback-v2',JSON.stringify({version:1,previous:{[key]:original}}));
     localStorage.setItem(key,'{"coins":999}');
     const recovery=window.BUPlatformSaves.recoverPending();
+    const newerPreserved=localStorage.getItem(key)==='{"coins":999}';
+    const pendingRetained=localStorage.getItem('bu-visual-lab-import-rollback-v2')!==null;
+    // This entire browser context is synthetic. Clear the fictional probe
+    // journal and restore its intentionally malformed sample so the next
+    // real game-screen checks exercise normal gameplay, not an incomplete
+    // import that the updated coordinator correctly refuses to resolve.
+    localStorage.removeItem('bu-visual-lab-import-rollback-v2');
+    localStorage.setItem(key,original);
     return {same,noJournal,error,simulatedRecovery:recovery,
-      afterRecovery:localStorage.getItem(key)===original};
+      newerPreserved,pendingRetained,afterCleanup:localStorage.getItem(key)===original};
   },report.candidate);
-  assert(rollback.error.includes('rolled back')&&rollback.same&&rollback.noJournal);
-  assert(rollback.simulatedRecovery.recovered&&rollback.afterRecovery);
+  assert(rollback.error.includes('rolled back after checking')&&rollback.same&&rollback.noJournal);
+  assert.equal(rollback.simulatedRecovery.recovered,false);
+  assert.equal(rollback.simulatedRecovery.needsManualReview,true);
+  assert(rollback.newerPreserved&&rollback.pendingRetained&&rollback.afterCleanup,
+    'Old unknown-crash journal must not overwrite the newer stored sample');
   console.log('TRANSACTION_RECOVERY',JSON.stringify(rollback));
 
   const tamper=await page.evaluate((backup)=>{
