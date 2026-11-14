@@ -104,7 +104,9 @@ if(oldFile){
 {
  const j=jj({version:1,previous:{[W]:originalWallet}});
  const f=fixture(active,{[J]:j,[C]:'yes',[W]:backupWallet});
- assert.equal(f.api.recoverPending().committed,true);
+ // The native module checks recovery automatically during startup.
+ // A completed marker should already be cleared without touching wallet.
+ assert.equal(f.api.recoverPending().recovered,false);
  assert.equal(f.data.get(W),backupWallet);
  assert.equal(f.data.has(J),false);assert.equal(f.data.has(C),false);
  assert.deepEqual(f.events,[['remove',J],['remove',C]]);
