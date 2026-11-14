@@ -253,4 +253,4 @@ else install();
 })();
 
 /* TEST-only standalone Bible Books route; no overlays, no Story Adventure modifications. */
-(()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-books-fullpage-nav-v3'))return;const s=document.createElement('script');s.id='bu-books-fullpage-nav-v3';s.src='bible-book-guides/mode-navigation-v3.js?v=20261114-v3';s.defer=true;document.head.appendChild(s)})();
+(()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-books-fullpage-nav-v3'))return;const s=document.createElement('script');s.id='bu-books-fullpage-nav-v3';s.src='bible-book-guides/mode-navigation-v3.js?v=20261114-books-chrome-route-v4';s.defer=true;document.head.appendChild(s)})();
