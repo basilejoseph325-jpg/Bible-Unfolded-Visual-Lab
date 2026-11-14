@@ -45,13 +45,13 @@ function render(){
  content.innerHTML=part.paragraphs.map(p=>'<p>'+safe(p)+'</p>').join('')+
   '<aside class="reflection"><span>THE BIG IDEA</span><p>'+safe(part.thought)+'</p></aside>';
  source.href='https://www.jw.org/en/library/bible/nwt/books/genesis/'+part.chapter+'/';
- source.textContent='Read Genesis '+part.range+' in the NWT on JW.org';
+ source.textContent='Open Genesis at chapter '+part.chapter+' on JW.org';
  prev.disabled=current===0;
  next.textContent=current===sections.length-1?(finished?'Finished ✓':'Finish Genesis ✓'):'Next Part →';
  done.hidden=!finished;
  save();
  renderList();
- window.scrollTo({top:0,behavior:'instant'});
+ window.scrollTo({top:0,behavior:'auto'});
  top.focus({preventScroll:true});
 }
 prev.addEventListener('click',()=>{if(current>0){current--;render()}});
