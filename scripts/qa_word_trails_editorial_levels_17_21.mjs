@@ -11,7 +11,7 @@ const ledger=fs.readFileSync('docs/WORD_TRAILS_12_TO_30_SOURCE_LEDGER_2026-11-09
 assert.equal(levels.length,19);
 const rows=ledger.split('\n').filter(s=>/^\|\s*\d\d\s*\|/.test(s));
 assert.equal(rows.length,77,'Keep every Bible discovery entry');
-const revised=new Set(['17-board-SARAH','17-board-MARAH','17-extra-RAM',
+const revised=new Set(['17-board-SARAH','17-board-MARAH','17-spark-HAM','17-extra-RAM',
  '18-board-ELIJAH','18-spark-ELI','18-extra-HEAL',
  '19-board-RACHEL','19-spark-CARE',
  '20-board-SAMSON','20-board-AMOS','20-extra-MAN',
@@ -45,11 +45,13 @@ for(let level=17;level<=21;level++){
  }
 }
 assert.equal(reviewed.length,20);
-assert.equal(revised.size,14);
+assert.equal(revised.size,15);
 assert(levels[5].bibleBoard.find(x=>x.word==='MARAH')?.insight.includes('became sweet'), 'Marah account sourced beyond bitterness');
+assert(levels[5].spark==='HAM'&&levels[5].reference==='Genesis 9:21-23'&&levels[5].insight.includes('Shem and Japheth'),'L17 Ham distinct from protected L11 basic Flood list');
+assert(levels[5].extraSparks.find(x=>x.word==='RAM')?.reference==='Genesis 15:7-10, 18'&&levels[5].extraSparks.find(x=>x.word==='RAM').insight.includes('covenant'),'L17 Ram now Abraham covenant, not protected L11 Isaac substitution');
 assert(levels[6].extraSparks.find(x=>x.word==='HEAL')?.insight.includes('captive in Syria'), 'Naaman account context');
 assert(levels[7].spark==='CARE'&&levels[7].reference==='1 Peter 5:6, 7', 'God cares source');
 assert(levels[8].bibleBoard.find(x=>x.word==='AMOS')?.insight.includes('earthquake'), 'Amos passage adds educational value');
 assert(levels[9].bibleBoard.find(x=>x.word==='ELISHA')?.insight.includes('waters divided'), 'Elisha continuity verified');
-assert(levels[9].extraSparks.find(x=>x.word==='SEAL')?.reference==='Revelation 5:1-5','Seven seals reference');
-console.log('PASS levels 17–21: 20 NWT-backed entries, 14 revised, 6 retained; full ledger parity and 36 remaining; NOT independent human signoff');
+assert(levels[9].extraSparks.find(x=>x.word==='SEAL')?.reference==='Esther 8:8-10'&&levels[9].extraSparks.find(x=>x.word==='SEAL').insight.includes('signet ring'),'Royal Esther seal distinct from protected L4 Revelation');
+console.log('PASS levels 17–21: 20 NWT-backed entries, 15 revised, 5 retained; full ledger parity and 36 remaining; NOT independent human signoff');

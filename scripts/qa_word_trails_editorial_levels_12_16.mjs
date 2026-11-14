@@ -12,7 +12,7 @@ const ledger=fs.readFileSync('docs/WORD_TRAILS_12_TO_30_SOURCE_LEDGER_2026-11-09
 assert.equal(levels.length,19,'Remain at 30 total including protected original 11 levels');
 const ledgerRows=ledger.split('\n').filter(s=>/^\|\s*\d\d\s*\|/.test(s));
 assert.equal(ledgerRows.length,77,'Keep one source-ledger row per Bible entry');
-const changed=new Set(['12-extra-SEE','13-board-ESTHER','13-spark-REST','13-extra-THREE','14-board-DAN','15-spark-HOME','15-extra-HEM','16-board-SIN','16-spark-NOAH']);
+const changed=new Set(['12-extra-SEE','13-board-ESTHER','13-spark-REST','13-extra-THREE','14-board-DAN','14-spark-ELI','15-spark-HOME','15-extra-HEM','16-board-SIN','16-spark-NOAH']);
 const refs=[];
 for(let i=0;i<5;i++){
  const l=levels[i],level=i+12;
@@ -39,12 +39,13 @@ for(let i=0;i<5;i++){
  }
 }
 assert.equal(refs.length,21,'All first five new levels have 21 Bible entries');
-assert.equal(changed.size,9,'Exactly nine editorial modifications tracked');
+assert.equal(changed.size,10,'Exactly ten editorial modifications tracked');
 const rest=levels[1],mose=levels[3];
+assert(levels[2].spark==='ELI'&&levels[2].reference==='1 Samuel 4:13-18'&&levels[2].insight.includes('fell backward'),'L14 Eli new Ark account, not original L5 Samuel call');
 assert(rest.spark==='REST'&&rest.reference==='Matthew 11:28-30'&&rest.insight.includes('refreshment'), 'NWT refreshment vs ordinary-language REST distinction');
 const hem=mose.extraSparks.find(x=>x.word==='HEM');
 assert(hem&&hem.reference==='Exodus 28:33-35'&&hem.insight.includes('all around its hem')&&hem.clue.includes("Aaron's sleeveless coat"), 'HEM directly anchored to the exact NWT Exodus 28:33-35 coat detail');
 const home=mose.spark==='HOME'&&mose.reference==='Luke 8:38, 39';
 assert(home,'Man sent home in full Luke context');
 assert(levels[4].bibleBoard.find(x=>x.word==='SIN')?.insight.includes('gift'),'Romans 6:23 lesson is genuinely informative');
-console.log('PASS 21 reviewed Word Trails NWT entries (9 revised, 12 retained), passage URLs, ledger parity; 56 remaining; independent human signoff NOT claimed');
+console.log('PASS 21 reviewed Word Trails NWT entries (10 revised, 11 retained), passage URLs, ledger parity; 56 remaining; independent human signoff NOT claimed');

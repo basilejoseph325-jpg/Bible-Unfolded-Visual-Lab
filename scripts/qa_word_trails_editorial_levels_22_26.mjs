@@ -59,6 +59,7 @@ assert(at(23,'board','SIMEON').insight.includes("wouldn't die"),'Simeon spirit r
 assert(at(23,'extra','NOISE').insight.includes('not an actual windstorm'),'Noise is described as LIKE rushing wind');
 assert(at(24,'board','BABEL').insight.includes('avoid being scattered'),'Babel history');
 assert(at(24,'extra','SEAL').reference==='Daniel 12:4, 8, 9','Daniel understood only part');
+assert(at(24,'spark','SEA').reference==='Revelation 4:2-6'&&at(24,'spark','SEA').insight.includes('glassy sea'),'L24 SEA heavenly vision distinct from original L3 boat storm');
 assert(at(25,'board','ELI').reference==='1 Samuel 3:15-18','Samuel and Eli context');
 assert(at(25,'spark','EAGLE').reference==='Job 39:27-29' &&
   at(25,'spark','EAGLE').clue.includes('nesting high on a cliff'),
@@ -67,5 +68,5 @@ assert(at(26,'board','ESTHER').clue.includes('Hadassah'),'Avoid repeated Esther 
 assert(at(26,'board','RUTH').insight.includes('change of life'),'Ruth story sensitivity');
 assert(at(26,'spark','REST').insight.includes('declared it sacred'),'Seventh-day rest explained');
 assert(at(26,'extra','THREE').insight.includes('sea became calm'),'Jonah additional story detail');
-assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('56 revised and 21 retained'),'Latest cumulative source review count');
+assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('58 revised and 19 retained'),'Latest cumulative source review count');
 console.log('PASS 20 items, 18 improved, 2 retained; NWT chapters and ledger match; 77/77 AI-assisted first-pass, human signoff pending. No independent human signoff.');

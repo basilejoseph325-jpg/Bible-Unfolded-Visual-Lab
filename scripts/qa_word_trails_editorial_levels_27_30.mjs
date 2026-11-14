@@ -61,5 +61,5 @@ assert(q(30,'board','LEVITES').insight.includes('Not every Levite served as a pr
 assert(q(30,'board','LEVI').insight.includes('third son'),'Leah Levi source');
 assert(q(30,'spark','VEIL').reference==='2 Corinthians 3:12-16','Paul applies Moses veil illustration');
 assert(q(30,'extra','EVIL').insight.includes('kindness instead of retaliation'),'Romans 12 broader context');
-assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('56 revised and 21 retained'),'Final first-pass tally');
+assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('58 revised and 19 retained'),'Final first-pass tally');
 console.log('PASS final 16 Bible entries L27–30: 15 revised, 1 retained; 77/77 AI-assisted first-pass; source ledger and crossword IDs intact. No independent human signoff.');

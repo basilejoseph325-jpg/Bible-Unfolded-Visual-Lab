@@ -113,15 +113,14 @@ for(let i=0;i<levels.length;i++){
  summaries.push({level:n,title:l.title,grid:size,answers:words.length,crossings,unwantedTouch,
   bibleOnBoard:bible.length,bibleHidden:secret.length,playableBonuses:usable,scene:l.scene});
 }
-// New-level Bible finds must not recycle precisely the same educational clue
-// on a later board. Repeated answer words are allowed with fresh source-backed
-// meaning; the original eleven level answers and geometry remain unchanged.
+// Across all 30 levels Bible finds must not recycle the same source passage,
+// clue or insight for the same answer; original eleven gameplay data is untouched.
 const reviewedClues=new Map(),reviewedInsights=new Map(),reviewedWordPassages=new Map();
 const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-for(let k=0;k<later.length;k++){
- const L=later[k],lev=k+12;
- const discovery=[...L.bibleBoard,
-   {word:L.spark,clue:L.clue,insight:L.insight,reference:L.reference},...L.extraSparks];
+for(let k=0;k<levels.length;k++){
+ const L=levels[k],lev=k+1;
+ const discovery=[...(L.bibleBoard||[]),
+   {word:L.spark,clue:L.clue,insight:L.insight,reference:L.reference},...(extra[k]||[])];
  for(const x of discovery){
   const sourceKey=x.word+'|'+norm(x.reference);
   if(reviewedWordPassages.has(sourceKey))fail.push('Level '+lev+': '+x.word+' repeats the SAME Bible source passage as level '+reviewedWordPassages.get(sourceKey)+'; find a genuinely different discovery');
