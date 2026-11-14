@@ -131,7 +131,7 @@ const legacy=fakeCoordinator(patched,{[J]:oldJournal,[L]:stolenLive});
 assert.equal(legacy.map.get(L),stolenLive,'No auto-rollback of an ambiguous LIVE save');
 assert.equal(legacy.map.get(J),oldJournal,'Retain unresolved journal for deliberate human review');
 assert.equal(legacy.api.recoverPending().recovered,false);
-assert.match(legacy.api.recoverPending().error,/LIVE Word Trails/);
+assert.match(legacy.api.recoverPending().error,/Automatic rollback is stopped/);
 assert.equal(legacy.map.get(W),originalWallet);
 pass('legacy cross-origin journal is quarantined rather than silently rolling back LIVE data');
 console.log('PASS_TEST_NATIVE_V2_LIVE_KEY_LEAK_ISOLATION',JSON.stringify({
