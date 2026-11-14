@@ -1,0 +1,32 @@
+name: QA TEST original LIVE migration cold-start review v33
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-legacy-migration-cold-review-v33.yml'
+      - 'scripts/qa_native_legacy_migration_cold_review_v33.cjs'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  verify-old-live-migration-without-changing-live:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read pinned original protected LIVE migration script without modifying LIVE
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_legacy_migration_cold_review_v33.cjs
+          curl -fLsS --retry 3 --max-time 35 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments/word-trails-live-migration-v1.js \
+            -o /tmp/old-protected-live-wordtrails-migration-v1.js
+          test -s /tmp/old-protected-live-wordtrails-migration-v1.js
+      - name: Compare current TEST read-only startup risk with exact old LIVE importer on fictional data
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_native_legacy_migration_cold_review_v33.cjs \
+            /tmp/old-protected-live-wordtrails-migration-v1.js
