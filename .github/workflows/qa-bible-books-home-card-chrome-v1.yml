@@ -1,0 +1,30 @@
+name: QA standalone Bible Books homepage card - Chrome
+on:
+  push:
+    branches: [feature/bible-books-made-simple-home-card-20261114, main]
+    paths:
+      - 'bible-books-made-simple-card-v1.js'
+      - 'journey-progress-caption.js'
+      - 'scripts/qa_bible_books_home_card_chrome_v1.cjs'
+      - '.github/workflows/qa-bible-books-home-card-chrome-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  chrome-player-path:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check syntax
+        run: |
+          node --check bible-books-made-simple-card-v1.js
+          node --check journey-progress-caption.js
+          node --check scripts/qa_bible_books_home_card_chrome_v1.cjs
+      - name: Chrome mobile portrait and landscape, full reading and resume
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-books-card-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-books-card-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-books-card-qa/node_modules node scripts/qa_bible_books_home_card_chrome_v1.cjs
