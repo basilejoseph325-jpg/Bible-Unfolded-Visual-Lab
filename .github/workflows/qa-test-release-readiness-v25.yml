@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v33 (twelve groups)
+name: QA Bible Unfolded TEST full pre-release regression v34 (thirteen groups)
 on:
   push:
     paths:
@@ -10,6 +10,9 @@ on:
       - '.github/workflows/qa-native-recovery-review-panel-v31.yml'
       - '.github/workflows/qa-native-external-page-guard-v32.yml'
       - '.github/workflows/qa-native-legacy-migration-cold-review-v33.yml'
+      - '.github/workflows/qa-native-verified-backup-preview-v34.yml'
+      - 'scripts/qa_native_verified_backup_restore_preview_v34.cjs'
+      - 'scripts/qa_native_verified_backup_restore_preview_v34_real_browser.cjs'
       - 'scripts/qa_native_legacy_migration_cold_review_v33.cjs'
       - 'scripts/qa_native_legacy_migration_cold_review_v33_real_browser.cjs'
       - 'scripts/qa_native_external_page_storage_guard_v32.cjs'
@@ -46,6 +49,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  verified-current-backup-and-safe-preview:
+    name: Verify real downloaded TEST backup against current progress, preview wallet/wheel changes with NO restore
+    uses: ./.github/workflows/qa-native-verified-backup-preview-v34.yml
   original-live-migration-cold-start-advisory:
     name: Read-only TEST startup risk review against pinned original LIVE auto-migrator
     uses: ./.github/workflows/qa-native-legacy-migration-cold-review-v33.yml
