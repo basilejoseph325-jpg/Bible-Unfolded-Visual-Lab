@@ -1,0 +1,52 @@
+name: Verify published TEST native Settings restore suspended v35
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-native-import-suspended-v35.yml'
+      - 'scripts/qa_native_settings_import_suspended_v35_real_browser.cjs'
+      - 'journey-progress-caption.js'
+      - 'visual-lab-test-banner.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  actual-public-test-native-import-ui-closed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated browser and check scripted native Settings import safety test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_native_settings_import_suspended_v35_real_browser.cjs
+          npm install --prefix /tmp/bu-public-import-v35 puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Verify deployed TEST native Settings restore gate and current cache chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 36); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?gate-v35=$attempt" |
+               grep -F 'visual-lab-test-banner.js?v=20261113-native-import-paused-v35' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?gate-v35=$attempt" |
+               grep -F 'bu-platform-saves-v2.js?v=20261113-native-import-paused-v35' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?gate-v35=$attempt" |
+               grep -F 'function refuseLegacySettingsImport(picker,event)' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?capture-v35=$attempt" |
+               grep -F 'picker.addEventListener(' >/dev/null; then
+              echo 'PASS: published TEST old native v1/v2 UI import gate is loaded'
+              break
+            fi
+            if [ "$attempt" = '36' ]; then
+              echo 'FAIL: published TEST v35 old import gate not yet deployed' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: Real public TEST native Settings two phone sizes; all imported files blocked with no save writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_TEST_ORIGIN='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab' \
+           NODE_PATH=/tmp/bu-public-import-v35/node_modules \
+           node scripts/qa_native_settings_import_suspended_v35_real_browser.cjs
