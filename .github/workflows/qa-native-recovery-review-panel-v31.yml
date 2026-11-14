@@ -1,0 +1,23 @@
+name: QA TEST recovery review and safe emergency backup v31
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-recovery-review-panel-v31.yml'
+      - 'scripts/qa_native_recovery_review_panel_v31.cjs'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  verify-recovery-review-and-v1-v2-block:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate actual TEST native Settings recovery panel, imports and current progress export
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_recovery_review_panel_v31.cjs
+          node scripts/qa_native_recovery_review_panel_v31.cjs
