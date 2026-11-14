@@ -1,0 +1,30 @@
+name: QA TEST-only Word Trails full backup lost-update guard v6
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-full-backup-journal-guard-v6.yml'
+      - 'scripts/qa_word_trails_full_backup_journal_guard_v6.cjs'
+      - 'experiments/word-trails-full-backup-journal-guard-v6.js'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  synthetic-v2-native-journal-lost-update-and-v6-guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate unlinked test module and executable regression suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-full-backup-journal-guard-v6.js
+          node --check scripts/qa_word_trails_full_backup_journal_guard_v6.cjs
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html; do
+            if grep -F 'word-trails-full-backup-journal-guard-v6.js' "$f"; then
+              echo 'STOP: v6 is a TEST-only unlinked proposal, never active game code' >&2
+              exit 1
+            fi
+          done
+      - name: Prove original v2 rewind risk and test conflict-aware proposed v3 journal
+        run: node scripts/qa_word_trails_full_backup_journal_guard_v6.cjs
