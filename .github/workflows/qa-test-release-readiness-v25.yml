@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v31 (ten groups)
+name: QA Bible Unfolded TEST full pre-release regression v32 (eleven groups)
 on:
   push:
     paths:
@@ -8,6 +8,9 @@ on:
       - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
       - '.github/workflows/qa-test-native-journal-crash-safety-v30.yml'
       - '.github/workflows/qa-native-recovery-review-panel-v31.yml'
+      - '.github/workflows/qa-native-external-page-guard-v32.yml'
+      - 'scripts/qa_native_external_page_storage_guard_v32.cjs'
+      - 'scripts/qa_native_external_page_storage_guard_v32_real_browser.cjs'
       - 'scripts/qa_native_recovery_review_panel_v31.cjs'
       - 'scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs'
       - '.github/workflows/qa-test-trivia-family-visuals-v29.yml'
@@ -40,6 +43,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  native-external-page-guard:
+    name: Detect cross-document LIVE migration/shared native progress writes and block unsafe imports
+    uses: ./.github/workflows/qa-native-external-page-guard-v32.yml
   native-player-recovery-review:
     name: Native TEST Settings must show recovery review, preserve journal, download and block v1/v2 imports
     uses: ./.github/workflows/qa-native-recovery-review-panel-v31.yml
