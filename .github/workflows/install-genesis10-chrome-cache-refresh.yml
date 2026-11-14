@@ -1,0 +1,60 @@
+name: Install exact Genesis 10 Story asset cache refresh in TEST only
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-genesis10-chrome-cache-refresh.yml'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  fix-chrome-cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Safely update exactly two native script asset URLs on TEST
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 -m py_compile scripts/refresh_genesis10_story_core_cache_test_v1.py
+            python3 scripts/refresh_genesis10_story_core_cache_test_v1.py
+            python3 - <<'PY'
+          import subprocess
+          from pathlib import Path
+          html=Path("index.html").read_text(encoding="utf8")
+          old=subprocess.check_output(["git","show","HEAD:index.html"],text=True)
+          changes=[
+            ("bible_unfolded_core_part3.js","gen10-questions-hints-20261114-d01-v1"),
+            ("bible_unfolded_core_part5.js","gen10-photos-20261114-d01-v1")]
+          reverse=html
+          for p,v in changes:
+              reverse=reverse.replace('<script src="'+p+'?v='+v+'"></script>','<script src="'+p+'"></script>',1)
+          if reverse!=old:
+              # If the exact patch was already applied, the working file may
+              # equal HEAD. That is safe, and git diff will be empty below.
+              assert html==old, "Native HTML changes beyond two cache suffixes"
+          print("PASS_HTML_SCOPE: Only two Story source URLs may change, no saves/locks/wallet/UI touched")
+          for name in ("bible_unfolded_core_part3.js","bible_unfolded_core_part5.js"):
+              assert Path(name).is_file()
+          PY
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'Already up-to-date; no new commit needed'
+              exit 0
+            fi
+            git commit -m "fix(TEST): bust Chrome cache for current Genesis 10 Story photo and clues"
+            if git push origin HEAD:main; then
+              echo "PASS: updated current TEST HTML core references; LIVE untouched"
+              exit 0
+            fi
+            sleep 2
+          done
+          echo 'Concurrent GitHub changes prevented safe push; no LIVE touched' >&2
+          exit 1
