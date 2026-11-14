@@ -18,7 +18,7 @@ const origin=process.env.STORY_TEST_URL||'http://127.0.0.1:8896/index.html';
    page.on('pageerror',x=>errors.push(x.message));
    await page.setViewport({width:w,height:h,isMobile:true,hasTouch:true,deviceScaleFactor:2});
    let pageRes=await page.goto(origin,{waitUntil:'domcontentloaded',timeout:115000});
-   assert.equal(pageRes.status(),200);
+   assert([200,304].includes(pageRes.status()),'Cached 304 is valid when Chrome retains the original HTML');
    await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof BU_HQ_WORDS==='object',{timeout:85000});
    const inventory=await page.evaluate(()=>({
     original7to9:Object.keys(BU_HQ_WORDS).filter(k=>/^g0[789]-d/.test(k)).length,
