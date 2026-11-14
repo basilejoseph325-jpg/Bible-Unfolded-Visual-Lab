@@ -27,9 +27,9 @@ jobs:
           BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
           for attempt in $(seq 1 36); do
             if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?v32=$attempt" |
-                grep -F 'visual-lab-test-banner.js?v=20261113-verified-backup-preview-v34' >/dev/null &&
+                grep -F 'visual-lab-test-banner.js?v=20261113-native-import-paused-v35' >/dev/null &&
                curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?v32=$attempt" |
-                grep -F 'bu-platform-saves-v2.js?v=20261113-verified-backup-preview-v34' >/dev/null &&
+                grep -F 'bu-platform-saves-v2.js?v=20261113-native-import-paused-v35' >/dev/null &&
                curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?v32=$attempt" |
                 grep -F 'function observeExternalStorage(event)' >/dev/null; then
               echo 'PASS: published TEST source has the real v32 storage-event handler'
