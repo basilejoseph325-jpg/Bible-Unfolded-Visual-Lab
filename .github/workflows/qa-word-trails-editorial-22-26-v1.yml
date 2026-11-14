@@ -36,7 +36,7 @@ jobs:
                curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-exodus28-hem-20261113-v24&check=$attempt" |
                grep -F 'Which bird does Jehovah describe nesting high on a cliff when speaking to Job?' >/dev/null &&
                curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-exodus28-hem-20261113-v24&hem=$attempt" |
-               grep -F 'Exodus says gold bells and colorful pomegranates went around what part of Aaron's sleeveless coat?' >/dev/null; then
+               grep -F "Exodus says gold bells and colorful pomegranates went around what part of Aaron's sleeveless coat?" >/dev/null; then
               echo 'PASS: actual public TEST displays Job 39 eagle AND Exodus 28 hem in versioned source; LIVE untouched'
               break
             fi
