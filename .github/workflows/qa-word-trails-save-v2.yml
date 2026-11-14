@@ -26,7 +26,9 @@ jobs:
         assert "bu-platform-saves-v2.js" in b
         assert "WordTrailsNextTEST" in s
         assert "coinsNeverConvertToInsightTokens:true" in s
-        assert "return nativeHandler.call(picker,event)" in s
+        assert "refuseLegacySettingsImport(picker,event)" in s
+        assert "picker.addEventListener('change',e=>refuseLegacySettingsImport(picker,e),true)" in s
+        assert "return nativeHandler.call(picker,event)" not in s
         assert "window.__bu388SkipCheckpoint=true" in s
         assert "testCoinsQuarantined:true" in s
         assert "localStorage.clear(" not in s
