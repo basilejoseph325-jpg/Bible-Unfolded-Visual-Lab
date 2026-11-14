@@ -156,6 +156,36 @@ function protectedNative(incoming,previous){
  }
  return next;
 }
+/* Safe read-only native backup plan. Uses THE SAME validated TEST v2
+ * native data and wheel-entitlement merge as actual applyBackup(). It never
+ * touches localStorage, the journal, or a wallet. Future v7 consent UI must
+ * still require player backup confirmation and a cooperative Web Lock before
+ * any write, and never apply an old v2 journal automatically. */
+function previewRestoreWrites(candidate){
+ const c=typeof candidate==='string'?parse(candidate):candidate;
+ const summary=dryRun(c);
+ if(read(JOURNAL)!==null||read(COMMITTED)!==null)
+  throw Error('An earlier TEST backup needs recovery review before another restore.');
+ const existing=currentSnapshot();
+ const desired=protectedNative(c.keys,existing.keys);
+ if(c.extensions.wordTrailsNext.state!==null)desired[TEST]=c.extensions.wordTrailsNext.state;
+ if(c.extensions.wordTrailsNext.feel!==null)desired[FEEL]=c.extensions.wordTrailsNext.feel;
+ const entries=Object.entries(desired);
+ const writes=[];
+ for(const [key,after] of entries){
+  if(!allowed(key)&&!keysToKeep.includes(key))
+   throw Error('Restore would touch a protected non-TEST key.');
+  const before=key===TEST?existing.trail:key===FEEL?existing.feel:existing.keys[key]??null;
+  if(after!==undefined&&before!==after){
+   if(writes.length>=MAX_KEYS)throw Error('Restore exceeds safe changed-key limit.');
+   writes.push(Object.freeze({key,before,after}));
+  }
+ }
+ return Object.freeze({valid:true,unchanged:writes.length===0,
+  writes:Object.freeze(writes),changes:writes.length,
+  summary,liveWordTrailsExcluded:true,
+  testCoinsQuarantined:true,requiresActualBackupAndApproval:true});
+}
 function setExact(k,value){
  if(value===null)localStorage.removeItem(k);else localStorage.setItem(k,value);
  if(read(k)!==value)throw Error('Storage verification failed for '+k+'.');
@@ -285,6 +315,6 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else install();
 window.BUPlatformSaves=Object.freeze({
  version:'2.0.0-test',keys:Object.freeze({TEST,FEEL,JOURNAL,COMMITTED}),
- makeBackup,dryRun,applyBackup,validateTrails,recoverPending,bound:()=>installed
+ makeBackup,dryRun,previewRestoreWrites,applyBackup,validateTrails,recoverPending,bound:()=>installed
 });
 })();
