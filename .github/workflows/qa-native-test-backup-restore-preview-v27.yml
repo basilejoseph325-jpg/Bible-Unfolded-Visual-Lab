@@ -1,0 +1,26 @@
+name: QA TEST read-only native backup restore plan and v7 parity v27
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
+      - 'bu-platform-saves-v2.js'
+      - 'experiments/word-trails-native-full-backup-transaction-v7.js'
+      - 'scripts/qa_native_test_backup_readonly_plan_v27.cjs'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  validate-native-backup-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify actual TEST native core and readonly restore-plan test
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_test_backup_readonly_plan_v27.cjs
+          node --check experiments/word-trails-native-full-backup-transaction-v7.js
+          node scripts/qa_native_test_backup_readonly_plan_v27.cjs
+          echo 'PASS only when the readonly TEST planner exactly matches the existing validated v2 restore, protected LIVE key stays untouched, and v7 rejects stale native wallet snapshots'
