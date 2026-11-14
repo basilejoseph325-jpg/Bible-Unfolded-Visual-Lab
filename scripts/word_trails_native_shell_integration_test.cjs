@@ -30,6 +30,13 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       });
       await page.goto('http://127.0.0.1:8891/index.html',{waitUntil:'domcontentloaded',timeout:120000});
       await page.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.(),{timeout:120000});
+      // The original Visual Lab audio bridge intentionally installs its
+      // native Settings listeners 800 ms after window load. Exercise settings
+      // only after that OWNER bridge is initialized, not during its startup race.
+      await page.waitForFunction(()=>{
+        try{return JSON.parse(localStorage.getItem('bu-platform-audio-preferences-v1')||'null')?.source==='main'}
+        catch(_){return false}
+      },{timeout:10000});
       const pre=await page.evaluate(()=>({hasNativeMenu:!!document.querySelector('#game-menu'),hasSettings:!!document.querySelector('#settings-dialog'),rootMenu:typeof window.openMenu,rootSettings:typeof window.openDialog,hasHost:!!window.BUWTNativeShell,home:!!document.getElementById('home-cross')}));
       console.log('NATIVE_ROOT_READY',JSON.stringify({viewport:viewport.width+'x'+viewport.height,...pre}));
       assert(pre.hasNativeMenu&&pre.hasSettings&&pre.home&&pre.hasHost);
