@@ -274,6 +274,13 @@ function applyBackup(candidate,{reload=true}={}){
   // If the commit marker was installed, never rewind a completed import.
   if(read(COMMITTED)==='yes'){
    window.__bu388SkipCheckpoint=false;
+   // A racing legacy tab could have written the same generic 'yes' marker.
+   // Claim commit success ONLY when OUR journal is still present and every
+   // intended user value is byte-for-byte equal to the expected AFTER state.
+   // Otherwise fail closed rather than calling an incomplete restore done.
+   if(read(JOURNAL)!==journalText||
+      changed.some(k=>read(k)!==desired[k]))
+    throw Error('TEST import commit marker conflicts with saved progress. Stop and review the unfinished restore; no automatic rollback was attempted.');
    return {ok:true,committed:true,needsCleanup:true,changed:changed.length,plan};
   }
   const result=rollbackThisAttempt(changed,previous,desired,journalText);
