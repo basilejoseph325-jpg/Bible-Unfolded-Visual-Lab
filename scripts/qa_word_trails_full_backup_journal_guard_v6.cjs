@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 /* TEST-only synthetic race regression:
- * 1. Show actual native v2 coordinator silently rewinds newer cross-tab data.
+ * 1. Show active TEST coordinator now quarantines dangerous previous-only journals.
  * 2. Prove unlinked v6 candidate detects conflicts and fails closed.
  * Never run on real localStorage or modify Story-Trails LIVE.
  */
@@ -68,10 +68,12 @@ const blocked={request:async(_,{ifAvailable},cb)=>cb(null)};
  assert.equal(rejected.ok,false);
  assert.deepEqual([...f.map],[...before]);
  checks++;
- oldCoreRecovery(f);
- assert.equal(f.map.get(WALLET),oldWallet,'Must reproduce real v2 lost update');
- assert.equal(f.map.get(TRAILS),oldTrail);
- assert.equal(f.map.has(LEGACY),false);
+ const active=oldCoreRecovery(f);
+ assert.equal(f.map.get(WALLET),newerWallet,'Active TEST native recovery MUST NOT erase a newer wallet');
+ assert.equal(f.map.get(TRAILS),restoredTrail,'An unfinished import must not be silently rewound on load');
+ assert.equal(f.map.has(LEGACY),true,'Incomplete legacy journal must remain for review');
+ assert.equal(active.recoverPending().needsManualReview,true);
+ assert.equal(f.events.length,0,'Active native startup may inspect but must not write user progress');
  checks++;
  // Future version: compare current to BEFORE and AFTER under cooperative lock.
  const f2=fixture({[WALLET]:restoreWallet,[TRAILS]:restoredTrail,[V3]:pending(steps)});
@@ -122,7 +124,7 @@ const blocked={request:async(_,{ifAvailable},cb)=>cb(null)};
  assert.equal(f7.map.get(TRAILS),oldTrail);
  checks++;
  console.log('PASS_WORD_TRAILS_FULL_BACKUP_JOURNAL_GUARD_V6',JSON.stringify({
-  cases:checks,actualNativeV2LostConcurrentWalletUpdate:true,
+  cases:checks,activeNativeV2QuarantinesOldLostUpdate:true,
   candidateRefusedLegacyJournal:true,candidateRefusedConflictingNewerWrites:true,
   candidateRequiredApprovalBackupAndWebLock:true,
   freshUnconflictedV3RecoveredOnlyExpectedKeys:true,
