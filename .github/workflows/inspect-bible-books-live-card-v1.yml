@@ -1,0 +1,42 @@
+name: Inspect actual native homepage cards for Bible Books release
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-bible-books-live-card-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect-native-cards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Print exact DOM anchors for homepage cards
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json
+          p=Path('index.html')
+          raw=p.read_text(encoding='utf-8')
+          needles=['Behind the Name','Bible Word Trails','Bible Crosswords','PLAY CROSSWORD PACKS','Discover Names','PLAY TOGETHER','home-books','Bible Books']
+          print('INDEX CHARS',len(raw))
+          for needle in needles:
+            hits=list(re.finditer(re.escape(needle),raw,re.I))
+            print('\n====',needle,'INDEX HITS',len(hits))
+            for m in hits[:3]:
+              print('AT',m.start(),'SNIP',raw[max(0,m.start()-850):m.start()+1250].replace('\n',' ')[:2200])
+          parts=[]
+          for idx in range(1,6):
+            f=Path('bible_unfolded_core_part'+str(idx)+'.js')
+            txt=f.read_text()
+            mat=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',txt,re.S)
+            if mat:
+              parts.append(json.loads(mat.group(1)))
+          core=''.join(parts)
+          print('CORE CHARS',len(core))
+          for needle in needles:
+            hits=list(re.finditer(re.escape(needle),core,re.I))
+            print('\n====',needle,'CORE HITS',len(hits))
+            for m in hits[:3]:print('AT',m.start(),'SNIP',core[max(0,m.start()-500):m.start()+850].replace('\n',' ')[:1600])
+          PY
