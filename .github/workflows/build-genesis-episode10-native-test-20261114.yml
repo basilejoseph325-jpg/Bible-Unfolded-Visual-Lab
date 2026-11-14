@@ -21,7 +21,7 @@ jobs:
           set -euo pipefail
           python3 -m py_compile scripts/install_genesis_episode10_native_test.py
           python3 scripts/install_genesis_episode10_native_test.py
-          node --check bible_unfolded_core_part5.js
+          for part in bible_unfolded_core_part*.js; do node --check "$part"; done
           python3 - <<'PY'
           from pathlib import Path
           import re,json,subprocess
@@ -102,8 +102,11 @@ jobs:
           set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add bible_unfolded_core_part5.js
+          git add bible_unfolded_core_part*.js
           git diff --cached --quiet && exit 1
-          git diff --name-only --cached | grep -qx 'bible_unfolded_core_part5.js'
+          ! git diff --name-only --cached | grep -Ev '^bible_unfolded_core_part[45]\.js
+          git commit -m 'feat(TEST candidate): add playable Genesis Episode 10 to original Story engine'
+          git push origin HEAD:feature/genesis-episode10-native-20261114
+
           git commit -m 'feat(TEST candidate): add playable Genesis Episode 10 to original Story engine'
           git push origin HEAD:feature/genesis-episode10-native-20261114
