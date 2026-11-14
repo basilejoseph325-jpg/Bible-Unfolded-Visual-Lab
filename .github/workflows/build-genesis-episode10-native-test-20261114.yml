@@ -1,0 +1,109 @@
+name: Build Genesis Episode 10 in original TEST Story engine (candidate branch)
+on:
+  push:
+    branches:
+      - feature/genesis-episode10-native-20261114
+    paths:
+      - '.github/workflows/build-genesis-episode10-native-test-20261114.yml'
+      - 'scripts/install_genesis_episode10_native_test.py'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  native-genesis:
+    if: github.ref == 'refs/heads/feature/genesis-episode10-native-20261114'
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with: {persist-credentials: true}
+      - name: Validate content and install only native Genesis extension
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/install_genesis_episode10_native_test.py
+          python3 scripts/install_genesis_episode10_native_test.py
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import re,json,subprocess
+          parts=[]
+          for i in range(1,6):
+            raw=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            assert m
+            parts.append(json.loads(m.group(1)))
+          src=''.join(parts)
+          p=Path('/tmp/bu-story-native-test.js')
+          p.write_text(src)
+          subprocess.run(['node','--check',str(p)],check=True)
+          assert src.count('genesis_ep10')>=5
+          assert "const BU_GENESIS_IDS=['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10']" in src
+          print('PASS_GENESIS_NATIVE_SOURCE_FIVE_PARTS')
+          PY
+      - name: Real Chrome checks first and last native chapter entry on an isolated browser
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-ep10-browser puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8893 --bind 127.0.0.1 >/tmp/bu-ep10-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-ep10-browser/node_modules node - <<'JS'
+          const assert=require('node:assert/strict'),{execSync}=require('node:child_process');
+          const puppeteer=require('puppeteer-core');
+          const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+          (async()=>{
+            const browser=await puppeteer.launch({headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],protocolTimeout:120000});
+            try{
+              const page=await browser.newPage(),errors=[];
+              page.on('pageerror',err=>errors.push(err.message));
+              await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              await page.goto('http://127.0.0.1:8893/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+              await page.waitForFunction(()=>typeof bu3857Open==='function'&&!!document.getElementById('bu3857-screen'),{timeout:75000});
+              const status=await page.evaluate(()=>{
+                openEpisodes('genesis');
+                const cards=[...document.querySelectorAll('#episode-list button[data-episode]')];
+                const last=cards.at(-1);
+                return {count:cards.length,last:last?.textContent?.trim().slice(0,200),
+                  lastId:last?.dataset.episode,
+                  earlyIDs:BU_GENESIS_IDS,
+                  hasChapter:!!BU3857_DATA.genesis_ep10,
+                  newCount:BU3857_DATA.genesis_ep10?.discoveries.length,
+                  previousCount:BU3857_DATA.genesis_ep09?.discoveries.length,
+                  originalCard:!!document.getElementById('home-journey')};
+              });
+              assert.equal(status.count,10);
+              assert.equal(status.lastId,'9');
+              assert.equal(status.newCount,10);
+              assert.equal(status.previousCount,10);
+              assert(status.last.includes('Jacob and Esau'));
+              assert.deepEqual(status.earlyIDs,['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10']);
+              assert(status.originalCard&&status.hasChapter);
+              await page.evaluate(()=>bu3857Open('genesis_ep10',true));
+              const played=await page.evaluate(()=>({
+                visible:!document.getElementById('bu3857-screen').hidden,
+                heading:document.getElementById('bu3857-header-title')?.textContent,
+                episode:document.getElementById('bu3857-episode')?.textContent,
+                step:bu3857Current()?.id,
+                buttons:document.querySelectorAll('#bu3857-screen button').length,
+                saveKey:BU_GENESIS_KEY
+              }));
+              assert(played.visible&&played.heading==='Jacob and Esau');
+              assert(played.episode.includes('EPISODE 10'));
+              assert.equal(played.step,'g10-d01');
+              assert(played.buttons>=3);
+              assert.equal(played.saveKey,'bible-unfolded-genesis-adventure-v3860');
+              assert.deepEqual(errors,[],'Native Story must have zero JS exceptions');
+              console.log('PASS_NATIVE_GENESIS_10_STORY_LAUNCH',JSON.stringify({status,played}));
+              await page.close();
+            }finally{await browser.close()}
+          })().catch(e=>{console.error('FAIL_NATIVE_GENESIS_10',e.stack||e);process.exitCode=1});
+          JS
+      - name: Commit candidate ONLY after native source and real Chrome pass
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bible_unfolded_core_part5.js
+          git diff --cached --quiet && exit 1
+          git diff --name-only --cached | grep -qx 'bible_unfolded_core_part5.js'
+          git commit -m 'feat(TEST candidate): add playable Genesis Episode 10 to original Story engine'
+          git push origin HEAD:feature/genesis-episode10-native-20261114
