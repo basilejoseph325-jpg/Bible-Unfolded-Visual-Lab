@@ -1,0 +1,38 @@
+name: QA TEST draft minimal LIVE Word Trails autoimport retirement (stage 1 v6)
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-stage1-retirement-v6.yml'
+      - 'scripts/qa_word_trails_stage1_no_autoimport_v6.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  build-safe-two-file-patch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify code and retrieve exact protected LIVE sources READ ONLY
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_stage1_no_autoimport_v6.cjs
+          BASE='https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments'
+          curl -fLsS --retry 3 --max-time 30 "$BASE/word-trails-next-v1.html" -o /tmp/wt-stage1-original.html
+          curl -fLsS --retry 3 --max-time 30 "$BASE/word-trails-live-migration-v1.js" -o /tmp/wt-stage1-original.js
+          test -s /tmp/wt-stage1-original.html
+          test -s /tmp/wt-stage1-original.js
+      - name: Build and test exact two-file no-silent-import draft
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_stage1_no_autoimport_v6.cjs \
+            /tmp/wt-stage1-original.html /tmp/wt-stage1-original.js /tmp/wt-stage1-v6
+          test "$(find /tmp/wt-stage1-v6 -type f | wc -l)" -eq 2
+      - name: Archive UNAPPLIED candidate, never deploy to LIVE
+        uses: actions/upload-artifact@v4
+        with:
+          name: TEST-only-unapproved-WordTrails-stage1-retirement-v6
+          path: /tmp/wt-stage1-v6/experiments/
+          if-no-files-found: error
+          retention-days: 30
