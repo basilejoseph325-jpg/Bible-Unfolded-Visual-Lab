@@ -144,6 +144,7 @@ async function frameFor(page){
       c.BUWTAnnouncer.change('paul',72);
       c.BUWTAnnouncer.resetProgress();
       const onMode=c.BUWTAnnouncer.getMode(),onVolume=c.BUWTAnnouncer.getVolume();
+      const callsAfterModeChange=calls.slice();
       const accepted=c.BUWTAnnouncer.progress();
       const callsWhenOn=calls.slice();
       c.BUWTAnnouncer.progress(); // one announcement per puzzle
@@ -153,13 +154,14 @@ async function frameFor(page){
       const returned=native.voicePrefs();
       document.getElementById('settings-dialog').hidden=true;
       return {mainOpen,duplicateDialogOpen,offMode,offVolume,rejected,
-       callsWhenOff,onMode,onVolume,accepted,callsWhenOn,duplicateCalls,
+       callsWhenOff,onMode,onVolume,accepted,callsAfterModeChange,callsWhenOn,duplicateCalls,
        originalMode:oldMode,originalVolume:oldVolume,
        returnedMode:returned.mode,returnedVolume:returned.volume,
        hasDemoClips:typeof c.BUWTVoiceClips,
        localStandaloneSettingsOpen:!!c.document.getElementById('wt-main-settings')?.open};
      }finally{window.bu381Play=original}
     });
+    console.log('DEMO_FREE_NATIVE_VOICE_TRACE',JSON.stringify({viewport:width+'x'+height,voice}));
     assert(voice.mainOpen,'Word Trails settings must open real native Settings');
     assert.equal(voice.duplicateDialogOpen,false,'No duplicate settings dialog');
     assert.equal(voice.offMode,'off');
