@@ -7,6 +7,9 @@ if(window.BUPlatformSaves)return;
 const NATIVE=/^(?:bible-unfolded|story-trails)-[a-z0-9_.-]+$/i;
 const TEST='bu-visual-lab-wordtrails-next-v1';
 const FEEL='bu-wt-next-feel-v2';
+// TEST and protected LIVE share a browser origin. The LIVE crossword key
+// must NEVER enter a Visual Lab native backup or TEST restore transaction.
+const LIVE_CROSSWORD='bible-unfolded-word-trails-next-v1';
 const JOURNAL='bu-visual-lab-import-rollback-v2';
 const COMMITTED='bu-visual-lab-import-committed-v2';
 const BACKUP_VERSION=2,MAX_BYTES=2000000,MAX_KEYS=100,MAX_NATIVE_VALUE=300000;
@@ -15,7 +18,7 @@ const OWNERSHIP=['bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ow
 const WHEELS=['goldwheel','moonwheel','seawheel'];
 const keysToKeep=[TEST,FEEL];
 const own=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
-const allowed=k=>typeof k==='string'&&k.length<=160&&NATIVE.test(k);
+const allowed=k=>typeof k==='string'&&k.length<=160&&NATIVE.test(k)&&k!==LIVE_CROSSWORD;
 const parse=s=>JSON.parse(s);
 const safeNum=x=>Number.isSafeInteger(x)&&x>=0&&x<=1000000000;
 const dataStr=(v,max)=>v===null||(typeof v==='string'&&v.length<=max);
@@ -70,6 +73,8 @@ function validateFeel(raw){
 function nativeData(data){
  if(!own(data)||data.format!=='BibleUnfoldedSave'||data.version!==BACKUP_VERSION||
     !own(data.keys))throw Error('This is not a compatible complete TEST backup.');
+ if(Object.prototype.hasOwnProperty.call(data.keys,LIVE_CROSSWORD))
+  throw Error('This older TEST backup contains protected LIVE Word Trails progress. Export a fresh TEST backup instead; no data was changed.');
  const pairs=Object.entries(data.keys);
  if(!pairs.length||pairs.length>MAX_KEYS||pairs.some(([k,v])=>!allowed(k)||typeof v!=='string'||v.length>MAX_NATIVE_VALUE))
   throw Error('The native game backup contains invalid keys.');
@@ -165,6 +170,11 @@ function recoverPending(){
  if(!data||data.version!==1||!own(data.previous)){
   return {recovered:false,error:'Unrecognized unfinished import journal'};
  }
+ // A legacy unfinished TEST journal may include the LIVE crossword key.
+ // The old v2 auto-recovery could overwrite newer LIVE play from another tab.
+ // Without expected after-values we cannot safely resolve that conflict.
+ if(Object.prototype.hasOwnProperty.call(data.previous,LIVE_CROSSWORD))
+  return {recovered:false,error:'Old TEST recovery includes protected LIVE Word Trails progress. Automatic recovery stopped for manual review.'};
  // Rewind every touched key after a prior interrupted import. If rollback fails,
  // retain the journal and do not pretend the save is safe.
  try{
@@ -266,6 +276,7 @@ function install(){
  btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();download()},true);
  picker.onchange=e=>acceptFile(originalImport,picker,e);
  getStatus();
+ if(recovered.error)notice('Backup recovery needs review to protect saved progress. No automatic restore was performed. '+recovered.error);
 }
 const recovered=recoverPending();
 if(recovered.error)console.error('Word Trails save rollback:',recovered.error);
