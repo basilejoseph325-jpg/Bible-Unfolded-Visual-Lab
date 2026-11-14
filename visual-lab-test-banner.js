@@ -207,7 +207,7 @@ else install();
  data.onload=()=>{
   if(document.getElementById('bu-daily-insight-app-loader'))return;
   const app=document.createElement('script');app.id='bu-daily-insight-app-loader';
-  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261114-book-60-v1';
+  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261114-test-picker-60-v2';
   document.head.append(app);
  };
  data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
