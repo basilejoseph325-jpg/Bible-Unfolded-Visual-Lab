@@ -1,0 +1,89 @@
+name: Build and QA complete Genesis Episode 10 photos (TEST candidate)
+on:
+  push:
+    branches:
+      - feature/genesis10-reviewed-seven-photos-20261114
+    paths:
+      - '.github/workflows/build-genesis10-reviewed-seven-photos-test-v1.yml'
+      - 'scripts/install_genesis10_all_ten_photos_test_v1.py'
+      - 'scripts/qa_genesis10_all10_images_player_test_v1.cjs'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install-and-test-photos:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Validate original assets and scripts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/install_genesis10_all_ten_photos_test_v1.py
+          node --check scripts/qa_genesis10_all10_images_player_test_v1.cjs
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          from pathlib import Path
+          names=['rebekah-inquires-jehovah','isaac-stays-gerar','rehoboth-water-found',
+                 'isaac-abimelech-covenant','rebekah-goatskins-jacob',
+                 'isaac-blessing-jacob','jacob-stairway-dream']
+          for n in names:
+            p=Path('story-adventure-art/genesis10/'+n+'.webp')
+            b=p.read_bytes()
+            assert b[:4]==b'RIFF' and b[8:12]==b'WEBP' and 20000<len(b)<100000,p
+            print('PASS_APPROVED_ART',n,len(b))
+          PY
+      - name: Add ONLY 7 reviewed scenes to native Genesis 10 maps and bust part5 cache
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/install_genesis10_all_ten_photos_test_v1.py
+          node --check bible_unfolded_core_part5.js
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          current=Path('bible_unfolded_core_part5.js').read_text()
+          past=subprocess.check_output(['git','show','HEAD:bible_unfolded_core_part5.js'],text=True)
+          for raw in (past,current):
+            match=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            assert match
+          previous=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',past,re.S).group(1))
+          updated=json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',current,re.S).group(1))
+          paths=['g10-d02','g10-d05','g10-d06','g10-d07','g10-d08','g10-d09','g10-d10']
+          start_art='const BU_EP10_SCENE_ART=Object.freeze({'
+          start_alt='const BU_EP10_SCENE_ALT=Object.freeze({'
+          for anchor in (start_art,start_alt):
+            i=previous.index(anchor);j=previous.index('});',i)
+            before=previous[i:j+3]
+            k=updated.index(anchor);z=updated.index('});',k)
+            after=updated[k:z+3]
+            assert all(id not in before and id in after for id in paths)
+            assert all(id in before for id in ('g10-d01','g10-d03','g10-d04'))
+          assert previous.replace(start_art, '')!=updated.replace(start_art, '')
+          assert 'BU_EP10_SCENE_ART[d.id]' in updated
+          assert 'BU_EP10_SCENE_ALT[d.id]' in updated
+          unchanged=subprocess.check_output(['git','diff','--name-only'],text=True).splitlines()
+          assert sorted(unchanged)==['bible_unfolded_core_part5.js','index.html'],unchanged
+          print('PASS_SCOPE only native part5 scene map and one HTML cache URL modified')
+          PY
+      - name: Actually load all 10 Story scenes above the word wheel on two mobile sizes
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-genesis-all10-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-gen10-qa-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-genesis-all10-qa/node_modules node scripts/qa_genesis10_all10_images_player_test_v1.cjs
+      - name: Commit only the two verified native files on candidate branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bible_unfolded_core_part5.js index.html
+          git diff --cached --quiet && { echo 'No native image changes to commit' >&2; exit 1; }
+          git commit -m 'feat(TEST candidate): show reviewed artwork in all ten Genesis 10 scenes'
+          git push origin HEAD:feature/genesis10-reviewed-seven-photos-20261114
