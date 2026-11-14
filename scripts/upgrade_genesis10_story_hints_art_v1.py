@@ -41,8 +41,11 @@ if len(original_30)!=30 or any(key.startswith("g10") for key in original_30):
 new={}
 for id_ in ids:
     row=src[id_]
-    if existing[id_]["answer"]!=row["answer"]:
-        raise SystemExit("Do not change established wheel answer: "+id_)
+    original={'g10-d01':'ISAAC','g10-d02':'TWINS','g10-d03':'HUNTER',
+      'g10-d04':'LENTILS','g10-d05':'GERAR','g10-d06':'REHOBOTH',
+      'g10-d07':'OATH','g10-d08':'GOATSKINS','g10-d09':'BLESSING','g10-d10':'BETHEL'}
+    if existing[id_]['answer']!=original[id_]:
+        raise SystemExit('Unexpected initial Episode 10 answer: '+id_)
     new[id_]={k:row[k] for k in ["clue","answer","explanation","hint1","hint2","hint3","basis"]}
 serialized=json.dumps(new,ensure_ascii=False,separators=(",",":"))
 replace_once(m.group(0),"Object.assign(BU_HQ_WORDS,"+serialized+");")
@@ -79,15 +82,18 @@ replace_once(old,new)
 # scene photo exists in this TEST branch, not a collage or UI mock-up.
 art="story-adventure-art/genesis10/esau-and-jacob.webp"
 if not Path(art).exists():raise SystemExit("Actual imported Episode 10 photo missing")
+art2="story-adventure-art/genesis10/esau-birthright-stew.webp"
+if not Path(art2).exists():raise SystemExit("Second scene photo missing")
+alt2="Jacob offering Esau bread and lentil stew near the family tents, historical illustration"
 alt="Esau, the hunter, returning near his family’s tents while Jacob remains at camp, historical reconstruction"
 hook="const sceneSrc=BU3857_SCENE_ART[d.id]||BU_GENESIS_SCENE_ART[d.id];"
-replacement=("const BU_EP10_SCENE_ART=Object.freeze({'g10-d03':'"+art+"'});\n"
- "const BU_EP10_SCENE_ALT=Object.freeze({'g10-d03':'"+alt+"'});\n"
+replacement=("const BU_EP10_SCENE_ART=Object.freeze({'g10-d03':'"+art+"','g10-d04':'"+art2+"'});\n"
+ "const BU_EP10_SCENE_ALT=Object.freeze({'g10-d03':'"+alt+"','g10-d04':'"+alt2+"'});\n"
  "const sceneSrc=BU3857_SCENE_ART[d.id]||BU_GENESIS_SCENE_ART[d.id]||BU_EP10_SCENE_ART[d.id];")
 # Constants must not be redeclared each render? Place before function once,
 # not inside bu3857Render.
-const_map=("const BU_EP10_SCENE_ART=Object.freeze({'g10-d03':'"+art+"'});\n"
- "const BU_EP10_SCENE_ALT=Object.freeze({'g10-d03':'"+alt+"'});\n")
+const_map=("const BU_EP10_SCENE_ART=Object.freeze({'g10-d03':'"+art+"','g10-d04':'"+art2+"'});\n"
+ "const BU_EP10_SCENE_ALT=Object.freeze({'g10-d03':'"+alt+"','g10-d04':'"+alt2+"'});\n")
 function_anchor="function bu3857Render(){"
 replace_once(function_anchor,const_map+function_anchor)
 replace_once(hook,"const sceneSrc=BU3857_SCENE_ART[d.id]||BU_GENESIS_SCENE_ART[d.id]||BU_EP10_SCENE_ART[d.id];")
