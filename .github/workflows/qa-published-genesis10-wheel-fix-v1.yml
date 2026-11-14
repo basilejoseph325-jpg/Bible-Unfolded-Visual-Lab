@@ -1,0 +1,33 @@
+name: QA published TEST Genesis 10 all word wheels (real public site)
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/qa-published-genesis10-wheel-fix-v1.yml']
+permissions: {contents: read}
+jobs:
+  published-genesis10:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare exact existing all-10 actual player-path QA for public TEST
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/qa_genesis10_real_word_wheel_20261114.cjs')
+          s=p.read_text()
+          original='http://127.0.0.1:8893/index.html'
+          assert s.count(original)==1
+          s=s.replace(original,'https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?story_fix=20261114-ep10-v1')
+          p.write_text(s)
+          print('PASS_PUBLIC_TEST_TARGET',s.count('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/'))
+          PY
+          node --check scripts/qa_genesis10_real_word_wheel_20261114.cjs
+      - name: Play each of ten answers on deployed TEST website, verify saves and completion
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-public-genesis10-qa puppeteer-core@24 --no-audit --no-fund --silent
+          NODE_PATH=/tmp/bu-public-genesis10-qa/node_modules node scripts/qa_genesis10_real_word_wheel_20261114.cjs
