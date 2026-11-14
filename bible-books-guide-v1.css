@@ -1,0 +1,53 @@
+/* Bible Books reading experience — scoped standalone stylesheet, Visual Lab */
+:root{color-scheme:dark;--ink:#f5e9ce;--gold:#e8c17a;--deep:#051c25}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#071d26;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button,a{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer;font:inherit}
+a{color:inherit}
+button:focus-visible,a:focus-visible{outline:3px solid #ffe6a6;outline-offset:4px}
+#reader{max-width:660px;margin:auto;min-height:100dvh;padding-bottom:calc(22px + env(safe-area-inset-bottom))}
+.toolbar{position:relative;z-index:2;height:60px;padding:0 14px;display:flex;justify-content:space-between;gap:10px;align-items:center;background:#082c36;border-bottom:1px solid #bd97534a}
+.back{display:flex;align-items:center;gap:7px;font-size:26px;line-height:1;text-decoration:none;font-weight:800;color:#fce5b0}
+.back span{font-size:13px;font-weight:700}
+.eyebrow{font-size:9px;letter-spacing:.14em;font-weight:800;color:#eddbb2;text-align:center}
+.test-pill{font-size:10px;font-weight:900;color:#1e2e2a;background:linear-gradient(135deg,#ffe993,#e8a84c);padding:5px 8px;border-radius:7px}
+.cover{min-height:290px;display:flex;flex-direction:column;justify-content:end;padding:66px 22px 24px;background:linear-gradient(180deg,#08283211 0%,#041b25a8 50%,#031822 100%),url('bible-book-art/01_genesis.webp') center 42%/cover no-repeat;box-shadow:inset 0 -16px 22px #041c25}
+.overline{font-size:10px;letter-spacing:.24em;font-weight:850;color:#ffd88d;text-shadow:0 2px 4px #000;margin:0 0 7px}
+.cover h1{font:700 clamp(38px,10vw,53px)/1.03 Georgia,serif;color:#ffdfa5;text-shadow:0 3px 12px #000c;margin:0}
+.subhead{font:italic 19px/1.3 Georgia,serif;color:#fef0cf;margin:9px 0 8px;text-shadow:0 2px 4px #000}
+.description{max-width:530px;margin:0;color:#f7e8ca;font-size:14px;line-height:1.58;text-shadow:0 2px 5px #000e}
+.reading-shell{padding:16px 16px 36px}
+.reading-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 3px 10px;color:#e7cf9b;font-weight:800;letter-spacing:.04em;font-size:12px}
+#toggle-parts{background:#183c44;border:1px solid #bda27199;color:#ffdfa1;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:800}
+.track{height:6px;background:#193943;border-radius:50px;overflow:hidden;border:1px solid #8f784d5c;margin:0 0 16px}
+.track span{display:block;width:6.25%;height:100%;background:linear-gradient(90deg,#c58a4a,#ffe0a2);border-radius:50px;transition:width .2s ease}
+.parts-panel{background:#0c3039;border:1px solid #a28e665c;border-radius:14px;padding:12px;margin:0 0 14px}
+.parts-panel[hidden],.completion[hidden]{display:none}
+.parts-panel p{margin:1px 2px 10px;color:#f3d8a1;font-size:13px;font-weight:750}
+.parts{max-height:255px;overflow:auto;display:grid;gap:5px;overscroll-behavior:contain}
+.part-item{text-align:left;width:100%;font-size:13px;line-height:1.45;padding:9px 11px;color:#e9e2cf;border-radius:9px;border:1px solid #54727a70;background:#173e48}
+.part-item.active{background:#4b3a28;border-color:#e9c586;color:#ffebc2}
+.paper{border:1px solid #c8a46885;border-radius:17px;padding:clamp(20px,5vw,32px) clamp(19px,5vw,33px) 26px;background:linear-gradient(145deg,#f4e1b8 0%,#ecd5a8 54%,#e0c492 100%);color:#30251b;box-shadow:0 14px 34px #0008,inset 0 1px #fff4d5;outline:none}
+.chapter-label{font-size:10px;font-weight:900;letter-spacing:.18em;color:#785c35;margin:0 0 8px}
+.paper h2{font:700 clamp(26px,6.8vw,34px)/1.13 Georgia,serif;margin:0 0 11px;color:#3a3423}
+.deck{font:italic 18px/1.45 Georgia,serif;color:#655138;margin:0 0 16px;padding-bottom:16px;border-bottom:1px solid #9d855c66}
+.story p{font-size:clamp(16px,4.1vw,18px);line-height:1.74;letter-spacing:.005em;margin:0 0 17px;color:#30281f}
+.reflection{background:#fff7de80;border-left:4px solid #bd853b;padding:13px 14px 11px;border-radius:4px 10px 10px 4px;margin:20px 0 24px}
+.reflection span{font-size:10px;letter-spacing:.13em;color:#8a602d;font-weight:900}
+.reflection p{font:italic 17px/1.48 Georgia,serif;color:#503721;margin:5px 0 0}
+.source{display:block;background:#3a5b50;color:#fff2ce;text-align:center;border:1px solid #163a33;border-radius:10px;padding:14px 12px;font-weight:750;font-size:13px;line-height:1.45;text-decoration:none}
+.source::after{content:' ↗'}
+.steps{display:grid;grid-template-columns:1fr 1.3fr;gap:11px;margin-top:18px}
+.steps button{border-radius:12px;min-height:54px;padding:12px 13px;font-weight:850;font-size:14px}
+.steps .primary{border:1px solid #ffefc2;background:linear-gradient(#f6d58c,#b78138);color:#24241e;box-shadow:0 4px 10px #0007}
+.steps .secondary{border:1px solid #a89870;color:#ffe7bc;background:#1a3c44}
+.steps button:disabled{opacity:.43;cursor:default}
+.restart{display:block;background:none;border:0;color:#d8c8ac;text-decoration:underline;text-underline-offset:4px;font-size:12px;margin:22px auto 13px;padding:8px}
+.fineprint{font-size:11px;line-height:1.6;color:#b9c7c3;margin:0 6px 18px;text-align:center}
+.completion{margin:17px 0 0;background:#153d3f;border:1px solid #ddbb7d;border-radius:13px;padding:20px;text-align:center;color:#f8e2b4}
+.completion strong{font:700 24px Georgia,serif}
+.completion p{margin:10px 0 0;font-size:14px;line-height:1.6}
+@media(min-width:720px){.cover{min-height:340px}.reading-shell{padding-inline:32px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.track span{transition:none}}

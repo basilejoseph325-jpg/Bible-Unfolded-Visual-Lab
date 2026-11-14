@@ -251,3 +251,14 @@ else install();
  script.defer=true;
  document.head.appendChild(script);
 })();
+
+
+/* Bible Books reader: Genesis standalone route — no changes to shared puzzles. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/'))return;
+ if(document.getElementById('bu-books-reader-entry-loader'))return;
+ const script=document.createElement('script');
+ script.id='bu-books-reader-entry-loader';
+ script.src='bible-books-guide-entry-v1.js?v=20261114-genesis-pilot-v1';
+ script.defer=true;document.head.appendChild(script);
+})();
