@@ -58,6 +58,9 @@ assert(at(23,'extra','NOISE').insight.includes('not an actual windstorm'),'Noise
 assert(at(24,'board','BABEL').insight.includes('avoid being scattered'),'Babel history');
 assert(at(24,'extra','SEAL').reference==='Daniel 12:4, 8, 9','Daniel understood only part');
 assert(at(25,'board','ELI').reference==='1 Samuel 3:15-18','Samuel and Eli context');
+assert(at(25,'spark','EAGLE').reference==='Job 39:27-29' &&
+  at(25,'spark','EAGLE').clue.includes('nesting high on a cliff'),
+  'Eagle clue must uniquely distinguish the eagle from the falcon in Job 39:26-29');
 assert(at(26,'board','ESTHER').clue.includes('Hadassah'),'Avoid repeated Esther clue');
 assert(at(26,'board','RUTH').insight.includes('change of life'),'Ruth story sensitivity');
 assert(at(26,'spark','REST').insight.includes('declared it sacred'),'Seventh-day rest explained');
