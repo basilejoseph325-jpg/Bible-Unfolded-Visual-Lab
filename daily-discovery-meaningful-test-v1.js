@@ -16,11 +16,13 @@
 if(window.BUDailyInsightV1)return;
 const KEY='bu-daily-insight-test-v1';
 const Q=new URLSearchParams(location.search);
-// A deliberately explicit, TEST-repository-only editorial QA route.
-// Never expose the full 30-lesson browser or ?daily_preview= on normal Daily.
-const editorialQA=()=>Q.get('daily_qa')==='1'&&(
- (location.hostname==='basilejoseph325-jpg.github.io'&&location.pathname.startsWith('/Bible-Unfolded-Visual-Lab/'))||
- ['127.0.0.1','localhost'].includes(location.hostname));
+// OWNER REQUEST: the complete chapter selector stays VISIBLE by default
+// on Visual Lab TEST, while the prelaunch LIVE/Story-Trails reader stays daily-only.
+// The manual ?daily_qa=1 flag must NOT be required to browse TEST lessons.
+// Local development mirrors TEST. ?daily_qa=0 can temporarily hide the selector.
+const editorialQA=()=>((
+ location.hostname==='basilejoseph325-jpg.github.io'&&location.pathname.startsWith('/Bible-Unfolded-Visual-Lab/')
+ )||['127.0.0.1','localhost'].includes(location.hostname))&&Q.get('daily_qa')!=='0';
 const DATA=()=>window.BUDailyDiscoveryLibrary||[];
 // TEST only: a curated historical illustration for every existing lesson.
 // Seven now use purpose-made, reviewed artistic reconstructions. Other items
@@ -128,9 +130,9 @@ function tabs(){
  '<button type="button" class="bu-insight-tab" role="tab" data-insight-tab="'+id+'" aria-selected="'+String(view.tab===id)+'">'+l+'</button>').join('')+
  '</nav>';
 }
-/* Only the explicitly enabled TEST editorial QA session may browse the
-   future 30 chapters; an everyday visitor sees today's lesson only.
-   Past lessons still remain available via their own Saved collection. */
+/* The owner-requested dropdown is always available in the TEST illustrated
+   reader (60 chapters). This code is scoped to Visual Lab and NOT installed
+   in the original LIVE site. Previewing chapters does not mark daily rewards. */
 function bookPreviewPicker(){
  if(!editorialQA()||!bookEnabled()||!bookImage(item()))return '';
  return '<nav class="bu-book-preview-picker" aria-label="TEST-only editorial discovery inspection">'+
@@ -483,7 +485,7 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 window.BUDailyInsightV1=Object.freeze({
- version:'1.2.2-test-book-art-4',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
+ version:'1.2.3-test-always-on-picker-60',source:'NWT/JW.org editorial pilot',storageKey:KEY,open,
  current:()=>current()?.id,libraryCount:()=>DATA().length,
  inspect:()=>({tab:view.tab,id:view.id,open:view.open,today:localDay(),
  saved:[...state().saved],read:[...state().read],shared:[...state().shared]})
