@@ -191,32 +191,61 @@ function setExact(k,value){
  if(value===null)localStorage.removeItem(k);else localStorage.setItem(k,value);
  if(read(k)!==value)throw Error('Storage verification failed for '+k+'.');
 }
+/* Old TEST v2 journals contain BEFORE values only. A browser crash can
+ * leave a partial restore, then an unrelated open tab may save NEW progress.
+ * Automatically replaying "previous" on reload can permanently destroy that
+ * newer wallet, Word Trails or native Story progress. A later page CANNOT
+ * know the desired AFTER values of the old interrupted operation; never
+ * pretend that this record alone proves an overwrite is safe.
+ * The COMMITTED marker only authorizes cleanup of our own journal metadata,
+ * not an application-level rollback. */
 function recoverPending(){
- const raw=read(JOURNAL);if(!raw)return {recovered:false};
- if(read(COMMITTED)==='yes'){
-  localStorage.removeItem(JOURNAL);localStorage.removeItem(COMMITTED);
-  return {recovered:false,committed:true};
- }
+ const raw=read(JOURNAL),marker=read(COMMITTED);
+ if(raw===null)return marker===null?{recovered:false}:
+  {recovered:false,error:'An orphaned TEST backup commit marker needs review.',needsManualReview:true};
  const data=getJson(raw);
- if(!data||data.version!==1||!own(data.previous)){
-  return {recovered:false,error:'Unrecognized unfinished import journal'};
+ if(!data||data.version!==1||!own(data.previous))
+  return {recovered:false,error:'Unrecognized unfinished TEST import journal. No saved progress changed.',needsManualReview:true};
+ if(marker==='yes'){
+  try{
+   localStorage.removeItem(JOURNAL);
+   localStorage.removeItem(COMMITTED);
+   if(read(JOURNAL)!==null||read(COMMITTED)!==null)
+    throw Error('Backup commit cleanup was not verified.');
+   return {recovered:false,committed:true};
+  }catch(e){return {recovered:false,error:'Completed import journal cleanup needs review: '+e.message,needsManualReview:true}}
  }
- // A legacy unfinished TEST journal may include the LIVE crossword key.
- // The old v2 auto-recovery could overwrite newer LIVE play from another tab.
- // Without expected after-values we cannot safely resolve that conflict.
- if(Object.prototype.hasOwnProperty.call(data.previous,LIVE_CROSSWORD))
-  return {recovered:false,error:'Old TEST recovery includes protected LIVE Word Trails progress. Automatic recovery stopped for manual review.'};
- // Rewind every touched key after a prior interrupted import. If rollback fails,
- // retain the journal and do not pretend the save is safe.
+ return {recovered:false,needsManualReview:true,pending:true,
+  error:'An unfinished TEST backup restore was found. Automatic rollback is stopped to protect newer wallet, Story and Word Trails progress. Export a fresh backup and review this restore before importing again.'};
+}
+/* Only the synchronous writer itself knows its exact BEFORE and AFTER values.
+ * If a write throws while THIS call is active, we can attempt a conservative
+ * same-call rollback after checking every affected key. Any unexpected value
+ * or journal alteration means a newer writer may exist: STOP and retain the
+ * journal without modifying even one user key. This cannot prevent an old,
+ * non-cooperating tab from writing the same value during the final check. */
+function rollbackThisAttempt(changed,previous,desired,journalText){
  try{
-  for(const [k,v] of Object.entries(data.previous)){
-   if(!allowed(k)&&!keysToKeep.includes(k))throw Error('Invalid rollback key.');
-   if(!dataStr(v,MAX_NATIVE_VALUE))throw Error('Invalid rollback value.');
-   setExact(k,v);
+  if(read(JOURNAL)!==journalText||read(COMMITTED)!==null)
+   return {ok:false,error:'Restore journal or commit marker changed during import.'};
+  for(const k of changed){
+   const current=read(k);
+   if(current!==previous[k]&&current!==desired[k])
+    return {ok:false,error:'Newer or unexpected progress detected in '+k+'.'};
   }
+  for(const k of changed){
+   if(read(k)===previous[k])continue;
+   if(read(k)!==desired[k])
+    return {ok:false,error:'Concurrent save detected while restoring '+k+'.'};
+   setExact(k,previous[k]);
+  }
+  if(read(JOURNAL)!==journalText)
+   return {ok:false,error:'Restore journal changed during recovery.'};
   localStorage.removeItem(JOURNAL);
-  return {recovered:true};
- }catch(e){return {recovered:false,error:e.message}}
+  if(read(JOURNAL)!==null)
+   throw Error('Rollback journal cleanup was not verified.');
+  return {ok:true};
+ }catch(e){return {ok:false,error:e.message}}
 }
 function applyBackup(candidate,{reload=true}={}){
  const c=typeof candidate==='string'?parse(candidate):candidate;
@@ -232,19 +261,36 @@ function applyBackup(candidate,{reload=true}={}){
  const changed=touched.filter(k=>desired[k]!==undefined&&previous[k]!==desired[k]);
  if(!changed.length)return {ok:true,unchanged:true,plan};
  const journal={version:1,previous,createdAt:new Date().toISOString()};
+ const journalText=JSON.stringify(journal);
  try{
-  setExact(JOURNAL,JSON.stringify(journal));
- }catch(e){throw Error('Not enough safe storage for rollback. No progress changed: '+e.message);}
+  setExact(JOURNAL,journalText);
+ }catch(e){throw Error('Not enough safe storage for restore journal. No progress changed: '+e.message);}
  window.__bu388SkipCheckpoint=true;
  try{
   for(const k of changed)setExact(k,desired[k]);
   setExact(COMMITTED,'yes');
-  localStorage.removeItem(JOURNAL);localStorage.removeItem(COMMITTED);
  }catch(e){
-  const result=recoverPending();
+  // If the commit marker was installed, never rewind a completed import.
+  if(read(COMMITTED)==='yes'){
+   window.__bu388SkipCheckpoint=false;
+   return {ok:true,committed:true,needsCleanup:true,changed:changed.length,plan};
+  }
+  const result=rollbackThisAttempt(changed,previous,desired,journalText);
   window.__bu388SkipCheckpoint=false;
-  if(result.error)throw Error('Import failed AND rollback needs recovery: '+result.error);
-  throw Error('Import was safely rolled back: '+e.message);
+  if(!result.ok)
+   throw Error('TEST import interrupted; automatic rollback was stopped to protect newer saved progress. The journal needs review: '+result.error);
+  throw Error('TEST import failed; this attempt was rolled back after checking its saved values: '+e.message);
+ }
+ // Cleanup is intentionally separate from the completed native-data commit:
+ // a metadata failure must NOT cause a completed import to be rolled back.
+ try{
+  localStorage.removeItem(JOURNAL);
+  localStorage.removeItem(COMMITTED);
+  if(read(JOURNAL)!==null||read(COMMITTED)!==null)
+   throw Error('Backup journal cleanup was not verified.');
+ }catch(e){
+  window.__bu388SkipCheckpoint=false;
+  return {ok:true,committed:true,needsCleanup:true,changed:changed.length,plan};
  }
  if(reload)location.reload();
  return {ok:true,changed:changed.length,plan};
@@ -290,7 +336,8 @@ async function acceptFile(nativeHandler,picker,event){
   const test=t.present?'Imported Word Trails: '+t.completedCount+' completed levels, '+t.coins+' TEST coins. ':'No Word Trails progress in this file. ';
   if(!confirm('Import complete Visual Lab TEST backup? Matching saved progress is replaced. Existing purchased wheel ownership is kept.\n\n'+comparison+wallet+'\n'+test+'\nTEST coins will NOT become real Insight Tokens.\n\nIMPORTANT: TEST and LIVE share a GitHub Pages browser-storage origin. Importing the native wallet here also changes the saved native wallet visible in LIVE on this device.\n\nExport your current backup first if you need to keep it.'))return;
   const result=applyBackup(value);
-  if(result.unchanged)notice('This backup is already present; no balances were changed.');
+  if(result.needsCleanup)notice('TEST import data was committed, but its journal needs review. Do not run another import until the recovery status is cleared.');
+  else if(result.unchanged)notice('This backup is already present; no balances were changed.');
  }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message)}
  finally{picker.value='';}
 }
