@@ -1,0 +1,23 @@
+name: QA TEST external old-page save activity guard v32
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-external-page-guard-v32.yml'
+      - 'scripts/qa_native_external_page_storage_guard_v32.cjs'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  detect-competing-page-and-block-unsafe-imports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate native source and run synthetic external-page storage event guard tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_external_page_storage_guard_v32.cjs
+          node scripts/qa_native_external_page_storage_guard_v32.cjs
