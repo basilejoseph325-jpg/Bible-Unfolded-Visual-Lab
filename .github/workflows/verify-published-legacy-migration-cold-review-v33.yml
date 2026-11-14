@@ -1,0 +1,57 @@
+name: Verify public TEST cold-start original LIVE migration review v33
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-legacy-migration-cold-review-v33.yml'
+      - 'scripts/qa_native_legacy_migration_cold_review_v33_real_browser.cjs'
+      - 'visual-lab-test-banner.js'
+      - 'journey-progress-caption.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  public-test-cold-start-and-old-live-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated browser and fetch pinned original LIVE migrator for QA ONLY
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_native_legacy_migration_cold_review_v33_real_browser.cjs
+          npm install --prefix /tmp/bu-public-legacy-v33 puppeteer-core@24 --silent --no-audit --no-fund
+          curl -fLsS --retry 3 --max-time 35 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Story-Trails/74a96491770ab6aa7229889ce1aa4733e06666d8/experiments/word-trails-live-migration-v1.js \
+            -o /tmp/old-protected-live-wordtrails-migration-v1.js
+          test -s /tmp/old-protected-live-wordtrails-migration-v1.js
+      - name: Verify public TEST root now loads the native V33 read-only legacy migration review
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 36); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?v33=$attempt" |
+               grep -F 'visual-lab-test-banner.js?v=20261113-legacy-migration-cold-review-v33' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?v33=$attempt" |
+               grep -F 'bu-platform-saves-v2.js?v=20261113-legacy-migration-cold-review-v33' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?v33=$attempt" |
+               grep -F 'function legacyTransitionStatus()' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?legacy-v33=$attempt" |
+               grep -F 'function installLegacyTransitionReview()' >/dev/null; then
+              echo 'PASS: public TEST v33 startup-review source and versioned bootstrap verified'
+              break
+            fi
+            if [ "$attempt" = '36' ]; then
+              echo 'FAIL: public TEST v33 bootstrap not published' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: REAL published TEST two-page browser reproduction with EXACT original protected LIVE migration
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_TEST_ORIGIN='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab' \
+           NODE_PATH=/tmp/bu-public-legacy-v33/node_modules \
+           node scripts/qa_native_legacy_migration_cold_review_v33_real_browser.cjs \
+             /tmp/old-protected-live-wordtrails-migration-v1.js
