@@ -51,16 +51,27 @@ const initial={
      [W,P,afterWallet,afterPuzzle]);
    assert.equal(preview.ok,true);
    // A holds the lock while B attempts the first proposed restore.
+   // Keep A foreground during acquisition: Chromium may throttle a tab that
+   // was backgrounded while B was initialized. Surface lock errors explicitly.
+   await a.bringToFront();
    await a.evaluate(()=>{
     window.__qaHeld=false;
+    window.__qaLockError=null;
     window.__qaHold=navigator.locks.request(
      'bible-unfolded-full-backup-recovery-exclusive-v3',
      {mode:'exclusive'},lock=>{
       window.__qaHeld=true;
       return new Promise(resolve=>window.__qaRelease=resolve);
-     });
+     }).catch(e=>{window.__qaLockError=String(e);return null});
    });
-   await a.waitForFunction(()=>window.__qaHeld===true,{timeout:15000});
+   await a.waitForFunction(()=>window.__qaHeld===true||!!window.__qaLockError,
+     {timeout:30000,polling:100});
+   const lockStatus=await a.evaluate(()=>({
+    held:window.__qaHeld,error:window.__qaLockError
+   }));
+   assert.equal(lockStatus.error,null,'Chrome lock acquisition failed: '+lockStatus.error);
+   assert.equal(lockStatus.held,true,'Tab A never obtained the native Web Lock');
+   await b.bringToFront();
    const refused=await b.evaluate(p=>window.__tx.apply({
     approved:true,backupConfirmed:true,plan:p
    }),preview.plan);
@@ -76,6 +87,7 @@ const initial={
    // across Chromium renderer processes, even after the writer's call
    // returned. Require BOTH exact values to appear in tab A, not an
    // unreliable immediate read that sometimes sees the old snapshot.
+   await a.bringToFront();
    await a.waitForFunction(([walletKey,walletValue,puzzleKey,puzzleValue])=>
     localStorage.getItem(walletKey)===walletValue &&
     localStorage.getItem(puzzleKey)===puzzleValue,
