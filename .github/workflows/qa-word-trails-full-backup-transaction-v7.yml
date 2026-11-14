@@ -30,7 +30,7 @@ jobs:
         run: node scripts/qa_word_trails_native_full_backup_transaction_v7.cjs
       - name: Install isolated Chrome driver
         run: npm install --prefix /tmp/wt-backup-v7-browser puppeteer-core@24 --silent --no-audit --no-fund
-      - name: Two real same-origin Chromium tabs: locked import and old-writer conflict
+      - name: "Two real same-origin Chromium tabs: locked import and old-writer conflict"
         shell: bash
         run: |
           set -euo pipefail
