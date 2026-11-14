@@ -1,0 +1,56 @@
+name: TEST hard-gate Daily quick tap in earliest HTML head
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-test-daily-early-gate-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  install-early-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Syntax check guarded patch
+        run: |
+          set -euo pipefail
+          python3 -m py_compile .github/scripts/patch_daily_early_gate_test_20261114.py
+          node --check journey-progress-caption.js
+          node --check daily-discovery-meaningful-test-v1.js
+      - name: Apply isolated TEST HTML head fix with conflict-safe push
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git reset --hard origin/main
+            python3 .github/scripts/patch_daily_early_gate_test_20261114.py
+            python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          html=Path('index.html').read_text(encoding='utf-8')
+          assert html.count('<script id="bu-daily-early-gate-v1">')==1
+          assert html.index('bu-daily-early-gate-v1')<html.index('<style>')
+          js=html.split('<script id="bu-daily-early-gate-v1">',1)[1].split('</script>',1)[0]
+          subprocess.run(['node','--check','-'],input=js,text=True,check=True)
+          print('PASS: early inline guard parses and precedes all legacy scripts')
+          PY
+            git add index.html
+            if git diff --cached --quiet; then
+              echo 'Already installed on TEST; no LIVE changes'
+              exit 0
+            fi
+            git commit -m 'fix(TEST): block earliest Daily tap from launching old quiz'
+            if git push origin HEAD:main; then
+              echo 'PASS: deployed native-head interception to TEST main'
+              exit 0
+            fi
+            sleep 3
+          done
+          echo 'Failed to publish due to concurrent writes; LIVE untouched' >&2
+          exit 1
