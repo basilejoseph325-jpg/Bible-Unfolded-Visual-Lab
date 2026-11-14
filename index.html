@@ -5983,19 +5983,21 @@ window.BUScholarHintInformationController.install({
   const st=bu3857State;if(!st||st.complete)return;
   const d=bu3857Current();if(!d||st.solved[d.id])return;
   const entry=BU_HQ_WORDS[d.id]||null;
-  const max=entry?2+entry.answer.length:3;
+  const ep10=st.book==='genesis_ep10'&&!!entry;
+  const max=ep10?3:(entry?2+entry.answer.length:3);
   const level=()=>Math.min(max,normalized(st.hints[d.id]));
   const hintText=(n)=>{
    if(entry){
     if(n===1)return entry.hint1||'Consider the meaning behind this discovery.';
     if(n===2)return entry.hint2||'Consider the details in the passage.';
+    if(ep10&&n===3)return entry.hint3||entry.hint2;
     const count=n-2;return 'Letter '+count+' of '+entry.answer.length+': '+entry.answer[count-1]+'. The answer now starts with '+entry.answer.slice(0,count)+'.';
    }
    return d.progressiveHints?.[n-1]?.text||'Consider the account and its significance.';
   };
   const price=()=>{
    const n=level();if(n>=max)return 0;
-   return entry?(n===1?15:n===2?20:25):(n===1?15:30);
+   return ep10?(n===1?15:25):(entry?(n===1?15:n===2?20:25):(n===1?15:30));
   };
   if(level()===0){
    st.hints[d.id]=1;st.feedback='';bu3857Save();bu3857Render();
@@ -6003,13 +6005,14 @@ window.BUScholarHintInformationController.install({
   hintPopup(()=>{
    const n=level();const lines=[hintText(1)];
    // Prior purchased hints remain saved; show latest help in a compact one-viewport popup.
-   if(n>=2)lines.push(hintText(n));
+   if(ep10){if(n>=2)lines.push(hintText(2));if(n>=3)lines.push(hintText(3));}
+   else if(n>=2)lines.push(hintText(n));
    return lines;
   },price,()=>{
    const before=level();const cost=price();if(!cost||normalized(economy.coins)<cost)return false;
    if(!canSpend(cost,true))return false;
    const next=before+1;
-   if(entry&&next>=3)buHQHintLetters[d.id]=next-2;
+   if(entry&&next>=3&&!ep10)buHQHintLetters[d.id]=next-2;
    st.hints[d.id]=next;st.feedback='';bu3857Save();bu3857Render();return true;
   });
  };

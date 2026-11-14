@@ -1,0 +1,35 @@
+name: Inspect actual Genesis10 hint dialog and paid button handlers
+on:
+  push:
+    branches: [fix/genesis10-quality-art-hints-20261114]
+    paths: ['.github/workflows/diagnose-actual-genesis10-hint-popup-v1.yml']
+permissions: {contents: read}
+jobs:
+  diagnosis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show exact text and callbacks around user hint dialog
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          items=[Path('index.html')]
+          items += [p for p in Path('.').glob('*.js') if p.stat().st_size<2000000]
+          parts=[]
+          for i in range(1,6):
+            src=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            parts.append(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',src,re.S).group(1)))
+          items += [(f'core_part{i+1}',part) for i,part in enumerate(parts)]
+          needles=['Stronger hint','Discovery hint','Additional hint','Free hint:',"bu3857Hint()", "bu3857-hint","hintCost","hint-modal"]
+          for item in items:
+            if isinstance(item,tuple):name,src=item
+            else:name,src=str(item),item.read_text(encoding='utf8')
+            for token in needles:
+              found=list(re.finditer(re.escape(token),src,re.I))
+              if not found:continue
+              print('LOC',name,'TERM',token,'COUNT',len(found))
+              for m in found[:4]:
+                at=m.start()
+                print('EXACT',repr(src[max(0,at-750):at+1200])[:2050])
+          PY

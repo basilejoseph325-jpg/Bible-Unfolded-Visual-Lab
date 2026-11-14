@@ -1,0 +1,35 @@
+name: Inspect Story 10 image and hint functions (branch)
+on:
+  push:
+    branches: [fix/genesis10-quality-art-hints-20261114]
+    paths: ['.github/workflows/inspect-genesis10-existing-photos-hints-v1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect actual native image, clue, paid hint functions without editing engine
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          parts=[]
+          for i in range(1,6):
+            t=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            parts.append(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',t,re.S).group(1)))
+          s=''.join(parts)
+          for name in ['Stronger hint', 'Additional hint', 'Discovery hint', 'function bu3857Hint(){', 'function bu3857Reveal(){','function bu3857Puzzle(){','function buHQWordBoard(){','function buHQBind(){','function buHQUpdate(){','const BU_HQ_WORDS =','function bu3857Render(){']:
+            at=s.find(name)
+            print('SECTION_START',name,'INDEX',at,'PART',next((i+1 for i,t in enumerate(parts) if name in t),None))
+            if at>=0:
+              n=1500 if name in ('Stronger hint','Additional hint','Discovery hint') else (5500 if 'Hint' in name else 400)
+              print('SECTION_BODY',name,repr(s[at:at+n])[:n+500])
+          # Save exact image paths for previous Genesis discoveries only.
+          match=re.search(r'(?:const|let|var) BU_GENESIS_SCENE_ART\s*=\s*(\{.*?\});',s,re.S)
+          if match:
+            try:
+              imgs=json.loads(match.group(1))
+              print('PREVIOUS_IMAGES',json.dumps({k:v for k,v in imgs.items() if k.startswith(('g07-','g08-','g09-'))})[:10000])
+            except Exception as e: print('IMAGE_PARSE_FAILED',str(e)[:200])
+          PY

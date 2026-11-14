@@ -1,98 +1,108 @@
 {
   "schemaVersion": 1,
   "chapterId": "genesis_ep10",
-  "status": "TEST_content_source_review_pending_OWNER",
-  "notes": "Extends existing 30-scene Genesis word-connect Story mechanic; stable 10 discovery IDs, normal points/hints/saves; no new mode.",
+  "status": "TEST_editorial_quality_candidate_needs_owner_approval",
+  "notes": "GENESIS 10: distinct story-centered questions, one free contextual hint, two stronger reasoning hints (15/25 tokens), NO automatically revealed letters. Saved ids unchanged; original 30 wheels unaffected. Artwork draft partial.",
   "words": {
     "g10-d01": {
-      "clue": "After Abraham died, which son did Jehovah continue to bless?",
-      "answer": "ISAAC",
-      "explanation": "Genesis 25:11 says God continued to bless Isaac after Abraham's death.",
-      "hint1": "Both Isaac and Ishmael buried Abraham.",
-      "hint2": "Genesis 25:11 names the son Jehovah blessed afterward.",
+      "clue": "Abraham's life ended, but what did Jehovah keep alive through Isaac?",
+      "answer": "PROMISE",
+      "explanation": "After Abraham's death, Jehovah continued blessing Isaac. The promise about Abraham's offspring didn't disappear when Abraham died. (Genesis 25:7–11)",
+      "hint1": "Isaac received something more lasting than his father's possessions.",
+      "hint2": "Think about what Jehovah told Abraham regarding his offspring and the blessings ahead.",
       "basis": "direct",
-      "reference": "Genesis 25:7–11"
+      "reference": "Genesis 25:7–11",
+      "hint3": "It was a commitment Jehovah made, and one he would continue to keep."
     },
     "g10-d02": {
-      "clue": "What were the two children Rebekah was expecting?",
-      "answer": "TWINS",
-      "explanation": "Genesis 25:21–26 explains Rebekah's pregnancy and the birth of Esau and Jacob.",
-      "hint1": "Jehovah spoke of two nations inside Rebekah.",
-      "hint2": "Two brothers were born from the same pregnancy.",
+      "clue": "Rebekah was troubled by the struggle of her unborn sons. What did she seek from Jehovah instead of guessing?",
+      "answer": "GUIDANCE",
+      "explanation": "When Rebekah was troubled during her pregnancy, she went to inquire of Jehovah. He explained that the twins would become two peoples. (Genesis 25:22, 23)",
+      "hint1": "When she couldn't explain what was happening, Rebekah didn't rely on her own assumptions.",
+      "hint2": "She turned to Jehovah for help understanding something troubling.",
       "basis": "direct",
-      "reference": "Genesis 25:21–26"
+      "reference": "Genesis 25:21–26",
+      "hint3": "Think of the direction and understanding you seek when you don't know what to do."
     },
     "g10-d03": {
-      "clue": "What was Esau especially skilled at doing in the field?",
-      "answer": "HUNTER",
-      "explanation": "Genesis 25:27 describes Esau as a skilled hunter and Jacob as a blameless man dwelling in tents.",
-      "hint1": "He spent much of his time out in the field.",
-      "hint2": "He was known for catching game.",
+      "clue": "Esau spent his days in the open country, while Jacob lived in tents. What outdoor activity was Esau known for?",
+      "answer": "HUNTING",
+      "explanation": "The brothers were very different. Esau was a skilled hunter, a man of the field, while Jacob was a blameless man dwelling in tents. (Genesis 25:27)",
+      "hint1": "The two brothers didn't spend their days in the same places.",
+      "hint2": "Esau's skill required searching for wild animals far beyond the tents.",
       "basis": "direct",
-      "reference": "Genesis 25:27"
+      "reference": "Genesis 25:27",
+      "hint3": "It involves tracking and catching game—work Esau was known for."
     },
     "g10-d04": {
-      "clue": "What kind of stew did Esau receive after selling his birthright?",
-      "answer": "LENTILS",
-      "explanation": "Genesis 25:29–34 tells how Esau sold his birthright to Jacob, then ate bread and lentil stew.",
-      "hint1": "This meal was made from a small edible seed.",
-      "hint2": "Genesis 25:34 specifically describes the stew's main ingredient.",
+      "clue": "Esau came back exhausted and hungry. What valuable family privilege did he trade away for a single meal?",
+      "answer": "BIRTHRIGHT",
+      "explanation": "Esau sold Jacob his birthright for bread and lentil stew. Genesis 25:34 says he despised his birthright—an astonishing exchange of a lasting privilege for immediate relief.",
+      "hint1": "Jacob wasn't offering money; he wanted something Esau already possessed because he was born first.",
+      "hint2": "Esau treated an important privilege as less valuable than satisfying his hunger.",
       "basis": "direct",
-      "reference": "Genesis 25:29–34"
+      "reference": "Genesis 25:29–34",
+      "hint3": "It was the special standing and rights associated with being the firstborn."
     },
     "g10-d05": {
-      "clue": "Where did Isaac settle when Jehovah told him not to go down to Egypt?",
-      "answer": "GERAR",
-      "explanation": "During a famine, Isaac went to Gerar. Jehovah instructed him not to go to Egypt and confirmed his promise. (Genesis 26:1–6)",
-      "hint1": "It was a place associated with King Abimelech.",
-      "hint2": "Genesis 26:6 gives the place's name.",
+      "clue": "During the famine, which country did Jehovah specifically tell Isaac NOT to go to?",
+      "answer": "EGYPT",
+      "explanation": "Jehovah told Isaac not to go down to Egypt. Isaac lived in Gerar as directed, and Jehovah renewed the promise made to Abraham. (Genesis 26:1–6)",
+      "hint1": "A famine could make a family want to travel to where food might be easier to find.",
+      "hint2": "Jehovah told Isaac to stay in the land he designated rather than going farther away.",
       "basis": "direct",
-      "reference": "Genesis 26:1–6"
+      "reference": "Genesis 26:1–6",
+      "hint3": "It's the powerful neighboring land where Joseph's descendants would later live."
     },
     "g10-d06": {
-      "clue": "What did Isaac name the well where his servants no longer faced a dispute?",
+      "clue": "Isaac kept digging wells, but neighbors argued over the water. What did he name the well where the arguing finally stopped?",
       "answer": "REHOBOTH",
-      "explanation": "Isaac named the well Rehoboth, saying Jehovah had made ample room for his household. (Genesis 26:22)",
-      "hint1": "The name points to having room to spread out.",
-      "hint2": "Look at the name given in Genesis 26:22.",
+      "explanation": "After arguments over other wells, Isaac's servants dug another well. No one quarreled over it, and Isaac named the place Rehoboth because Jehovah had made ample room for them. (Genesis 26:19–22)",
+      "hint1": "Two earlier wells became the subject of disputes, but the next one brought relief.",
+      "hint2": "Isaac connected the new well's name with having enough room to live and prosper.",
       "basis": "direct",
-      "reference": "Genesis 26:19–22"
+      "reference": "Genesis 26:19–22",
+      "hint3": "The name is found in Genesis 26:22, where Isaac explains why he chose it."
     },
     "g10-d07": {
-      "clue": "What did Isaac and Abimelech make to seal their peaceful agreement?",
+      "clue": "After all the trouble over Isaac's wells, what solemn promise helped seal peace with Abimelech?",
       "answer": "OATH",
-      "explanation": "Genesis 26:26–31 describes Abimelech's visit, their agreement, and the oath they exchanged.",
-      "hint1": "It's a solemn promise between people.",
-      "hint2": "Genesis 26:31 says they swore this to one another.",
+      "explanation": "Abimelech's delegation made peace with Isaac, and the men swore an oath to one another. (Genesis 26:26–31)",
+      "hint1": "The visitors didn't come to start another fight.",
+      "hint2": "The peace agreement involved a formal promise between the parties.",
       "basis": "direct",
-      "reference": "Genesis 26:26–31"
+      "reference": "Genesis 26:26–31",
+      "hint3": "Genesis 26:31 says they swore to each other."
     },
     "g10-d08": {
-      "clue": "What did Rebekah place on Jacob's hands so they would feel hairy?",
+      "clue": "Isaac couldn't see well, and Jacob's arms were smooth. What did Rebekah use to make Jacob feel like Esau?",
       "answer": "GOATSKINS",
-      "explanation": "Genesis 27:16 describes Rebekah covering Jacob's hands and smooth neck with the skins of young goats as part of the deception.",
-      "hint1": "They came from young animals prepared for the meal.",
-      "hint2": "Genesis 27:16 tells what covered Jacob's hands.",
+      "explanation": "Rebekah covered Jacob's hands and neck with the skins of young goats so Isaac would mistake him for Esau. (Genesis 27:11–17)",
+      "hint1": "Rebekah knew Jacob's smooth skin could give him away.",
+      "hint2": "She used material from young animals that had been prepared for a meal.",
       "basis": "direct",
-      "reference": "Genesis 27:14–17"
+      "reference": "Genesis 27:14–17",
+      "hint3": "Genesis 27:16 describes what she placed over his hands and neck."
     },
     "g10-d09": {
-      "clue": "What did Isaac give Jacob when he believed he was speaking to Esau?",
+      "clue": "Esau came home expecting something important from Isaac. What had his father already given Jacob instead?",
       "answer": "BLESSING",
-      "explanation": "Isaac gave Jacob the blessing after Jacob falsely said he was Esau. Esau returned afterward and was distressed. (Genesis 27:18–38)",
-      "hint1": "It was something Isaac had intended to give Esau.",
-      "hint2": "Genesis 27:27–29 records Isaac giving it.",
+      "explanation": "Jacob pretended to be Esau and received Isaac's blessing. When Esau returned, he cried out in distress. (Genesis 27:18–38)",
+      "hint1": "This wasn't money or a physical object Isaac handed over.",
+      "hint2": "Isaac spoke words about the future of the son he believed was Esau.",
       "basis": "direct",
-      "reference": "Genesis 27:18–38"
+      "reference": "Genesis 27:18–38",
+      "hint3": "Genesis 27:27–29 records the words Isaac spoke over Jacob."
     },
     "g10-d10": {
-      "clue": "What did Jacob name the place where he dreamed about a stairway?",
+      "clue": "Jacob left home and had an extraordinary dream about a stairway reaching heaven. What did he name that place afterward?",
       "answer": "BETHEL",
-      "explanation": "After the dream, Jacob set up the stone as a pillar and named the place Bethel. (Genesis 28:10–22)",
-      "hint1": "Its name means 'House of God.'",
-      "hint2": "Genesis 28:19 gives the exact name.",
+      "explanation": "Jehovah reassured Jacob through his dream, renewing the promise made to Abraham and Isaac. After waking, Jacob named the place Bethel, meaning 'House of God.' (Genesis 28:10–22)",
+      "hint1": "He changed the name of the place after waking from his dream.",
+      "hint2": "The new name reflected his awareness of Jehovah's presence there.",
       "basis": "direct",
-      "reference": "Genesis 28:10–22"
+      "reference": "Genesis 28:10–22",
+      "hint3": "Genesis 28:19 contrasts the old name, Luz, with the name Jacob gave it."
     }
   }
 }
