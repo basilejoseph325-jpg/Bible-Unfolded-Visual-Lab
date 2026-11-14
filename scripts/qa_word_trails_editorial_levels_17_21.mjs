@@ -46,7 +46,10 @@ for(let level=17;level<=21;level++){
 }
 assert.equal(reviewed.length,20);
 assert.equal(revised.size,15);
-assert(levels[5].bibleBoard.find(x=>x.word==='MARAH')?.insight.includes('became sweet'), 'Marah account sourced beyond bitterness');
+const marah=levels[5].bibleBoard.find(x=>x.word==='MARAH');
+assert(marah?.reference==='Numbers 33:1, 2, 8, 9'&&marah.insight.includes('12 springs and 70 palm trees')&&marah.clue.includes('Elim'),'L17 MARAH itinerary must be different from original L11 bitter-water lesson');
+const oldLevelSource=fs.readFileSync('experiments/word-trails-next-v1.js','utf8');
+assert(oldLevelSource.includes("spark:'MARAH'")&&oldLevelSource.includes("reference:'Exodus 15:23-25'"),'Protected L11 MARAH stays unchanged');
 assert(levels[5].spark==='HAM'&&levels[5].reference==='Genesis 9:21-23'&&levels[5].insight.includes('Shem and Japheth'),'L17 Ham distinct from protected L11 basic Flood list');
 assert(levels[5].extraSparks.find(x=>x.word==='RAM')?.reference==='Genesis 15:7-10, 18'&&levels[5].extraSparks.find(x=>x.word==='RAM').insight.includes('covenant'),'L17 Ram now Abraham covenant, not protected L11 Isaac substitution');
 assert(levels[6].extraSparks.find(x=>x.word==='HEAL')?.insight.includes('captive in Syria'), 'Naaman account context');

@@ -32,16 +32,18 @@ jobs:
           BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments'
           for attempt in $(seq 1 30); do
             if curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-next-v1.html?editorial-check-v23=$attempt" |
-               grep -F 'word-trails-levels-12-30-v1.js?v=word-trails-all30-variety-20261113-v26' >/dev/null &&
-               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-all30-variety-20261113-v26&check=$attempt" |
+               grep -F 'word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27&check=$attempt" |
                grep -F 'Which bird does Jehovah describe nesting high on a cliff when speaking to Job?' >/dev/null &&
-               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-all30-variety-20261113-v26&hem=$attempt" |
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27&hem=$attempt" |
                grep -F "Exodus says gold bells and colorful pomegranates went around what part of Aaron's sleeveless coat?" >/dev/null &&
-               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-all30-variety-20261113-v26&ham=$attempt" |
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27&ham=$attempt" |
                grep -F "Which son of Noah was the father of Cush, Mizraim, Put, and Canaan?" >/dev/null &&
-               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-all30-variety-20261113-v26&dan=$attempt" |
-               grep -F "Which tribe captured Leshem and named the city after its forefather?" >/dev/null; then
-              echo 'PASS: actual public TEST has EAGLE, HEM, distinct HAM and DAN in versioned source; LIVE untouched'
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27&dan=$attempt" |
+               grep -F "Which tribe captured Leshem and named the city after its forefather?" >/dev/null &&
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27&marah=$attempt" |
+               grep -F "Before reaching Elim, with its 12 springs and 70 palm trees, which campsite had the Israelites just left?" >/dev/null; then
+              echo 'PASS: actual public TEST contains EAGLE, HEM, HAM, DAN and MARAH distinct journey study with new versioned source; LIVE untouched'
               break
             fi
             if [ "$attempt" = 30 ]; then
