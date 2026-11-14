@@ -107,6 +107,14 @@ const initial={
    await a.evaluate(([J,record])=>localStorage.setItem(J,record),[JOURNAL,j]);
    const newWallet=JSON.stringify({coins:999,points:45,purchases:['seawheel'],equippedWheel:'seawheel'});
    await a.evaluate(([k,v])=>localStorage.setItem(k,v),[W,newWallet]);
+   // Cross-process storage messages are asynchronous: require tab B to
+   // observe BOTH the injected journal and tab A's latest wallet before
+   // testing the recovery engine against its own current storage snapshot.
+   await b.bringToFront();
+   await b.waitForFunction(([walletKey,walletRaw,journalKey,journalRaw])=>
+    localStorage.getItem(walletKey)===walletRaw &&
+    localStorage.getItem(journalKey)===journalRaw,
+    {timeout:30000,polling:100},[W,newWallet,JOURNAL,j]);
    const observed=await b.evaluate(()=>window.__tx.inspect());
    assert.equal(observed.reason,'concurrent-writer-conflict');
    const protectedState=await b.evaluate(()=>window.__tx.recover({
