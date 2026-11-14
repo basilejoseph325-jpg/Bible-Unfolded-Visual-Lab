@@ -206,15 +206,13 @@ function recoverPending(){
  const data=getJson(raw);
  if(!data||data.version!==1||!own(data.previous))
   return {recovered:false,error:'Unrecognized unfinished TEST import journal. No saved progress changed.',needsManualReview:true};
- if(marker==='yes'){
-  try{
-   localStorage.removeItem(JOURNAL);
-   localStorage.removeItem(COMMITTED);
-   if(read(JOURNAL)!==null||read(COMMITTED)!==null)
-    throw Error('Backup commit cleanup was not verified.');
-   return {recovered:false,committed:true};
-  }catch(e){return {recovered:false,error:'Completed import journal cleanup needs review: '+e.message,needsManualReview:true}}
- }
+ if(marker==='yes')
+  // A generic v2 'yes' marker is not tied to any transaction ID or AFTER
+  // values. Another old tab can race the marker or wallet. Without a
+  // verifiable transaction record even marker cleanup can destroy evidence.
+  // Do not automatically remove ANY v2 journal or marker on a later load.
+  return {recovered:false,needsManualReview:true,commitMarkerPresent:true,
+   error:'A TEST backup commit marker was found, but this older journal cannot verify the finished values. Saved progress was not changed; review the restore before importing again.'};
  return {recovered:false,needsManualReview:true,pending:true,
   error:'An unfinished TEST backup restore was found. Automatic rollback is stopped to protect newer wallet, Story and Word Trails progress. Export a fresh backup and review this restore before importing again.'};
 }
