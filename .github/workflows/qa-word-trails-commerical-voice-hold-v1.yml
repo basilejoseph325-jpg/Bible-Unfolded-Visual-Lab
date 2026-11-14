@@ -1,0 +1,28 @@
+name: QA TEST known-noncommercial Word Trails announcer asset release hold v1
+on:
+  push:
+    paths:
+      - 'scripts/qa_word_trails_commercial_voice_hold_v1.cjs'
+      - '.github/workflows/qa-word-trails-commerical-voice-hold-v1.yml'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-original-voice-clips-v1.js'
+      - 'experiments/word-trails-announcer-v1.js'
+      - 'experiments/word-trails-main-settings-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  known-test-only-voice-asset-hold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check gating logic syntax
+        run: node --check scripts/qa_word_trails_commercial_voice_hold_v1.cjs
+      - name: Enforce known noncommercial demo-asset exclusion in synthetic release candidates
+        run: node scripts/qa_word_trails_commercial_voice_hold_v1.cjs
+      - name: Confirm original protected LIVE is NOT being changed or treated as licensed
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'TEST-only QA. This job never deploys LIVE or attests commercial rights.'
+          echo 'The original native voice recordings also require independent license provenance review.'
