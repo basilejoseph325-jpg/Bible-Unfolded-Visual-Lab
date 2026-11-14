@@ -157,8 +157,9 @@ function protectedNative(incoming,previous){
  return next;
 }
 /* Safe read-only native backup plan. Uses THE SAME validated TEST v2
- * native data and wheel-entitlement merge as actual applyBackup(). It never
- * touches localStorage, the journal, or a wallet. Future v7 consent UI must
+ * native data and wheel-entitlement merge as actual applyBackup(). It
+ * READS current localStorage, but WRITES NOTHING and never mutates the
+ * journal or wallet. Future v7 consent UI must
  * still require player backup confirmation and a cooperative Web Lock before
  * any write, and never apply an old v2 journal automatically. */
 function previewRestoreWrites(candidate){
