@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#071e29">
+<title>Story Adventure: The Wall Will Stand | Bible Unfolded TEST</title>
+<style>
+:root{color-scheme:dark;--ink:#f7edda;--muted:#c5c8bd;--gold:#f3d184;--line:#8d7547;--teal:#123845}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:system-ui,-apple-system,Segoe UI,Arial,sans-serif;color:var(--ink);background:radial-gradient(circle at 50% 10%,#27545c,#061720 75%);overscroll-behavior:none}
+button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid #ffe6aa;outline-offset:2px}
+#app{height:100dvh;max-width:560px;margin:auto;display:grid;grid-template-rows:auto auto minmax(150px,1fr) auto auto auto;gap:7px;padding:max(7px,env(safe-area-inset-top)) 9px max(9px,env(safe-area-inset-bottom));min-height:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.back{display:flex;align-items:center;gap:7px;text-decoration:none;color:#f2deae;font-size:12px;font-weight:800;padding:6px 5px}
+.test{border:1px solid #e9b767;background:#f6ba57;color:#242c31;padding:4px 10px;border-radius:999px;font-size:10px;letter-spacing:.15em;font-weight:900}
+.heading{min-width:0}
+.eyebrow{font-size:10px;font-weight:900;letter-spacing:.13em;color:var(--gold);text-transform:uppercase}
+h1{font-size:clamp(21px,5.9vw,28px);font-family:Georgia,serif;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:2px 0}
+#scene-subtitle{color:var(--muted);font-size:11px;line-height:1.3}
+.steps{display:flex;gap:6px;margin-top:7px}
+.steps span{height:4px;border-radius:6px;flex:1;background:#455b5d}
+.steps span.done{background:linear-gradient(90deg,#bb8f45,#f7db9b)}
+.scene{min-height:0;position:relative;overflow:hidden;border:1px solid #b79c62;border-radius:18px;background-color:#152c2b;background-image:linear-gradient(180deg,rgba(5,18,19,.08) 25%,rgba(6,22,27,.66) 100%),url("../bible-book-art/16_nehemiah.webp");background-size:cover;background-position:center 40%;box-shadow:inset 0 0 20px #071b28a3,0 7px 20px #0006}
+.scene.stage-1{background-position:45% 44%}.scene.stage-2{background-position:55% 47%}
+.scene::before{content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 38%,#081f28aa);pointer-events:none}
+.scene-label{position:absolute;top:10px;left:10px;padding:6px 9px;border:1px solid #f0d39b8a;border-radius:9px;background:#082b34db;color:#ffe5a5;font-size:10px;font-weight:850;letter-spacing:.08em}
+.marker{position:absolute;transform:translate(-50%,-50%);min-width:48px;min-height:48px;border:2px solid #f5d591;border-radius:50%;background:radial-gradient(circle,#f7d989bd,#af6e32db);color:#16252a;box-shadow:0 0 0 7px #e6c78136,0 0 20px #f8cf7477;display:flex;align-items:center;justify-content:center;font-size:19px;transition:transform .13s}
+.marker:active{transform:translate(-50%,-50%) scale(.92)}
+.marker.seen{background:#143a45e8;color:#ffe3a0;box-shadow:0 0 0 3px #edc27455;border-color:#d6af64}
+.marker span{position:absolute;bottom:-23px;white-space:nowrap;padding:3px 6px;background:#061b21e6;border-radius:5px;color:white;font-size:9px;font-weight:800;pointer-events:none}
+#scene-foot{position:absolute;bottom:10px;left:10px;right:10px;text-align:center;font-size:10px;line-height:1.25;color:#fff0d0;text-shadow:0 1px 4px #000}
+.discovery{border:1px solid #5c655a;background:#122a31f5;border-radius:12px;padding:9px 12px;min-height:57px;display:flex;flex-direction:column;justify-content:center;gap:2px}
+#discovery-title{font-size:12px;font-weight:900;color:#f6d48a}
+#discovery-copy{font-size:11px;line-height:1.35;color:#eee7d8}
+.mission{border:1px solid #9877446b;border-radius:12px;background:#0b2530;padding:8px 11px;min-height:90px}
+.mission-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+#mission-title{color:#f8d899;font-size:12px;font-weight:900}
+.source{color:#f2dba9;font-size:10px;text-decoration:underline;text-underline-offset:2px}
+#mission-prompt{font-size:11px;color:#e0e5df;line-height:1.3;min-height:14px}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.choice{min-height:44px;text-align:center;border:1px solid #c9a36a;border-radius:11px;background:linear-gradient(#30545c,#17343d);color:#fff0d6;font-weight:800;font-size:11px;padding:7px 5px}
+.choice.selected{background:linear-gradient(#f0d595,#bc8c4a);color:#1c2b2e;border-color:#fff2bc}
+.choice:disabled{opacity:.46;cursor:default}
+.controls{display:flex;gap:8px;align-items:center}
+.controls button{height:39px;border-radius:10px;border:1px solid #d5b87d;padding:0 12px;font-weight:900;font-size:12px}
+#restart{background:#17323a;color:#e9d4aa;flex:0 0 auto}
+#next{flex:1;background:linear-gradient(#f7dda0,#bb8542);color:#152a2c}
+#next:disabled{background:#4f5553;border-color:#6f7165;color:#c0b9ab;opacity:.77;cursor:default}
+#done{display:none}
+.final .scene{display:flex;justify-content:center;align-items:center;text-align:center}
+.final .scene::before{background:#081923c7}
+.final-copy{position:relative;z-index:1;padding:20px;max-width:400px}
+.final-copy .cup{font-size:43px;line-height:1}
+.final-copy h2{font:700 31px/1.06 Georgia,serif;color:#ffe0a3;margin:10px 0}
+.final-copy p{font-size:13px;line-height:1.45}
+.final .mission,.final #scene-foot{display:none}
+.final #done{display:block;border:1px solid #a58e62;background:#102e35;padding:11px;border-radius:12px;font-size:12px}
+.final #next{display:none}
+@media(max-height:635px){#app{gap:5px}h1{font-size:21px}.scene{border-radius:13px}.heading #scene-subtitle{font-size:10px}.discovery{min-height:49px;padding:7px 10px}.mission{min-height:85px;padding:6px 9px}.choice{min-height:40px;padding:5px 3px}.controls button{height:35px}.marker{min-width:42px;min-height:42px}}
+@media(max-height:540px){#app{grid-template-rows:auto auto minmax(110px,1fr) auto auto auto;gap:4px}.top{font-size:10px}.steps{margin-top:4px}.scene-label{top:5px;left:5px}.marker{min-width:36px;min-height:36px}.marker span{font-size:8px;bottom:-19px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app">
+  <header class="top">
+    <a class="back" href="../index.html" aria-label="Return to Bible Unfolded">‹ Back to Bible Unfolded</a>
+    <span class="test">TEST CHAPTER</span>
+  </header>
+  <section class="heading" aria-label="Adventure progress">
+    <div class="eyebrow" id="step-label">Episode 1 of 3 · Interactive adventure</div>
+    <h1 id="scene-title">The Wall Will Stand</h1>
+    <div id="scene-subtitle">Jerusalem · Nehemiah's time</div>
+    <div class="steps" id="steps" aria-hidden="true"><span></span><span></span><span></span></div>
+  </section>
+  <section class="scene" id="scene" aria-label="Explore the scene">
+    <div class="scene-label" id="scene-label">EXPLORE THE SCENE</div>
+    <div id="markers"></div>
+    <div id="scene-foot">Tap the glowing points to discover what's happening.</div>
+  </section>
+  <section class="discovery" aria-live="polite" aria-atomic="true">
+    <div id="discovery-title">A city under pressure</div>
+    <div id="discovery-copy">Look around before deciding what to focus on.</div>
+  </section>
+  <section class="mission" id="mission">
+    <div class="mission-head"><strong id="mission-title">Discover 2 clues to continue</strong><a class="source" id="source" target="_blank" rel="noopener noreferrer">Read the Bible</a></div>
+    <div id="mission-prompt">Explore the scene. There's more than one path through this adventure.</div>
+    <div class="choices" id="choices"></div>
+  </section>
+  <div id="done" aria-live="polite">You explored a Bible account through choices. Your adventure progress stays only in this TEST chapter; it doesn't spend or award regular game coins.</div>
+  <footer class="controls">
+    <button id="restart" type="button">↻ Restart</button>
+    <button id="next" type="button" disabled>Explore first</button>
+  </footer>
+</main>
+<script>
+(function(){
+'use strict';
+var KEY='bu-test-story-nehemiah-adventure-v1';
+var bible4='https://www.jw.org/en/library/bible/nwt/books/nehemiah/4/';
+var bible6='https://www.jw.org/en/library/bible/nwt/books/nehemiah/6/';
+var chapters=[
+ {title:'The Warning',subtitle:'Jerusalem · The exposed wall',label:'EPISODE 1 · THE WARNING',source:bible4,
+  opening:['A city under pressure','The enemies of Jerusalem were angry. But the builders kept working.'],
+  clues:[
+   {id:'wall',icon:'🧱',label:'The wall',x:25,y:31,heading:'An exposed section',copy:'Nehemiah paid special attention to exposed places behind the wall. (Nehemiah 4:13)'},
+   {id:'families',icon:'👥',label:'Families',x:69,y:37,heading:'Families together',copy:'Nehemiah posted people by their families and encouraged them to protect those they loved. (Nehemiah 4:13, 14)'},
+   {id:'watch',icon:'🛡',label:'A watch',x:47,y:70,heading:'Prayer and a watch',copy:'The people prayed to Jehovah and posted a guard day and night. (Nehemiah 4:9)'}],
+  choices:[
+   {label:'Look at weak points',feedback:'You focused on the exposed areas. Nehemiah took those weak points seriously.'},
+   {label:'Encourage the families',feedback:'You chose encouragement. Nehemiah reminded everyone not to be afraid.'}]},
+ {title:'Build and Guard',subtitle:'The work continues · Nehemiah 4',label:'EPISODE 2 · BUILD AND GUARD',source:bible4,
+  opening:['Work and watch','There was plenty to do, and danger had not disappeared.'],
+  clues:[
+   {id:'stones',icon:'🧱',label:'Stones',x:26,y:45,heading:'The work continued',copy:'Some men built the wall while others stood guard with weapons. (Nehemiah 4:16)'},
+   {id:'sword',icon:'⚔',label:'A sword',x:70,y:35,heading:'Ready while building',copy:'Builders had a sword strapped to their hip while they worked. (Nehemiah 4:18)'},
+   {id:'horn',icon:'📯',label:'The horn',x:51,y:73,heading:'A signal to gather',copy:'If the horn sounded, everyone was to gather where it was heard. (Nehemiah 4:19, 20)'}],
+  choices:[
+   {label:'Stay with the builders',feedback:'You focused on steady work. The account shows that the building continued despite the danger.'},
+   {label:'Keep the horn in mind',feedback:'You focused on the warning signal. The horn helped the scattered workers know where to gather.'}]},
+ {title:'The Wall Stands',subtitle:'The work reaches its finish · Nehemiah 6',label:'EPISODE 3 · THE WALL STANDS',source:bible6,
+  opening:['The finish is near','There were distractions and threats, but the work was important.'],
+  clues:[
+   {id:'message',icon:'✉',label:'Messages',x:28,y:32,heading:'A risky invitation',copy:'Nehemiah refused an invitation from men who were plotting to harm him. (Nehemiah 6:2, 3)'},
+   {id:'days',icon:'📜',label:'52 days',x:73,y:42,heading:'The wall was finished',copy:'The wall was completed in 52 days, on the 25th day of Elul. (Nehemiah 6:15)'},
+   {id:'neighbors',icon:'✨',label:'The result',x:48,y:72,heading:'A remarkable result',copy:'The surrounding nations recognized that God had helped the work succeed. (Nehemiah 6:16)'}],
+  choices:[
+   {label:'Reflect on the work',feedback:'Even under pressure, Nehemiah kept his attention on the important task.'},
+   {label:'Look at the result',feedback:'The completed wall showed what determination and Jehovah’s help made possible.'}]}
+];
+function fresh(){return {chapter:0,found:{},decisions:{},completed:false};}
+function load(){try{var o=JSON.parse(localStorage.getItem(KEY));if(o&&Number.isInteger(o.chapter)&&o.chapter>=0&&o.chapter<3&&o.found&&o.decisions)return o;}catch(e){}return fresh();}
+var state=load();
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function el(id){return document.getElementById(id);}
+function text(id,s){el(id).textContent=s;}
+function current(){return chapters[state.chapter];}
+function found(){return state.found[state.chapter]||[];}
+function selected(){return state.decisions[state.chapter];}
+function node(tag,cls,txt){var n=document.createElement(tag);if(cls)n.className=cls;if(txt!==undefined)n.textContent=txt;return n;}
+function reveal(clue){
+ var list=found();
+ if(list.indexOf(clue.id)<0){list.push(clue.id);state.found[state.chapter]=list;save();}
+ text('discovery-title',clue.heading);
+ text('discovery-copy',clue.copy);
+ renderMission();
+ renderMarkers();
+}
+function choose(index){
+ state.decisions[state.chapter]=index;save();
+ var choice=current().choices[index];
+ text('discovery-title','Your choice');
+ text('discovery-copy',choice.feedback);
+ renderMission();renderMarkers();
+}
+function renderMarkers(){
+ var root=el('markers');root.replaceChildren();
+ current().clues.forEach(function(clue){
+  var button=node('button','marker'+(found().indexOf(clue.id)>=0?' seen':''),clue.icon);
+  button.type='button';button.style.left=clue.x+'%';button.style.top=clue.y+'%';
+  button.setAttribute('aria-label','Explore '+clue.label);
+  button.appendChild(node('span','',clue.label));
+  button.addEventListener('click',function(){reveal(clue);});
+  root.appendChild(button);
+ });
+}
+function renderMission(){
+ var count=found().length,choice=selected(),unlocked=count>=2;
+ text('mission-title',count+' of 3 discoveries · '+(choice===undefined?'Choose your path':'Path chosen'));
+ text('mission-prompt',choice!==undefined?'Your decision shapes what you notice. The Bible account itself stays unchanged.':
+  unlocked?'Now choose what you want to focus on.': 'Find at least 2 glowing points to unlock your next decision.');
+ var root=el('choices');root.replaceChildren();
+ current().choices.forEach(function(option,i){
+  var b=node('button','choice'+(choice===i?' selected':''),option.label);
+  b.type='button';b.disabled=!unlocked;b.setAttribute('aria-pressed',String(choice===i));
+  b.addEventListener('click',function(){choose(i);});root.appendChild(b);
+ });
+ var next=el('next');next.disabled=choice===undefined;
+ next.textContent=choice===undefined?'Explore first':state.chapter===2?'Finish Adventure ›':'Continue Adventure ›';
+}
+function finish(){
+ state.completed=true;save();
+ el('app').classList.add('final');
+ text('step-label','ADVENTURE COMPLETE · 3 OF 3');
+ text('scene-title','The Wall Will Stand');
+ text('scene-subtitle','Nehemiah 4–6 · Story Explorer');
+ el('markers').replaceChildren();
+ el('scene-label').textContent='MISSION COMPLETE';
+ var panel=node('div','final-copy');
+ panel.appendChild(node('div','cup','✦'));
+ panel.appendChild(node('h2','','The Wall Stands!'));
+ panel.appendChild(node('p','','You explored the dangers, discovered how the builders kept going, and saw the remarkable finish: 52 days.'));
+ panel.appendChild(node('p','','There are no alternate Bible events here—only different details to discover on your way.'));
+ el('scene').appendChild(panel);
+ text('discovery-title','Adventure discovered');
+ text('discovery-copy','Want to find every hidden detail? Restart and explore the markers you missed.');
+ el('restart').textContent='↻ Play again';
+ Array.from(el('steps').children).forEach(function(s){s.classList.add('done');});
+}
+function render(){
+ if(state.completed){finish();return;}
+ var c=current();
+ text('step-label','EPISODE '+(state.chapter+1)+' OF 3 · INTERACTIVE ADVENTURE');
+ text('scene-title',c.title);text('scene-subtitle',c.subtitle);text('scene-label',c.label);
+ el('scene').className='scene stage-'+state.chapter;
+ el('source').href=c.source;
+ el('source').textContent='NWT source ↗';
+ text('discovery-title',c.opening[0]);text('discovery-copy',c.opening[1]);
+ Array.from(el('steps').children).forEach(function(s,i){s.classList.toggle('done',i<=state.chapter);});
+ renderMarkers();renderMission();
+}
+el('next').addEventListener('click',function(){
+ if(selected()===undefined)return;
+ if(state.chapter===2){finish();return;}
+ state.chapter++;save();render();
+});
+el('restart').addEventListener('click',function(){
+ state=fresh();save();el('app').classList.remove('final');
+ el('scene').querySelector('.final-copy')?.remove();
+ text('restart','↻ Restart');render();
+});
+render();
+})();
+</script>
+</body>
+</html>
