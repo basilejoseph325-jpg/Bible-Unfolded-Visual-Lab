@@ -6,6 +6,7 @@ on:
       - 'trivia-answer-scroll-v1.js'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-trivia-answer-scroll-v1.yml'
+  workflow_call:
 permissions: {contents: read}
 jobs:
   verify:
