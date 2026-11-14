@@ -203,11 +203,11 @@ else install();
  document.head.append(css);
  const data=document.createElement('script');
  data.id='bu-daily-insight-content-loader';data.async=false;
- data.src='daily-discovery-insights-content-test-v1.js?v=20261111-sourced-thoughts-30-v3';
+ data.src='daily-discovery-insights-content-test-v1.js?v=20261114-sourced-thoughts-60-v1';
  data.onload=()=>{
   if(document.getElementById('bu-daily-insight-app-loader'))return;
   const app=document.createElement('script');app.id='bu-daily-insight-app-loader';
-  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261113-daily-only-v14';
+  app.async=false;app.src='daily-discovery-meaningful-test-v1.js?v=20261114-book-60-v1';
   document.head.append(app);
  };
  data.onerror=()=>console.warn('TEST Daily Discovery editorial content unavailable; original mode left intact');
