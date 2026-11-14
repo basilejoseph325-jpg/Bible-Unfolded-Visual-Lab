@@ -7,6 +7,7 @@ on:
       - 'scripts/qa_word_trails_native_full_backup_transaction_v7.cjs'
       - 'scripts/qa_word_trails_native_full_backup_transaction_v7_real_browser.cjs'
   workflow_dispatch:
+  workflow_call:
 permissions: {contents: read}
 jobs:
   guarded-native-restore-fixtures:
