@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST pre-release regression sweep v25
+name: QA Bible Unfolded TEST full pre-release regression v27 (seven gates)
 on:
   push:
     paths:
