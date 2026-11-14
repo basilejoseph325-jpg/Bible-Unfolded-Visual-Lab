@@ -186,33 +186,42 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   assert(exportedStatus.includes('Complete TEST backup prepared'));
   console.log('NATIVE_SETTINGS_EXPORT_CONTROL',exportedStatus);
 
-  // Exercise the user-facing input, not just the pure import function.
+  // v35: native Settings v1/v2 UI imports are intentionally SUSPENDED,
+  // even though the low-level coordinator still supports isolated synthetic
+  // transaction tests above. A capture-phase handler must stop the old native
+  // importer before it can overwrite a shared LIVE wallet.
   const incoming=JSON.parse(JSON.stringify(report.candidate));
   incoming.extensions.wordTrailsNext.state=JSON.stringify({
    ...JSON.parse(incoming.extensions.wordTrailsNext.state),coins:199
   });
-  const nav=page.waitForNavigation({waitUntil:'domcontentloaded',timeout:30000});
-  await page.evaluate((payload)=>{
+  const uiRefused=await page.evaluate((payload)=>{
    const input=document.getElementById('save-file'),dt=new DataTransfer();
    dt.items.add(new File([JSON.stringify(payload)],'v2-test-import.json',{type:'application/json'}));
    input.files=dt.files;
-   window.confirm=()=>true;
-   input.dispatchEvent(new Event('change',{bubbles:true}));
+   const before=localStorage.getItem('bu-visual-lab-wordtrails-next-v1');
+   const beforeWallet=localStorage.getItem('bible-unfolded-rewards-v17');
+   const originalConfirm=window.confirm;let confirms=0;
+   window.confirm=()=>{confirms++;return true};
+   const event=new Event('change',{bubbles:true,cancelable:true});
+   input.dispatchEvent(event);
+   window.confirm=originalConfirm;
+   return {
+    nativeRestoreSuspended:event.defaultPrevented,
+    walletUnchanged:beforeWallet===localStorage.getItem('bible-unfolded-rewards-v17'),
+    crosswordUnchanged:before===localStorage.getItem('bu-visual-lab-wordtrails-next-v1'),
+    coins:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).coins,
+    journal:localStorage.getItem('bu-visual-lab-import-rollback-v2'),
+    file:input.value,confirms,
+    status:document.getElementById('bu-wt-save-status')?.textContent||'',
+    reviewOpen:document.getElementById('bu-wt-safe-preview-v34')?.open===true
+   };
   },incoming);
-  await nav;
-  await page.waitForFunction(()=>window.BUPlatformSaves?.bound?.(),{timeout:30000});
-  const uiImported=await page.evaluate(()=>{
-   const w=JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17'));
-   const t=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'));
-   return {coins:w.coins,points:w.points,testCoins:t.coins,purchases:w.purchases,
-      journal:localStorage.getItem('bu-visual-lab-import-rollback-v2'),
-      file:document.getElementById('save-file')?.value};
-  });
-  console.log('NATIVE_SETTINGS_V2_IMPORT_CONTROL',JSON.stringify(uiImported));
-  assert.equal(uiImported.coins,130);
-  assert.equal(uiImported.testCoins,199);
-  assert(uiImported.purchases.includes('seawheel')&&uiImported.purchases.includes('goldwheel'));
-  assert.equal(uiImported.journal,null);
+  console.log('NATIVE_SETTINGS_V2_IMPORT_UI_SAFELY_SUSPENDED_V35',JSON.stringify(uiRefused));
+  assert(uiRefused.nativeRestoreSuspended&&uiRefused.walletUnchanged&&uiRefused.crosswordUnchanged);
+  assert.equal(uiRefused.coins,177,'User-facing v2 import must NOT replace TEST coins');
+  assert.equal(uiRefused.journal,null);
+  assert.equal(uiRefused.confirms,0);
+  assert(uiRefused.file===''&&uiRefused.reviewOpen&&uiRefused.status.includes('RESTORE is temporarily disabled'));
 
   if(errors.length)console.log('PAGE_ERRORS',JSON.stringify(errors.slice(0,8)));
   await page.close();
