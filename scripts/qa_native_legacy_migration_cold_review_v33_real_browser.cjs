@@ -56,16 +56,34 @@ const testState=JSON.stringify({level:1,unlocked:2,coins:35,points:11,completed:
    assert(first.nativeSettings);
    // B is a blank/404 page on the SAME origin, with no game controllers.
    // Inject the EXACT pinned protected original LIVE migrator into B.
-   const b=await context.newPage();
+   const b=await context.newPage(),bConsole=[];
    await b.bringToFront();
+   b.on('console',msg=>bConsole.push(msg.text()));
+   b.on('pageerror',err=>bConsole.push(String(err.message||err)));
+   // GitHub Pages may serve a CSP-restricted 404 page, unlike the normal
+   // external LIVE script tag. Only this isolated fictional second page
+   // bypasses CSP so the PINNED historical code itself can run. Neither
+   // the real LIVE game nor any player's browser security is changed.
+   await b.setBypassCSP(true);
    await b.goto(ROOT+'/qa-empty-old-live-page-v33.html',
     {waitUntil:'domcontentloaded',timeout:30000});
+   const beforeB=await b.evaluate(({LIVE,TEST})=>{
+    const prior=localStorage.getItem(LIVE),test=localStorage.getItem(TEST);
+    // Ensure the exact old script's precondition is true at invocation.
+    // An unrelated startup task may have created LIVE after the first scan.
+    localStorage.removeItem(LIVE);
+    return {origin:location.origin,priorLive:prior,afterRemoval:localStorage.getItem(LIVE),
+      testLength:test?.length??null};
+   },{LIVE,TEST});
    await b.addScriptTag({content:original});
    const made=await b.evaluate(({LIVE,TEST})=>({
-    live:localStorage.getItem(LIVE),test:localStorage.getItem(TEST)
+    live:localStorage.getItem(LIVE),test:localStorage.getItem(TEST),
+    origin:location.origin
    }),{LIVE,TEST});
    const liveData=JSON.parse(made.live||'null');
-   assert(liveData&&liveData.migration?.version===1);
+   assert(liveData&&liveData.migration?.version===1,
+    'Pinned original LIVE migrator did not run in synthetic second page: '+
+      JSON.stringify({beforeB,made,bConsole}));
    assert.equal(liveData.migration.source,'Visual Lab crossword progress');
    assert.equal(liveData.coins,60);
    assert.equal(liveData.points,0);
