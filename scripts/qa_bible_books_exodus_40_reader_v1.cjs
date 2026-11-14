@@ -43,7 +43,7 @@ const browserPath=execSync('command -v google-chrome || command -v chromium',{en
         description:document.querySelector('.shelf-note')?.textContent,
         width:document.documentElement.scrollWidth,inner:innerWidth
      }));
-     assert.deepEqual(shelf.ready,['Genesis','Exodus']);
+     assert.deepEqual(shelf.ready,['Genesis','Exodus','Leviticus','Numbers']);
      assert.equal(shelf.count,66);
      assert(shelf.description.includes('Genesis')&&shelf.description.includes('Exodus'));
      assert(shelf.width<=shelf.inner+3);
@@ -113,8 +113,8 @@ const browserPath=execSync('command -v google-chrome || command -v chromium',{en
      await page.$eval('a.back-link',el=>el.click());
      await page.waitForFunction(()=>location.pathname.endsWith('/bible-book-guides/index.html'),{timeout:10000});
      await page.$eval('a.book-card[href*="leviticus"]',el=>el.click());
-     await page.waitForFunction(()=>location.search.includes('book=leviticus'),{timeout:12000});
-     assert((await page.$eval('#part-title',el=>el.textContent)).includes('being written'));
+     await page.waitForFunction(()=>location.search.includes('book=leviticus')&&!document.getElementById('reader-controls').hidden,{timeout:15000});
+     assert.equal(await page.$eval('#reading-count',el=>el.textContent),'PART 1 OF 27');
      assert.deepEqual(errors,[],'No page JS exceptions');
      console.log('PASS_EXODUS_40CH_30PARTS_READER',JSON.stringify({viewport,shelf,first,end,genesisProgressUntouched:true,exodusResume:true,exodusReset:true,otherBooksAvailable:true,errors:[]}));
      await context.close();
