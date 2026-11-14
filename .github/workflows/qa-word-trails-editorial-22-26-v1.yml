@@ -24,3 +24,23 @@ jobs:
           node scripts/qa_word_trails_editorial_levels_12_16.mjs
           node scripts/qa_word_trails_scripture_batch1.mjs
           node scripts/word_trails_quality_gate.mjs
+
+      - name: Verify published TEST contains the corrected Job 39 clue and its versioned loader
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments'
+          for attempt in $(seq 1 30); do
+            if curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-next-v1.html?editorial-check-v23=$attempt" |
+               grep -F 'word-trails-levels-12-30-v1.js?v=job39-eagle-clue-20261113-v23' >/dev/null &&
+               curl -fsSL --retry 2 --max-time 35 -H 'Cache-Control: no-cache' "$BASE/word-trails-levels-12-30-v1.js?v=job39-eagle-clue-20261113-v23&check=$attempt" |
+               grep -F 'Which bird does Jehovah describe nesting high on a cliff when speaking to Job?' >/dev/null; then
+              echo 'PASS: actual public TEST displays versioned Job 39 eagle clue; no LIVE files checked or changed'
+              break
+            fi
+            if [ "$attempt" = 30 ]; then
+              echo 'FAIL: public TEST has not served corrected eagle clue and new script URL' >&2
+              exit 1
+            fi
+            sleep 5
+          done
