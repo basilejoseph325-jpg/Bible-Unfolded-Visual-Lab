@@ -1,0 +1,45 @@
+name: Verify published TEST native Settings Word Trails recovery-practice link v24
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-wordtrails-settings-practice-v24.yml'
+      - 'scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  public-native-settings-rehearsal-link:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install phone browser runner and validate source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs
+          npm install --prefix /tmp/bu-wt-public-settings-v24 puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Wait for the genuine TEST root bootstrap to serve Settings practice v24
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 45); do
+            if curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/index.html?probe-wt-settings-v24=$attempt" | grep -F 'journey-progress-caption.js?v=20261113-wt-settings-practice-v24' >/dev/null &&
+               curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?probe-wt-settings-v24=$attempt" | grep -F 'visual-lab-test-banner.js?v=20261113-wt-settings-practice-v24' >/dev/null &&
+               curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?probe-wt-settings-v24=$attempt" | grep -F 'word-trails-checkpoint-native-settings-practice-v1.js?v=20261113-wt-practice-v1' >/dev/null &&
+               curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/word-trails-checkpoint-native-settings-practice-v1.js?probe-wt-settings-v24=$attempt" | grep -F 'BUWTCheckpointSettingsPracticeV1' >/dev/null &&
+               curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/experiments/word-trails-checkpoint-rehearsal-v2.html?probe-wt-settings-v24=$attempt" | grep -F 'Practice only — no real saves involved.' >/dev/null; then
+              echo 'PASS: published TEST v24 root → journey → banner → native Settings mock practice is current'
+              exit 0
+            fi
+            sleep 5
+          done
+          echo 'FAILED: current TEST native Settings practice loader not fully published' >&2
+          exit 1
+      - name: Test actual public native Settings and Word Trails into separate fake-save practice browser tab
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_WT_NATIVE_SETTINGS_ROOT='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/index.html' \
+          NODE_PATH=/tmp/bu-wt-public-settings-v24/node_modules \
+          node scripts/qa_word_trails_native_settings_checkpoint_entry_v24.cjs
