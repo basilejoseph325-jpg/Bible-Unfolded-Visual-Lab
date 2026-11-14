@@ -279,3 +279,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  sc.async=false;sc.src='crossword-scripture-packs-22-to-30-test-v1.js?v=20261114-crosswords30-v1';
  document.head.append(sc);
 })();
+
+
+/* Bible Books Made Simple: isolated homepage entry for separate reading library. */
+(()=>{'use strict';if(document.getElementById('bu-books-made-simple-card-loader'))return;const s=document.createElement('script');s.id='bu-books-made-simple-card-loader';s.defer=true;s.src='bible-books-made-simple-card-v1.js?v=20261114-books-home-card-v1';document.head.appendChild(s)})();
