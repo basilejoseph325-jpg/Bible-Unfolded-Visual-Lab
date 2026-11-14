@@ -1,5 +1,9 @@
 name: QA published Bible Books Leviticus public site
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-public-bible-books-leviticus-v1.yml'
   workflow_run:
     workflows: ["pages build and deployment"]
     types: [completed]
@@ -7,7 +11,7 @@ on:
 permissions: {contents: read}
 jobs:
   published-public-chrome:
-    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     timeout-minutes: 13
     steps:
