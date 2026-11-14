@@ -72,6 +72,14 @@ const initial={
     approved:true,backupConfirmed:true,plan:p
    }),preview.plan);
    assert.equal(granted.ok,true);
+   // Same-origin localStorage change notification can arrive asynchronously
+   // across Chromium renderer processes, even after the writer's call
+   // returned. Require BOTH exact values to appear in tab A, not an
+   // unreliable immediate read that sometimes sees the old snapshot.
+   await a.waitForFunction(([walletKey,walletValue,puzzleKey,puzzleValue])=>
+    localStorage.getItem(walletKey)===walletValue &&
+    localStorage.getItem(puzzleKey)===puzzleValue,
+    {timeout:15000,polling:100},[W,afterWallet,P,afterPuzzle]);
    assert.equal(await a.evaluate(k=>localStorage.getItem(k),W),afterWallet);
    assert.equal(await a.evaluate(k=>localStorage.getItem(k),P),afterPuzzle);
    assert.equal(await a.evaluate(k=>localStorage.getItem(k),VOICE),initial[VOICE]);
