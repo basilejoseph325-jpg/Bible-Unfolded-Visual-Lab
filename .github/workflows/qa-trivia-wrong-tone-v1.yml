@@ -5,6 +5,7 @@ on:
       - 'trivia-wrong-tone-repair-v1.js'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-trivia-wrong-tone-v1.yml'
+  workflow_call:
 permissions: {contents: read}
 jobs:
   verify:
