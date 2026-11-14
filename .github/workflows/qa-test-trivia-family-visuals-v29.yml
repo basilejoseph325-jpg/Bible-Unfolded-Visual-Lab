@@ -14,6 +14,7 @@ on:
       - 'family-worship-picker-gallery-v3.js'
       - 'family-worship-gallery-crop-v4.css'
   workflow_dispatch:
+  workflow_call:
 permissions: {contents: read}
 jobs:
   original-trivia-scholar-tablets:
