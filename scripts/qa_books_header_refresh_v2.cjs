@@ -39,7 +39,10 @@ const expectedExodus=process.env.EXODUS_READY==='1';
      assert.equal(await page.$eval('#reading-count',el=>el.textContent),'PART 1 OF 30');
      await page.$eval('#next-part',el=>el.click());
      assert.equal(await page.$eval('#reading-count',el=>el.textContent),'PART 2 OF 30');
-     await page.reload({waitUntil:'domcontentloaded',timeout:40000});
+     const readerUrlBeforeRefresh=page.url();
+     await page.reload({waitUntil:'domcontentloaded',timeout:65000});
+     await page.waitForFunction(()=>location.pathname.endsWith('/index.html')&&new URLSearchParams(location.search).get('fromBooksReload')==='v4',{timeout:65000});
+     await page.goto(readerUrlBeforeRefresh,{waitUntil:'domcontentloaded',timeout:65000});
      await page.waitForFunction(()=>document.getElementById('reading-count')?.textContent==='PART 2 OF 30',{timeout:12000});
    }else{
      await page.waitForFunction(()=>document.querySelector('#part-title')?.textContent.includes('being written'),{timeout:12000});

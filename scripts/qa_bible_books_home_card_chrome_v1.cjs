@@ -68,7 +68,10 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    await page.$eval('#next-part',el=>el.click());
    assert.equal(await page.$eval('#reading-count',el=>el.textContent),'PART 2 OF 23');
    assert.equal(await page.evaluate(()=>localStorage.getItem('buGuideLast:0')),'1');
-   await page.reload({waitUntil:'domcontentloaded'});
+   const readerUrlBeforeRefresh=page.url();
+   await page.reload({waitUntil:'domcontentloaded',timeout:65000});
+   await page.waitForFunction(()=>location.pathname.endsWith('/index.html')&&new URLSearchParams(location.search).get('fromBooksReload')==='v4',{timeout:65000});
+   await page.goto(readerUrlBeforeRefresh,{waitUntil:'domcontentloaded',timeout:65000});
    await page.waitForFunction(()=>document.querySelector('#reading-count')?.textContent==='PART 2 OF 23',{timeout:30000});
    await page.$eval('.back-link',el=>el.click());
    await page.waitForFunction(()=>location.pathname.endsWith('/bible-book-guides/index.html'),{timeout:30000});
