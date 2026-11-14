@@ -5,6 +5,7 @@ on:
       - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
       - 'experiments/word-trails-native-full-backup-transaction-v7.js'
       - 'scripts/qa_word_trails_native_full_backup_transaction_v7.cjs'
+      - 'scripts/qa_word_trails_native_full_backup_transaction_v7_real_browser.cjs'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
@@ -27,3 +28,13 @@ jobs:
           done
       - name: Consent, journal, conflict, crash, wallet and lock synthetic cases
         run: node scripts/qa_word_trails_native_full_backup_transaction_v7.cjs
+      - name: Install isolated Chrome driver
+        run: npm install --prefix /tmp/wt-backup-v7-browser puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Two real same-origin Chromium tabs: locked import and old-writer conflict
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_native_full_backup_transaction_v7_real_browser.cjs
+          python3 -m http.server 8898 --bind 127.0.0.1 >/tmp/wt-backup-v7-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/wt-backup-v7-browser/node_modules node scripts/qa_word_trails_native_full_backup_transaction_v7_real_browser.cjs
