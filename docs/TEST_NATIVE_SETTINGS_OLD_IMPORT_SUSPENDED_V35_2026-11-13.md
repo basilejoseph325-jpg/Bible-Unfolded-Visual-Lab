@@ -22,7 +22,7 @@ Before v35, the real TEST native Settings `#save-file` path still delegated vers
 
 **[Native save compatibility #43544986111 — SUCCESS](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43544986111)**. Existing synthetic low-level v2 journal/rollback/purchased-wheel tests passed, and the user-facing import test now deliberately requires no navigation and no native data mutation. CI static checks were updated from the obsolete instruction to delegate native v1 to requiring capture-phase interception.
 
-**Full release sweep:** `QA Bible Unfolded TEST full pre-release regression v35 (fourteen groups)` now includes this new v35 gate and all earlier v26-v34 tests, plus all 30 Word Trails levels/audio, Trivia, Family Worship and native cross-mode navigation. Verify the latest run status before asserting all jobs are green.
+**[Full v35 TEST regression #43545152879 — SUCCESS](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43545152879)**: **FOURTEEN groups / SEVENTEEN jobs GREEN** at `7ec881a9fe4e3f5bff13f571468699fbf024481c`. Includes the native v35 Settings import guard, all older v26–v34 backup/recovery guards, all 30 Word Trails levels/20 native voice assets, audio/Ocean Glow, Trivia, Family Worship and native cross-mode/navigation checks. **[Previously affected published TEST v34 preview #43545152678 — SUCCESS](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43545152678)**: both 390×705 and 320×568 layouts passed the current native v35 source while testing the retained v34 read-only preview and external-wallet invalidation, with zero JS errors.
 
 ## Important limitations (still no LIVE promotion)
 
