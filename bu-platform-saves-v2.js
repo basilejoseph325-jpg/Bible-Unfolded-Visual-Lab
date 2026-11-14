@@ -79,6 +79,11 @@ function observeExternalStorage(event){
     (event.storageArea&&event.storageArea!==localStorage))return;
  competingPages.add(event.key);
  if(event.key===LIVE_CROSSWORD){
+  // Update the separate READ-ONLY startup notice if an older migration
+  // arrives while TEST is open. Don't leave a "LIVE missing" warning after
+  // another page created the LIVE key, or erase any player data.
+  const oldReview=document.getElementById('bu-wt-legacy-transition-review');
+  if(oldReview)oldReview.remove();
   const next=getJson(event.newValue);
   if(next?.migration?.version===1&&
      next.migration.source==='Visual Lab crossword progress')
