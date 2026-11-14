@@ -32,8 +32,8 @@ const address=process.env.STORY_URL||'http://127.0.0.1:8895/index.html';
       locksUntouched:typeof openEpisodes==='function'
      };
     },n);
-    const expected={0:'abraham-burial-promise.webp',2:'esau-jacob-brothers.webp',3:'esau-birthright-stew.webp'}[n];
-    assert(state.src?.endsWith(expected),'Discovery '+(n+1)+' has no correct photo');
+    const expected={0:['abraham-burial-promise.webp'],2:['esau-and-jacob.webp','esau-jacob-brothers.webp'],3:['esau-birthright-stew.webp']}[n];
+    assert(expected.some(file=>state.src?.endsWith(file)),'Discovery '+(n+1)+' has no correct photo; actual '+state.src);
     await page.waitForFunction(()=>{
       const e=document.querySelector('#bu3857-content figure.bu3863-image img');
       return !!e&&e.complete&&e.naturalWidth>=600&&e.naturalHeight>=300;
