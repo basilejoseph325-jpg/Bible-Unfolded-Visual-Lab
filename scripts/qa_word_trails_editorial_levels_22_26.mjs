@@ -54,7 +54,7 @@ const at=(n,kind,word)=>{let l=levels[n-12];return kind==='board'?l.bibleBoard.f
 assert(at(22,'board','MARTHA').insight.includes('Mary chose'),'Martha and Mary account');
 assert(at(22,'board','TAMAR').reference==='Genesis 38:6-14','Judah and Tamar full context');
 assert(at(22,'spark','HAM').reference==='Genesis 10:6, 32'&&at(22,'spark','HAM').clue.includes('Cush, Mizraim, Put, and Canaan'),'Ham later family list differs from Level 17 Genesis 9');
-assert(levels[5].reference==='Genesis 9:18'&&at(22,'spark','HAM').reference!==levels[5].reference,'No repeated HAM passage or lesson');
+assert(levels[5].reference==='Genesis 9:21-23'&&at(22,'spark','HAM').reference!==levels[5].reference,'No repeated HAM passage or lesson');
 assert(at(23,'board','SIMEON').insight.includes("wouldn't die"),'Simeon spirit revelation');
 assert(at(23,'extra','NOISE').insight.includes('not an actual windstorm'),'Noise is described as LIKE rushing wind');
 assert(at(24,'board','BABEL').insight.includes('avoid being scattered'),'Babel history');
