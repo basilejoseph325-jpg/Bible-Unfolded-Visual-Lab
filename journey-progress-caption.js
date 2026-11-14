@@ -16,6 +16,57 @@ function boot(){const el=document.getElementById('journey-progress-label');if(!e
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 })();
 
+/* TEST ONLY — prevent a fast tap after refresh from launching the obsolete
+ * five-question Daily quiz while the illustrated 60-lesson reader downloads.
+ * Capture the home entry before its legacy listeners, then replay the owner's
+ * one tap when real editorial content + reader are both ready. */
+(()=>{'use strict';
+ const isTest=location.pathname.startsWith('/Bible-Unfolded-Visual-Lab/')||
+  ['localhost','127.0.0.1'].includes(location.hostname);
+ if(!isTest)return;
+ let queued=false,timer=null,checks=0;
+ const cta=()=>document.getElementById('bu375-home-cta');
+ const ready=()=>window.BUDailyInsightV1?.libraryCount?.()===60&&
+  typeof window.BUDailyInsightV1.open==='function';
+ function stop(){
+  if(timer!==null){clearInterval(timer);timer=null;}
+  queued=false;checks=0;
+  cta()?.removeAttribute('aria-busy');
+ }
+ function tryOpen(){
+  if(!queued)return false;
+  // User navigated away while the Daily scripts loaded: don't hijack them.
+  if(!cta()?.getClientRects().length){stop();return true;}
+  if(!ready())return false;
+  stop();
+  const opened=window.BUDailyInsightV1.open();
+  if(opened===false){
+   const status=document.getElementById('bu375-home-status');
+   if(status)status.textContent='Discovery could not open. Please try again.';
+  }
+  return true;
+ }
+ window.addEventListener('click',event=>{
+  if(!event.target?.closest?.('#bu375-home-cta'))return;
+  // Capture beats both native legacy document handlers and later TEST hooks.
+  event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
+  queued=true;
+  if(tryOpen())return;
+  cta()?.setAttribute('aria-busy','true');
+  const status=document.getElementById('bu375-home-status');
+  if(status)status.textContent='Opening your Daily Discovery…';
+  if(timer!==null)return; // repeated early taps never open twice
+  timer=setInterval(()=>{
+   if(tryOpen())return;
+   if(++checks>=300){
+    stop();
+    const message=document.getElementById('bu375-home-status');
+    if(message)message.textContent='Daily Discovery could not load. Please refresh.';
+   }
+  },100);
+ },true);
+})();
+
 /* Shared, versioned audio loader — identical in TEST and LIVE. */
 (()=>{if(document.getElementById('bu-premium-sfx-test'))return;const s=document.createElement('script');s.id='bu-premium-sfx-test';s.src='premium-sfx.js?v=20261105-story-next-audio-v8';document.head.appendChild(s)})();
 
