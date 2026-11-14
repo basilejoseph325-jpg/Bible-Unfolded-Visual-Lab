@@ -83,6 +83,19 @@ function output(e){return [e?.textContent||'',...(e?.children||[]).map(output)].
  assert.equal(backup.extensions.wordTrailsNext.state,testState);
  assert.equal(missing.writes.length,0);
  pass('cold transition panel offers non-destructive current TEST backup and never includes LIVE key');
+ // Exact remote LIVE migration also changes the read-only notice from
+ // "could recreate missing LIVE" to "migration marker already observed".
+ // Synthetic remote storage mutation bypasses the current tab's setItem.
+ missing.data.set(LIVE,oldMigrated);
+ for(const cb of missing.listeners.storage||[])cb({
+  key:LIVE,oldValue:null,newValue:oldMigrated,storageArea:missing.storage});
+ const next=missing.doc.getElementById('bu-wt-legacy-transition-review');
+ assert(next&&next!==panel,'Should refresh stale missing-LIVE risk copy');
+ assert(output(next).includes('past migration data'));
+ assert(!output(next).includes('LIVE crossword progress is missing'));
+ assert.equal(missing.win.BUPlatformSaves.legacyTransitionStatus().oldMigrationMarkerPresent,true);
+ assert.equal(missing.writes.length,0,'Warning refresh may not write native progress');
+ pass('cold-start warning refreshes when an older LIVE migration arrives while TEST is open');
  const marked=fixture({[W]:oldWallet,[TEST]:testState,[LIVE]:oldMigrated});
  assert.equal(marked.win.BUPlatformSaves.legacyTransitionStatus().oldMigrationMarkerPresent,true);
  assert.equal(marked.win.BUPlatformSaves.legacyTransitionStatus().oldImporterCouldRecreateMissingLive,false);
