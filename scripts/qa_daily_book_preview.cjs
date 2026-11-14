@@ -22,7 +22,7 @@ const scenes={
    const errors=[];page.on('pageerror',e=>errors.push(e.message));
    for(const id of Object.keys(scenes)){
     await page.goto(root+'index.html?daily_book=1&daily_qa=1&daily_preview='+id,{waitUntil:'domcontentloaded',timeout:120000});
-    await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+    await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
     await page.evaluate(()=>{document.getElementById('daily-continue')?.click();window.BUDailyInsightV1.open()});
     await page.waitForSelector('#bu375-body.bu-daily-book-preview .bu-insight-story',{timeout:12000});
     const info=await page.evaluate(()=>({
@@ -93,11 +93,24 @@ const scenes={
     assert(selected.text.length>55);
     console.log('BOOK_TEST_EDITOR_'+width+'_'+id,JSON.stringify(selected));
    }
-   // The 30-item dropdown exists ONLY when daily_qa=1 on Visual Lab TEST.
+   // Owner-confirmed: 60-item chapter dropdown is visible by default in TEST.
    const catalog=await page.evaluate(()=>[...document.querySelectorAll('[data-insight-book-select] option')]
       .map(o=>({id:o.value,title:o.textContent.trim()})));
-   assert.equal(catalog.length,30,'One browse option per existing Daily Discovery');
-   assert.equal(new Set(catalog.map(o=>o.id)).size,30,'Every chapter selection uses a unique saved-data ID');
+   assert.equal(catalog.length,60,'One browse option per existing Daily Discovery');
+   assert.equal(new Set(catalog.map(o=>o.id)).size,60,'Every chapter selection uses a unique saved-data ID');
+   if(width===390){
+    const last=await page.evaluate(()=>{
+     const control=document.querySelector('[data-insight-book-select]');
+     control.value=control.options[control.options.length-1].value;
+     control.dispatchEvent(new Event('change',{bubbles:true}));
+     return {id:window.BUDailyInsightV1.inspect().id,
+      title:document.querySelector('.bu-book-title-band h2')?.textContent,
+      selected:control.value};
+    });
+    assert.equal(last.id,'friends-roof','New Chapter 60 must be browseable in TEST');
+    assert(last.title?.includes('Four Friends'),'Chapter 60 opens real discovery copy');
+    console.log('PASS_DAILY_CHAPTER_60_BROWSER',JSON.stringify(last));
+   }
    const regularIDs=await page.evaluate(()=>window.BUDailyDiscoveryLibrary.map(d=>d.id));
    assert.deepEqual(catalog.map(o=>o.id),regularIDs,'Picker preserves original editorial order');
    // All 30 must actually render with an existing local image; visual matches
@@ -105,7 +118,7 @@ const scenes={
    if(width===390){
     const allArt=await page.evaluate(async()=>{
       const results=[];
-      const ids=[...document.querySelector('[data-insight-book-select]').options].map(o=>o.value);
+      const ids=[...document.querySelector('[data-insight-book-select]').options].map(o=>o.value).slice(0,30);
       for(const selectedId of ids){
        const dropdown=document.querySelector('[data-insight-book-select]');
        dropdown.value=selectedId;
@@ -212,7 +225,7 @@ const scenes={
      select.value='ruth';select.dispatchEvent(new Event('change',{bubbles:true}));
    });
    await page.reload({waitUntil:'domcontentloaded',timeout:120000});
-   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
    await page.evaluate(()=>window.BUDailyInsightV1.open());
    assert.equal(await page.evaluate(()=>window.BUDailyInsightV1.inspect().id),'ruth',
      'Refresh restores the last selected preview using its URL');
@@ -225,7 +238,7 @@ const scenes={
   const c=await browser.createBrowserContext(),p=await c.newPage();
   await p.setViewport({width:390,height:705,deviceScaleFactor:2,isMobile:true,hasTouch:true});
   await p.goto(root+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
-  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
   await p.evaluate(()=>{document.getElementById('daily-continue')?.click();document.querySelector('#bu375-home-cta').click()});
   await p.waitForSelector('#bu375-body.bu-daily-book-preview .bu-insight-story',{timeout:12000});
   const regular=await p.evaluate(()=>({
@@ -240,7 +253,7 @@ const scenes={
   }));
   console.log('BOOK_CHROME_NORMAL',JSON.stringify(regular));
   assert(regular.open&&regular.book,'Chrome normal Daily tile opens parchment without special URL');
-  assert.equal(regular.picker,0,'Normal daily page never exposes future discovery catalog');
+  assert.equal(regular.picker,60,'TEST home must expose the 60-chapter dropdown without URL flags');
   assert.equal(await p.evaluate(()=>document.querySelectorAll('[data-insight-preview]').length),0,'No Peter/Nile/Ruth sample shortcuts');
   assert.equal(regular.textColor,'rgb(54, 45, 35)','Book reading text is dark on parchment');
   assert(regular.picture.includes('scholar-research-assets/')||
@@ -253,7 +266,7 @@ const scenes={
   // The old approved blue theme remains available for direct comparison and
   // rollback in TEST with an explicit opt-out. Nothing touches LIVE.
   await p.goto(root+'index.html?daily_book=0&daily_qa=1&daily_preview=peter',{waitUntil:'domcontentloaded',timeout:120000});
-  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
   await p.evaluate(()=>{document.getElementById('daily-continue')?.click();window.BUDailyInsightV1.open()});
   const plain=await p.evaluate(()=>({
     active:document.getElementById('bu375-body').classList.contains('bu-daily-book-preview'),
@@ -264,19 +277,19 @@ const scenes={
   assert.equal(plain.key,'peter');assert.equal(plain.active,false);
   assert.equal(plain.picker,false,'Explicit old-theme comparison hides preview controls');
   assert(!plain.image.includes('assets/daily-book/'),'Original design remains available via daily_book=0');
-  // Guessed preview URLs without explicit editor QA must NOT expose future articles.
-  await p.goto(root+'index.html?daily_preview=peter',{waitUntil:'domcontentloaded',timeout:120000});
-  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===30,{timeout:60000});
+  // Optional TEST-only ?daily_qa=0 hides preview access; never apply to LIVE.
+  await p.goto(root+'index.html?daily_qa=0&daily_preview=peter',{waitUntil:'domcontentloaded',timeout:120000});
+  await p.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
   await p.evaluate(()=>{document.getElementById('daily-continue')?.click();window.BUDailyInsightV1.open()});
   const noBypass=await p.evaluate(()=>({
     id:window.BUDailyInsightV1.inspect().id,
     picker:!!document.querySelector('[data-insight-book-select]'),
     isToday:document.querySelector('.bu-book-title-band h2')?.textContent?.length>0
   }));
-  assert.equal(noBypass.id,regular.id,'Preview URL without editor flag cannot select another day');
-  assert.equal(noBypass.picker,false,'30-option dropdown hidden even on guessed preview URL');
+  assert.equal(noBypass.id,regular.id,'Explicit TEST selector opt-out must ignore preview URL');
+  assert.equal(noBypass.picker,false,'TEST opt-out hides the chapter dropdown');
   assert(noBypass.isToday,'Normal visitor sees an illustrated daily article');
-  console.log('PASS_DAILY_BOOK_PREVIEW: QA-only 30 artwork checks; daily-only visitor UI; no URL bypass; Saved works');
+  console.log('PASS_DAILY_BOOK_PREVIEW: TEST dropdown visible by default (60), original 30 art checked, opt-out works; LIVE unaffected');
  }catch(e){console.error('FAIL_DAILY_BOOK_PREVIEW',e.stack||e);process.exitCode=1}
  finally{await browser?.close()}
 })();
