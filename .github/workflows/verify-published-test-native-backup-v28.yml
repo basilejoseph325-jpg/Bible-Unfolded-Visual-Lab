@@ -1,0 +1,45 @@
+name: Verify published TEST native backup LIVE isolation and restore preview v28
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-test-native-backup-v28.yml'
+      - 'scripts/qa_published_native_backup_live_isolation_v28.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-test-source-chain-and-real-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate published public-website test and install Chromium driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_published_native_backup_live_isolation_v28.cjs
+          npm install --prefix /tmp/bu-public-native-v28 puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Wait for current TEST GitHub Pages loader and protected native source
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 36); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/index.html?native-v28=$attempt" | grep -F 'journey-progress-caption.js?v=20261113-wt-settings-practice-v24' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?native-v28=$attempt" | grep -F 'visual-lab-test-banner.js?v=20261113-native-backup-safety-v27' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?native-v28=$attempt" | grep -F 'bu-platform-saves-v2.js?v=20261113-native-backup-live-isolation-v27' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-v28=$attempt" | grep -F "const LIVE_CROSSWORD='bible-unfolded-word-trails-next-v1';" >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-preview-v28=$attempt" | grep -F 'function previewRestoreWrites(candidate)' >/dev/null; then
+              echo 'PASS: published TEST native save bootstrap is refreshed and protected'
+              break
+            fi
+            if [ "$attempt" = '36' ]; then
+              echo 'FAILED: published TEST native save protection still unavailable after verification window' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: Confirm actual published TEST native Settings and backup safety in two fresh synthetic browser contexts
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-public-native-v28/node_modules node scripts/qa_published_native_backup_live_isolation_v28.cjs
