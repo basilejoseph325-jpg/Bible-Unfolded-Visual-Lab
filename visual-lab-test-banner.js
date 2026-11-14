@@ -251,3 +251,6 @@ else install();
  script.defer=true;
  document.head.appendChild(script);
 })();
+
+/* Genesis book reader: TEST only, all other game modes unchanged. */
+(()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-genesis-guide-loader'))return;const s=document.createElement('script');s.id='bu-genesis-guide-loader';s.src='bible-book-guides/reader.js?v=20261114-phone-test-v2';s.defer=true;document.head.appendChild(s)})();
