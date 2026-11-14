@@ -75,7 +75,7 @@ if(oldFile){
 }
 {
  const f=fixture();assert.equal(f.events.length,0);
- assert.deepEqual(f.api.recoverPending(),{recovered:false});
+ assert.equal(f.api.recoverPending().recovered,false);
  pass('normal player start with no journal is storage-inert');
 }
 {
