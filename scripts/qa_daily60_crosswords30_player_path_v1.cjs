@@ -13,7 +13,19 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   page.on('pageerror',e=>errors.push(e.message));
   await page.goto('http://127.0.0.1:8898/index.html',{waitUntil:'domcontentloaded',timeout:110000});
   await page.waitForFunction(()=>window.BUDailyInsightV1?.libraryCount?.()===60,{timeout:60000});
-  await page.waitForFunction(()=>window.BUCrosswordExpanded30?.packCount?.()===30,{timeout:60000});
+  await new Promise(r=>setTimeout(r,7500));
+  const diag=await page.evaluate(()=>({
+   expansion:window.BUCrosswordExpanded30?.packCount?.()||null,
+   packCount:typeof TRAIL_PACKS==='undefined'?null:TRAIL_PACKS.length,
+   clueOwner:typeof bu3840Clues,commonOwner:typeof TRAIL_COMMON_WORDS,
+   pickerOwner:typeof renderCrossPicker,
+   script:document.getElementById('bu-crossword-extra-packs-loader')?.src||null,
+   extraHomeCard:!!document.getElementById('home-crossword-packs'),
+   crossScripts:[...document.scripts].map(x=>x.src).filter(x=>x.includes('crossword')),
+   errors
+  }));
+  console.log('CROSSWORDS_RUNTIME_DIAGNOSTIC',JSON.stringify(diag));
+  await page.waitForFunction(()=>window.BUCrosswordExpanded30?.packCount?.()===30,{timeout:12000});
   await page.waitForSelector('#home-crossword-packs',{timeout:30000});
   const before=await page.evaluate(()=>{
    const a=window.BUDailyDiscoveryLibrary,copy=window.BUCrosswordExpanded30;
