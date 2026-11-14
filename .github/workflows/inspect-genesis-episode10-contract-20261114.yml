@@ -23,7 +23,8 @@ jobs:
           print('EP9_DISCOVERY_TYPES',json.dumps([{'id':x['id'],'title':x['title'],'type':x.get('interaction',{}).get('type'),'allkeys':list(x),'interactionKeys':list(x.get('interaction',{}))} for x in ep['discoveries']],ensure_ascii=False))
           for idx in [0,1,2,4,7,9]:
             print('EP9_SCHEMA_'+str(idx),json.dumps(ep['discoveries'][idx],ensure_ascii=False)[:6700])
-          for term in ['function openEpisodes(', 'function renderEpisodes(', 'function bu3857Render(){', 'const BU_GENESIS_IDS=', 'function bu3857Options()', "case 'order_cards'", "case 'find_hotspots'", "case 'connect_pairs'"]:
+          for term in ['function makeEpisodes(){', 'function openEpisodes(', 'function renderEpisodes(', 'function bu3857Render(){', 'const BU_GENESIS_IDS=', 'function bu3857Options()', 'BU_GENESIS_SCENE_ART', "case 'order_cards'", "case 'find_hotspots'", "case 'connect_pairs'"]:
             pos=full.find(term)
-            print('ENGINE_SNIP',term,repr(full[pos:pos+4200])[:4400] if pos>=0 else 'ABSENT')
+            print('ENGINE_SNIP',term,repr(full[pos:pos+(9500 if term=='function makeEpisodes(){' else 2100)])[:9700] if pos>=0 else 'ABSENT')
+          print('PART_PLACEMENT',[(i, len(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\\[\\d+\\] = (".*");',Path(f'bible_unfolded_core_part{i}.js').read_text(),re.S)[1]))) for i in range(1,6)])
           PY
