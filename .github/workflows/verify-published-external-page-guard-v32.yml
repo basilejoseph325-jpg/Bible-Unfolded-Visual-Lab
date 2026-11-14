@@ -1,0 +1,50 @@
+name: Verify published TEST competing-page save warning v32
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-external-page-guard-v32.yml'
+      - 'scripts/qa_native_external_page_storage_guard_v32_real_browser.cjs'
+      - 'visual-lab-test-banner.js'
+      - 'journey-progress-caption.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-test-cross-document-save-activity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated Chromium driver
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_native_external_page_storage_guard_v32_real_browser.cjs
+          npm install --prefix /tmp/bu-public-external-v32 puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Verify actual public TEST page's native storage-event listener and cold cache chain
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 36); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?v32=$attempt" |
+                grep -F 'visual-lab-test-banner.js?v=20261113-external-page-progress-guard-v32' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?v32=$attempt" |
+                grep -F 'bu-platform-saves-v2.js?v=20261113-external-page-progress-guard-v32' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?v32=$attempt" |
+                grep -F 'function observeExternalStorage(event)' >/dev/null; then
+              echo 'PASS: published TEST source has the real v32 storage-event handler'
+              break
+            fi
+            if [ "$attempt" = '36' ]; then
+              echo 'FAIL: published native external-writer guard not yet deployed' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: Actual public TEST browser, two same-origin pages, old LIVE migration signature and blocked native imports
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_TEST_ORIGIN='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab' \
+            NODE_PATH=/tmp/bu-public-external-v32/node_modules \
+            node scripts/qa_native_external_page_storage_guard_v32_real_browser.cjs
