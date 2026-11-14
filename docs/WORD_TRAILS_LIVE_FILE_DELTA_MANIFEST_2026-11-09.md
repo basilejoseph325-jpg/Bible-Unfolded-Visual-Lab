@@ -1,6 +1,8 @@
 # LIVE transfer file manifest — Word Trails NEXT / Visual Lab
 **Prepared November 9, 2026 · Read-only LIVE audit, zero LIVE writes**
 
+> **Current inventory override (Nov 13/14, 2026):** [Fresh LIVE-to-TEST source/hash recheck](WORD_TRAILS_LIVE_DELTA_RECHECK_2026-11-13.md): among 21 files, **8 identical, 10 different, 3 absent**; homepage SVG now exists in LIVE. The older counts below are historical, not release guidance. No LIVE promotion is authorized.
+
 ## Purpose
 This is a file-level handoff checklist for the eventual approved promotion. It is **NOT** permission to deploy. The owner’s required sequence remains: source/editorial acceptance → physical Samsung & iPhone checks → explicit LIVE authorization → backed-up selective integration → LIVE browser verification/rollback availability.
 

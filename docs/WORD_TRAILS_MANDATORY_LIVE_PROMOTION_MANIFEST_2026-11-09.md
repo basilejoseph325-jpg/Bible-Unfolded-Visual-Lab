@@ -41,6 +41,8 @@ When the owner says "next", "continue", or "move to live", read this manifest an
 - This was a **read-only repository hash and file inventory**, NOT a deployed compatibility run, a safe migration dry-run on real user data, or a LIVE release.
 
 ## Exact file-dependency checklist before LIVE promotion
+
+**CURRENT STATUS OVERRIDE — November 13/14:** [Read-only file delta recheck](WORD_TRAILS_LIVE_DELTA_RECHECK_2026-11-13.md) updates old November 9 counts: 8 identical, 10 different, 3 absent of 21, homepage SVG is already in LIVE. The next paragraph is a historical snapshot, not current inventory. No LIVE changes or authorization implied.
 The newer read-only comparison now has a separate [Word Trails LIVE File Delta Manifest](WORD_TRAILS_LIVE_FILE_DELTA_MANIFEST_2026-11-09.md) with **21 tracked code/adapter dependencies, 20 currently absent from LIVE, one differing adapter**, and the required `assets/ui/word-trails-home-next-crossword-v1.svg` homepage overlay. It distinguishes TEST-only modules that require adaptation from safe asset dependencies. Consult the file before any LIVE copy; revalidate all hashes against the frozen release candidate.
 
 ## Additional TEST content work after initial shared-core integration (November 9)
