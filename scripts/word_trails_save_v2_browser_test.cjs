@@ -136,7 +136,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   assert(tamper.every(Boolean));
   console.log('REJECTS_CORRUPTED_IMPORTS',tamper.length);
 
-  // v1 unchanged path: the root handler still sees a genuine version 1 file.
+  // v35 safety gate: the TEST native v1 import UI must NOT reach the original root handler.
   const legacy=await page.evaluate(async()=>{
    const input=document.getElementById('save-file');
    const old=Object.fromEntries(Object.keys(localStorage).map(k=>[k,localStorage.getItem(k)]));
@@ -149,8 +149,8 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
    const unchanged=old['bible-unfolded-rewards-v17']===localStorage.getItem('bible-unfolded-rewards-v17');
    return {prompted,unchanged};
   });
-  assert(legacy.prompted===1&&legacy.unchanged);
-  console.log('LEGACY_V1_IMPORT_STILL_SUPPORTED',JSON.stringify(legacy));
+  assert(legacy.prompted===0&&legacy.unchanged,'Native v1 UI import must be paused, without a confirmation dialog');
+  console.log('LEGACY_V1_IMPORT_UI_SAFELY_PAUSED_V35',JSON.stringify(legacy));
 
   // Reload and launch real crossword. A partial puzzle has to be readable.
   const beforeReload=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'));
