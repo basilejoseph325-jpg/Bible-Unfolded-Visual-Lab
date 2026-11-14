@@ -19,7 +19,10 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
  try{
   for(const [width,height] of [[390,705],[320,568]]){
    const context=await browser.createBrowserContext();
-   const a=await context.newPage(),b=await context.newPage(),errors=[];
+   // Keep A foreground until native Settings finishes installing; starting
+   // tab B first allows headless Chrome to throttle A's startup polling.
+   const a=await context.newPage(),errors=[];
+   await a.bringToFront();
    a.on('pageerror',e=>errors.push(e.message));
    await a.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
    await a.goto(root+'/index.html?qa-external-v32='+width,
@@ -29,6 +32,8 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
     {timeout:75000});
    // A 404 is deliberate: B has the SAME origin yet no Bible Unfolded game
    // scripts that could create false positives from unrelated daily rewards.
+   const b=await context.newPage();
+   await b.bringToFront();
    await b.goto(root+'/qa-empty-second-tab-v32.html',{waitUntil:'domcontentloaded',timeout:30000});
    const start=await a.evaluate(({LIVE,T})=>{
     const api=window.BUPlatformSaves;
@@ -39,6 +44,7 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
    assert.equal(start.detected,false,'Native screen already detected a conflicting writer');
    assert(start.hasMenu);
    await b.evaluate(([k,raw])=>localStorage.setItem(k,raw),[LIVE,migrated]);
+   await a.bringToFront();
    await a.waitForFunction(()=>window.BUPlatformSaves?.externalChangeStatus().oldLiveMigrationObserved===true,
     {timeout:30000,polling:100});
    const observed=await a.evaluate(({LIVE,T,migrated})=>{
