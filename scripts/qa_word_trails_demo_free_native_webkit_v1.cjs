@@ -171,9 +171,18 @@ async function frameFor(page){
     assert.equal(voice.onMode,'paul');
     assert.equal(voice.onVolume,72);
     assert.equal(voice.accepted,true,'Announcer should delegate to native host');
-    assert.equal(voice.callsWhenOn.length,1);
-    assert.equal(voice.callsWhenOn[0].phrase,'excellent_thinking');
-    assert.equal(voice.duplicateCalls,0,'No repeated mid-puzzle announcer');
+    // Choosing a named voice intentionally triggers a native SAMPLE PREVIEW.
+    // That preview is NOT a duplicate mid-puzzle announcement.
+    assert.equal(voice.callsAfterModeChange.length,1,'Voice selection should preview once');
+    assert.equal(voice.callsAfterModeChange[0].phrase,'excellent_thinking');
+    assert.equal(voice.callsAfterModeChange[0].opts?.preview,true,
+     'The initial native call should be marked as a Settings preview');
+    const gameplayCalls=voice.callsWhenOn.slice(voice.callsAfterModeChange.length);
+    assert.equal(gameplayCalls.length,1,'Only one in-puzzle announcement allowed');
+    assert.equal(gameplayCalls[0].phrase,'excellent_thinking');
+    assert.equal(gameplayCalls[0].opts?.milestone,true,
+     'The second request must be the intentional in-puzzle announcement');
+    assert.equal(voice.duplicateCalls,0,'Repeated progress must not announce twice');
     assert.equal(voice.returnedMode,voice.originalMode);
     assert.equal(voice.returnedVolume,voice.originalVolume);
     assert.equal(voice.localStandaloneSettingsOpen,false);
