@@ -1,0 +1,98 @@
+name: QA original Story Adventure after removing unapproved Nehemiah
+on:
+  push:
+    paths:
+      - 'visual-lab-test-banner.js'
+      - '.github/workflows/qa-native-story-no-nehemiah-20261114.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  original-story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert removed prototype and original scripts untouched
+        run: |
+          set -euo pipefail
+          node --check visual-lab-test-banner.js
+          test ! -e experiments/story-adventure-nehemiah-explore-v1.html
+          test ! -e story-adventure-explore-launcher-test-v1.js
+          test ! -e scripts/qa_story_nehemiah_real_player_v1.cjs
+          test ! -e .github/workflows/qa-story-nehemiah-real-player-v1.yml
+          ! grep -qE 'nehemiah-explore|story-adventure-explore-launcher' visual-lab-test-banner.js
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re
+          parts=[]
+          for i in range(1,6):
+              s=Path(f'bible_unfolded_core_part{i}.js').read_text()
+              m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',s,re.S)
+              assert m, f'Native game part {i} must parse'
+              parts.append(json.loads(m[1]))
+          full=''.join(parts)
+          for key in ['function bu3857Open(', 'function bu3857Render()', 'const BU3857_DATA', 'const chapterData=']:
+              assert key in full, f'Original Story component vanished: {key}'
+          import subprocess
+          original=subprocess.check_output(['git','show','backup-before-remove-unapproved-nehemiah-20261114:bible_unfolded_core_part5.js'],text=True)
+          assert Path('bible_unfolded_core_part5.js').read_text()==original
+          print('PASS_REMOVAL_SAFE original Story engine identical to rollback baseline')
+          dec=json.JSONDecoder()
+          def parse_json_after(marker):
+              at=full.index(marker)+len(marker)
+              obj, end=dec.raw_decode(full[at:].lstrip())
+              return obj
+          a=parse_json_after('const BU3857_DATA = ')
+          b=parse_json_after('Object.assign(BU3857_DATA,')
+          a.update(b)
+          summary=[]
+          for key, v in a.items():
+              ds=v.get('discoveries',[])
+              summary.append({'id':key,'title':v.get('title'),'number':v.get('chapterNumber'),
+                 'coverage':v.get('coverage'),'status':v.get('contentStatus'),
+                 'count':len(ds),'first':{'title':ds[0].get('title') if ds else None,
+                    'narration':ds[0].get('narration','')[:230] if ds else None,
+                    'interactionType':ds[0].get('interaction',{}).get('type') if ds else None},
+                 'last':{'title':ds[-1].get('title') if ds else None,
+                    'narration':ds[-1].get('narration','')[:230] if ds else None,
+                    'interactionType':ds[-1].get('interaction',{}).get('type') if ds else None}})
+          print('NATIVE_STORY_EPISODE_COVERAGE',json.dumps(summary,ensure_ascii=False))
+          for marker in ['const chapterData=','const BU_GENESIS_IDS=','function bu3857Open(','function bu3857Render(){']:
+              at=full.find(marker)
+              print('NATIVE_STORY_ENGINE_SNIP',marker,repr(full[at:at+1400]))
+          PY
+      - name: Check actual TEST home + Journey still open in isolated Chrome
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-story-after-removal puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-story-removal-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-story-after-removal/node_modules node - <<'JS'
+          const assert=require('node:assert/strict'),{execSync}=require('node:child_process');
+          const puppeteer=require('puppeteer-core');
+          const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+          (async()=>{
+            const b=await puppeteer.launch({headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],protocolTimeout:100000});
+            try {
+              const p=await b.newPage(),errors=[];
+              p.on('pageerror',e=>errors.push(e.message));
+              await p.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+              await p.goto('http://127.0.0.1:8894/index.html',{waitUntil:'domcontentloaded',timeout:100000});
+              await p.waitForSelector('#home-journey',{timeout:55000});
+              await p.evaluate(()=>document.getElementById('home-journey').click());
+              await p.waitForFunction(()=>document.getElementById('journey-stops')?.getClientRects().length>0,{timeout:25000});
+              const status=await p.evaluate(()=>({
+                nativeJourney:!!document.getElementById('journey-stops'),
+                originalBooks:!!document.getElementById('home-books'),
+                unwantedEntry:!!document.getElementById('bu-story-explorer-entry'),
+                unwantedScript:!!document.getElementById('bu-story-explorer-launcher-v1'),
+                nativeStory:!!document.getElementById('play'),
+                currentScreen:document.querySelector('.screen:not([hidden])')?.id
+              }));
+              assert(status.nativeJourney&&status.nativeStory&&status.originalBooks);
+              assert(!status.unwantedEntry&&!status.unwantedScript);
+              assert.deepEqual(errors,[]);
+              console.log('PASS_ORIGINAL_JOURNEY_IN_CHROME',JSON.stringify(status));
+            } finally {await b.close();}
+          })().catch(e=>{console.error(e.stack||e);process.exitCode=1});
+          JS
