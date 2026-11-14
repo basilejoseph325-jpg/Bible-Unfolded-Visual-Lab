@@ -1,0 +1,34 @@
+name: Inspect existing Genesis Story wheel contract (feature branch)
+on:
+  push:
+    branches: [fix/genesis-ep10-word-wheel-20261114]
+    paths: ['.github/workflows/diagnose-genesis10-wheel-contract-v1.yml']
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Read exact Story word wheel and hint/reveal functions
+        run: |
+          python3 - <<'PY'
+          import re,json
+          from pathlib import Path
+          parts=[]
+          for n in range(1,6):
+            raw=Path(f'bible_unfolded_core_part{n}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            assert m
+            parts.append(json.loads(m[1]))
+          full=''.join(parts)
+          for term in ['const BU_HQ_WORDS =','let buHQPath=[]','function bu3857Puzzle(){','function bu3857Hint(){','function bu3857Reveal(){','function buHQBind(){','function buHQPick(index){','function bu3857Solve(']:
+            hits=list(re.finditer(re.escape(term),full))
+            print('TARGET',term,'COUNT',len(hits),'PART',next((i+1 for i,p in enumerate(parts) if term in p),None))
+            for hit in hits[:1]:
+              p=hit.start(); print('EXACT',repr(full[p:p+3000])[:3200])
+          p=full.index('const BU_HQ_WORDS =')+len('const BU_HQ_WORDS =')
+          words,_=json.JSONDecoder().raw_decode(full[p:].lstrip())
+          print('ORIGINAL_WORD_COUNT',len(words))
+          print('SAMPLES',json.dumps({k:words[k] for k in ('g07-d01','g08-d01','g09-d01','g09-d10')},ensure_ascii=False))
+          print('EP10_MISSING_WORDS',[f'g10-d{i:02d}' for i in range(1,11) if f'g10-d{i:02d}' not in words])
+          PY
