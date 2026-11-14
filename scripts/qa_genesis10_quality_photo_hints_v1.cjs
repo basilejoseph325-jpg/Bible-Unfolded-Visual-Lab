@@ -68,40 +68,42 @@ const origin=process.env.STORY_TEST_URL||'http://127.0.0.1:8896/index.html';
    const free=await page.evaluate(()=>({
     coins:economy.coins,level:bu3857State.hints['g10-d03'],
     letter:buHQHintLetters['g10-d03'],
-    modal:document.getElementById('bu3863-dialog-layer')?.innerText||''
+    modal:document.getElementById('bu3864-modal-layer')?.innerText||''
    }));
    assert.equal(free.coins,500,'Free clue must not charge');
    assert.equal(free.level,1);
    assert.equal(free.letter,0);
    await page.evaluate(()=>{
-    document.getElementById('bu3863-dialog-layer')?.remove();
-    document.getElementById('bu3857-hint').click();
+    const buy=[...document.querySelectorAll('#bu3864-modal-layer button')].find(el=>el.textContent.includes('Stronger hint'));
+    if(!buy)throw Error('Actual paid Story hint button was not presented');
+    buy.click();
    });
    await page.waitForFunction(()=>bu3857State.hints['g10-d03']===2,{timeout:8000});
    const paid=await page.evaluate(()=>({
     coins:economy.coins,level:bu3857State.hints['g10-d03'],
     letter:buHQHintLetters['g10-d03'],
-    modal:document.getElementById('bu3863-dialog-layer')?.innerText||''
+    modal:document.getElementById('bu3864-modal-layer')?.innerText||''
    }));
    assert.equal(paid.coins,485,'First paid clue costs only 15');
    assert.equal(paid.level,2);
    assert.equal(paid.letter,0);
    await page.evaluate(()=>{
-    document.getElementById('bu3863-dialog-layer')?.remove();
-    document.getElementById('bu3857-hint').click();
+    const buy=[...document.querySelectorAll('#bu3864-modal-layer button')].find(el=>el.textContent.includes('Stronger hint'));
+    if(!buy)throw Error('Actual paid Story hint button was not presented');
+    buy.click();
    });
    await page.waitForFunction(()=>bu3857State.hints['g10-d03']===3,{timeout:8000});
    const third=await page.evaluate(()=>({
     coins:economy.coins,level:bu3857State.hints['g10-d03'],
     letter:buHQHintLetters['g10-d03'],
-    modal:document.getElementById('bu3863-dialog-layer')?.innerText||''
+    modal:document.getElementById('bu3864-modal-layer')?.innerText||''
    }));
    assert.equal(third.coins,460,'Second paid clue costs 25');
    assert.equal(third.level,3);
    assert.equal(third.letter,0,'Never replace paid thinking clues with letter reveals');
    assert(!/Letter [0-9]+ of/.test(third.modal),'Old paid letter-reveal UI must not return');
    const after=await page.evaluate(()=>{
-    document.getElementById('bu3863-dialog-layer')?.remove();
+    document.getElementById('bu3864-modal-layer')?.remove();
     bu3857Hint();
     return {coins:economy.coins,level:bu3857State.hints['g10-d03']};
    });
