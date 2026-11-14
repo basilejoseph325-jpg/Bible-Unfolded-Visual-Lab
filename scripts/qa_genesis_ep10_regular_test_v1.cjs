@@ -17,7 +17,7 @@ for(const [width,height] of [[390,705],[320,568]]){
  await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
  page.on('pageerror',err=>errors.push(err.message));
  const response=await page.goto(target,{waitUntil:'domcontentloaded',timeout:115000});
- assert.equal(response.status(),200,'TEST game must load');
+ assert([200,304].includes(response.status()),'Original or cached TEST game must load (HTTP 200/304)');
  await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof openEpisodes==='function'&&
   typeof bu3857Render==='function'&&!!document.getElementById('home-journey'),
   {timeout:85000});
