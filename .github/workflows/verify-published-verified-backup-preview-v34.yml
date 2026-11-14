@@ -1,0 +1,52 @@
+name: Verify public TEST native verified backup preview v34
+on:
+  push:
+    paths:
+      - '.github/workflows/verify-published-verified-backup-preview-v34.yml'
+      - 'scripts/qa_native_verified_backup_restore_preview_v34_real_browser.cjs'
+      - 'journey-progress-caption.js'
+      - 'visual-lab-test-banner.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-test-file-backed-native-safe-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install isolated Chromium driver and verify v34 test script
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_native_verified_backup_restore_preview_v34_real_browser.cjs
+          npm install --prefix /tmp/bu-public-preview-v34 puppeteer-core@24 --silent --no-audit --no-fund
+      - name: Wait for published public TEST source chain and exact read-only file-checker to appear
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 36); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?public-v34=$attempt" |
+               grep -F 'visual-lab-test-banner.js?v=20261113-verified-backup-preview-v34' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?public-v34=$attempt" |
+               grep -F 'bu-platform-saves-v2.js?v=20261113-verified-backup-preview-v34' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?verify-v34=$attempt" |
+               grep -F 'function verifyCurrentBackupCopy(candidate)' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?preview-v34=$attempt" |
+               grep -F 'function installRestoreReview()' >/dev/null; then
+              echo 'PASS: actual PUBLIC TEST has real v34 verified-file read-only restore review'
+              break
+            fi
+            if [ "$attempt" = '36' ]; then
+              echo 'FAIL: public TEST read-only v34 file picker not yet deployed' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+      - name: ACTUAL public TEST native Settings selected-file proof and mock external wallet writer
+        shell: bash
+        run: |
+          set -euo pipefail
+          BU_TEST_ORIGIN='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab' \
+           NODE_PATH=/tmp/bu-public-preview-v34/node_modules \
+           node scripts/qa_native_verified_backup_restore_preview_v34_real_browser.cjs
