@@ -67,3 +67,9 @@ a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #ffe
 @media(min-width:720px){.book-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.book-card{min-height:180px}.shelf-content{padding-inline:24px}.read-hero{min-height:320px}}
 @media(max-width:350px){.book-grid{gap:9px}.book-card{padding:9px}.topbar{padding-inline:8px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress-track span{transition:none}}
+
+/* Library header: enough vertical room for the full two-line title, including Chrome font scaling. */
+body[data-view="library"] .topbar{height:auto;min-height:108px;padding-block:13px;grid-template-columns:82px minmax(0,1fr) 60px}
+body[data-view="library"] .top-brand{align-self:center;min-width:0}
+body[data-view="library"] .top-brand strong{font-size:clamp(18px,5vw,23px);line-height:1.13;overflow-wrap:normal;max-width:330px;margin:3px auto 0}
+body[data-view="library"] .top-brand small{line-height:1.35}
