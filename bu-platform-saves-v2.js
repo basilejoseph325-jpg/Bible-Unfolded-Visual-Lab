@@ -312,6 +312,45 @@ function getStatus(){
  native.append(el);return el;
 }
 function notice(s){const el=getStatus();if(el)el.textContent=s}
+/* TEST recovery REVIEW only. A previous-only v2 journal contains no trusted
+ * AFTER values, so the player can inspect the situation and request a
+ * non-destructive copy of CURRENT progress. There is deliberately NO
+ * rewind, clear-journal, accept-import or "fix it" action in this panel.
+ * In particular, a current-progress backup may already be partly restored:
+ * downloading it is NOT the same as reconstructing an older checkpoint. */
+function installRecoveryReview(){
+ const state=recoverPending();
+ const existing=document.getElementById('bu-wt-recovery-review');
+ if(!state.needsManualReview){if(existing)existing.remove();return;}
+ const status=getStatus();if(!status||existing)return;
+ const root=document.createElement('details');
+ root.id='bu-wt-recovery-review';
+ root.style.cssText='margin:9px 0 3px;padding:9px 11px;border:1px solid rgba(197,157,92,.65);border-radius:10px;max-width:100%;box-sizing:border-box;';
+ const summary=document.createElement('summary');
+ summary.textContent='Review an interrupted TEST backup';
+ summary.style.cssText='cursor:pointer;font-weight:750;letter-spacing:.01em;';
+ root.append(summary);
+ const paragraph=(txt)=>{
+  const p=document.createElement('p');
+  p.textContent=txt;p.style.cssText='margin:9px 0;font-size:.9em;line-height:1.5;';
+  root.append(p);
+ };
+ paragraph('A previous backup restore may not have finished. To avoid replacing newer game progress, this TEST version has stopped automatic recovery and blocked further imports.');
+ paragraph('First, save a copy of your CURRENT progress. Important: this file may contain a partly restored game; it cannot recreate the older state before the interruption.');
+ const backup=document.createElement('button');
+ backup.type='button';
+ backup.id='bu-wt-recovery-current-backup';
+ backup.textContent='Download current TEST progress';
+ backup.style.cssText='display:block;max-width:100%;margin:10px 0;padding:8px 11px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;';
+ backup.addEventListener('click',()=>{
+  // Only creates a backup download request; never imports or edits progress.
+  download();
+ });
+ root.append(backup);
+ paragraph('Check your Downloads to make sure the file was saved. Please don\'t clear browser data, delete recovery records, or try another import. Keep a copy of the file for review. Closing other old Bible Unfolded tabs is sensible, but this screen cannot stop already-running older code.');
+ paragraph('LIVE and TEST share browser storage. This review cannot guarantee that a second, older tab won\'t change progress.');
+ status.parentNode.append(root);
+}
 function download(){
  try{
   const payload=JSON.stringify(makeBackup(),null,2);
@@ -321,12 +360,19 @@ function download(){
   a.href=url;a.download='Bible_Unfolded_Complete_TEST_Backup_v2.json';
   a.style.display='none';document.body.append(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1200);
-  notice('Complete TEST backup prepared: native progress + Word Trails crossword save.');
+  notice('Complete TEST backup prepared: native progress + Word Trails crossword save. Check Downloads to confirm the file was saved; nothing was restored.');
  }catch(e){notice('Backup failed: '+e.message)}
 }
 async function acceptFile(nativeHandler,picker,event){
  const file=picker.files?.[0];if(!file)return;
  try{
+  // Do not let the original native v1 handler bypass recovery quarantine.
+  // A new-format v2 import is blocked by applyBackup too, but the user-facing
+  // file picker must reject BOTH formats before any old/new handler runs.
+  if(read(JOURNAL)!==null||read(COMMITTED)!==null){
+   installRecoveryReview();
+   throw Error('An earlier TEST backup needs recovery review. Imports are blocked until that is resolved; first download your CURRENT progress.');
+  }
   if(file.size>MAX_BYTES)throw Error('This backup exceeds 2 MB.');
   const content=await file.text(),value=parse(content);
   if(value?.format==='BibleUnfoldedSave'&&value.version===1){
@@ -344,7 +390,7 @@ async function acceptFile(nativeHandler,picker,event){
   const result=applyBackup(value);
   if(result.needsCleanup)notice('TEST import data was committed, but its journal needs review. Do not run another import until the recovery status is cleared.');
   else if(result.unchanged)notice('This backup is already present; no balances were changed.');
- }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message)}
+ }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message);installRecoveryReview()}
  finally{picker.value='';}
 }
 let installed=false,attempts=0;
@@ -361,6 +407,7 @@ function install(){
  picker.onchange=e=>acceptFile(originalImport,picker,e);
  getStatus();
  if(recovered.error)notice('Backup recovery needs review to protect saved progress. No automatic restore was performed. '+recovered.error);
+ installRecoveryReview();
 }
 const recovered=recoverPending();
 if(recovered.error)console.error('Word Trails save rollback:',recovered.error);
