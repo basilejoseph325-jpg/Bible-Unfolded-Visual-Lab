@@ -7,7 +7,7 @@
 const assert=require('node:assert/strict'),puppeteer=require('puppeteer-core');
 const {execSync}=require('node:child_process');
 const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
-const root='http://127.0.0.1:8897';
+const root=process.env.BU_TEST_ORIGIN||'http://127.0.0.1:8897';
 const LIVE='bible-unfolded-word-trails-next-v1',W='bible-unfolded-rewards-v17';
 const T='bu-visual-lab-wordtrails-next-v1';
 const migrated=JSON.stringify({level:1,coins:60,points:0,
@@ -94,7 +94,7 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
     JSON.stringify({viewport:width+'x'+height,actualCrossDocumentStorageEvent:true,
       originalNativeSettings:true,oldLiveMigrationMarkerDetected:true,
       v1AndV2ImportsBlocked:true,readOnlyBackupStillAvailable:true,
-      noRealUserData:true,pageErrors:0}));
+      publishedTest:root.startsWith('https://'),noRealUserData:true,pageErrors:0}));
    await context.close();
   }
  }finally{await browser.close()}
