@@ -38,3 +38,58 @@ jobs:
           python3 -m http.server 8891 --bind 127.0.0.1 >/tmp/bu-native-http.log 2>&1 &
           sleep 2
           NODE_PATH=/tmp/bu-native-qa/node_modules node scripts/word_trails_native_shell_integration_test.cjs
+      - name: Published TEST direct link never opens duplicate standalone QA menu
+        run: |
+          set -euo pipefail
+          SITE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          for attempt in $(seq 1 24); do
+            if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$SITE/experiments/word-trails-next-v1.html?v36=$attempt" |
+               grep -F 'Published links always load the real native menu/Settings host.' >/dev/null; then
+              echo 'PASS: public TEST is serving the updated native-only Word Trails entry'
+              break
+            fi
+            if [ "$attempt" = 24 ]; then
+              echo 'FAIL: public Word Trails direct-link guard not deployed' >&2
+              exit 1
+            fi
+            sleep 5
+          done
+          NODE_PATH=/tmp/bu-native-qa/node_modules node - <<'JS'
+          const puppeteer=require('puppeteer-core');
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+          (async()=>{
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,
+              args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage']});
+            try{
+              for(const query of ['?standalone=qa','?standalone=qa&native=1']){
+                const context=await browser.createBrowserContext();
+                const page=await context.newPage(),errors=[];
+                page.on('pageerror',e=>errors.push(e.message));
+                await page.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+                await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/experiments/word-trails-next-v1.html'+query,
+                  {waitUntil:'domcontentloaded',timeout:120000});
+                await page.waitForFunction(()=>
+                  location.pathname.endsWith('/Bible-Unfolded-Visual-Lab/index.html') &&
+                  window.BUWTNativeShell?.active?.() &&
+                  document.getElementById('game-menu') &&
+                  document.getElementById('settings-dialog') &&
+                  document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,
+                  {timeout:100000});
+                const result=await page.evaluate(()=>({
+                  realRootMenu:!!document.getElementById('game-menu'),
+                  nativeActive:window.BUWTNativeShell.active(),
+                  rootSettings:!!document.getElementById('settings-dialog'),
+                  url:location.pathname,hasNativeFrame:!!document.getElementById('bu-wt-native-game'),
+                  duplicateMenuOpen:document.getElementById('bu-wt-native-game')?.contentWindow?.document?.getElementById('wt-unified-menu')?.open===true
+                }));
+                assert(result.realRootMenu&&result.nativeActive&&result.rootSettings&&result.hasNativeFrame);
+                assert.equal(result.duplicateMenuOpen,false);
+                assert.deepEqual(errors,[]);
+                console.log('PASS_PUBLIC_NATIVE_WT_DIRECT_LINK_V36',JSON.stringify({query,...result,pageErrors:0}));
+                await context.close();
+              }
+            }finally{await browser.close()}
+          })().catch(e=>{console.error('FAIL_PUBLIC_NATIVE_WT_DIRECT_LINK_V36',e.stack||e);process.exitCode=1});
+          JS
