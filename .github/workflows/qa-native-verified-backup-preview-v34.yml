@@ -1,0 +1,23 @@
+name: QA TEST verified current backup and read-only restore preview v34
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-native-verified-backup-preview-v34.yml'
+      - 'scripts/qa_native_verified_backup_restore_preview_v34.cjs'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  native-current-file-proof-and-read-only-restore-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate TEST native Settings source and exact wallet/wheel/TEST restore preview
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_verified_backup_restore_preview_v34.cjs
+          node scripts/qa_native_verified_backup_restore_preview_v34.cjs
