@@ -1,0 +1,65 @@
+name: Build and test Genesis 10 thoughtful hints and scene photo (candidate only)
+on:
+  push:
+    branches: [fix/genesis10-quality-art-hints-20261114]
+    paths:
+      - '.github/workflows/build-genesis10-quality-art-hints-test.yml'
+  workflow_dispatch:
+permissions: {contents: write}
+jobs:
+  qa-scoped-story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Guarded TEST-only Story install
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/upgrade_genesis10_story_hints_art_v1.py
+          python3 scripts/upgrade_genesis10_story_hints_art_v1.py
+          node --check scripts/qa_genesis10_quality_photo_hints_v1.cjs
+          for f in bible_unfolded_core_part*.js; do node --check "$f"; done
+          python3 - <<'PY'
+          import json,re,subprocess
+          from pathlib import Path
+          parts=[]
+          for n in range(1,6):
+            raw=Path(f'bible_unfolded_core_part{n}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            assert m
+            parts.append(json.loads(m.group(1)))
+          full=''.join(parts)
+          p=Path('/tmp/bu-test-story-full.js')
+          p.write_text(full,encoding='utf8')
+          subprocess.run(['node','--check',str(p)],check=True)
+          assert full.count("const BU_EP10_SCENE_ART=Object.freeze(")==1
+          assert full.count("s.book==='genesis_ep10'")>=1
+          assert "Object.assign(BU_HQ_WORDS,{" in full
+          print('PASS_NWT_NATIVE_STORY_SYNTAX')
+          PY
+          python3 - <<'PY'
+          import subprocess
+          changed=set(subprocess.check_output(['git','diff','--name-only'],text=True).splitlines())
+          assert changed=={'bible_unfolded_core_part3.js','bible_unfolded_core_part5.js'}, changed
+          print('PASS_SCOPE only native Story parts 3 and 5 changed')
+          PY
+      - name: Play original Genesis and test meaningful hint prices in mobile Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-story10-photo-hint-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-story10-quality.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-story10-photo-hint-qa/node_modules node scripts/qa_genesis10_quality_photo_hints_v1.cjs
+      - name: Commit verified native branch only, without touching main or LIVE
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add bible_unfolded_core_part3.js bible_unfolded_core_part5.js
+          git commit -m 'feat(TEST candidate): photographed Genesis 10 and deeper thinking hints'
+          git push origin HEAD:fix/genesis10-quality-art-hints-20261114
