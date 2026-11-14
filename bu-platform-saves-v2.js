@@ -17,6 +17,41 @@ const WALLETS=['bible-unfolded-rewards-v17','bible-unfolded-rewards-v17-recovery
 const OWNERSHIP=['bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ownership-v3825-backup'];
 const WHEELS=['goldwheel','moonwheel','seawheel'];
 const keysToKeep=[TEST,FEEL];
+// Passive in-memory warning for other same-origin pages/frames writing shared
+// native wallets, purchased-wheel ownership or protected LIVE crossword data.
+// Old LIVE scripts do not participate in a lock: this detector does NOT
+// prevent their writes or guarantee transaction safety.
+const EXTERNAL_NATIVE=new Set([...WALLETS,...OWNERSHIP,LIVE_CROSSWORD]);
+const competingPages=new Set();
+let migratedLiveElsewhere=false;
+function externalChangeStatus(){
+ return Object.freeze({detected:competingPages.size>0,
+  keys:Object.freeze([...competingPages]),
+  oldLiveMigrationObserved:migratedLiveElsewhere,
+  warningOnly:true,cannotStopLegacyTabs:true});
+}
+function assertNoExternalWriter(){
+ if(competingPages.size)
+  throw Error('Another Bible Unfolded page or frame changed shared progress while TEST was open. Backup imports are paused here. Download current progress, close other open game tabs, and reopen TEST before considering another import.');
+}
+function observeExternalStorage(event){
+ // Browser storage events report writes in OTHER documents on this origin;
+ // a native game iframe may be the source, so do not claim tab identity.
+ if(!event||!EXTERNAL_NATIVE.has(event.key)||event.oldValue===event.newValue||
+    (event.storageArea&&event.storageArea!==localStorage))return;
+ competingPages.add(event.key);
+ if(event.key===LIVE_CROSSWORD){
+  const next=getJson(event.newValue);
+  if(next?.migration?.version===1&&
+     next.migration.source==='Visual Lab crossword progress')
+   migratedLiveElsewhere=true;
+ }
+ if(recoverPending().needsManualReview)
+  notice('Backup recovery needs review; no progress was automatically replaced. Another open Bible Unfolded page or frame also changed shared progress.');
+ else notice('Another Bible Unfolded page or frame changed shared saved progress. Backup imports are paused in this TEST session; current progress can still be exported.');
+ installConcurrentReview();
+}
+
 const own=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
 const allowed=k=>typeof k==='string'&&k.length<=160&&NATIVE.test(k)&&k!==LIVE_CROSSWORD;
 const parse=s=>JSON.parse(s);
@@ -163,6 +198,7 @@ function protectedNative(incoming,previous){
  * still require player backup confirmation and a cooperative Web Lock before
  * any write, and never apply an old v2 journal automatically. */
 function previewRestoreWrites(candidate){
+ assertNoExternalWriter();
  const c=typeof candidate==='string'?parse(candidate):candidate;
  const summary=dryRun(c);
  if(read(JOURNAL)!==null||read(COMMITTED)!==null)
@@ -246,6 +282,7 @@ function rollbackThisAttempt(changed,previous,desired,journalText){
  }catch(e){return {ok:false,error:e.message}}
 }
 function applyBackup(candidate,{reload=true}={}){
+ assertNoExternalWriter();
  const c=typeof candidate==='string'?parse(candidate):candidate;
  const plan=dryRun(c);
  if(read(JOURNAL)!==null||read(COMMITTED)!==null)
@@ -312,6 +349,37 @@ function getStatus(){
  native.append(el);return el;
 }
 function notice(s){const el=getStatus();if(el)el.textContent=s}
+/* Purely informational cross-document storage activity review. No state is
+ * persisted or modified; never identify an unrelated LIVE save update as
+ * definitively unsafe. The inability to fence older LIVE tabs remains. */
+function installConcurrentReview(){
+ if(!competingPages.size||document.getElementById('bu-wt-external-page-review'))return;
+ const status=getStatus();if(!status)return;
+ const root=document.createElement('details');
+ root.id='bu-wt-external-page-review';
+ root.style.cssText='margin:9px 0 3px;padding:9px 11px;border:1px solid rgba(197,157,92,.65);border-radius:10px;box-sizing:border-box;';
+ const summary=document.createElement('summary');
+ summary.textContent='Shared progress changed in another open page';
+ summary.style.cssText='cursor:pointer;font-weight:750;';
+ root.append(summary);
+ const para=(message)=>{
+  const p=document.createElement('p');
+  p.style.cssText='margin:9px 0;font-size:.9em;line-height:1.5;';
+  p.textContent=message;root.append(p);
+ };
+ para('Another open Bible Unfolded page or embedded game frame changed shared saved progress while this TEST page was open. This may be normal gameplay, but importing an older backup could overwrite newer values, so imports are paused for this TEST session.');
+ if(migratedLiveElsewhere)
+  para('A LIVE Word Trails progress record with the older automatic TEST-to-LIVE migration marker was observed. This does not tell us whether LIVE progress was correct or whether an older script is still running.');
+ para('You can download a copy of CURRENT TEST progress. Check Downloads to confirm it was saved. Close other open Bible Unfolded pages, then reopen TEST before reviewing any backup. Reopening cannot guarantee that older cached tabs are gone.');
+ const backup=document.createElement('button');
+ backup.type='button';backup.id='bu-wt-external-current-backup';
+ backup.textContent='Download current TEST progress';
+ backup.style.cssText='display:block;max-width:100%;margin:10px 0;padding:8px 11px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;';
+ backup.addEventListener('click',()=>download());
+ root.append(backup);
+ para('This warning cannot stop an older non-cooperating tab from writing again. It does not reset, merge or import saved progress.');
+ status.parentNode.append(root);
+}
 /* TEST recovery REVIEW only. A previous-only v2 journal contains no trusted
  * AFTER values, so the player can inspect the situation and request a
  * non-destructive copy of CURRENT progress. There is deliberately NO
@@ -373,6 +441,7 @@ async function acceptFile(nativeHandler,picker,event){
    installRecoveryReview();
    throw Error('An earlier TEST backup needs recovery review. Imports are blocked until that is resolved; first download your CURRENT progress.');
   }
+  assertNoExternalWriter();
   if(file.size>MAX_BYTES)throw Error('This backup exceeds 2 MB.');
   const content=await file.text(),value=parse(content);
   if(value?.format==='BibleUnfoldedSave'&&value.version===1){
@@ -390,7 +459,7 @@ async function acceptFile(nativeHandler,picker,event){
   const result=applyBackup(value);
   if(result.needsCleanup)notice('TEST import data was committed, but its journal needs review. Do not run another import until the recovery status is cleared.');
   else if(result.unchanged)notice('This backup is already present; no balances were changed.');
- }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message);installRecoveryReview()}
+ }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message);installRecoveryReview();installConcurrentReview()}
  finally{picker.value='';}
 }
 let installed=false,attempts=0;
@@ -408,14 +477,18 @@ function install(){
  getStatus();
  if(recovered.error)notice('Backup recovery needs review to protect saved progress. No automatic restore was performed. '+recovered.error);
  installRecoveryReview();
+ installConcurrentReview();
 }
 const recovered=recoverPending();
+if(typeof window.addEventListener==='function')
+ window.addEventListener('storage',observeExternalStorage);
 if(recovered.error)console.error('Word Trails save rollback:',recovered.error);
 else if(recovered.recovered){window.__bu388SkipCheckpoint=true;location.reload();}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
 else install();
 window.BUPlatformSaves=Object.freeze({
  version:'2.0.0-test',keys:Object.freeze({TEST,FEEL,JOURNAL,COMMITTED}),
- makeBackup,dryRun,previewRestoreWrites,applyBackup,validateTrails,recoverPending,bound:()=>installed
+ makeBackup,dryRun,previewRestoreWrites,applyBackup,validateTrails,recoverPending,
+ externalChangeStatus,bound:()=>installed
 });
 })();
