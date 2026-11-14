@@ -1,0 +1,56 @@
+name: One-time Bible Books Chrome entry patch
+on:
+  push:
+    branches:
+      - fix/bible-books-chrome-direct-route-20261114
+    paths:
+      - .github/workflows/patch-bible-books-chrome-once.yml
+permissions:
+  contents: write
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Make targeted native home routing patch
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text()
+          marker='<meta name="build-version" content="v3.9.72-noah-editorial-working">'
+          direct='''\n<script id="bu-books-direct-entry-v4">
+          /* TEST: reliable direct Bible Books routing before legacy event handlers.
+             One explicit native Story Adventure request is allowed through. */
+          (()=>{'use strict';
+          let nativeOnce=new URLSearchParams(location.search).get('bu_native_story')==='1';
+          window.addEventListener('click',event=>{
+            if(!event.target?.closest?.('#home-books'))return;
+            if(nativeOnce){nativeOnce=false;return;}
+            event.preventDefault();event.stopImmediatePropagation();
+            window.location.assign('bible-book-guides/index.html');
+          },true);
+          })();
+          </script>'''
+          old='journey-progress-caption.js?v=20261113-wt-settings-practice-v24'
+          new='journey-progress-caption.js?v=20261114-books-chrome-route-v4'
+          assert s.count(marker)==1, 'index.html header changed'
+          assert s.count(old)==1, 'main script inclusion changed'
+          assert 'bu-books-direct-entry-v4' not in s
+          s=s.replace(marker,marker+direct).replace(old,new)
+          p.write_text(s)
+          print('Applied minimal native Bible Books routing + Chrome cache-bust.')
+          PY
+      - name: Commit targeted patch to review branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --check
+          git diff --cached --numstat
+          git commit -m "fix(TEST): direct Bible Books navigation early in index, Chrome cache bust"
+          git push
