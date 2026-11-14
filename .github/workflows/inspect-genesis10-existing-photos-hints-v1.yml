@@ -19,11 +19,11 @@ jobs:
             t=Path(f'bible_unfolded_core_part{i}.js').read_text()
             parts.append(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',t,re.S).group(1)))
           s=''.join(parts)
-          for name in ['const BU_GENESIS_SCENE_ART', 'const BU_GENESIS_SCENE_ALT', 'function bu3857Hint(){', 'function bu3857Reveal(){','function bu3857Puzzle(){','function buHQWordBoard(){','function buHQBind(){','function buHQUpdate(){','const BU_HQ_WORDS =','function bu3857Render(){']:
+          for name in ['Stronger hint', 'Additional hint', 'Discovery hint', 'function bu3857Hint(){', 'function bu3857Reveal(){','function bu3857Puzzle(){','function buHQWordBoard(){','function buHQBind(){','function buHQUpdate(){','const BU_HQ_WORDS =','function bu3857Render(){']:
             at=s.find(name)
             print('SECTION_START',name,'INDEX',at,'PART',next((i+1 for i,t in enumerate(parts) if name in t),None))
             if at>=0:
-              n=6000 if 'Hint' in name or 'Render' in name else 3000
+              n=1500 if name in ('Stronger hint','Additional hint','Discovery hint') else (5500 if 'Hint' in name else 400)
               print('SECTION_BODY',name,repr(s[at:at+n])[:n+500])
           # Save exact image paths for previous Genesis discoveries only.
           match=re.search(r'(?:const|let|var) BU_GENESIS_SCENE_ART\s*=\s*(\{.*?\});',s,re.S)
