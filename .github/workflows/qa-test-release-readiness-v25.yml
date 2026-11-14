@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v32 (eleven groups)
+name: QA Bible Unfolded TEST full pre-release regression v33 (twelve groups)
 on:
   push:
     paths:
@@ -9,6 +9,9 @@ on:
       - '.github/workflows/qa-test-native-journal-crash-safety-v30.yml'
       - '.github/workflows/qa-native-recovery-review-panel-v31.yml'
       - '.github/workflows/qa-native-external-page-guard-v32.yml'
+      - '.github/workflows/qa-native-legacy-migration-cold-review-v33.yml'
+      - 'scripts/qa_native_legacy_migration_cold_review_v33.cjs'
+      - 'scripts/qa_native_legacy_migration_cold_review_v33_real_browser.cjs'
       - 'scripts/qa_native_external_page_storage_guard_v32.cjs'
       - 'scripts/qa_native_external_page_storage_guard_v32_real_browser.cjs'
       - 'scripts/qa_native_recovery_review_panel_v31.cjs'
@@ -43,6 +46,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  original-live-migration-cold-start-advisory:
+    name: Read-only TEST startup risk review against pinned original LIVE auto-migrator
+    uses: ./.github/workflows/qa-native-legacy-migration-cold-review-v33.yml
   native-external-page-guard:
     name: Detect cross-document LIVE migration/shared native progress writes and block unsafe imports
     uses: ./.github/workflows/qa-native-external-page-guard-v32.yml
