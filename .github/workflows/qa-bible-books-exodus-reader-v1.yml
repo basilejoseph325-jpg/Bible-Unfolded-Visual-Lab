@@ -1,0 +1,29 @@
+name: QA Exodus 40 chapters — full Bible Books Chrome reader
+on:
+  push:
+    branches: [feature/bible-books-exodus-full-40-chapters,main]
+    paths:
+      - 'bible-book-guides/**'
+      - 'scripts/qa_bible_books_exodus_40_reader_v1.cjs'
+      - '.github/workflows/qa-bible-books-exodus-reader-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  reader-and-state:
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JavaScript and editorial data
+        run: |
+          node --check bible-book-guides/books-v3.js
+          node --check scripts/qa_bible_books_exodus_40_reader_v1.cjs
+          python3 -m json.tool bible-book-guides/exodus-draft.json >/dev/null
+      - name: Chrome mobile portrait and landscape — every reader transition
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-exodus-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-exodus-qa-server.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-exodus-qa/node_modules node scripts/qa_bible_books_exodus_40_reader_v1.cjs
