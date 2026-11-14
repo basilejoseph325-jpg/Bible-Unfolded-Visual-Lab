@@ -124,6 +124,16 @@ const source=fakeCoordinator(patched);
 assert(source.api.keys.TEST===T && source.api.version==='2.0.0-test');
 assert.equal(source.map.get(L),live);
 pass('native API and canonical TEST key retained without modifying LIVE key');
+// A pre-upgrade TEST journal may have captured LIVE as a native key.
+// After upgrade the loader must NOT auto-replay it over newer LIVE gameplay.
+const oldJournal=j({version:1,previous:{[L]:live,[W]:originalWallet},createdAt:'2026-11-13T10:00:00Z'});
+const legacy=fakeCoordinator(patched,{[J]:oldJournal,[L]:stolenLive});
+assert.equal(legacy.map.get(L),stolenLive,'No auto-rollback of an ambiguous LIVE save');
+assert.equal(legacy.map.get(J),oldJournal,'Retain unresolved journal for deliberate human review');
+assert.equal(legacy.api.recoverPending().recovered,false);
+assert.match(legacy.api.recoverPending().error,/LIVE Word Trails/);
+assert.equal(legacy.map.get(W),originalWallet);
+pass('legacy cross-origin journal is quarantined rather than silently rolling back LIVE data');
 console.log('PASS_TEST_NATIVE_V2_LIVE_KEY_LEAK_ISOLATION',JSON.stringify({
  cases,leakedLiveInTestExport:false,importMixedOriginRejected:true,
  testRestored:true,originalLiveUnchanged:true,paidWheelsUnionPreserved:true,
