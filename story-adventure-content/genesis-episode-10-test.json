@@ -1,0 +1,335 @@
+{
+  "schemaVersion": "1.0.0",
+  "contentStatus": "draft_in_progress_not_playable",
+  "chapterId": "genesis_ep10",
+  "chapterNumber": 10,
+  "title": "Jacob and Esau",
+  "coverage": "Selected events in Genesis 25–28",
+  "translation": "New World Translation (2013 revision), jw.org",
+  "illustrationStatus": "Needs review before a playable release",
+  "discoveries": [
+    {
+      "id": "g10-d01",
+      "sequence": 1,
+      "title": "A Promise Continues",
+      "narration": "Abraham dies at 175 years old. Isaac and Ishmael bury their father, and Jehovah continues to bless Isaac. Abraham's life has ended, but Jehovah's promise hasn't.",
+      "scripture": [
+        {
+          "reference": "Genesis 25:7–11",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
+        }
+      ],
+      "interaction": {
+        "type": "order_cards",
+        "data": {
+          "cards": [
+            {
+              "id": "s0",
+              "label": "Abraham dies at 175"
+            },
+            {
+              "id": "s1",
+              "label": "Isaac and Ishmael bury him"
+            },
+            {
+              "id": "s2",
+              "label": "Jehovah continues to bless Isaac"
+            }
+          ]
+        },
+        "solution": {
+          "order": [
+            "s0",
+            "s1",
+            "s2"
+          ]
+        },
+        "prompt": "Put these moments in the order the Bible gives them.",
+        "accessibleAlternative": "Every event is a labeled button; no dragging required."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Start with Abraham's death, not his burial."
+        },
+        {
+          "level": 2,
+          "text": "Both sons took part in the burial."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 25:11 tells us Jehovah blessed Isaac afterward."
+        }
+      ],
+      "explanation": "Genesis 25:7–11 describes Abraham's death, his burial by Isaac and Ishmael, and Jehovah's continued blessing on Isaac.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d02",
+      "sequence": 2,
+      "title": "Rebekah Asks Jehovah",
+      "narration": "Rebekah is expecting twins, but their movements trouble her. She asks Jehovah what is happening. His answer shows that these two boys will matter far beyond their own household.",
+      "scripture": [
+        {
+          "reference": "Genesis 25:19–26",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
+        }
+      ],
+      "interaction": {
+        "type": "find_hotspots",
+        "data": {
+          "hotspots": [
+            {
+              "id": "f0",
+              "label": "Rebekah asks Jehovah about her pregnancy"
+            },
+            {
+              "id": "f1",
+              "label": "Jehovah tells her two nations are involved"
+            },
+            {
+              "id": "f2",
+              "label": "The older will serve the younger"
+            },
+            {
+              "id": "f3",
+              "label": "An angel tells Rebekah to settle in Egypt"
+            }
+          ],
+          "requiredCount": 3
+        },
+        "solution": {
+          "targetIds": [
+            "f0",
+            "f1",
+            "f2"
+          ]
+        },
+        "prompt": "Which details really belong in this Bible account?",
+        "accessibleAlternative": "All details can be selected as labeled buttons."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "What did Rebekah do when she was troubled?"
+        },
+        {
+          "level": 2,
+          "text": "Jehovah's answer concerned two peoples."
+        },
+        {
+          "level": 3,
+          "text": "Choose Rebekah's question, two nations, and the older serving the younger."
+        }
+      ],
+      "explanation": "Genesis 25:22, 23 tells us Rebekah inquired of Jehovah. He revealed that the two sons would become two peoples and that the older would serve the younger.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d03",
+      "sequence": 3,
+      "title": "Two Brothers, Different Lives",
+      "narration": "When the twins grow up, Esau becomes a skilled hunter who spends time in the field. Jacob is described as a blameless man who lives in tents. The brothers lead very different lives.",
+      "scripture": [
+        {
+          "reference": "Genesis 25:24–28",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
+        }
+      ],
+      "interaction": {
+        "type": "connect_pairs",
+        "data": {
+          "left": [
+            {
+              "id": "k0",
+              "label": "Esau's work"
+            },
+            {
+              "id": "k1",
+              "label": "Jacob's way of life"
+            },
+            {
+              "id": "k2",
+              "label": "Isaac's preference"
+            }
+          ],
+          "right": [
+            {
+              "id": "v0",
+              "label": "A skilled hunter, a man of the field"
+            },
+            {
+              "id": "v1",
+              "label": "A blameless man dwelling in tents"
+            },
+            {
+              "id": "v2",
+              "label": "He loved Esau because of the game he ate"
+            }
+          ]
+        },
+        "solution": {
+          "pairs": [
+            [
+              "k0",
+              "v0"
+            ],
+            [
+              "k1",
+              "v1"
+            ],
+            [
+              "k2",
+              "v2"
+            ]
+          ]
+        },
+        "prompt": "Connect the details that belong together.",
+        "accessibleAlternative": "Each pair can be selected using labeled buttons."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Genesis 25:27 describes both brothers."
+        },
+        {
+          "level": 2,
+          "text": "One brother hunts, while the other is known for living in tents."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 25:28 says which son Isaac loved."
+        }
+      ],
+      "explanation": "Genesis 25:27, 28 describes each brother and records the parents' preferences.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d04",
+      "sequence": 4,
+      "title": "A Meal and a Birthright",
+      "narration": "Esau comes home from the field exhausted, and Jacob has been making stew. Jacob asks Esau for his right as firstborn. Esau agrees, eats the lentil stew, and walks away. That's a very costly meal!",
+      "scripture": [
+        {
+          "reference": "Genesis 25:29–34",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
+        }
+      ],
+      "interaction": {
+        "type": "order_cards",
+        "data": {
+          "cards": [
+            {
+              "id": "s0",
+              "label": "Esau returns from the field exhausted"
+            },
+            {
+              "id": "s1",
+              "label": "Jacob asks for the birthright"
+            },
+            {
+              "id": "s2",
+              "label": "Esau swears and sells his birthright"
+            },
+            {
+              "id": "s3",
+              "label": "Jacob gives Esau bread and lentil stew"
+            }
+          ]
+        },
+        "solution": {
+          "order": [
+            "s0",
+            "s1",
+            "s2",
+            "s3"
+          ]
+        },
+        "prompt": "Put these moments in the order the Bible gives them.",
+        "accessibleAlternative": "Every event is a labeled button; no dragging required."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Esau's hunger begins the exchange."
+        },
+        {
+          "level": 2,
+          "text": "Jacob asks for something far more important than a meal."
+        },
+        {
+          "level": 3,
+          "text": "Esau swears before he eats the bread and stew."
+        }
+      ],
+      "explanation": "Genesis 25:29–34 records Esau selling his birthright to Jacob for bread and lentil stew. The Bible says Esau despised the birthright.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    },
+    {
+      "id": "g10-d05",
+      "sequence": 5,
+      "title": "Isaac Faces a Famine",
+      "narration": "A famine strikes, and Isaac travels to Gerar. Jehovah tells him not to go down to Egypt and repeats the promise given to Abraham. Isaac stays in the land Jehovah directs him to live in.",
+      "scripture": [
+        {
+          "reference": "Genesis 26:1–6",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/26/"
+        }
+      ],
+      "interaction": {
+        "type": "find_hotspots",
+        "data": {
+          "hotspots": [
+            {
+              "id": "f0",
+              "label": "There is a famine in the land"
+            },
+            {
+              "id": "f1",
+              "label": "Jehovah tells Isaac not to go to Egypt"
+            },
+            {
+              "id": "f2",
+              "label": "Jehovah repeats the promise of blessing"
+            },
+            {
+              "id": "f3",
+              "label": "Isaac moves his household to Egypt"
+            }
+          ],
+          "requiredCount": 3
+        },
+        "solution": {
+          "targetIds": [
+            "f0",
+            "f1",
+            "f2"
+          ]
+        },
+        "prompt": "Which details really belong in this Bible account?",
+        "accessibleAlternative": "All details can be selected as labeled buttons."
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The account begins with a shortage of food."
+        },
+        {
+          "level": 2,
+          "text": "Jehovah told Isaac where to stay."
+        },
+        {
+          "level": 3,
+          "text": "Do not choose a move to Egypt; Jehovah told him not to go there."
+        }
+      ],
+      "explanation": "Genesis 26:1–6 describes the famine, Jehovah's direction to Isaac, and the promise that all nations would receive a blessing through his offspring.",
+      "tone": "exploration_not_trivia",
+      "graphicViolence": false
+    }
+  ]
+}
