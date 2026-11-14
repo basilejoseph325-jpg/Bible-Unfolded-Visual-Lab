@@ -124,7 +124,7 @@ else install();
    data, while preserving native v1 import and the shared Rewards wallet. */
 (()=>{if(window.BUPlatformSaves||document.getElementById('bu-platform-save-core-v2'))return;
  const el=document.createElement('script');el.id='bu-platform-save-core-v2';
- el.src='bu-platform-saves-v2.js?v=20261113-verified-backup-preview-v34';
+ el.src='bu-platform-saves-v2.js?v=20261113-native-import-paused-v35';
  el.defer=true;document.head.appendChild(el);
 })();
 
