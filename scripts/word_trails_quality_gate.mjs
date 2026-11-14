@@ -116,13 +116,16 @@ for(let i=0;i<levels.length;i++){
 // New-level Bible finds must not recycle precisely the same educational clue
 // on a later board. Repeated answer words are allowed with fresh source-backed
 // meaning; the original eleven level answers and geometry remain unchanged.
-const reviewedClues=new Map(),reviewedInsights=new Map();
+const reviewedClues=new Map(),reviewedInsights=new Map(),reviewedWordPassages=new Map();
 const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
 for(let k=0;k<later.length;k++){
  const L=later[k],lev=k+12;
- const discovery=[...L.bibleBoard.map(x=>({word:x.word,clue:x.clue,insight:x.insight})),
-   {word:L.spark,clue:L.clue,insight:L.insight},...L.extraSparks];
+ const discovery=[...L.bibleBoard,
+   {word:L.spark,clue:L.clue,insight:L.insight,reference:L.reference},...L.extraSparks];
  for(const x of discovery){
+  const sourceKey=x.word+'|'+norm(x.reference);
+  if(reviewedWordPassages.has(sourceKey))fail.push('Level '+lev+': '+x.word+' repeats the SAME Bible source passage as level '+reviewedWordPassages.get(sourceKey)+'; find a genuinely different discovery');
+  else reviewedWordPassages.set(sourceKey,lev);
   for(const [value,store,label] of [[x.clue,reviewedClues,'clue'],[x.insight,reviewedInsights,'insight']]){
    const key=x.word+'|'+norm(value);
    if(store.has(key))fail.push('Level '+lev+': '+x.word+' repeats the exact '+label+

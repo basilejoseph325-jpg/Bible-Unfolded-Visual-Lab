@@ -12,7 +12,7 @@ const rows=ledger.split('\n').filter(x=>/^\|\s*\d\d\s*\|/.test(x));
 assert.equal(levels.length,19,'Original 11 plus 19 TEST-only levels');
 assert.equal(rows.length,77,'Unchanged 77-entry source ledger');
 const changed=new Set([
- '22-board-MARTHA','22-board-TAMAR','22-extra-RAM',
+ '22-board-MARTHA','22-board-TAMAR','22-spark-HAM','22-extra-RAM',
  '23-board-SIMEON','23-board-SIMON','23-extra-NOISE',
  '24-board-BABEL','24-board-ABEL','24-spark-SEA','24-extra-SEAL',
  '25-board-GALILEE','25-board-ELI','25-spark-EAGLE',
@@ -49,10 +49,12 @@ for(let level=22;level<=26;level++){
   count++;
  }
 }
-assert.equal(count,20);assert.equal(improved,17);assert.equal(retained,3);
+assert.equal(count,20);assert.equal(improved,18);assert.equal(retained,2);
 const at=(n,kind,word)=>{let l=levels[n-12];return kind==='board'?l.bibleBoard.find(x=>x.word===word):kind==='extra'?l.extraSparks.find(x=>x.word===word):{word:l.spark,clue:l.clue,insight:l.insight,reference:l.reference}};
 assert(at(22,'board','MARTHA').insight.includes('Mary chose'),'Martha and Mary account');
 assert(at(22,'board','TAMAR').reference==='Genesis 38:6-14','Judah and Tamar full context');
+assert(at(22,'spark','HAM').reference==='Genesis 10:6, 32'&&at(22,'spark','HAM').clue.includes('Cush, Mizraim, Put, and Canaan'),'Ham later family list differs from Level 17 Genesis 9');
+assert(levels[5].reference==='Genesis 9:18'&&at(22,'spark','HAM').reference!==levels[5].reference,'No repeated HAM passage or lesson');
 assert(at(23,'board','SIMEON').insight.includes("wouldn't die"),'Simeon spirit revelation');
 assert(at(23,'extra','NOISE').insight.includes('not an actual windstorm'),'Noise is described as LIKE rushing wind');
 assert(at(24,'board','BABEL').insight.includes('avoid being scattered'),'Babel history');
@@ -65,5 +67,5 @@ assert(at(26,'board','ESTHER').clue.includes('Hadassah'),'Avoid repeated Esther 
 assert(at(26,'board','RUTH').insight.includes('change of life'),'Ruth story sensitivity');
 assert(at(26,'spark','REST').insight.includes('declared it sacred'),'Seventh-day rest explained');
 assert(at(26,'extra','THREE').insight.includes('sea became calm'),'Jonah additional story detail');
-assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('54 revised and 23 retained'),'Latest cumulative source review count');
-console.log('PASS 20 items, 17 improved, 3 retained; NWT chapters and ledger match; 77/77 AI-assisted first-pass, human signoff pending. No independent human signoff.');
+assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('56 revised and 21 retained'),'Latest cumulative source review count');
+console.log('PASS 20 items, 18 improved, 2 retained; NWT chapters and ledger match; 77/77 AI-assisted first-pass, human signoff pending. No independent human signoff.');

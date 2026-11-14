@@ -13,7 +13,7 @@ assert.equal(rows.length,77,'Keep exact 77-entry source ledger');
 const changed=new Set([
  '27-board-PAUL','27-board-SAUL','27-spark-SALT',
  '28-board-PSALMS','28-board-PSALM','28-spark-LAMP','28-extra-PALM',
- '29-board-JORDAN','29-spark-ROD','29-extra-JAR',
+ '29-board-JORDAN','29-board-DAN','29-spark-ROD','29-extra-JAR',
  '30-board-LEVITES','30-board-LEVI','30-spark-VEIL','30-extra-EVIL']);
 const canMake=(rack,word)=>{
  const counts={};for(const ch of rack)counts[ch]=(counts[ch]||0)+1;
@@ -43,7 +43,7 @@ for(let level=27;level<=30;level++){
   total++;
  }
 }
-assert.equal(total,16);assert.equal(revised,14);assert.equal(retained,2);
+assert.equal(total,16);assert.equal(revised,15);assert.equal(retained,1);
 const q=(level,kind,word)=>{const l=bank[level-12];return kind==='board'?l.bibleBoard.find(x=>x.word===word):kind==='extra'?l.extraSparks.find(x=>x.word===word):{word:l.spark,clue:l.clue,reference:l.reference,insight:l.insight}};
 assert(q(27,'board','PAUL').insight.includes('same man'),'Saul/Paul same-person distinction');
 assert(q(27,'board','SAUL').insight.includes("doesn't say"),'No invented renaming event');
@@ -53,11 +53,13 @@ assert(q(28,'board','PSALM').reference==='Psalm 23:1-4','Psalm 23 additional con
 assert(q(28,'spark','LAMP').insight.includes('next footstep'),'Psalm 119 lamp application labeled figurative');
 assert(q(28,'extra','PALM').reference==='Psalm 92:12-14','Psalm 92 palm/old age');
 assert(q(29,'board','JORDAN').insight.includes('overflowing its banks'),'Joshua 3 harvest season');
+assert(q(29,'board','DAN').reference==='Joshua 19:40, 47, 48'&&q(29,'board','DAN').clue.includes('Leshem')&&q(29,'board','DAN').insight.includes('too cramped'),'Later tribe of Dan and Leshem, not Level 14 birth story');
+assert(q(29,'board','DAN').reference!==bank[14-12].bibleBoard.find(x=>x.word==='DAN').reference,'DAN discovery must cover a distinct passage');
 assert(q(29,'spark','ROD').reference==='Exodus 4:2-5','Moses sign context');
 assert(q(29,'extra','JAR').insight.includes('pay her debt'),'Widow oil debt');
 assert(q(30,'board','LEVITES').insight.includes('Not every Levite served as a priest'),'Priests vs Levites');
 assert(q(30,'board','LEVI').insight.includes('third son'),'Leah Levi source');
 assert(q(30,'spark','VEIL').reference==='2 Corinthians 3:12-16','Paul applies Moses veil illustration');
 assert(q(30,'extra','EVIL').insight.includes('kindness instead of retaliation'),'Romans 12 broader context');
-assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('54 revised and 23 retained'),'Final first-pass tally');
-console.log('PASS final 16 Bible entries L27–30: 14 revised, 2 retained; 77/77 AI-assisted first-pass; source ledger and crossword IDs intact. No independent human signoff.');
+assert(ledger.includes('all 77 entries (levels 12–30)')&&ledger.includes('56 revised and 21 retained'),'Final first-pass tally');
+console.log('PASS final 16 Bible entries L27–30: 15 revised, 1 retained; 77/77 AI-assisted first-pass; source ledger and crossword IDs intact. No independent human signoff.');
