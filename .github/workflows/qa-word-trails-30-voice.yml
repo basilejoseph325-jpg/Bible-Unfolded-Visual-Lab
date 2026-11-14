@@ -11,6 +11,7 @@ on:
       - 'experiments/word-trails-main-settings-v1.css'
       - 'experiments/word-trails-original-voice-clips-v1.js'
       - 'experiments/word-trails-unified-menu-v1.js'
+  workflow_call:
 permissions: {contents: read}
 jobs:
   test:
