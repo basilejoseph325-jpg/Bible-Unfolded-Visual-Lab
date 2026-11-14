@@ -1,4 +1,4 @@
-name: Verify published TEST native backup and cold crash recovery v30
+name: Verify published TEST native backup and recovery review v31
 on:
   push:
     paths:
@@ -25,11 +25,13 @@ jobs:
           BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
           for attempt in $(seq 1 36); do
             if curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/index.html?native-v28=$attempt" | grep -F 'journey-progress-caption.js?v=20261113-wt-settings-practice-v24' >/dev/null &&
-               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?native-v28=$attempt" | grep -F 'visual-lab-test-banner.js?v=20261113-native-backup-safety-v30' >/dev/null &&
-               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?native-v28=$attempt" | grep -F 'bu-platform-saves-v2.js?v=20261113-native-backup-crash-guard-v30' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/journey-progress-caption.js?native-v28=$attempt" | grep -F 'visual-lab-test-banner.js?v=20261113-native-recovery-review-v31' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/visual-lab-test-banner.js?native-v28=$attempt" | grep -F 'bu-platform-saves-v2.js?v=20261113-native-recovery-review-v31' >/dev/null &&
                curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-v28=$attempt" | grep -F "const LIVE_CROSSWORD='bible-unfolded-word-trails-next-v1';" >/dev/null &&
                curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-preview-v30=$attempt" | grep -F 'function previewRestoreWrites(candidate)' >/dev/null &&
-               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-crash-v30=$attempt" | grep -F 'function rollbackThisAttempt(changed,previous,desired,journalText)' >/dev/null; then
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-crash-v30=$attempt" | grep -F 'function rollbackThisAttempt(changed,previous,desired,journalText)' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-review-v31=$attempt" | grep -F 'function installRecoveryReview()' >/dev/null &&
+               curl -fsSL --max-time 35 -H 'Cache-Control: no-cache' "$BASE/bu-platform-saves-v2.js?native-review-v31=$attempt" | grep -F 'Do not let the original native v1 handler bypass recovery quarantine.' >/dev/null; then
               echo 'PASS: published TEST native save bootstrap is refreshed and protected'
               break
             fi
