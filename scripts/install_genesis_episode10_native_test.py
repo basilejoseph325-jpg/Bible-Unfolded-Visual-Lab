@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build an isolated, compatible Genesis Episode 10 on a TEST feature branch.
-Only changes one serialized native game part after exact anchor checks. Never
+Only changes the required serialized native parts after exact anchor checks. Never
 copies the original engine to LIVE or alters existing chapter ids/saves/rewards.
 """
 import json,re
@@ -21,7 +21,7 @@ ep["contentStatus"]="playable_test_candidate_pending_phone_and_art_approval"
 pieces=[]
 for f in files:
     src=f.read_text(encoding="utf-8")
-    m=re.search(r'(__BU_STAGE41_CORE_PARTS__\\[\\d+\\] = )(".*")(\\s*;)',src,re.S)
+    m=re.search(r'(__BU_STAGE41_CORE_PARTS__\[\d+\] = )(".*")(\s*;)',src,re.S)
     if not m:raise SystemExit(f"Unexpected serialized game part: {f}")
     pieces.append([f,src,m,json.loads(m.group(2))])
 if any("genesis_ep10" in p[3] for p in pieces):
