@@ -1,0 +1,31 @@
+name: QA TEST native crash journal fails closed v30
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-test-native-journal-crash-safety-v30.yml'
+      - 'scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs'
+      - 'bu-platform-saves-v2.js'
+  workflow_dispatch:
+  workflow_call:
+permissions: {contents: read}
+jobs:
+  no-silent-old-wallet-rollback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source syntax and pinned original pre-fix code for negative proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check bu-platform-saves-v2.js
+          node --check scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs
+          curl -fLsS --retry 3 --max-time 35 \
+            https://raw.githubusercontent.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/476eb6d5cf73f884b763c46b07e10b1a0c789d0f/bu-platform-saves-v2.js \
+            -o /tmp/old-test-native-before-v30.js
+          test -s /tmp/old-test-native-before-v30.js
+      - name: Reproduce old wallet loss and verify new fail-closed cold recovery, same-call quota rollback and committed cleanup
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs /tmp/old-test-native-before-v30.js
