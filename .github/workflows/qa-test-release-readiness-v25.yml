@@ -22,6 +22,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  all-30-crossword-levels-and-original-voices:
+    name: Solve all 30 Word Trails levels + 20 native voice assets
+    uses: ./.github/workflows/qa-word-trails-30-voice.yml
   original-modes-and-word-trails-navigation:
     name: Original modes + Word Trails portrait/landscape
     runs-on: ubuntu-latest
