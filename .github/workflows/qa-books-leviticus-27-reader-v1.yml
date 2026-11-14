@@ -1,0 +1,29 @@
+name: QA Leviticus 27 chapters — Bible Books Chrome reader
+on:
+  push:
+    branches: [feature/leviticus-27-reading-parts-20261114, main]
+    paths:
+      - 'bible-book-guides/**'
+      - 'scripts/qa_books_leviticus_27_reader_v1.cjs'
+      - '.github/workflows/qa-books-leviticus-27-reader-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  leviticus-reader:
+    runs-on: ubuntu-latest
+    timeout-minutes: 19
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate reader source and manuscript structure
+        run: |
+          node --check bible-book-guides/books-v3.js
+          node --check scripts/qa_books_leviticus_27_reader_v1.cjs
+          python3 -m json.tool bible-book-guides/leviticus-draft.json >/dev/null
+      - name: Chrome portrait, narrow phone and landscape full reading journey
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-leviticus-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-leviticus-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-leviticus-qa/node_modules node scripts/qa_books_leviticus_27_reader_v1.cjs
