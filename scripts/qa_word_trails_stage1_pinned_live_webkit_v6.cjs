@@ -21,6 +21,12 @@ const checkSave=async page=>page.evaluate(LIVE=>{
    const ctx=await browser.newContext({viewport:{width,height},
     isMobile:true,hasTouch:true,deviceScaleFactor:2});
    try{
+    // Seed before scripts load, especially cached older HTML that may launch
+    // the Word Trails engine before DOMContentLoaded returns.
+    await ctx.addInitScript(({test,live,progress})=>{
+     localStorage.setItem(test,progress);
+     localStorage.removeItem(live);
+    },{test:TEST,live:LIVE,progress:raw});
     const page=await ctx.newPage(),errors=[];
     page.on('pageerror',e=>errors.push(e.message));
     const target=oldHTML?URL+'/experiments/word-trails-old-html-compat-v6.html':URL+'/index.html';
@@ -29,11 +35,9 @@ const checkSave=async page=>page.evaluate(LIVE=>{
      await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
       !!document.querySelector('#home-cross'),null,{timeout:110000});
     }
-    // Seed a synthetic TEST save while LIVE crossword key is ABSENT.
-    await page.evaluate(({t,raw,l})=>{
-     localStorage.setItem(t,raw);localStorage.removeItem(l);
-    },{t:TEST,raw,l:LIVE});
-    assert.equal(await page.evaluate(l=>localStorage.getItem(l),LIVE),null);
+    // In the fresh root, the LIVE key must stay absent until Word Trails
+    // actually starts. Old cached HTML itself starts the game immediately.
+    if(!oldHTML)assert.equal(await page.evaluate(l=>localStorage.getItem(l),LIVE),null);
     if(oldHTML){
      await page.waitForFunction(()=>window.BUWTLegacyAutoImportRetiredV6?.disabled===true&&
       document.querySelectorAll('.wheel-letter').length>=6,
