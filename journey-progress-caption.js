@@ -221,3 +221,10 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  sc.src='trivia-genesis-food-clarity-test-v1.js?v=20261110-genesis-food-clause-v1';
  document.head.append(sc);
 })();
+
+/* Real Crosswords packs 22–30 — TEST only, additive; existing saves untouched. */
+(()=>{if(document.getElementById('bu-crossword-extra-packs-loader'))return;
+ const sc=document.createElement('script');sc.id='bu-crossword-extra-packs-loader';
+ sc.async=false;sc.src='crossword-scripture-packs-22-to-30-test-v1.js?v=20261114-crosswords30-v1';
+ document.head.append(sc);
+})();
