@@ -15,6 +15,7 @@ const T='bu-visual-lab-wordtrails-next-v1';
 const L='bible-unfolded-word-trails-next-v1';
 const W='bible-unfolded-rewards-v17';
 const O='bible-unfolded-wheel-ownership-v3825';
+const OB='bible-unfolded-wheel-ownership-v3825-backup';
 const VOICE='bible-unfolded-private-voice-pref-v381';
 const LEGACY='bu-visual-lab-import-rollback-v2';
 const JOURNAL='bu-visual-lab-import-transaction-v7';
@@ -29,6 +30,7 @@ const testProgress={
 const original={
  [W]:str({coins:750,points:65,purchases:['seawheel'],equippedWheel:'seawheel'}),
  [O]:str({version:1,owned:['seawheel']}),
+ [OB]:str({version:1,owned:['seawheel']}),
  [VOICE]:str({mode:'off',volume:41}),
  [T]:str(testProgress),
  [L]:str({level:9,unlocked:10,coins:51,completed:[0,1,2,3]}),
