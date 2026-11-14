@@ -9,8 +9,11 @@
 <script>
 (()=>{'use strict';try{
  const args=new URLSearchParams(location.search);
- if(window.top===window && args.get('standalone')!=='qa' &&
-    (location.hostname.endsWith('.github.io')||args.get('native')==='1')){
+ // Published links always load the real native menu/Settings host.
+ // Only local standalone test URLs can bypass that host via standalone=qa.
+ if(window.top===window &&
+    (location.hostname.endsWith('.github.io')||
+     (args.get('native')==='1'&&args.get('standalone')!=='qa'))){
   location.replace('../index.html?wt_launch=native');
  }
 }catch(_){}})();
