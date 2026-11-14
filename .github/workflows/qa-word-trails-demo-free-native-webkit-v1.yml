@@ -1,0 +1,40 @@
+name: QA TEST Word Trails sans demo clips native WebKit voice controls v1
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-demo-free-native-webkit-v1.yml'
+      - 'scripts/qa_word_trails_demo_free_native_webkit_v1.cjs'
+      - 'scripts/qa_word_trails_commercial_voice_hold_v1.cjs'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-announcer-v1.js'
+      - 'experiments/word-trails-main-settings-v1.js'
+      - 'word-trails-native-shell-v1.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  native-browser-no-demo-clips:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate both candidate and commercial audio gate scripts
+        run: |
+          node --check scripts/qa_word_trails_demo_free_native_webkit_v1.cjs
+          node --check scripts/qa_word_trails_commercial_voice_hold_v1.cjs
+      - name: Install isolated WebKit browser runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-wt-demo-free-native-webkit-v1 playwright@latest --silent --no-audit --no-fund
+          /tmp/bu-wt-demo-free-native-webkit-v1/node_modules/.bin/playwright install --with-deps webkit
+      - name: Rehearse sanitized game in real WebKit using synthetic saves and mocked native audio
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8893 --bind 127.0.0.1 >/tmp/bu-wt-demo-free-native-webkit-v1-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-wt-demo-free-native-webkit-v1/node_modules node scripts/qa_word_trails_demo_free_native_webkit_v1.cjs
+      - name: Show release boundary
+        run: |
+          echo 'This tests a temporary browser response, not an authorized commercial LIVE release.'
+          echo 'Neither the demo-free candidate nor any original/native voice recordings have been commercially licensed by this test.'
