@@ -1,0 +1,36 @@
+name: QA Word Trails TEST-only native v2 verified backup to locked v7 bridge v8
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-native-backup-bridge-v8.yml'
+      - 'experiments/word-trails-native-backup-bridge-candidate-v8.js'
+      - 'scripts/qa_word_trails_native_backup_bridge_v8.cjs'
+      - 'bu-platform-saves-v2.js'
+      - 'experiments/word-trails-native-full-backup-transaction-v7.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  synthetic-v2-v7-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax and ensure migration prototype is not in any game page
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-native-backup-bridge-candidate-v8.js
+          node --check scripts/qa_word_trails_native_backup_bridge_v8.cjs
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js word-trails-checkpoint-native-settings-practice-v1.js experiments/word-trails-next-v1.html experiments/word-trails-checkpoint-rehearsal-v2.html experiments/word-trails-checkpoint-rehearsal-v2.js; do
+            if grep -F 'word-trails-native-backup-bridge-candidate-v8.js' "$f"; then
+              echo 'STOP: TEST research bridge must never be loaded by a player-facing page' >&2
+              exit 1
+            fi
+          done
+          echo 'PASS: v8 cannot auto-load in native or practice screens'
+      - name: Use REAL v2 coordinator and v7 transaction on fake-memory profiles only
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/qa_word_trails_native_backup_bridge_v8.cjs
+          echo 'PASS: no production save data, LIVE writes, or player import UI involved'
