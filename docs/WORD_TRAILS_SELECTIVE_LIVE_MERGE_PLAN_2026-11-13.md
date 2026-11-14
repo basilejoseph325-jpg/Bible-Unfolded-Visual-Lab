@@ -7,6 +7,8 @@
 - [Complete 21-file source/hash inventory](WORD_TRAILS_LIVE_DELTA_RECHECK_2026-11-13.md): **8 identical, 10 present-but-different, 3 absent in LIVE**. All five large original native-core JS parts are identical.
 - **Important: LIVE already contains an earlier 30-level Word Trails NEXT implementation.** This is a future controlled *update*, NOT an initial blank-system install.
 
+**Latest TEST-only bridge QA:** [Native v8 complete-backup validation → locked v7 transaction bridge](WORD_TRAILS_NATIVE_V8_VERIFIED_BACKUP_TRANSACTION_BRIDGE_2026-11-13.md) passed 15 synthetic scenarios. It is unlinked and not permission to enable any real save import; LIVE legacy auto-migration still blocks release.
+
 ## Actual code risks found (not hypothetical)
 
 **1. Separate saves and an active legacy importer.** TEST crossword key: `bu-visual-lab-wordtrails-next-v1`; LIVE: `bible-unfolded-word-trails-next-v1`. TEST `bu-platform-saves-v2.js` (~41.4 KB) deliberately suspends TEST player-facing backup imports, adds protective read-only previews and cross-tab warnings, and excludes protected LIVE crossword data. LIVE's distinct backup handler (~14.9 KB) already supports its production backup import/rollback process. **Never overwrite the LIVE save manager with TEST's.** Both games use different paths under one `github.io` origin, so browser `localStorage` is shared across those paths.
