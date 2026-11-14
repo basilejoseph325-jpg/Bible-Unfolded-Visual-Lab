@@ -4,6 +4,8 @@ on:
     paths:
       - '.github/workflows/qa-word-trails-native-shell.yml'
       - 'scripts/word_trails_native_shell_integration_test.cjs'
+      - 'scripts/qa_word_trails_public_native_route_v36.cjs'
+      - 'experiments/word-trails-next-v1.html'
       - 'word-trails-native-shell-v1.js'
       - 'word-trails-next-launcher.js'
       - 'experiments/word-trails-unified-menu-v1.js'
@@ -26,6 +28,8 @@ jobs:
           node --check experiments/word-trails-announcer-v1.js
           node --check experiments/word-trails-main-settings-v1.js
           node --check scripts/word_trails_native_shell_integration_test.cjs
+          node --check scripts/qa_word_trails_public_native_route_v36.cjs
+          node scripts/qa_word_trails_public_native_route_v36.cjs
           test -f BIBLE_UNFOLDED_RULEBOOK_START_HERE.md
       - name: Native homepage plus embedded Word Trails mobile browser QA
         run: |
