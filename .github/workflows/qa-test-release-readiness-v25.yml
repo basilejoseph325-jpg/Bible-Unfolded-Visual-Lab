@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v30 (nine groups)
+name: QA Bible Unfolded TEST full pre-release regression v31 (ten groups)
 on:
   push:
     paths:
@@ -7,6 +7,8 @@ on:
       - '.github/workflows/qa-native-backup-live-key-isolation-v26.yml'
       - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
       - '.github/workflows/qa-test-native-journal-crash-safety-v30.yml'
+      - '.github/workflows/qa-native-recovery-review-panel-v31.yml'
+      - 'scripts/qa_native_recovery_review_panel_v31.cjs'
       - 'scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs'
       - '.github/workflows/qa-test-trivia-family-visuals-v29.yml'
       - '.github/workflows/qa-trivia-scholar-v1.yml'
@@ -38,6 +40,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  native-player-recovery-review:
+    name: Native TEST Settings must show recovery review, preserve journal, download and block v1/v2 imports
+    uses: ./.github/workflows/qa-native-recovery-review-panel-v31.yml
   native-v2-stale-journal-never-rewinds:
     name: TEST native crash journals must not silently roll back newer wallet or game progress
     uses: ./.github/workflows/qa-test-native-journal-crash-safety-v30.yml
