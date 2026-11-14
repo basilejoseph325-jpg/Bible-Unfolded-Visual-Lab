@@ -1,0 +1,29 @@
+name: QA TEST-only native full-game restore transaction v7
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
+      - 'experiments/word-trails-native-full-backup-transaction-v7.js'
+      - 'scripts/qa_word_trails_native_full_backup_transaction_v7.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  guarded-native-restore-fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax and unlinked TEST-only contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-native-full-backup-transaction-v7.js
+          node --check scripts/qa_word_trails_native_full_backup_transaction_v7.cjs
+          for file in index.html visual-lab-test-banner.js journey-progress-caption.js word-trails-native-shell-v1.js bu-platform-saves-v2.js experiments/word-trails-next-v1.html experiments/word-trails-next-v1.js; do
+            if grep -F 'word-trails-native-full-backup-transaction-v7.js' "$file"; then
+              echo 'STOP: experimental v7 transaction is linked to a real player page' >&2
+              exit 1
+            fi
+          done
+      - name: Consent, journal, conflict, crash, wallet and lock synthetic cases
+        run: node scripts/qa_word_trails_native_full_backup_transaction_v7.cjs
