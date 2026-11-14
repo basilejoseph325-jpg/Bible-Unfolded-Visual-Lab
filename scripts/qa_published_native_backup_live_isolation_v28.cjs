@@ -77,9 +77,9 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
      before,after
     };
    },{TEST,LIVE,wordTrails,fakeLive,OLD});
-   assert(result.load.includes('native-backup-crash-guard-v30'),
+   assert(result.load.includes('native-recovery-review-v31'),
     'Published TEST root must load cache-busted protected save coordinator');
-   assert(result.banner.includes('native-backup-safety-v30'),
+   assert(result.banner.includes('native-recovery-review-v31'),
     'Published TEST root must load newest Visual Lab banner');
    assert(result.bound&&result.originalSettings&&result.realNativeExport&&result.realNativeImport);
    assert(!result.liveInExport,'Published TEST backup must not contain LIVE crossword progress');
@@ -130,6 +130,70 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
    assert(cold.review===true&&cold.notice.includes('Backup recovery needs review'),
     'Native Settings must disclose unfinished restore needing review');
    assert.deepEqual(errors,[],'Published browser must not throw errors after cold recovery probe');
+   const ui=await page.evaluate(async ({OLD,TEST,LIVE})=>{
+    const panel=document.getElementById('bu-wt-recovery-review');
+    const button=document.getElementById('bu-wt-recovery-current-backup');
+    const summary=panel?.querySelector('summary');
+    const copy=panel?.textContent||'';
+    const status=document.getElementById('bu-wt-save-status');
+    const picker=document.getElementById('save-file');
+    if(!panel||!button||!picker)return {panel:false};
+    let downloads=0,filename='';
+    const anchorClick=HTMLAnchorElement.prototype.click;
+    // Intercept ONLY the synthetic TEST download to prevent CI from
+    // actually saving a file to the runner. Native game code still executes.
+    HTMLAnchorElement.prototype.click=function(){
+     if(this.download?.startsWith('Bible_Unfolded_Complete_TEST_Backup_v2')){
+      downloads++;filename=this.download;
+     }else return anchorClick.call(this);
+    };
+    try{button.click()}finally{HTMLAnchorElement.prototype.click=anchorClick}
+    const requested=status?.textContent?.includes('Check Downloads')||false;
+    let nativeCalls=0,confirmCalls=0;
+    const oldConfirm=window.confirm;
+    window.confirm=()=>{confirmCalls++;return true};
+    const blocked=[],keys=['bible-unfolded-rewards-v17',TEST,LIVE,OLD];
+    const before=keys.map(k=>localStorage.getItem(k));
+    const copyBackup=window.BUPlatformSaves.makeBackup();
+    for(const version of [1,2]){
+     const payload=version===1?
+      {format:'BibleUnfoldedSave',version:1,keys:{'bible-unfolded-rewards-v17':before[0]}}:
+      copyBackup;
+     const file=new File([JSON.stringify(payload)],'test-v'+version+'.json',{type:'application/json'});
+     const dt=new DataTransfer();dt.items.add(file);picker.files=dt.files;
+     await picker.onchange(new Event('change'));
+     blocked.push({version,status:status?.textContent||'',clear:!picker.value});
+    }
+    window.confirm=oldConfirm;
+    const after=keys.map(k=>localStorage.getItem(k));
+    return {panel:true,tag:panel.tagName,summary:summary?.textContent||'',copy,
+     buttons:panel.querySelectorAll('button').length,buttonText:button.textContent,
+     downloads,filename,requested,nativeCalls,confirmCalls,blocked,
+     unchanged:JSON.stringify(before)===JSON.stringify(after),
+     journalStillPresent:after[3]!==null,
+     testSaveStillPresent:after[1]!==null,
+     liveStillPresent:after[2]!==null,
+     status:status?.textContent||''};
+   },{OLD,TEST,LIVE});
+   assert.equal(ui.panel,true,'Recovery panel absent from real published TEST Settings');
+   assert.equal(ui.tag,'DETAILS');
+   assert.equal(ui.buttons,1,'Recovery must expose no dangerous reset/import button');
+   assert(ui.summary.includes('Review an interrupted TEST backup'));
+   assert(ui.copy.includes('partly restored')&&ui.copy.includes('LIVE and TEST'));
+   assert.equal(ui.downloads,1,'Current progress button did not request native v2 backup');
+   assert(ui.filename.endsWith('.json')&&ui.requested);
+   assert.equal(ui.confirmCalls,0,'Pending journal unexpectedly invoked a v1/v2 import prompt');
+   assert(ui.blocked.length===2&&ui.blocked.every(x=>x.status.includes('Imports are blocked')&&x.clear));
+   assert(ui.unchanged&&ui.journalStillPresent&&ui.testSaveStillPresent&&ui.liveStillPresent,
+    'Backup review/import block unexpectedly changed native or protected progress');
+   assert.deepEqual(errors,[],'Recovery review interactions triggered JS errors');
+   console.log('PASS_PUBLISHED_TEST_NATIVE_RECOVERY_REVIEW_V31',JSON.stringify({
+    viewport:width+'x'+height,reviewVisible:true,
+    noResetButton:true,downloadRequested:true,
+    nativeV1AndV2ImportsBlocked:true,journalPreserved:true,
+    walletAndTestLiveProgressPreserved:true,
+    syntheticBrowserOnly:true,pageErrors:0
+   }));
    console.log('PASS_PUBLISHED_TEST_NATIVE_BACKUP_CRASH_GUARD_V30',JSON.stringify({
     viewport:width+'x'+height,
     cacheBustedNativeLoader:true,
