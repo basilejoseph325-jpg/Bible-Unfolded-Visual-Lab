@@ -9,6 +9,12 @@ const source={level:2,unlocked:5,coins:9999,points:300,completed:[0,1,2],
  claimedFreeHints:[0],sound:true,
  progress:{level:2,found:['ELI'],bonuses:[],hinted:[],combo:1}};
 const raw=JSON.stringify(source);
+// Fictional established LIVE progress: an old cached script must never
+// overwrite it with unrelated, newer TEST crossword levels.
+const existingLiveRaw=JSON.stringify({level:2,unlocked:5,coins:137,points:42,
+ completed:[0,1],sparks:[],claimedSparks:[],boardBible:[],paidWords:[],
+ paidBonuses:[],claimedFreeHints:[],sound:true,progress:null,
+ ownerSavedMarker:'existing-LIVE-progress-must-survive'});
 // The pinned old script, used as a byte-exact stand-in for an OLD CACHED response.
 // A new LIVE shim cannot retroactively invalidate a browser's old JS cache.
 const oldJs=fs.readFileSync('/tmp/wt-stage1-original.js','utf8');
@@ -23,17 +29,21 @@ const checkSave=async page=>page.evaluate(LIVE=>{
  const browser=await webkit.launch({headless:true,timeout:90000});
  try{
  for(const [width,height] of [[390,705],[320,568]]){
-  for(const mode of ['fresh-html','old-html-refetches-shim','old-html-cached-old-js']){
-   const oldHTML=mode!=='fresh-html',cachedJS=mode==='old-html-cached-old-js';
+  for(const mode of ['fresh-html','old-html-refetches-shim',
+   'old-html-cached-old-js','existing-live-cached-old-js']){
+   const oldHTML=mode!=='fresh-html',cachedJS=mode.includes('cached-old-js');
+   const hasExistingLive=mode==='existing-live-cached-old-js';
    const ctx=await browser.newContext({viewport:{width,height},
     isMobile:true,hasTouch:true,deviceScaleFactor:2});
    try{
     // Seed before scripts load, especially cached older HTML that may launch
     // the Word Trails engine before DOMContentLoaded returns.
-    await ctx.addInitScript(({test,live,progress})=>{
+    await ctx.addInitScript(({test,live,progress,preExisting})=>{
      localStorage.setItem(test,progress);
-     localStorage.removeItem(live);
-    },{test:TEST,live:LIVE,progress:raw});
+     if(preExisting!==null)localStorage.setItem(live,preExisting);
+     else localStorage.removeItem(live);
+    },{test:TEST,live:LIVE,progress:raw,
+     preExisting:hasExistingLive?existingLiveRaw:null});
     const page=await ctx.newPage(),errors=[];
     page.on('pageerror',e=>errors.push(e.message));
     // Real WebKit interception: serve the exact ORIGINAL code from the SAME old
@@ -66,7 +76,14 @@ const checkSave=async page=>page.evaluate(LIVE=>{
     await page.waitForFunction(l=>localStorage.getItem(l)!==null,LIVE,{timeout:45000});
     const saved=await checkSave(page);
     assert(saved&&Array.isArray(saved.completed));
-    if(cachedJS){
+    if(hasExistingLive){
+     const current=await page.evaluate(l=>localStorage.getItem(l),LIVE);
+     assert.equal(current,existingLiveRaw,
+      'Cached old script must preserve an existing LIVE save byte for byte');
+     assert.equal(saved.coins,137,'Existing LIVE coins must not be replaced by 60');
+     assert.equal(saved.ownerSavedMarker,'existing-LIVE-progress-must-survive');
+     assert.equal(saved.migration,undefined,'No migration allowed with existing LIVE progress');
+    }else if(cachedJS){
      // Negative regression: old cached *JS* can still silently recreate LIVE.
      // The test PASSES only if this dangerous limitation is honestly detected.
      assert.equal(saved.completed.length,3,'A cached old importer must still exhibit the known unsafe copy');
@@ -87,8 +104,9 @@ const checkSave=async page=>page.evaluate(LIVE=>{
      viewport:width+'x'+height,
      case:mode,
      localPinnedLiveCopy:true,wordTrailsLoaded:true,
-     legacyCompletedLevelsNotImported:!cachedJS,
-     knownUncontrolledOldJsCanAutoimport:cachedJS,
+     legacyCompletedLevelsNotImported:!cachedJS||hasExistingLive,
+     knownUncontrolledOldJsCanAutoimport:cachedJS&&!hasExistingLive,
+     existingLiveSavePreserved:hasExistingLive?true:null,
      testSaveUntouched:true,zeroPageExceptions:true,
      liveRepositoryChanged:false,physicalIphoneCertified:false
     }));
