@@ -78,6 +78,9 @@ function observeExternalStorage(event){
  if(!event||!EXTERNAL_NATIVE.has(event.key)||event.oldValue===event.newValue||
     (event.storageArea&&event.storageArea!==localStorage))return;
  competingPages.add(event.key);
+ verifiedCurrentCopy=null; // invalidate selected-file verification on foreign shared write
+ const previewInfo=document.getElementById('bu-wt-safe-preview-message-v34');
+ if(previewInfo)previewInfo.textContent='Another page changed shared progress. Verify a fresh current backup before previewing.';
  if(event.key===LIVE_CROSSWORD){
   // Update the separate READ-ONLY startup notice if an older migration
   // arrives while TEST is open. Don't leave a "LIVE missing" warning after
@@ -393,6 +396,141 @@ function getStatus(){
  native.append(el);return el;
 }
 function notice(s){const el=getStatus();if(el)el.textContent=s}
+/* TEST v34: verify a selected, actual backup file matches the complete
+ * CURRENT native/TEST export. This is an equality check of real saved data,
+ * NOT proof the browser has durably downloaded a file, NOT proof other tabs
+ * are closed, and NEVER authorization to restore. The timestamp may differ.
+ * No key is written, recovered or removed by this operation. */
+let verifiedCurrentCopy=null;
+function verifyCurrentBackupCopy(candidate){
+ const c=typeof candidate==='string'?parse(candidate):candidate;
+ nativeData(c);
+ const latest=makeBackup();
+ const fileKeys=Object.keys(c.keys),currentKeys=Object.keys(latest.keys);
+ const same=fileKeys.length===currentKeys.length&&
+  currentKeys.every(k=>Object.prototype.hasOwnProperty.call(c.keys,k)&&
+   c.keys[k]===latest.keys[k])&&
+  c.extensions.wordTrailsNext.state===latest.extensions.wordTrailsNext.state&&
+  c.extensions.wordTrailsNext.feel===latest.extensions.wordTrailsNext.feel;
+ return Object.freeze({
+  validFormat:true,matchesCurrent:!!same,
+  includedNativeKeys:fileKeys.length,
+  testCrosswordPresent:c.extensions.wordTrailsNext.state!==null,
+  liveCrosswordExcluded:!Object.prototype.hasOwnProperty.call(c.keys,LIVE_CROSSWORD),
+  readOnly:true,authorizesRestore:false,
+  message:same?'The selected TEST backup matches the currently saved progress at this instant. Keep the downloaded file. This does NOT mean restoring is safe yet.':
+   'This file does not match all current native and TEST saved progress. Progress may have changed; download a fresh backup and verify it again.'
+ });
+}
+/* The preview uses EXACT active v27 protectedNative, wallet and paid-wheel
+ * merge rules. Returned values are only a FRIENDLY SUMMARY: never expose
+ * raw player JSON or use a preview as a write token. */
+function previewRestoreReview(candidate){
+ const plan=previewRestoreWrites(candidate);
+ const count=keys=>plan.writes.filter(x=>keys.includes(x.key)).length;
+ return Object.freeze({
+  changes:plan.changes,
+  nativeKeysChanging:plan.writes.filter(x=>allowed(x.key)).length,
+  nativeWalletKeysChanging:count(WALLETS),
+  paidWheelKeysChanging:count(OWNERSHIP),
+  testWordTrailsChanging:count([TEST]),
+  testAudioChanging:count([FEEL]),
+  currentWallet:plan.summary.currentWallet,
+  incomingWallet:plan.summary.incomingWallet,
+  currentWordTrails:plan.summary.currentWordTrails,
+  incomingWordTrails:plan.summary.incomingWordTrails,
+  ownedWheelsRetained:Object.freeze([...plan.summary.preservedOwnedWheels]),
+  liveCrosswordExcluded:plan.liveWordTrailsExcluded,
+  testCoinsStaySeparate:plan.testCoinsQuarantined,
+  noWritesPerformed:true,restoreDisabled:true
+ });
+}
+/* Native Settings read-only review UI. Separate file inputs never delegate
+ * to native v1 or TEST v2 restore. A real file chosen from Downloads must
+ * match current progress BEFORE examining any candidate backup. Even then
+ * there is intentionally no Apply/Restore button. */
+function installRestoreReview(){
+ if(document.getElementById('bu-wt-safe-preview-v34'))return;
+ const status=getStatus();
+ if(!status)return;
+ const root=document.createElement('details');
+ root.id='bu-wt-safe-preview-v34';
+ root.style.cssText='margin:9px 0 3px;padding:9px 11px;border:1px solid rgba(197,157,92,.65);border-radius:10px;box-sizing:border-box;max-width:100%;';
+ const summary=document.createElement('summary');
+ summary.textContent='Preview a TEST backup safely (no restore)';
+ summary.style.cssText='cursor:pointer;font-weight:750;';root.append(summary);
+ function line(text){
+  const el=document.createElement('p');
+  el.textContent=text;
+  el.style.cssText='margin:9px 0;font-size:.9em;line-height:1.5;';
+  root.append(el);return el;
+ }
+ line('First download your current TEST progress using the normal Export button above. Check your Downloads, then select that file to verify it matches your CURRENT save. This does not back up protected LIVE Word Trails progress.');
+ line('Next you can preview a different TEST backup to see what would change. No restore will run from this preview.');
+ const info=document.createElement('p');
+ info.id='bu-wt-safe-preview-message-v34';
+ info.setAttribute('role','status');
+ info.setAttribute('aria-live','polite');
+ info.style.cssText='margin:9px 0;font-size:.9em;line-height:1.5;';
+ info.textContent='No current backup file verified yet.';
+ root.append(info);
+ const mk=(label,id,fn)=>{
+  const b=document.createElement('button');
+  b.type='button';b.id=id;b.textContent=label;
+  b.style.cssText='display:block;max-width:100%;margin:8px 0;padding:8px 11px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;';
+  b.addEventListener('click',fn);root.append(b);return b;
+ };
+ const file=(id,handler)=>{
+  const el=document.createElement('input');
+  el.type='file';el.accept='.json,application/json';
+  el.id=id;el.style.display='none';
+  el.addEventListener('change',async()=>{
+   const selected=el.files?.[0];
+   if(!selected)return;
+   try{
+    if(selected.size>MAX_BYTES)throw Error('Selected file exceeds the safe 2 MB limit.');
+    await handler(parse(await selected.text()));
+   }catch(e){info.textContent='Could not review file: '+e.message}
+   finally{el.value=''}
+  });
+  root.append(el);return el;
+ };
+ const verifyFile=file('bu-wt-current-copy-picker-v34',async candidate=>{
+  verifiedCurrentCopy=null;
+  const result=verifyCurrentBackupCopy(candidate);
+  if(result.matchesCurrent){
+   verifiedCurrentCopy=candidate;
+   info.textContent='CURRENT TEST backup file verified against saved game data now. No save was changed. This does not approve restoring.';
+  }else info.textContent=result.message;
+ });
+ const previewFile=file('bu-wt-candidate-preview-picker-v34',async candidate=>{
+  if(!verifiedCurrentCopy)
+   throw Error('First verify your downloaded CURRENT TEST backup file.');
+  if(!verifyCurrentBackupCopy(verifiedCurrentCopy).matchesCurrent){
+   verifiedCurrentCopy=null;
+   throw Error('Saved game changed since the backup was checked. Verify a fresh current backup before previewing.');
+  }
+  const result=previewRestoreReview(candidate);
+  const current=result.currentWallet,incoming=result.incomingWallet;
+  const oldTrail=result.currentWordTrails,newTrail=result.incomingWordTrails;
+  const wallet=current&&incoming?
+   ' Current Insight Tokens: '+current.insightTokens+'; incoming: '+incoming.insightTokens+
+   '. Current Points: '+current.points+'; incoming: '+incoming.points+'.':'';
+  const crossword=oldTrail?.present&&newTrail?.present?
+   ' Current Word Trails: '+oldTrail.completedCount+' levels, '+oldTrail.coins+
+   ' TEST coins; incoming: '+newTrail.completedCount+' levels, '+newTrail.coins+' TEST coins.':'';
+  info.textContent='READ-ONLY PREVIEW: '+result.changes+' saved keys would change ('+
+   result.nativeWalletKeysChanging+' wallet records, '+
+   result.paidWheelKeysChanging+' ownership records, '+
+   result.testWordTrailsChanging+' TEST crossword record).'+wallet+crossword+
+   ' Owned paid wheel types retained: '+result.ownedWheelsRetained.length+
+   '. TEST coins never become Insight Tokens. NO progress has been restored; apply is disabled.';
+ });
+ mk('Verify downloaded current TEST backup','bu-wt-verify-current-copy-v34',()=>verifyFile.click());
+ mk('Preview another TEST backup (read only)','bu-wt-open-restore-preview-v34',()=>previewFile.click());
+ line('Restore is intentionally NOT available in this preview. Older LIVE tabs may still write saved progress; a matching file is not a transaction lock or permission to overwrite real data.');
+ status.parentNode.append(root);
+}
 /* The startup REVIEW supplements, but cannot replace, v32 cross-document
  * detection. It deliberately never blocks normal play or performs writes.
  * A historical migration marker is evidence of earlier migration data,
@@ -564,6 +702,7 @@ function install(){
  installRecoveryReview();
  installConcurrentReview();
  installLegacyTransitionReview();
+ installRestoreReview();
 }
 const recovered=recoverPending();
 if(typeof window.addEventListener==='function')
@@ -574,7 +713,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else install();
 window.BUPlatformSaves=Object.freeze({
  version:'2.0.0-test',keys:Object.freeze({TEST,FEEL,JOURNAL,COMMITTED}),
- makeBackup,dryRun,previewRestoreWrites,applyBackup,validateTrails,recoverPending,
+ makeBackup,dryRun,previewRestoreWrites,verifyCurrentBackupCopy,previewRestoreReview,
+ applyBackup,validateTrails,recoverPending,
  externalChangeStatus,legacyTransitionStatus,bound:()=>installed
 });
 })();
