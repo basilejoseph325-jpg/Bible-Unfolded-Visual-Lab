@@ -13,6 +13,21 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       const errors=[];
       page.on('pageerror',e=>errors.push(e.message.slice(0,180)));
       await page.setViewport(viewport);
+      // Trace writes to the legacy shared-audio record without modifying app behavior.
+      await page.evaluateOnNewDocument(()=>{
+        window.__qaAudioShadowWrites=[];
+        const original=Storage.prototype.setItem;
+        Storage.prototype.setItem=function(k,v){
+          if(k==='bu-platform-audio-preferences-v1'){
+            window.__qaAudioShadowWrites.push({
+              key:k,
+              value:String(v).slice(0,250),
+              stack:String(new Error().stack).slice(0,900)
+            });
+          }
+          return original.call(this,k,v);
+        };
+      });
       await page.goto('http://127.0.0.1:8891/index.html',{waitUntil:'domcontentloaded',timeout:120000});
       await page.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.(),{timeout:120000});
       const pre=await page.evaluate(()=>({hasNativeMenu:!!document.querySelector('#game-menu'),hasSettings:!!document.querySelector('#settings-dialog'),rootMenu:typeof window.openMenu,rootSettings:typeof window.openDialog,hasHost:!!window.BUWTNativeShell,home:!!document.getElementById('home-cross')}));
@@ -79,7 +94,10 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
         await new Promise(resolve=>setTimeout(resolve,45));
         return {nativeToggled:!original,childDuring:during,restored:child.BUWTPolish.state().sfx===original,
           feelUnchanged:localStorage.getItem('bu-wt-next-feel-v2')===feelBefore,
-          mirroredUnchanged:localStorage.getItem('bu-platform-audio-preferences-v1')===mirroredBefore};
+          mirroredUnchanged:localStorage.getItem('bu-platform-audio-preferences-v1')===mirroredBefore,
+          mirroredBefore,mirroredAfter:localStorage.getItem('bu-platform-audio-preferences-v1'),
+          parentShadowWrites:window.__qaAudioShadowWrites?.slice(-5),
+          childShadowWrites:child.__qaAudioShadowWrites?.slice(-5)};
       });
       console.log('NATIVE_AUDIO_PROPAGATION',JSON.stringify(sync));
       assert.equal(sync.childDuring,sync.nativeToggled);
