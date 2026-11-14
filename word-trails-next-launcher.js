@@ -57,12 +57,12 @@ function installCrosswordsHomeCard(){
  if(!original)return false;
  const button=original.cloneNode(true);
  button.id='home-crossword-packs';
- button.setAttribute('aria-label','Play Bible Crosswords — 30 Scripture and classic puzzle boards');
+ button.setAttribute('aria-label','Play Bible Crosswords — 33 Scripture and classic puzzle boards');
  const title=button.querySelector('.cinematic-card-title');
  const desc=button.querySelector('.cinematic-card-desc');
  const cta=button.querySelector('.cinematic-card-cta');
  if(title)title.textContent='Bible Crosswords';
- if(desc)desc.textContent='30 playable puzzle boards! Find words, learn Bible details, and earn rewards.';
+ if(desc)desc.textContent='33 playable puzzle boards! Find words, learn Bible details, and earn rewards.';
  if(cta)cta.textContent='PLAY CROSSWORD PACKS ›';
  button.addEventListener('click',event=>{
   event.preventDefault();event.stopPropagation();
