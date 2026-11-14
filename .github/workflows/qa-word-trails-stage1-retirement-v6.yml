@@ -4,12 +4,13 @@ on:
     paths:
       - '.github/workflows/qa-word-trails-stage1-retirement-v6.yml'
       - 'scripts/qa_word_trails_stage1_no_autoimport_v6.cjs'
+      - 'scripts/qa_word_trails_stage1_pinned_live_webkit_v6.cjs'
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
   build-safe-two-file-patch:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Verify code and retrieve exact protected LIVE sources READ ONLY
@@ -29,6 +30,39 @@ jobs:
           node scripts/qa_word_trails_stage1_no_autoimport_v6.cjs \
             /tmp/wt-stage1-original.html /tmp/wt-stage1-original.js /tmp/wt-stage1-v6
           test "$(find /tmp/wt-stage1-v6 -type f | wc -l)" -eq 2
+      - name: Clone the PROTECTED LIVE repository into throwaway CI only; preserve originals
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch main https://github.com/basilejoseph325-jpg/Story-Trails.git /tmp/wt-stage1-actual-live-copy
+          test "$(git -C /tmp/wt-stage1-actual-live-copy rev-parse HEAD)" = '74a96491770ab6aa7229889ce1aa4733e06666d8'
+          cmp /tmp/wt-stage1-original.html /tmp/wt-stage1-actual-live-copy/experiments/word-trails-next-v1.html
+          cmp /tmp/wt-stage1-original.js /tmp/wt-stage1-actual-live-copy/experiments/word-trails-live-migration-v1.js
+          mkdir -p /tmp/wt-stage1-rollback-v6/experiments
+          cp /tmp/wt-stage1-original.html /tmp/wt-stage1-rollback-v6/experiments/word-trails-next-v1.html
+          cp /tmp/wt-stage1-original.js /tmp/wt-stage1-rollback-v6/experiments/word-trails-live-migration-v1.js
+          cp /tmp/wt-stage1-original.html /tmp/wt-stage1-actual-live-copy/experiments/word-trails-old-html-compat-v6.html
+          cp /tmp/wt-stage1-v6/experiments/word-trails-next-v1.html /tmp/wt-stage1-actual-live-copy/experiments/word-trails-next-v1.html
+          cp /tmp/wt-stage1-v6/experiments/word-trails-live-migration-v1.js /tmp/wt-stage1-actual-live-copy/experiments/word-trails-live-migration-v1.js
+          test "$(git -C /tmp/wt-stage1-actual-live-copy diff --name-only | wc -l)" -eq 2
+          echo 'PASS: only two LIVE sources changed inside TEMPORARY CLONE; original remote untouched'
+      - name: Test actual patched LIVE copy in WebKit, both mobile widths, including cached-HTML compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/wt-stage1-live-webkit-v6 playwright@latest --silent --no-audit --no-fund
+          /tmp/wt-stage1-live-webkit-v6/node_modules/.bin/playwright install --with-deps webkit
+          node --check scripts/qa_word_trails_stage1_pinned_live_webkit_v6.cjs
+          python3 -m http.server 8897 --bind 127.0.0.1 --directory /tmp/wt-stage1-actual-live-copy >/tmp/wt-stage1-live-copy-v6-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/wt-stage1-live-webkit-v6/node_modules node scripts/qa_word_trails_stage1_pinned_live_webkit_v6.cjs
+      - name: Archive byte-exact pre-patch LIVE files for rollback review (NOT publish)
+        uses: actions/upload-artifact@v4
+        with:
+          name: TEST-only-rollback-original-LIVE-WordTrails-stage1-v6
+          path: /tmp/wt-stage1-rollback-v6/experiments/
+          if-no-files-found: error
+          retention-days: 30
       - name: Archive UNAPPLIED candidate, never deploy to LIVE
         uses: actions/upload-artifact@v4
         with:
