@@ -1,0 +1,28 @@
+name: QA Books reader refresh returns game home (all three books)
+on:
+  push:
+    branches: [fix/books-reader-and-library-refresh-home-v4, main]
+    paths:
+      - 'bible-book-guides/read.html'
+      - 'scripts/qa_books_reader_reload_home_v4.cjs'
+      - '.github/workflows/qa-books-reader-reload-home-v4.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  chrome-refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate test and reload guard
+        run: |
+          node --check scripts/qa_books_reader_reload_home_v4.cjs
+          grep -q 'bu-books-reader-refresh-home-v4' bible-book-guides/read.html
+      - name: Chrome 390, 320, and landscape — reading refresh goes home with progress preserved
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-book-reload-v4 puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-book-reload-v4.log 2>&1 &
+          sleep 2
+          BOOKS_SAVE_PREFIX=buGuide NODE_PATH=/tmp/bu-book-reload-v4/node_modules node scripts/qa_books_reader_reload_home_v4.cjs
