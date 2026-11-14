@@ -45,3 +45,5 @@
 .bu-guide-thought p{font:italic 17px/1.5 Georgia,serif;color:#553a25;margin:6px 0 0}
 .bu-guide-source{display:block;padding:13px 12px;border:1px solid #4a7763;border-radius:10px;background:#2e5b4e;color:#fff2d7;text-align:center;text-decoration:none;margin:13px 0 10px}
 .bu-guide-story{display:block;width:100%;padding:12px;border-radius:10px;border:1px solid #d6b577;background:#24454b;color:#ffe3b3;font-size:13px;font-weight:800;margin:18px 0 12px}
+
+.bu-guide-header-mark{width:auto;min-width:49px;padding:6px 8px;background:linear-gradient(135deg,#ffe78d,#e7a64b);color:#18322f;border-radius:7px;font:900 10px/1 system-ui,sans-serif;letter-spacing:.07em;text-shadow:none}
