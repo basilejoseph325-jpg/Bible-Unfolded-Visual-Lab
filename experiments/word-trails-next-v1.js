@@ -652,6 +652,9 @@ function levelMap(){
 }
 wheel.addEventListener('pointerdown',e=>{
  if(locked)return;const b=e.target.closest('.wheel-letter');if(!b)return;
+ // The click guard blocks only the synthetic click AFTER the last swipe.
+ // A separate new finger press must be allowed immediately, even within 200ms.
+ suppressClickUntil=0;
  window.BUWTWheelNative?.begin?.(e);
  dragging=true;dragActive=false;pointer=e.pointerId;
  start={x:e.clientX,y:e.clientY,index:Number(b.dataset.letterIndex)};
