@@ -2,7 +2,8 @@
 'use strict';
 /* Public GitHub Pages TEST root verification, fictional data in FRESH
  * Chromium isolated browser contexts. NEVER run on user's actual browser.
- * Merely read TEST backup APIs; no imports, exports/downloads or LIVE edits.
+ * Only use read-only TEST backup APIs and fictional localStorage probes;
+ * no imports, downloads, real user storage or original LIVE edits.
  */
 const puppeteer=require('puppeteer-core'),assert=require('node:assert/strict');
 const {execSync}=require('node:child_process');
@@ -76,9 +77,9 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
      before,after
     };
    },{TEST,LIVE,wordTrails,fakeLive,OLD});
-   assert(result.load.includes('native-backup-live-isolation-v27'),
+   assert(result.load.includes('native-backup-crash-guard-v30'),
     'Published TEST root must load cache-busted protected save coordinator');
-   assert(result.banner.includes('native-backup-safety-v27'),
+   assert(result.banner.includes('native-backup-safety-v30'),
     'Published TEST root must load newest Visual Lab banner');
    assert(result.bound&&result.originalSettings&&result.realNativeExport&&result.realNativeImport);
    assert(!result.liveInExport,'Published TEST backup must not contain LIVE crossword progress');
@@ -88,7 +89,39 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
    assert.deepEqual(result.before,result.after,'Published native preview must not touch saved data');
    assert.equal(result.before.live,fakeLive,'Synthetic LIVE save should remain byte-for-byte unchanged');
    assert.deepEqual(errors,[],'Published browser must not throw errors');
-   console.log('PASS_PUBLISHED_TEST_NATIVE_BACKUP_ISOLATION_V28',JSON.stringify({
+   // Reopen the ACTUAL PUBLISHED TEST root with a deliberately interrupted
+   // previous-only v2 journal. Cold startup must not silently rewind a
+   // newer wallet or TEST crossword, even though the old source did so.
+   const syntheticWallet=JSON.stringify({coins:98765,points:-22,
+    purchases:['seawheel'],equippedWheel:'seawheel'});
+   const interrupted=JSON.stringify({version:1,
+    previous:{'bible-unfolded-rewards-v17':JSON.stringify({coins:6,points:0}),
+      [TEST]:JSON.stringify({...JSON.parse(wordTrails),coins:2})},
+    createdAt:'2026-11-13T19:10:00Z'});
+   await page.evaluate(({wallet,journal,TEST,wordTrails,LIVE,fakeLive,OLD})=>{
+    localStorage.setItem('bible-unfolded-rewards-v17',wallet);
+    localStorage.setItem(TEST,wordTrails);
+    localStorage.setItem(LIVE,fakeLive);
+    localStorage.setItem(OLD,journal);
+   },{wallet:syntheticWallet,journal:interrupted,TEST,wordTrails,LIVE,fakeLive,OLD});
+   await page.reload({waitUntil:'domcontentloaded',timeout:120000});
+   await page.waitForFunction(()=>window.BUPlatformSaves?.bound?.(),{timeout:90000});
+   const cold=await page.evaluate(({OLD,TEST,LIVE})=>({
+    wallet:localStorage.getItem('bible-unfolded-rewards-v17'),
+    trail:localStorage.getItem(TEST),
+    live:localStorage.getItem(LIVE),
+    journal:localStorage.getItem(OLD),
+    notice:document.getElementById('bu-wt-save-status')?.textContent||'',
+    review:window.BUPlatformSaves.recoverPending().needsManualReview
+   }),{OLD,TEST,LIVE});
+   assert.equal(cold.wallet,syntheticWallet,'Cold TEST startup overwrote a newer native wallet');
+   assert.equal(cold.trail,wordTrails,'Cold TEST startup rewound crossword progress');
+   assert.equal(cold.live,fakeLive,'Cold TEST startup touched LIVE progress');
+   assert.equal(cold.journal,interrupted,'Cold startup deleted the journal needed for manual review');
+   assert(cold.review===true&&cold.notice.includes('Backup recovery needs review'),
+    'Native Settings must disclose unfinished restore needing review');
+   assert.deepEqual(errors,[],'Published browser must not throw errors after cold recovery probe');
+   console.log('PASS_PUBLISHED_TEST_NATIVE_BACKUP_CRASH_GUARD_V30',JSON.stringify({
     viewport:width+'x'+height,
     cacheBustedNativeLoader:true,
     originalSettingsControls:true,
@@ -96,6 +129,9 @@ const fakeLive=JSON.stringify({level:11,completed:[0,1,2],coins:999});
     contaminatedImportRejected:true,
     previewReadonly:true,
     fakeLiveSaveUnchanged:true,
+    coldOldJournalQuarantined:true,
+    fictionalNewWalletPreserved:true,
+    nativeSettingsRecoveryWarningShown:true,
     simulatedBrowserOnly:true,pageErrors:0
    }));
    await context.close();
