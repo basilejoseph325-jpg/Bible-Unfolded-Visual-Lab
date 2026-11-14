@@ -9,6 +9,7 @@ on:
       - 'family-worship-menu-art/**'
       - 'journey-progress-caption.js'
       - '.github/workflows/qa-family-worship-picker-gallery-v3.yml'
+  workflow_call:
 permissions: {contents: read}
 jobs:
   verify:
