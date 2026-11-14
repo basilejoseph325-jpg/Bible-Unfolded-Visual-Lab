@@ -38,6 +38,11 @@ function fixture(source=active,extras={},hooks={}){
     threw=true;data.set(W,newerWallet);events.push(['foreign-set',W]);
     throw Error('INJECTED_CONCURRENT_WRITER');
    }
+   if(hooks.foreignCommitConflictOnSet===k&&!threw){
+    threw=true;data.set(k,String(v));events.push(['set',k]);
+    data.set(W,newerWallet);events.push(['foreign-set',W]);
+    throw Error('INJECTED_COMMIT_MARKER_CONFLICT');
+   }
    events.push(['set',k]);data.set(k,String(v));
   },
   removeItem:k=>{
@@ -104,13 +109,14 @@ if(oldFile){
 {
  const j=jj({version:1,previous:{[W]:originalWallet}});
  const f=fixture(active,{[J]:j,[C]:'yes',[W]:backupWallet});
- // The native module checks recovery automatically during startup.
- // A completed marker should already be cleared without touching wallet.
- assert.equal(f.api.recoverPending().recovered,false);
+ // A generic v2 'yes' marker does not verify the completed AFTER values.
+ // On cold startup retain BOTH the journal and marker for manual review.
+ assert.equal(f.api.recoverPending().needsManualReview,true);
+ assert.equal(f.api.recoverPending().commitMarkerPresent,true);
  assert.equal(f.data.get(W),backupWallet);
- assert.equal(f.data.has(J),false);assert.equal(f.data.has(C),false);
- assert.deepEqual(f.events,[['remove',J],['remove',C]]);
- pass('already committed import cleans metadata ONLY and never rewinds');
+ assert.equal(f.data.get(J),j);assert.equal(f.data.get(C),'yes');
+ assert.equal(f.events.length,0);
+ pass('generic old commit marker quarantined without touching wallet or journal');
 }
 {
  const f=fixture(active,{[C]:'yes',[W]:newerWallet});
@@ -143,6 +149,17 @@ if(oldFile){
  pass('uncooperative newer wallet during failed import triggers no destructive rollback');
 }
 {
+ const f=fixture(active,{}, {foreignCommitConflictOnSet:C});
+ assert.throws(()=>f.api.applyBackup(imported(f.api),{reload:false}),
+  /commit marker conflicts with saved progress/);
+ assert.equal(f.data.get(W),newerWallet);
+ assert.equal(f.data.get(C),'yes');
+ assert.equal(f.data.has(J),true);
+ assert.equal(f.api.recoverPending().needsManualReview,true);
+ assert.equal(f.data.get(W),newerWallet);
+ pass('racing generic commit marker cannot falsely claim restore success or erase newer wallet');
+}
+{
  const f=fixture(active,{}, {failRemoveKey:J});
  const result=f.api.applyBackup(imported(f.api),{reload:false});
  assert.equal(result.ok,true);assert.equal(result.committed,true);
@@ -150,10 +167,11 @@ if(oldFile){
  assert.equal(f.data.get(W)!==originalWallet,true);
  assert.equal(JSON.parse(f.data.get(W)).coins,150);
  assert.equal(f.data.has(J),true);assert.equal(f.data.get(C),'yes');
- assert.equal(f.api.recoverPending().committed,true);
+ assert.equal(f.api.recoverPending().needsManualReview,true);
  assert.equal(JSON.parse(f.data.get(W)).coins,150);
- assert.equal(f.data.has(J),false);
- pass('cleanup failure does not undo committed restore; cold recovery only removes metadata');
+ assert.equal(f.data.has(J),true);
+ assert.equal(f.data.get(C),'yes');
+ pass('metadata cleanup failure keeps committed values and ambiguous old journal evidence');
 }
 {
  const journal=jj({version:1,previous:{[W]:originalWallet}});
