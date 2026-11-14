@@ -34,7 +34,8 @@ jobs:
           for key in ['function bu3857Open(', 'function bu3857Render()', 'const BU3857_DATA', 'const chapterData=']:
               assert key in full, f'Original Story component vanished: {key}'
           import subprocess
-          original=subprocess.check_output(['git','show','backup-before-remove-unapproved-nehemiah-20261114:bible_unfolded_core_part5.js'],text=True)
+          subprocess.run(['git','fetch','origin','backup-before-remove-unapproved-nehemiah-20261114','--depth=1'],check=True,stdout=subprocess.DEVNULL)
+          original=subprocess.check_output(['git','show','FETCH_HEAD:bible_unfolded_core_part5.js'],text=True)
           assert Path('bible_unfolded_core_part5.js').read_text()==original
           print('PASS_REMOVAL_SAFE original Story engine identical to rollback baseline')
           dec=json.JSONDecoder()
