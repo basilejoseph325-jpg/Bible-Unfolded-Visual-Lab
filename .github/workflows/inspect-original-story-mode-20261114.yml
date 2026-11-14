@@ -1,0 +1,50 @@
+name: Inspect ACTUAL native Story Adventure content and play flow (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-original-story-mode-20261114.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inventory native STORY engine, episode counts, and question flow
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re,json
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          print('NATIVE_INDEX',len(s))
+          for term in ['Story Adventure','bu3857-screen','bu3863','bu3815','journey-stops','episode-list','chapter-list','home-journey','bu3857Open','BU3857_DATA','BU3863_DATA','GENESIS','EXODUS']:
+            matches=list(re.finditer(re.escape(term),s,re.I))
+            print('HTML_TERM',term,'COUNT',len(matches))
+            for m in matches[:2]:
+              p=m.start()
+              print('HTML_SNIP',term,repr(s[max(0,p-140):p+320])[:520])
+          parts=[]
+          for i in range(1,6):
+            raw=Path(f'bible_unfolded_core_part{i}.js').read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            if not m:
+              print('PART_NOT_PARSED',i,len(raw));continue
+            parts.append(json.loads(m.group(1)))
+          full=''.join(parts)
+          print('NATIVE_CORE',len(full),'PARTS',len(parts))
+          for term in ['BU3857_DATA','BU3863_DATA','bu3857State','bu3863State','bu3815','function bu3857Open','function bu3857Render','function bu3863','const BU3857','GENESIS_EPISODES','EXODUS','Genesis','Nehemiah','discoveries','questions','episodes','hint','choice','scene','story']:
+            matches=list(re.finditer(re.escape(term),full,re.I))
+            print('CODE_TERM',term,'COUNT',len(matches))
+            limit=5 if term in ['BU3857_DATA','BU3863_DATA','function bu3857Open','const BU3857','GENESIS_EPISODES','Nehemiah','function bu3863'] else 1
+            for m in matches[:limit]:
+              p=m.start()
+              print('CODE_SNIP',term,repr(full[max(0,p-120):p+440])[:620])
+          for term in ['const BU3857_DATA','let BU3857_DATA','var BU3857_DATA','BU3857_DATA =','BU3857_DATA=','const BU3863_DATA','function bu3857Start','id="journey-stops"','id="episode-list"']:
+            matches=list(re.finditer(re.escape(term),full))
+            print('STRUCT',term,'COUNT',len(matches))
+            for m in matches[:1]:
+              p=m.start()
+              print('STRUCT_SNIP',repr(full[p:p+1400])[:1500])
+          PY
