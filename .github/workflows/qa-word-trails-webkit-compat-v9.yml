@@ -4,6 +4,9 @@ on:
     paths:
       - '.github/workflows/qa-word-trails-webkit-compat-v9.yml'
       - 'scripts/qa_word_trails_webkit_safari_compat_v9.cjs'
+      - 'scripts/qa_word_trails_webkit_native_game_v9.cjs'
+      - 'word-trails-native-shell-v1.js'
+      - 'word-trails-next-launcher.js'
       - 'experiments/word-trails-checkpoint-rehearsal-v2.html'
       - 'experiments/word-trails-checkpoint-rehearsal-v2.js'
       - 'experiments/word-trails-native-backup-bridge-candidate-v8.js'
@@ -42,3 +45,5 @@ jobs:
           sleep 2
           NODE_PATH=/tmp/wt-safari-v9/node_modules node scripts/qa_word_trails_webkit_safari_compat_v9.cjs
           echo 'PASS: WebKit engine is not physical iPhone Safari acceptance; LIVE remains unchanged'
+          NODE_PATH=/tmp/wt-safari-v9/node_modules node scripts/qa_word_trails_webkit_native_game_v9.cjs
+          echo 'PASS: actual native TEST Word Trails entered/back/reentered/refresh-to-home in WebKit'
