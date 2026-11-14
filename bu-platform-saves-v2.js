@@ -250,7 +250,8 @@ function rollbackThisAttempt(changed,previous,desired,journalText){
 function applyBackup(candidate,{reload=true}={}){
  const c=typeof candidate==='string'?parse(candidate):candidate;
  const plan=dryRun(c);
- if(read(JOURNAL))throw Error('An earlier import recovery must finish first.');
+ if(read(JOURNAL)!==null||read(COMMITTED)!==null)
+  throw Error('An earlier import recovery must finish first.');
  const existing=currentSnapshot();
  const desired=protectedNative(c.keys,existing.keys);
  if(c.extensions.wordTrailsNext.state!==null)desired[TEST]=c.extensions.wordTrailsNext.state;
