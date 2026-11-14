@@ -51,8 +51,8 @@ async function choose(page,id,doc){
     typeof window.BUPlatformSaves?.verifyCurrentBackupCopy==='function'&&
     !!document.getElementById('bu-wt-safe-preview-v34'),{timeout:90000});
    const source=await a.evaluate(()=>document.getElementById('bu-platform-save-core-v2')?.src||'');
-   assert(source.includes('verified-backup-preview-v34'),
-    'Published Settings did not load cache-busted real v34 source');
+   assert(source.includes('native-import-paused-v35'),
+    'TEST Settings did not load the latest v35 source retaining the original v34 readonly preview');
    const test=await a.evaluate(({LIVE,W,WB,OW,T,FEEL,wallet,trail,live})=>{
     localStorage.setItem(W,wallet);localStorage.setItem(WB,wallet);
     localStorage.setItem(OW,JSON.stringify({version:1,owned:['seawheel']}));
