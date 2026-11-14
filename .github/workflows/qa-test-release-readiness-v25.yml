@@ -3,6 +3,10 @@ on:
   push:
     paths:
       - '.github/workflows/qa-test-release-readiness-v25.yml'
+      - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
+      - 'experiments/word-trails-native-full-backup-transaction-v7.js'
+      - 'scripts/qa_word_trails_native_full_backup_transaction_v7.cjs'
+      - 'scripts/qa_word_trails_native_full_backup_transaction_v7_real_browser.cjs'
       - 'scripts/visual_lab_all_mode_smoke_test.cjs'
       - 'scripts/word_trails_native_shell_integration_test.cjs'
       - 'scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs'
@@ -22,6 +26,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  full-backup-v7-two-tab-guard:
+    name: Confirm no unsafe backup recovery or stale-tab wallet overwrite
+    uses: ./.github/workflows/qa-word-trails-full-backup-transaction-v7.yml
   all-30-crossword-levels-and-original-voices:
     name: Solve all 30 Word Trails levels + 20 native voice assets
     uses: ./.github/workflows/qa-word-trails-30-voice.yml
