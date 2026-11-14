@@ -84,7 +84,10 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
       leviticus:localStorage.getItem('buGuideLast:2')
    }));
    assert.deepEqual(await keys(),{genesis:'5',exodus:'10',leviticus:'1'});
-   await page.reload({waitUntil:'domcontentloaded',timeout:45000});
+   const readerUrlBeforeRefresh=page.url();
+   await page.reload({waitUntil:'domcontentloaded',timeout:65000});
+   await page.waitForFunction(()=>location.pathname.endsWith('/index.html')&&new URLSearchParams(location.search).get('fromBooksReload')==='v4',{timeout:65000});
+   await page.goto(readerUrlBeforeRefresh,{waitUntil:'domcontentloaded',timeout:65000});
    await page.waitForFunction(()=>document.getElementById('reading-count')?.textContent==='PART 2 OF 27',{timeout:15000});
    await page.$eval('a.back-link',el=>el.click());
    await page.waitForFunction(()=>location.pathname.endsWith('/bible-book-guides/index.html'),{timeout:12000});
