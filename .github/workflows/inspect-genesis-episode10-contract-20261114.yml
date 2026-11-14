@@ -1,0 +1,29 @@
+name: Inspect Genesis 10 existing Story Adventure data contract (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/inspect-genesis-episode10-contract-20261114.yml'
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Identify exact Genesis 9-to-10 native gameplay integration
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          full=''.join(json.loads(re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',Path(f'bible_unfolded_core_part{i}.js').read_text(),re.S)[1]) for i in range(1,6))
+          d=json.JSONDecoder()
+          at=full.index('Object.assign(BU3857_DATA,')+len('Object.assign(BU3857_DATA,')
+          a,_=d.raw_decode(full[at:].lstrip())
+          ep=a['genesis_ep09']
+          print('EP9_METADATA',json.dumps({k:v for k,v in ep.items() if k!='discoveries'},ensure_ascii=False))
+          print('EP9_DISCOVERY_TYPES',json.dumps([{'id':x['id'],'title':x['title'],'type':x.get('interaction',{}).get('type'),'allkeys':list(x),'interactionKeys':list(x.get('interaction',{}))} for x in ep['discoveries']],ensure_ascii=False))
+          for idx in [0,1,2,4,7,9]:
+            print('EP9_SCHEMA_'+str(idx),json.dumps(ep['discoveries'][idx],ensure_ascii=False)[:6700])
+          for term in ['function openEpisodes(', 'function renderEpisodes(', 'function bu3857Render(){', 'const BU_GENESIS_IDS=', 'function bu3857Options()', "case 'order_cards'", "case 'find_hotspots'", "case 'connect_pairs'"]:
+            pos=full.find(term)
+            print('ENGINE_SNIP',term,repr(full[pos:pos+4200])[:4400] if pos>=0 else 'ABSENT')
+          PY
