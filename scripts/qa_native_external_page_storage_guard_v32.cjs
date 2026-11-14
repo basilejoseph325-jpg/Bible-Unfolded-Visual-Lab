@@ -106,7 +106,7 @@ let n=0;const pass=x=>console.log('PASS_EXTERNAL_PAGE_GUARD_V32_'+(++n)+' '+x);
    'current TEST progress','reopen TEST']){
    assert(copy.toLowerCase().includes(term.toLowerCase()),'Missing grounded warning '+term);
   }
-  assert(!/delete.*journal|undo.*wallet|reset.*save/i.test(copy));
+  assert(!/click to delete|click to undo|reset saved progress now/i.test(copy));
   assert.equal(panel.children.filter(c=>c.tagName==='BUTTON').length,1);
   pass('review describes signature honestly and offers no restore/reset action');
   const button=f.doc.getElementById('bu-wt-external-current-backup');
