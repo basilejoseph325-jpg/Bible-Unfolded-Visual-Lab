@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v29 (eight groups)
+name: QA Bible Unfolded TEST full pre-release regression v30 (nine groups)
 on:
   push:
     paths:
@@ -6,6 +6,8 @@ on:
       - '.github/workflows/qa-word-trails-full-backup-transaction-v7.yml'
       - '.github/workflows/qa-native-backup-live-key-isolation-v26.yml'
       - '.github/workflows/qa-native-test-backup-restore-preview-v27.yml'
+      - '.github/workflows/qa-test-native-journal-crash-safety-v30.yml'
+      - 'scripts/qa_native_v2_previous_only_journal_fail_closed_v30.cjs'
       - '.github/workflows/qa-test-trivia-family-visuals-v29.yml'
       - '.github/workflows/qa-trivia-scholar-v1.yml'
       - '.github/workflows/qa-trivia-wrong-tone-v1.yml'
@@ -36,6 +38,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  native-v2-stale-journal-never-rewinds:
+    name: TEST native crash journals must not silently roll back newer wallet or game progress
+    uses: ./.github/workflows/qa-test-native-journal-crash-safety-v30.yml
   approved-trivia-and-family-visuals:
     name: Trivia sounds/scroll/stone art and Family Worship mobile interaction
     uses: ./.github/workflows/qa-test-trivia-family-visuals-v29.yml
