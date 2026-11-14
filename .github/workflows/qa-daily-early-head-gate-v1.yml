@@ -1,0 +1,27 @@
+name: QA TEST earliest Daily tap before JS loader
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'scripts/qa_daily_early_head_gate_v1.cjs'
+      - '.github/workflows/qa-daily-early-head-gate-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  head-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify the real native HTML head and test syntax
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_daily_early_head_gate_v1.cjs
+          node --check daily-discovery-meaningful-test-v1.js
+      - name: Tap original Daily before the late TEST script even exists
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-early-daily-qa puppeteer-core@24 --no-audit --no-fund --silent
+          python3 -m http.server 8897 --bind 127.0.0.1 >/tmp/bu-early-qa-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/bu-early-daily-qa/node_modules node scripts/qa_daily_early_head_gate_v1.cjs
