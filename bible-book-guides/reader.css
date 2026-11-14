@@ -1,0 +1,49 @@
+/* Bible Unfolded — Bible Book Guides. Contained styles; do not modify game CSS. */
+.bu-guide-reader[hidden],.bu-guide-reader [hidden]{display:none!important}
+.bu-guide-reader{position:fixed;inset:0;z-index:200000;display:flex;flex-direction:column;background:radial-gradient(ellipse at 55% 8%,#1b4a48,#092d35 53%,#061e29 100%);color:#fff5dc;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;isolation:isolate}
+.bu-guide-reader *{box-sizing:border-box}
+.bu-guide-reader button,.bu-guide-reader select{font-family:inherit}
+.bu-guide-reader button:focus-visible,.bu-guide-reader a:focus-visible,.bu-guide-reader select:focus-visible{outline:3px solid #f6d18d;outline-offset:3px}
+.bu-guide-header{height:75px;flex-shrink:0;padding:calc(9px + env(safe-area-inset-top,0px)) 17px 11px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #d8b7737d;background:#082932ed}
+.bu-guide-header>div{text-align:center;flex:1}
+.bu-guide-header small{display:block;color:#d8b773;font-size:10px;font-weight:800;letter-spacing:2.1px}
+.bu-guide-header strong{display:block;font:700 23px/1.12 Georgia,serif;color:#ffdf99}
+.bu-guide-close{min-width:69px;padding:10px 11px;border:1px solid #d9bb7b85;border-radius:12px;color:#ffe4b3;font-weight:700;background:#183d43}
+.bu-guide-header-mark{display:inline-grid;place-items:center;width:52px;color:#ffdc93;font-size:24px}
+.bu-guide-main{min-height:0;flex:1;overflow-y:auto;overscroll-behavior:contain;padding:0 17px 18px;scrollbar-color:#bb9656 transparent}
+.bu-guide-intro{text-align:center;padding:23px 4px 17px;max-width:780px;margin:auto}
+.bu-guide-number{font-size:11px;font-weight:800;color:#efc675;letter-spacing:2px}
+.bu-guide-title{margin:7px 0 5px;font:700 clamp(35px,9vw,47px)/1.06 Georgia,serif;color:#ffe1a3;text-shadow:0 2px 9px #0008}
+.bu-guide-subtitle{margin:5px auto;font-size:14px;line-height:1.45;color:#dce9df;max-width:440px}
+.bu-guide-reading{max-width:760px;margin:0 auto 15px;padding:18px 0 10px;border-top:1px solid #d0b27f72}
+.bu-guide-progress{display:flex;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.8px;font-weight:800;color:#e1c58e;text-transform:uppercase}
+.bu-guide-ref{text-transform:none;letter-spacing:0;color:#bad3d2;font-weight:600}
+.bu-guide-track{height:4px;background:#65858380;border-radius:99px;overflow:hidden;margin:10px 0 19px}
+.bu-guide-track span{display:block;height:100%;width:5%;background:linear-gradient(90deg,#8cb9a2,#f5d286);transition:width .2s ease}
+.bu-guide-picker-label{display:block;font-size:12px;color:#c5d6cf;margin-bottom:7px}
+.bu-guide-picker{display:block;width:100%;border:1px solid #d9b97e6f;border-radius:11px;background:#12343a;color:#f6e7ca;padding:11px 13px;font-size:13px;appearance:auto}
+.bu-guide-article{padding:22px 2px 12px}
+.bu-guide-article h2{font:700 clamp(27px,6.5vw,35px)/1.15 Georgia,serif;color:#ffe4b0;margin:0 0 17px}
+.bu-guide-article p{font-size:clamp(17px,4vw,19px);line-height:1.72;letter-spacing:.02px;color:#f4f0e4;margin:0;white-space:pre-line}
+.bu-guide-source{display:inline-block;color:#ffe09b;font-size:14px;font-weight:750;margin:12px 0 7px;text-underline-offset:4px}
+.bu-guide-note{font-size:12px;line-height:1.5;color:#bdccc8;margin:10px 0}
+.bu-guide-footer{display:flex;gap:13px;padding:12px 17px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid #d1b27370;background:#08252d;flex-shrink:0}
+.bu-guide-footer button{flex:1;min-height:48px;border-radius:11px;border:1px solid #d8bc80;color:#ffe6b5;font-size:15px;font-weight:800;background:#204347}
+.bu-guide-footer button:last-child{background:linear-gradient(160deg,#b59054,#e8ca8b);color:#172d31;border-color:#ffe0a3}
+.bu-guide-footer button:disabled{opacity:.5}
+@media(min-width:650px){.bu-guide-reader{align-items:center}.bu-guide-header,.bu-guide-main,.bu-guide-footer{width:100%}.bu-guide-header{justify-content:center}.bu-guide-main{max-width:900px}.bu-guide-footer{justify-content:center}.bu-guide-footer button{max-width:340px}}
+@media(max-height:550px){.bu-guide-header{height:59px;padding-top:4px;padding-bottom:4px}.bu-guide-intro{padding:10px 4px}.bu-guide-reading{padding-top:10px}.bu-guide-article{padding-top:14px}.bu-guide-footer{padding-top:7px;padding-bottom:7px}}
+
+/* Genesis reader, isolated parchment skin */
+.bu-guide-intro{min-height:225px;display:flex;flex-direction:column;justify-content:flex-end;margin:0 -17px 14px;padding:52px 17px 22px;background:linear-gradient(180deg,#041b2312 0%,#041b2399 70%,#051b26ea 100%),url('../bible-book-art/01_genesis.webp') center 43%/cover no-repeat;text-shadow:0 2px 6px #000d}
+.bu-guide-intro .bu-guide-title{font-size:clamp(38px,10vw,50px)}
+.bu-guide-article{margin:17px 0 13px;border:1px solid #ffecbea0;border-radius:16px;padding:clamp(20px,5vw,30px);background:linear-gradient(135deg,#f4e5c4,#ebd5aa 65%,#dfc593);box-shadow:0 11px 25px #0009}
+.bu-guide-article h2{color:#493421}
+.bu-guide-paragraphs p{font-size:clamp(16px,4.2vw,18px);color:#362a1f;line-height:1.75;margin:0 0 18px}
+.bu-guide-thought{border-left:4px solid #ac7739;border-radius:3px 9px 9px 3px;background:#fff5d98c;padding:13px 14px;margin:17px 0 0}
+.bu-guide-thought small{color:#90622f;font-size:10px;font-weight:900;letter-spacing:.07em}
+.bu-guide-thought p{font:italic 17px/1.5 Georgia,serif;color:#553a25;margin:6px 0 0}
+.bu-guide-source{display:block;padding:13px 12px;border:1px solid #4a7763;border-radius:10px;background:#2e5b4e;color:#fff2d7;text-align:center;text-decoration:none;margin:13px 0 10px}
+.bu-guide-story{display:block;width:100%;padding:12px;border-radius:10px;border:1px solid #d6b577;background:#24454b;color:#ffe3b3;font-size:13px;font-weight:800;margin:18px 0 12px}
+
+.bu-guide-header-mark{width:auto;min-width:49px;padding:6px 8px;background:linear-gradient(135deg,#ffe78d,#e7a64b);color:#18322f;border-radius:7px;font:900 10px/1 system-ui,sans-serif;letter-spacing:.07em;text-shadow:none}

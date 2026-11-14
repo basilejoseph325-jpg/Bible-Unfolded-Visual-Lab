@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Bible Unfolded — Bible Book Guides Preview</title>
+<style>
+body{margin:0;min-height:100vh;background:#082936;color:#f7eacb;font:16px system-ui;display:grid;place-items:center;text-align:center}
+main{padding:24px;max-width:420px}h1{font:700 32px Georgia,serif;color:#f6d28d}
+button{background:#caa86a;color:#092b32;border:none;border-radius:12px;padding:15px 23px;font-weight:800;font-size:16px}
+</style>
+</head>
+<body>
+<main><h1>Bible Book Guides</h1><p>Isolated Visual Lab preview. Genesis has a complete 50-chapter editorial draft. Other books are scheduled for development.</p><button id="open" type="button">Read Genesis</button><p>This preview does not touch points, games, or saved Story Adventure progress.</p></main>
+<script>window.BU_BIBLE_BOOK_GUIDE_PREVIEW = true;</script>
+<script src="reader.js"></script>
+<script>document.getElementById('open').addEventListener('click',()=>window.BibleBookGuides.openBook(0));</script>
+</body></html>
