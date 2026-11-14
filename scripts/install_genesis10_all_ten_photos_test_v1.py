@@ -61,7 +61,8 @@ for i in range(1,11):
  art_span=after[after.index(art_anchor):after.index('});',after.index(art_anchor))+3]
  alt_span=after[after.index(alt_anchor):after.index('});',after.index(alt_anchor))+3]
  assert id in art_span and id in alt_span
-assert "bible-unfolded-genesis-adventure-v3860" in after
+assert "BU_EP10_SCENE_ART[d.id]" in after
+assert "BU_EP10_SCENE_ALT[d.id]" in after
 assert 'BU_EP10_SCENE_ART[d.id]' in after
 core.write_text(wrapper[:match.start(2)]+json.dumps(after,ensure_ascii=True)+wrapper[match.end(2):],encoding="utf8")
 
