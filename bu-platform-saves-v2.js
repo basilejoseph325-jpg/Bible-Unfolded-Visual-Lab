@@ -34,6 +34,44 @@ function assertNoExternalWriter(){
  if(competingPages.size)
   throw Error('Another Bible Unfolded page or frame changed shared progress while TEST was open. Backup imports are paused here. Download current progress, close other open game tabs, and reopen TEST before considering another import.');
 }
+/* READ ONLY: a new TEST session can miss a storage event emitted before
+ * it opened. Inspect the current LIVE/TEST crossword key state, but do NOT
+ * claim this proves old tabs are present, and never set a LIVE sentinel.
+ * Exact original LIVE migration V1 reads TEST when LIVE is absent, then
+ * validates level/unlocked, arrays and optional progress before writing. */
+function legacyMigrationInputLooksUsable(raw){
+ const x=getJson(raw);
+ if(!x||!Number.isInteger(x.level)||x.level<0||x.level>29||
+    !Number.isInteger(x.unlocked)||x.unlocked<0||x.unlocked>29)return false;
+ for(const k of ['completed','sparks','claimedSparks','boardBible','paidWords','paidBonuses','claimedFreeHints']){
+  const a=x[k]===undefined?[]:x[k];
+  if(!Array.isArray(a)||a.length>6000||a.some(v=>typeof v==='number'?
+     !Number.isInteger(v)||v<0||v>29:
+     typeof v!=='string'||v.length>100||!/^[a-z0-9_:|.-]+$/i.test(v)))return false;
+ }
+ if(x.progress!==undefined&&x.progress!==null){
+  const q=x.progress;
+  if(!own(q)||!Number.isInteger(q.level)||q.level<0||q.level>29)return false;
+  for(const k of ['found','bonuses','hinted'])
+   if(!Array.isArray(q[k])||q[k].length>120||
+      q[k].some(v=>typeof v!=='string'||!/^[A-Z0-9:]+$/.test(v)))return false;
+  if(!Number.isFinite(q.combo)||q.combo<0||q.combo>1000)return false;
+ }
+ return true;
+}
+function legacyTransitionStatus(){
+ const live=read(LIVE_CROSSWORD),test=read(TEST),record=getJson(live);
+ const legacyRecord=!!(record?.migration?.version===1&&
+   record.migration.source==='Visual Lab crossword progress');
+ return Object.freeze({
+  liveSavePresent:live!==null,
+  testSavePresent:test!==null,
+  oldMigrationMarkerPresent:legacyRecord,
+  oldImporterCouldRecreateMissingLive:live===null&&legacyMigrationInputLooksUsable(test),
+  readOnly:true,cannotVerifyNoOldTabs:true,
+  approvalToImportOrPromote:false
+ });
+}
 function observeExternalStorage(event){
  // Browser storage events report writes in OTHER documents on this origin;
  // a native game iframe may be the source, so do not claim tab identity.
@@ -50,6 +88,7 @@ function observeExternalStorage(event){
   notice('Backup recovery needs review; no progress was automatically replaced. Another open Bible Unfolded page or frame also changed shared progress.');
  else notice('Another Bible Unfolded page or frame changed shared saved progress. Backup imports are paused in this TEST session; current progress can still be exported.');
  installConcurrentReview();
+ installLegacyTransitionReview();
 }
 
 const own=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
@@ -349,6 +388,47 @@ function getStatus(){
  native.append(el);return el;
 }
 function notice(s){const el=getStatus();if(el)el.textContent=s}
+/* The startup REVIEW supplements, but cannot replace, v32 cross-document
+ * detection. It deliberately never blocks normal play or performs writes.
+ * A historical migration marker is evidence of earlier migration data,
+ * NOT proof that a legacy tab is presently active. */
+function installLegacyTransitionReview(){
+ const state=legacyTransitionStatus();
+ const old=document.getElementById('bu-wt-legacy-transition-review');
+ if(!state.oldMigrationMarkerPresent&&!state.oldImporterCouldRecreateMissingLive){
+  if(old)old.remove();
+  return;
+ }
+ if(old)return;
+ const status=getStatus();if(!status)return;
+ const root=document.createElement('details');
+ root.id='bu-wt-legacy-transition-review';
+ root.style.cssText='margin:9px 0 3px;padding:9px 11px;border:1px solid rgba(197,157,92,.65);border-radius:10px;box-sizing:border-box;';
+ const summary=document.createElement('summary');
+ summary.textContent='Review older LIVE Word Trails save behavior';
+ summary.style.cssText='cursor:pointer;font-weight:750;';
+ root.append(summary);
+ const paragraph=(message)=>{
+  const el=document.createElement('p');
+  el.textContent=message;
+  el.style.cssText='margin:9px 0;font-size:.9em;line-height:1.5;';
+  root.append(el);
+ };
+ if(state.oldImporterCouldRecreateMissingLive)
+  paragraph('LIVE crossword progress is missing, and saved TEST Word Trails progress has a format the older LIVE importer can read. An older LIVE page could recreate a LIVE crossword save from TEST if opened. This is a possibility, not proof that an old tab is running.');
+ if(state.oldMigrationMarkerPresent)
+  paragraph('The saved LIVE crossword contains an older automatic TEST-to-LIVE migration marker. It shows past migration data, but cannot tell us when it was written or whether an old tab remains open.');
+ paragraph('Before considering a backup import or future LIVE transition, download current TEST progress, check your Downloads, and close any older Bible Unfolded pages. Reopening TEST does not prove old scripts are gone. Do not delete browser data.');
+ const downloadCurrent=document.createElement('button');
+ downloadCurrent.type='button';
+ downloadCurrent.id='bu-wt-legacy-transition-current-backup';
+ downloadCurrent.textContent='Download current TEST progress';
+ downloadCurrent.style.cssText='display:block;max-width:100%;margin:10px 0;padding:8px 11px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer;';
+ downloadCurrent.addEventListener('click',()=>download());
+ root.append(downloadCurrent);
+ paragraph('This is a read-only warning, not a migration or recovery tool. It does not block old code, authorize imports, merge progress or change LIVE saves.');
+ status.parentNode.append(root);
+}
 /* Purely informational cross-document storage activity review. No state is
  * persisted or modified; never identify an unrelated LIVE save update as
  * definitively unsafe. The inability to fence older LIVE tabs remains. */
@@ -478,6 +558,7 @@ function install(){
  if(recovered.error)notice('Backup recovery needs review to protect saved progress. No automatic restore was performed. '+recovered.error);
  installRecoveryReview();
  installConcurrentReview();
+ installLegacyTransitionReview();
 }
 const recovered=recoverPending();
 if(typeof window.addEventListener==='function')
@@ -489,6 +570,6 @@ else install();
 window.BUPlatformSaves=Object.freeze({
  version:'2.0.0-test',keys:Object.freeze({TEST,FEEL,JOURNAL,COMMITTED}),
  makeBackup,dryRun,previewRestoreWrites,applyBackup,validateTrails,recoverPending,
- externalChangeStatus,bound:()=>installed
+ externalChangeStatus,legacyTransitionStatus,bound:()=>installed
 });
 })();
