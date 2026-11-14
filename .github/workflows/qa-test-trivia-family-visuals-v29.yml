@@ -1,0 +1,30 @@
+name: QA TEST approved Trivia and Family Worship visual behavior v29
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-test-trivia-family-visuals-v29.yml'
+      - '.github/workflows/qa-trivia-scholar-v1.yml'
+      - '.github/workflows/qa-trivia-wrong-tone-v1.yml'
+      - '.github/workflows/qa-trivia-answer-scroll-v1.yml'
+      - '.github/workflows/qa-family-worship-picker-gallery-v3.yml'
+      - 'journey-progress-caption.js'
+      - 'trivia-photo-stone-tablets-v4.css'
+      - 'trivia-wrong-tone-repair-v1.js'
+      - 'trivia-answer-scroll-v1.js'
+      - 'family-worship-picker-gallery-v3.js'
+      - 'family-worship-gallery-crop-v4.css'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  original-trivia-scholar-tablets:
+    name: Trivia stone visuals, approved assets and answers
+    uses: ./.github/workflows/qa-trivia-scholar-v1.yml
+  original-trivia-correct-wrong-sfx:
+    name: Trivia correct and wrong sounds without changing other games
+    uses: ./.github/workflows/qa-trivia-wrong-tone-v1.yml
+  original-trivia-parchment-explanation:
+    name: Trivia answer explanation scroll, preserved modal handlers
+    uses: ./.github/workflows/qa-trivia-answer-scroll-v1.yml
+  family-worship-photos-and-gameplay:
+    name: Family Worship 42 topics, four levels and six-player mobile gameplay
+    uses: ./.github/workflows/qa-family-worship-picker-gallery-v3.yml
