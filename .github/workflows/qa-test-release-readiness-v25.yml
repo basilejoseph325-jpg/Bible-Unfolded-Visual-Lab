@@ -27,7 +27,7 @@ on:
 permissions: {contents: read}
 jobs:
   full-backup-v7-two-tab-guard:
-    name: Confirm no unsafe backup recovery or stale-tab wallet overwrite
+    name: TEST-only v7 synthetic transaction and two-tab conflict proof
     uses: ./.github/workflows/qa-word-trails-full-backup-transaction-v7.yml
   all-30-crossword-levels-and-original-voices:
     name: Solve all 30 Word Trails levels + 20 native voice assets
