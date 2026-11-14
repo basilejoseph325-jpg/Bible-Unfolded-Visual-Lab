@@ -46,7 +46,12 @@ async function gameFrame(page){
     hasTouch:true,deviceScaleFactor:2});
    try{
     await ctx.addInitScript(values=>{
-     for(const [key,value] of Object.entries(values))localStorage.setItem(key,value);
+     // Seed an isolated profile only once per storage key. This initializer
+     // also runs in same-origin iframes and after refresh: DO NOT replace
+     // legitimately accumulated progress when the player navigates/reloads.
+     for(const [key,value] of Object.entries(values)){
+      if(localStorage.getItem(key)===null)localStorage.setItem(key,value);
+     }
     },seed);
     const page=await ctx.newPage(),errors=[],badArtwork=[];
     page.on('pageerror',err=>errors.push(err.message));
