@@ -8,7 +8,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
  const browser=await puppeteer.launch({headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],timeout:90000});
  try{
   for(const viewport of [{width:390,height:844},{width:844,height:390}]){
-   const page=await browser.newPage(),errors=[];
+   const context=await browser.createBrowserContext();
+   const page=await context.newPage(),errors=[];
    await page.setViewport({...viewport,isMobile:true,hasTouch:true,deviceScaleFactor:2});
    page.on('pageerror',error=>errors.push(error.message));
    await page.goto('http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
@@ -77,7 +78,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    assert(width.scroll<=width.inner+3,'Shelf must fit viewport width without horizontal overflow');
    assert.deepEqual(errors,[],'No JavaScript page exceptions');
    console.log('PASS_BIBLE_BOOKS_CARD_PLAYER_PATH',JSON.stringify({viewport,home,shelf,intro,resume,width,errors:[]}));
-   await page.close();
+   await context.close();
   }
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
