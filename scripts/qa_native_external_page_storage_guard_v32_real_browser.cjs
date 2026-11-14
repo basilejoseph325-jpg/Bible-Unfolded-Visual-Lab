@@ -87,7 +87,7 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
     },version);
     assert.equal(blocked.dialogs,0);
     assert(blocked.cleared&&blocked.walletSame);
-    assert(blocked.status.includes('imports are paused'));
+    assert(blocked.status.includes('RESTORE is temporarily disabled'));
    }
    assert.deepEqual(errors,[],'Published native UI threw JS errors');
    console.log('PASS_NATIVE_EXTERNAL_PAGE_GUARD_V32_REAL_TWO_DOCS',
