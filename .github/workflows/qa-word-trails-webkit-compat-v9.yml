@@ -1,0 +1,44 @@
+name: QA TEST Word Trails WebKit/Safari engine checkpoint and real lock compatibility v9
+on:
+  push:
+    paths:
+      - '.github/workflows/qa-word-trails-webkit-compat-v9.yml'
+      - 'scripts/qa_word_trails_webkit_safari_compat_v9.cjs'
+      - 'experiments/word-trails-checkpoint-rehearsal-v2.html'
+      - 'experiments/word-trails-checkpoint-rehearsal-v2.js'
+      - 'experiments/word-trails-native-backup-bridge-candidate-v8.js'
+      - 'bu-platform-saves-v2.js'
+      - 'experiments/word-trails-native-full-backup-transaction-v7.js'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  webkit-safari-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate WebKit test script and ensure v8 stays unlinked
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --check scripts/qa_word_trails_webkit_safari_compat_v9.cjs
+          for f in index.html journey-progress-caption.js visual-lab-test-banner.js word-trails-native-shell-v1.js experiments/word-trails-next-v1.html experiments/word-trails-checkpoint-rehearsal-v2.html; do
+            if grep -F 'word-trails-native-backup-bridge-candidate-v8.js' "$f"; then
+              echo 'STOP: restore bridge is an unlinked TEST research candidate' >&2
+              exit 1
+            fi
+          done
+      - name: Install isolated Playwright WebKit engine and Linux browser dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/wt-safari-v9 playwright@latest --silent --no-audit --no-fund
+          /tmp/wt-safari-v9/node_modules/.bin/playwright install --with-deps webkit
+      - name: Test real WebKit mobile viewport, checkpoint download and two-tab browser locks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-wt-webkit-v9-http.log 2>&1 &
+          sleep 2
+          NODE_PATH=/tmp/wt-safari-v9/node_modules node scripts/qa_word_trails_webkit_safari_compat_v9.cjs
+          echo 'PASS: WebKit engine is not physical iPhone Safari acceptance; LIVE remains unchanged'
