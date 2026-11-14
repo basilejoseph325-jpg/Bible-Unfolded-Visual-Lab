@@ -1,0 +1,69 @@
+/* Full-page standalone Bible Books mode, no shared-game selectors */
+:root{--gold:#f0cf91;--cream:#f5e6c7;--page:#08252f;--brown:#412e1d}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100dvh;background:var(--page);color:var(--cream);font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a,button,select{-webkit-tap-highlight-color:transparent}
+button,select{font:inherit}button{cursor:pointer}
+a:focus-visible,button:focus-visible,select:focus-visible{outline:3px solid #ffe7a7;outline-offset:3px}
+[hidden]{display:none!important}
+.topbar{height:62px;background:#092d37;border-bottom:1px solid #cba76a70;display:grid;grid-template-columns:82px 1fr 60px;gap:5px;align-items:center;padding:8px 13px}
+.back-link{display:flex;align-items:center;gap:5px;text-decoration:none;color:#ffe4b2;font-weight:800;font-size:29px;line-height:1}
+.back-link span{font-size:13px}.top-brand{text-align:center;min-width:0}
+.top-brand small{display:block;color:#e6c586;font-size:9px;font-weight:900;letter-spacing:.13em}
+.top-brand strong{display:block;font:700 23px/1.13 Georgia,serif;color:#ffdda0}
+.test-label{justify-self:end;background:linear-gradient(125deg,#ffec99,#e7aa4f);color:#203834;font-size:10px;font-weight:950;letter-spacing:.08em;padding:7px 9px;border-radius:7px}
+.page{max-width:720px;margin:auto}
+.shelf-hero{padding:110px 20px 30px;text-align:center;background:linear-gradient(180deg,#061b230f 0%,#051922ac 60%,#061d27 100%),url('../bible-book-art/01_genesis.webp') center 44%/cover no-repeat;min-height:320px;display:flex;flex-direction:column;justify-content:flex-end;text-shadow:0 2px 9px #000}
+.eyebrow{margin:0 0 6px;color:#f5d492;font-size:10px;font-weight:900;letter-spacing:.19em}
+.shelf-hero h1{font:700 clamp(31px,8.3vw,42px)/1.08 Georgia,serif;margin:0 0 11px;color:#ffdfa6}
+.shelf-hero>p:last-child{font-size:14px;line-height:1.6;margin:0 auto;max-width:510px;color:#fff1d6}
+.shelf-content{padding:13px 13px 45px}
+.shelf-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:1px solid #c6a36c7f;margin:22px 2px 14px;padding-bottom:10px}
+.shelf-heading h2{font:700 clamp(20px,5.2vw,25px) Georgia,serif;color:#f9dca1;margin:0}
+.shelf-heading span{font-size:11px;color:#c9d7d1;white-space:nowrap}
+.shelf-heading.second{margin-top:37px}
+.book-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.book-card{display:flex;position:relative;isolation:isolate;flex-direction:column;justify-content:flex-end;min-height:155px;aspect-ratio:1.06;text-align:left;text-decoration:none;overflow:hidden;border:1px solid #edc88c8c;border-radius:15px;padding:11px;background:#14373f;box-shadow:0 7px 18px #0008}
+.book-card::before{content:'';position:absolute;z-index:-1;inset:0;background-image:linear-gradient(180deg,#05182220,#05182236 37%,#03141ee9 100%),var(--book-art);background-size:cover;background-position:center,var(--focus-x,50%) center}
+.book-card:active{transform:scale(.985)}
+.book-number{position:absolute;top:9px;right:9px;background:#0a2f39c9;border:1px solid #d8b77b80;border-radius:6px;font-size:10px;color:#ffe5b5;padding:3px 6px}
+.book-name{font:700 clamp(18px,4.6vw,24px)/1.12 Georgia,serif;color:#ffdf9f;text-shadow:0 2px 8px #000;margin-bottom:7px}
+.book-hint{font-size:10px;letter-spacing:.035em;color:#fcf1d9;font-weight:800;text-shadow:0 2px 5px #000}
+.book-card.ready{border-color:#ffe1a0;box-shadow:0 0 0 1px #ffce6a66,0 7px 20px #0009}
+.book-card.ready .book-hint{color:#ffde91}
+.shelf-note{font-size:12px;line-height:1.6;color:#c7d3d0;padding:0 3px;margin:25px 1px 30px}
+.other-mode{padding:20px 17px;border:1px solid #a88e607d;border-radius:15px;background:#153a43}
+.other-mode h2{font:700 23px Georgia,serif;color:#ffe0a3;margin:0 0 9px}
+.other-mode p{font-size:13px;line-height:1.6;color:#ecdfc8;margin:0 0 15px}
+.secondary-action{display:block;background:#2b4d4e;border:1px solid #ddbc7d;border-radius:10px;text-align:center;padding:12px;color:#ffe9bb;text-decoration:none;font-weight:850;font-size:13px}
+.read-hero{min-height:248px;display:flex;flex-direction:column;justify-content:flex-end;text-align:center;padding:80px 20px 25px;background-image:linear-gradient(180deg,#051a2222 0%,#071c2877 53%,#071d27 100%),var(--read-art,url('../bible-book-art/01_genesis.webp'));background-size:cover;background-position:center 45%;text-shadow:0 3px 8px #000}
+.read-hero h1{font:700 clamp(38px,10vw,50px)/1.05 Georgia,serif;color:#ffdfa8;margin:0 0 9px}
+.read-hero>p:last-child{font:italic 17px/1.45 Georgia,serif;color:#fff1d3;margin:0}
+.read-content{padding:18px clamp(13px,4vw,29px) 24px}
+.reading-status{display:flex;justify-content:space-between;gap:10px;color:#edcf97;font-size:11px;font-weight:850;letter-spacing:.05em}
+.reading-status span:last-child{color:#d6e1d9}
+.progress-track{height:6px;background:#173b43;border-radius:30px;overflow:hidden;margin:10px 0 16px}
+.progress-track span{display:block;height:100%;width:0;border-radius:30px;background:linear-gradient(90deg,#b78341,#ffdf9f);transition:width .2s ease}
+.picker-label{display:block;font-size:12px;color:#d7d9ca;margin-bottom:8px}
+.chapter-picker{display:block;width:100%;min-height:46px;padding:10px 12px;border:1px solid #be9d66;border-radius:9px;background:#16414a;color:#ffebc3;margin-bottom:20px;font-size:13px}
+.reading-paper{background:linear-gradient(130deg,#f7e8c6,#edd8af 55%,#dfc593);border:1px solid #f3e2bfb3;border-radius:16px;padding:clamp(20px,5vw,32px);color:var(--brown);box-shadow:0 10px 24px #0009}
+.reading-paper h2{margin:0 0 19px;font:700 clamp(27px,7.1vw,35px)/1.13 Georgia,serif;color:#4b341e}
+#part-body p{font-size:clamp(16px,4.25vw,18px);line-height:1.74;color:#35291f;margin:0 0 18px}
+.thought-box{border-left:4px solid #ae7c3c;background:#fff7e18c;border-radius:4px 9px 9px 4px;padding:13px 15px;margin:17px 0 22px}
+.thought-box small{font-size:10px;letter-spacing:.1em;font-weight:900;color:#825827}
+.thought-box p{font:italic 17px/1.5 Georgia,serif;color:#5c4027;margin:6px 0 0}
+.passage-link{display:block;text-align:center;background:#2a5b50;color:#fff2cf;font-size:13px;font-weight:800;line-height:1.55;text-decoration:none;border:1px solid #366b5b;border-radius:10px;padding:14px 12px}
+.completion{border:1px solid #dec18a;border-radius:12px;background:#173e43;margin:18px 0 0;padding:18px;text-align:center}
+.completion h2{font:700 24px Georgia,serif;color:#ffe1a1;margin:0}
+.completion p{font-size:14px;line-height:1.55;margin:10px 0 0}
+.reading-actions{text-align:center}
+.reset-reading{padding:8px 10px;margin:20px auto 8px;border:0;background:none;color:#e0d0b7;font-size:12px;text-decoration:underline;text-underline-offset:4px}
+.source-note{font-size:11px;line-height:1.65;color:#becdc8;max-width:470px;margin:8px auto}
+.bottom-nav{position:sticky;bottom:0;display:flex;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:#082831;border-top:1px solid #bc9c6882;box-shadow:0 -4px 16px #0005}
+.bottom-nav button{flex:1;min-height:52px;padding:11px 9px;border:1px solid #d5b583;border-radius:11px;font-size:14px;font-weight:850;background:#1f4248;color:#ffe9c4}
+.bottom-nav button:last-child{background:linear-gradient(#f8dea5,#c59a58);color:#20352f;border-color:#ffe7b7}
+.bottom-nav button:disabled{opacity:.45;cursor:default}
+@media(min-width:720px){.book-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.book-card{min-height:180px}.shelf-content{padding-inline:24px}.read-hero{min-height:320px}}
+@media(max-width:350px){.book-grid{gap:9px}.book-card{padding:9px}.topbar{padding-inline:8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.progress-track span{transition:none}}
