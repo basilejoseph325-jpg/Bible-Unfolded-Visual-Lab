@@ -1,4 +1,4 @@
-name: QA Bible Unfolded TEST full pre-release regression v34 (thirteen groups)
+name: QA Bible Unfolded TEST full pre-release regression v35 (fourteen groups)
 on:
   push:
     paths:
@@ -11,6 +11,9 @@ on:
       - '.github/workflows/qa-native-external-page-guard-v32.yml'
       - '.github/workflows/qa-native-legacy-migration-cold-review-v33.yml'
       - '.github/workflows/qa-native-verified-backup-preview-v34.yml'
+      - '.github/workflows/qa-native-settings-import-suspended-v35.yml'
+      - 'scripts/qa_native_settings_import_suspended_v35.cjs'
+      - 'scripts/qa_native_settings_import_suspended_v35_real_browser.cjs'
       - 'scripts/qa_native_verified_backup_restore_preview_v34.cjs'
       - 'scripts/qa_native_verified_backup_restore_preview_v34_real_browser.cjs'
       - 'scripts/qa_native_legacy_migration_cold_review_v33.cjs'
@@ -49,6 +52,9 @@ on:
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
+  native-settings-unsafe-import-closed:
+    name: Suspend native TEST Settings v1/v2 import UI while retaining export and safe preview
+    uses: ./.github/workflows/qa-native-settings-import-suspended-v35.yml
   verified-current-backup-and-safe-preview:
     name: Verify real downloaded TEST backup against current progress, preview wallet/wheel changes with NO restore
     uses: ./.github/workflows/qa-native-verified-backup-preview-v34.yml
