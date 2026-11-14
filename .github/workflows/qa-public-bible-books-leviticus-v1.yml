@@ -1,0 +1,73 @@
+name: QA published Bible Books Leviticus public site
+on:
+  workflow_run:
+    workflows: ["pages build and deployment"]
+    types: [completed]
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-public-chrome:
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 13
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Chrome browser harness
+        run: npm install --prefix /tmp/bu-public-books-qa puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Verify actual public Bible Books reader in Chrome
+        shell: bash
+        run: |
+          set -euo pipefail
+          NODE_PATH=/tmp/bu-public-books-qa/node_modules node <<'NODE'
+          'use strict';
+          const assert=require('node:assert/strict');
+          const {execSync}=require('node:child_process');
+          const puppeteer=require('puppeteer-core');
+          const origin='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/';
+          (async()=>{
+            const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+            const browser=await puppeteer.launch({executablePath:chrome,headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],timeout:85000});
+            try{
+              const ctx=await browser.createBrowserContext();
+              const page=await ctx.newPage();
+              await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+              const errors=[];page.on('pageerror',e=>errors.push(e.message));
+              let lastError;
+              for(let i=0;i<6;i++){
+                try{
+                  const response=await page.goto(origin+'bible-book-guides/index.html?publishedQA=leviticus27-'+i,{waitUntil:'domcontentloaded',timeout:48000});
+                  assert.equal(response.status(),200);
+                  await page.waitForSelector('.book-card.ready',{timeout:14000});
+                  const available=await page.$$eval('.book-card.ready .book-name',els=>els.map(x=>x.textContent));
+                  assert.deepEqual(available,['Genesis','Exodus','Leviticus']);
+                  lastError=null;break;
+                }catch(e){lastError=e;await new Promise(resolve=>setTimeout(resolve,6000))}
+              }
+              if(lastError)throw lastError;
+              assert.equal(await page.$$eval('.book-card',els=>els.length),66);
+              await page.$eval('a.book-card[href*="leviticus"]',e=>e.click());
+              await page.waitForFunction(()=>location.search.includes('book=leviticus')&&!document.getElementById('reader-controls').hidden,{timeout:24000});
+              const part=await page.evaluate(()=>({
+                title:document.getElementById('part-title').textContent,
+                count:document.getElementById('reading-count').textContent,
+                options:document.querySelectorAll('#chapter-picker option').length,
+                nwt:document.getElementById('passage-link').href,
+                cover:getComputedStyle(document.getElementById('book-hero')).backgroundImage
+              }));
+              assert.equal(part.title,"A Doorway Into Jehovah's Tent");
+              assert.equal(part.count,'PART 1 OF 27');
+              assert.equal(part.options,27);
+              assert(part.cover.includes('03_leviticus.webp'));
+              assert.equal(part.nwt,'https://www.jw.org/en/library/bible/nwt/books/leviticus/1/');
+              await page.$eval('#next-part',e=>e.click());
+              assert.equal(await page.evaluate(()=>localStorage.getItem('buGuideLast:2')),'1');
+              await page.reload({waitUntil:'domcontentloaded',timeout:45000});
+              await page.waitForFunction(()=>document.getElementById('reading-count')?.textContent==='PART 2 OF 27',{timeout:22000});
+              await page.$eval('a.back-link',e=>e.click());
+              await page.waitForFunction(()=>location.pathname.endsWith('/bible-book-guides/index.html'),{timeout:22000});
+              assert.deepEqual(errors,[],'Published reader JavaScript errors');
+              console.log('PASS_PUBLIC_PAGES_LEVITICUS',JSON.stringify({origin,part,resumedPart:2,errors:[]}));
+              await ctx.close();
+            }finally{await browser.close()}
+          })().catch(e=>{console.error(e);process.exitCode=1});
+          NODE
