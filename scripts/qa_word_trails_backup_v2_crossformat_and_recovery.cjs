@@ -148,22 +148,27 @@ assert.equal(failing.data.has(failing.api.keys.JOURNAL),false);
 assert.equal(failing.data.has(failing.api.keys.COMMITTED),false);
 total++;
 
-// Crash-recovery test in a fake tab: inject a realistic journal, partially
-// overwrite 2 keys, and verify the coordinator's own recovery restores them.
+// A TEST crash leaves a previous-only journal. Newer wallet/TEST crossword
+// writes may have occurred since the crash; automatic rewind is unsafe.
+// LIVE's pinned, protected old coordinator is read-only evidence and is NOT
+// changed here (its previous behavior remains a separate release blocker).
 const interrupted=factory('TEST');
 const priorWallet=interrupted.data.get(W),priorTrail=interrupted.data.get(T);
 interrupted.data.set(interrupted.api.keys.JOURNAL,ck({
  version:1,previous:{[W]:priorWallet,[T]:priorTrail},createdAt:'2026-11-13T10:00:00Z'
 }));
-interrupted.data.set(W,ck(nativeWallet(14,['goldwheel'])));
-interrupted.data.set(T,ck(trail(999999)));
-const undone=interrupted.api.recoverPending();
-assert.equal(undone.recovered,true);
-assert.equal(interrupted.data.get(W),priorWallet);
-assert.equal(interrupted.data.get(T),priorTrail);
-assert.equal(interrupted.data.has(interrupted.api.keys.JOURNAL),false);
+const newerInterruptedWallet=ck(nativeWallet(14,['goldwheel']));
+const newerInterruptedTrail=ck(trail(999999));
+interrupted.data.set(W,newerInterruptedWallet);
+interrupted.data.set(T,newerInterruptedTrail);
+const stopped=interrupted.api.recoverPending();
+assert.equal(stopped.recovered,false);
+assert.equal(stopped.needsManualReview,true);
+assert.equal(interrupted.data.get(W),newerInterruptedWallet);
+assert.equal(interrupted.data.get(T),newerInterruptedTrail);
+assert.equal(interrupted.data.has(interrupted.api.keys.JOURNAL),true);
 total++;
 
 console.log('PASS_WORD_TRAILS_V2_BACKUP_CROSSFORMAT '+total+' audit cases, pinned LIVE gitBlob='+blob+
- ': complete TEST/LIVE backups remain distinct and reject direct cross-import, wheel entitlements preserved, native and crossword coins separate, synthetic rollback and crash recovery verified.');
+ ': complete TEST/LIVE backups remain distinct and reject direct cross-import, wheel entitlements preserved, native and crossword coins separate, same-call TEST rollback and stopped old interrupted TEST journal verified.');
 console.log('RELEASE_BLOCKERS: v2 full backups are not portable between repo formats; broad native restore changes shared-origin wallet by design and needs user consent. Legacy LIVE auto-migration and v2 coordinator have NO cooperative Web Lock. Do not publish direct TEST->LIVE full-backup imports.');
