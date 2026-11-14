@@ -254,16 +254,3 @@ else install();
 
 /* TEST-only standalone Bible Books route; no overlays, no Story Adventure modifications. */
 (()=>{'use strict';if(location.pathname.includes('/experiments/')||document.getElementById('bu-books-fullpage-nav-v3'))return;const s=document.createElement('script');s.id='bu-books-fullpage-nav-v3';s.src='bible-book-guides/mode-navigation-v3.js?v=20261114-books-chrome-route-v4';s.defer=true;document.head.appendChild(s)})();
-
-
-/* VISUAL LAB ONLY — separate 3-scene Nehemiah Story Adventure chapter.
- * Entry appears on the existing Journey screen; no overlay or replacement of
- * the protected native story game, chapter data, scores or settings. */
-(()=>{'use strict';
- if(document.getElementById('bu-story-explorer-launcher-v1'))return;
- const script=document.createElement('script');
- script.id='bu-story-explorer-launcher-v1';
- script.defer=true;
- script.src='story-adventure-explore-launcher-test-v1.js?v=20261114-v1';
- document.head.appendChild(script);
-})();
