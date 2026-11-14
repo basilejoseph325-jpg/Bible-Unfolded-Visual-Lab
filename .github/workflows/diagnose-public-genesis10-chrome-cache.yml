@@ -1,0 +1,41 @@
+name: Inspect published Genesis10 Chrome cache and native script URLs (read only)
+on:
+  push:
+    paths:
+      - '.github/workflows/diagnose-public-genesis10-chrome-cache.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare public cache headers and native core script references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          html=Path('index.html').read_text(encoding='utf-8')
+          print('REPO_HTML_BYTES',len(html))
+          print('DOCTYPE',html[:80])
+          for needle in ['bible_unfolded_core_part','journey-progress-caption.js','serviceWorker','navigator.serviceWorker','cache','genesis_ep10','BU_EP10_SCENE_ART','genesis10/abraham-burial-promise.webp']:
+            positions=[m.start() for m in re.finditer(re.escape(needle),html,re.I)]
+            print('HTML_REF',needle,'count',len(positions))
+            for pos in positions[:4]:
+              print('HTML_CONTEXT',needle,repr(html[max(0,pos-180):pos+270])[:520])
+          scripts=re.findall(r'<script\b[^>]*?src\s*=\s*["\']([^"\']+)["\']',html,re.I)
+          print('SCRIPTS_COUNT',len(scripts))
+          for item in scripts:
+            if any(k in item for k in ['part','journey','main','loader','story','script']):
+              print('SCRIPT_URL',item[:350])
+          for filename in ('bible_unfolded_core_part3.js','bible_unfolded_core_part5.js'):
+            s=Path(filename).read_text(encoding='utf-8')
+            print('CORE_SOURCE',filename,len(s),'ART_MAP',s.count('abraham-burial-promise.webp'),'EP10_DATA',s.count('PROMISE'))
+          PY
+          for url in             'https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/'             'https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/bible_unfolded_core_part3.js'             'https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/bible_unfolded_core_part5.js'             'https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/story-adventure-art/genesis10/abraham-burial-promise.webp'; do
+              echo "PUBLIC_HEADER $url"
+              curl -sIL --max-time 30 "$url" | grep -iE 'HTTP/|cache-control:|etag:|last-modified:|age:|date:|content-type:|content-length:' | tail -15
+          done
