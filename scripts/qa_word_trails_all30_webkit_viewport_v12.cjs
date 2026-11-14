@@ -57,14 +57,21 @@ async function gameFrame(page){
     await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:110000});
     await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
      !!document.querySelector('#home-cross'),null,{timeout:100000});
-    const before=await snapshot(page,protectedKeys);
-    // Native startup may legitimately normalize older synthetic wallet/voice
-    // shapes. Treat the post-startup state as the protected gameplay baseline.
-    // The non-platform LIVE save and sentinel must remain byte-exact.
-    for(const key of [LIVE,SENTINEL])assert.equal(before[key],seed[key],
+    const beforeNative=await snapshot(page,protectedKeys);
+    // The fictional LIVE save and independent sentinel must be exact.
+    for(const key of [LIVE,SENTINEL])assert.equal(beforeNative[key],seed[key],
      key+' unexpectedly altered during native startup');
     await page.locator('#home-cross').evaluate(el=>el.click());
     const child=await gameFrame(page);
+    // Entering the iframe may initialize/normalize the global wallet schema.
+    // Once the native Word Trails frame is ready, NO level-map activity may
+    // change shared wallet, purchases, voices or established LIVE progress.
+    const before=await snapshot(page,protectedKeys);
+    for(const key of [LIVE,SENTINEL])assert.equal(before[key],seed[key],
+     key+' unexpectedly altered during Word Trails entry');
+    const firstWallet=JSON.parse(before[WALLET]);
+    assert.equal(firstWallet.coins,749,'Entering Word Trails changed real native coin balance');
+    assert.equal(firstWallet.points,30,'Entering Word Trails changed real native point balance');
     let checked=0,minWheel=99,maxWheel=0,boardSizes=new Set();
     for(let i=0;i<30;i++){
      // Real UI navigation, no direct access to closure-private game methods.
