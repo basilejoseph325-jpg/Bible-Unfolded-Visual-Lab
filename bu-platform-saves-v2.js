@@ -654,36 +654,24 @@ function download(){
   notice('Complete TEST backup prepared: native progress + Word Trails crossword save. Check Downloads to confirm the file was saved; nothing was restored.');
  }catch(e){notice('Backup failed: '+e.message)}
 }
-async function acceptFile(nativeHandler,picker,event){
- const file=picker.files?.[0];if(!file)return;
+/* TEST v35 player-facing native import safety gate. Original v1 and
+ * current v2 Settings imports have no cooperative transaction lock that can
+ * exclude old LIVE/TEST tabs. Block ALL UI restore attempts here, even if
+ * there has not been an observed conflict. The real game, export action and
+ * v34 read-only restore review remain intact.
+ * Internal API writers and already-running old scripts remain a blocker. */
+function refuseLegacySettingsImport(picker,event){
+ if(event){
+  if(typeof event.preventDefault==='function')event.preventDefault();
+  if(typeof event.stopImmediatePropagation==='function')event.stopImmediatePropagation();
+ }
  try{
-  // Do not let the original native v1 handler bypass recovery quarantine.
-  // A new-format v2 import is blocked by applyBackup too, but the user-facing
-  // file picker must reject BOTH formats before any old/new handler runs.
-  if(read(JOURNAL)!==null||read(COMMITTED)!==null){
-   installRecoveryReview();
-   throw Error('An earlier TEST backup needs recovery review. Imports are blocked until that is resolved; first download your CURRENT progress.');
-  }
-  assertNoExternalWriter();
-  if(file.size>MAX_BYTES)throw Error('This backup exceeds 2 MB.');
-  const content=await file.text(),value=parse(content);
-  if(value?.format==='BibleUnfoldedSave'&&value.version===1){
-   // Preserve the original native v1 importer and exactly its safety dialog.
-   if(nativeHandler)return nativeHandler.call(picker,event);
-   throw Error('Native v1 importer unavailable.');
-  }
-  const plan=dryRun(value);
-  const n=plan.incomingWallet,c=plan.currentWallet;
-  const wallet=n?'Imported native wallet: '+n.insightTokens+' Insight Tokens and '+n.points+' Points. ':'';
-  const comparison=c?'Current wallet: '+c.insightTokens+' Insight Tokens and '+c.points+' Points. ':'';
-  const t=plan.incomingWordTrails;
-  const test=t.present?'Imported Word Trails: '+t.completedCount+' completed levels, '+t.coins+' TEST coins. ':'No Word Trails progress in this file. ';
-  if(!confirm('Import complete Visual Lab TEST backup? Matching saved progress is replaced. Existing purchased wheel ownership is kept.\n\n'+comparison+wallet+'\n'+test+'\nTEST coins will NOT become real Insight Tokens.\n\nIMPORTANT: TEST and LIVE share a GitHub Pages browser-storage origin. Importing the native wallet here also changes the saved native wallet visible in LIVE on this device.\n\nExport your current backup first if you need to keep it.'))return;
-  const result=applyBackup(value);
-  if(result.needsCleanup)notice('TEST import data was committed, but its journal needs review. Do not run another import until the recovery status is cleared.');
-  else if(result.unchanged)notice('This backup is already present; no balances were changed.');
- }catch(e){window.__bu388SkipCheckpoint=false;notice('Import failed: '+e.message);installRecoveryReview();installConcurrentReview()}
- finally{picker.value='';}
+  if(recoverPending().needsManualReview)installRecoveryReview();
+  if(competingPages.size)installConcurrentReview();
+  const review=document.getElementById('bu-wt-safe-preview-v34');
+  if(review)review.open=true;
+  notice('TEST backup RESTORE is temporarily disabled to protect progress. No import was performed. Export your current game and use "Preview a TEST backup safely (no restore)" below. Previewing is not consent to restore while older tabs may still be open.');
+ }finally{if(picker)picker.value='';}
 }
 let installed=false,attempts=0;
 function install(){
@@ -693,11 +681,14 @@ function install(){
   if(attempts++<45)setTimeout(install,250);return;
  }
  installed=true;
- const originalImport=picker.onchange;
- // The root's original Settings UI remains the only player-facing save interface.
+ // Retain native Settings, but never delegate the selected file to its
+ // old v1 handler. Capture-phase intercept blocks ordinary bubbling or
+ // onchange property handlers while the updated TEST page is loaded.
  btn.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();download()},true);
- picker.onchange=e=>acceptFile(originalImport,picker,e);
+ picker.addEventListener('change',e=>refuseLegacySettingsImport(picker,e),true);
+ picker.onchange=e=>refuseLegacySettingsImport(picker,e);
  getStatus();
+ notice('TEST backup RESTORE is temporarily disabled. Export your current game, then use the read-only preview below.');
  if(recovered.error)notice('Backup recovery needs review to protect saved progress. No automatic restore was performed. '+recovered.error);
  installRecoveryReview();
  installConcurrentReview();
