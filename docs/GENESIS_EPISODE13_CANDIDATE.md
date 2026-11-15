@@ -69,7 +69,7 @@ PR #22 loader or native files. No such shared-file patch is included here.
 
 - [x] Twelve source/readability reviews and specific illustration briefs.
 - [x] Native candidate available through an isolated, working review entry.
-- [x] Local automated QA recorded below; hosted workflow verification follows PR creation.
+- [x] Local automated QA recorded below; exact hosted runs are linked in [PR #28 checks](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pull/28/checks).
 - [ ] Create and review `g13-d01.webp` through `g13-d12.webp`; integrate them and
   the Bethel ending image. **No new scene images currently exist.**
 - [ ] Independent human Scripture, writing and sensitivity acceptance.
@@ -106,5 +106,14 @@ fixture waits for the caption update. Final results follow.
 - Rendered gameplay, explanation and ending inspected at 320×568 in Chromium.
   No physical Samsung/iPhone test or completed illustration is claimed.
 
-The final local run has no failing checks. The earlier failures and corrections
+The final local run has no failing checks. CI isolation uses the PR event’s base
+and head, so a trial merge does not attribute the concurrent Word Trails session’s
+legitimate `main` commits to this chapter. The earlier failures and corrections
 are described above rather than being represented as passing attempts.
+
+The first hosted Episode 13 run passed native gameplay and Episode 12 regression,
+but its original diff check incorrectly counted the parallel Word Trails merge
+(`4ea1a29`) as this PR's change. That check now uses the PR event's base/head and
+passed locally with that exact concurrent-main event. No Word Trails or shared
+file was changed to resolve the fixture failure. Hosted results and exact run
+links are maintained in PR #28 rather than claiming an unexecuted run passed.

@@ -1,9 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),cp=require('node:child_process'),p=require('puppeteer-core'),vm=require('node:vm');
-const BASE='1bf5e1b8a30972886ac3b3aec25c14c7ef34888c';
+const INSPECTED_BASE='1bf5e1b8a30972886ac3b3aec25c14c7ef34888c';
+// Actions checks out a trial merge. Compare only this PR's head delta, so another
+// session's legitimate main-branch Word Trails commits are not attributed to us.
+const event=process.env.GITHUB_EVENT_PATH?JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH,'utf8')):{};
+const BASE=event.pull_request?.base?.sha||INSPECTED_BASE;
+const CANDIDATE=event.pull_request?.head?.sha||'HEAD';
 const allowed=new Set(['genesis-episode13-preview.html','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-content/genesis-episode13-native-preview.js','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_native_preview.cjs','scripts/qa_genesis13_boundaries.cjs','.github/workflows/qa-genesis13-dev.yml','docs/GENESIS_EPISODE13_CANDIDATE.md']);
-const changed=cp.execFileSync('git',['diff','--name-only',BASE,'HEAD'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);for(const f of changed)assert(allowed.has(f),'Out-of-scope file changed: '+f);
+const changed=cp.execFileSync('git',['diff','--name-only',BASE+'...'+CANDIDATE],{encoding:'utf8'}).trim().split('\n').filter(Boolean);for(const f of changed)assert(allowed.has(f),'Out-of-scope file changed: '+f);
 const protectedFiles=['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode12-integration-test.js','story-adventure-content/genesis-episode12-return-to-esau-v1.json',...Array.from({length:5},(_,i)=>'bible_unfolded_core_part'+(i+1)+'.js')];
 for(const f of protectedFiles)assert.equal(fs.readFileSync(f,'utf8'),cp.execFileSync('git',['show',BASE+':'+f],{encoding:'utf8',maxBuffer:40000000}),f+' differs from inspected TEST main');
 new vm.Script(fs.readFileSync('story-adventure-content/genesis-episode13-native-preview.js','utf8'));
