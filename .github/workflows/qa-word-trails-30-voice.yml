@@ -4,6 +4,7 @@ on:
     paths:
       - '.github/workflows/qa-word-trails-30-voice.yml'
       - 'experiments/word-trails-levels-12-30-v1.js'
+      - 'experiments/word-trails-levels-31-35-v1.js'
       - 'experiments/word-trails-next-v1.js'
       - 'experiments/word-trails-next-v1.html'
       - 'experiments/word-trails-announcer-v1.js'
@@ -104,7 +105,7 @@ jobs:
              localStorage.setItem('bible-unfolded-private-voice-pref-v381',JSON.stringify({mode:'charlie',volume:65}));
             });
             await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
-            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 30'));
+            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 35'));
             const dims=()=>page.evaluate(()=>{
              const b=document.querySelector('#board').getBoundingClientRect();
              const w=document.querySelector('#wheel').getBoundingClientRect();
@@ -165,7 +166,7 @@ jobs:
              const data=await page.evaluate(i=>window.BUWTAdditionalLevels[i],i);
              const targetLevel=i+12;
              const label=await page.$eval('#level-label',el=>el.textContent);
-             assert(label.includes('LEVEL '+targetLevel+' / 30'),'Wrong level label '+label);
+             assert(label.includes('LEVEL '+targetLevel+' / 35'),'Wrong level label '+label);
              // Actual gameplay: early six-letter rack supports TWO good bonus
              // words; later racks use the usual three-word satchel.
              if(targetLevel===12||targetLevel===13){
@@ -217,7 +218,8 @@ jobs:
             assert(stored.claimedSparks.length>=38);
             console.log('SAVED_30_LEVELS',JSON.stringify({completed:stored.completed.length,
              claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
-            await page.click('#next-level');
+            await page.click('#next-level'); // Chapter 7 now begins at Level 31
+            await page.click('#level-map');
             await page.waitForSelector('#map[open]');
             const mapQA=await page.evaluate(()=>({
              levels:document.querySelectorAll('#map .map-level').length,
@@ -227,10 +229,10 @@ jobs:
              seals:[...document.querySelectorAll('#map .map-milestone-status')].length
             }));
             console.log('SCENIC_LEVEL_MAP',JSON.stringify(mapQA));
-            assert.equal(mapQA.levels,30);
-            assert.equal(mapQA.chapters,6,'Six five-level scenic chapters');
-            assert.equal(mapQA.scenePreviews,30,'All 30 levels need illustrated map previews');
-            assert.equal(mapQA.seals,6,'All six milestone seals must show on the level map');
+            assert.equal(mapQA.levels,35);
+            assert.equal(mapQA.chapters,7,'Seven five-level scenic chapters');
+            assert.equal(mapQA.scenePreviews,35,'All 35 levels need illustrated map previews');
+            assert.equal(mapQA.seals,7,'All seven milestone seals must show on the level map');
             await page.click('#map-x');
             for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
              await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
