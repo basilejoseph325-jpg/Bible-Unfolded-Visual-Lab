@@ -227,6 +227,9 @@ function load(){
   x.unlocked=Math.max(0,Math.min(LEVELS.length-1,Number(x.unlocked)||0));
   x.coins=Math.max(0,Number(x.coins)||0);x.points=Math.max(0,Number(x.points)||0);
   for(const key of ['completed','sparks','paidWords','paidBonuses','claimedFreeHints'])if(!Array.isArray(x[key]))x[key]=[];
+  // A player who had finished Level 30 before the 35-level update had no
+  // Level 31 to unlock. Allow entry without replaying or paying rewards again.
+  if(LEVELS.length>30&&x.completed.includes(29))x.unlocked=Math.max(x.unlocked,30);
   if(!Array.isArray(x.claimedSparks))x.claimedSparks=[];
   if(!Array.isArray(x.boardBible))x.boardBible=[];
   // Migration: a completed old single star was the FIRST Bible word in its level.
