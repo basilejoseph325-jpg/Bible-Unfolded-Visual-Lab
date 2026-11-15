@@ -38,11 +38,24 @@ const sleep=t=>new Promise(r=>setTimeout(r,t));
    await page.evaluate(()=>{if(typeof focusHome==='function')focusHome();document.getElementById('home-books').click()});
    await page.waitForSelector('#bu-james-gate');
    assert(!(await page.evaluate(()=>window.BUJamesReturnLoopV1.inspect().owned.includes('books'))));
-   await page.evaluate(()=>document.querySelector('#bu-james-gate [data-buj-action=unlock-books]').click());
-   const unlocked=await page.evaluate(()=>window.BUJamesReturnLoopV1.inspect());
+   // Purchased Books now enters a separate full-page shelf, rather than a
+   // second native screen. Wait for navigation before reading the persisted
+   // TEST wallet, then return to the game for the remaining economy tests.
+   await Promise.all([
+    page.waitForNavigation({waitUntil:'domcontentloaded',timeout:30000}),
+    page.evaluate(()=>document.querySelector('#bu-james-gate [data-buj-action=unlock-books]').click())
+   ]);
+   await page.waitForFunction(()=>document.querySelectorAll('#hebrew-books .book-card.ready').length>=4,{timeout:15000});
+   const unlocked=await page.evaluate(()=>({
+    ...JSON.parse(localStorage.getItem('bu-james-return-loop-v1-test-only')||'null'),
+    shelf:location.pathname.endsWith('/bible-book-guides/index.html'),
+    gateOpen:!!document.querySelector('#bu-james-gate')
+   }));
    assert(unlocked.owned.includes('books'),'Book access must persist as a purchased entitlement');
    assert.equal(unlocked.balance,init.state.balance-180);
-   assert.equal(await page.evaluate(()=>!!document.querySelector('#bu-james-gate')),false,'Book gate closes after purchase');
+   assert(unlocked.shelf&&!unlocked.gateOpen,'Purchased Books must open the standalone reading shelf');
+   await page.goto(base+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
+   await page.waitForFunction(()=>!!window.BUJamesReturnLoopV1&&!!document.querySelector('#bu-james-rewards'),{timeout:30000});
    await page.evaluate(()=>{if(typeof focusHome==='function')focusHome();document.getElementById('home-rewards').click()});
    await sleep(100);
    await page.screenshot({path:'/tmp/BU-JAMES-REWARDS-'+vp.width+'-shop.png'});
