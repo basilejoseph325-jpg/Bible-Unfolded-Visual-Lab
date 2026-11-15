@@ -1,0 +1,652 @@
+{
+  "schemaVersion": "1.0.0",
+  "chapterId": "genesis_ep13",
+  "chapterNumber": 13,
+  "title": "Jacob's Household at Bethel",
+  "coverage": "Genesis 34–35",
+  "translation": "New World Translation (2013 revision), jw.org",
+  "contentStatus": "source_first_editorial_candidate_not_native_integrated",
+  "saveKey": "bible-unfolded-genesis-adventure-v3860",
+  "rules": "Existing approved v3.9.00 Story wheel and 3 contextual clues per scene (free,15,25), no letter aid. Preserve normal Journey locks and release gates. Sensitive Dinah account handled without graphic scenes or blame.",
+  "sourceReview": {
+    "primarySources": [
+      "https://www.jw.org/en/library/bible/nwt/books/genesis/34/",
+      "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+    ],
+    "status": "assistant_first_pass_not_independent_human_signoff"
+  },
+  "discoveries": [
+    {
+      "id": "g13-d01",
+      "sequence": 1,
+      "title": "A Painful Wrong",
+      "narration": "An awful wrong has been done to Dinah, Jacob's daughter. Shechem, a local ruler's son, violated her. The Bible doesn't excuse what happened. As Jacob's family learns about it, the question becomes how they'll respond.",
+      "scripture": [
+        {
+          "reference": "Genesis 34:1–7",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/34/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which daughter of Jacob was seriously harmed by Shechem?",
+        "answer": "DINAH"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The young woman was Leah's daughter."
+        },
+        {
+          "level": 2,
+          "text": "Her father was Jacob, and her brothers were away with the herds."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 34 begins by naming Jacob's daughter."
+        }
+      ],
+      "explanation": "Dinah was Jacob and Leah's daughter. Genesis says that Shechem violated her. She was wronged, and nothing about the account makes her responsible for what he did. What happens next shows how additional bad decisions can deepen a family's suffering.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d02",
+      "sequence": 2,
+      "title": "An Answer with a Hidden Plan",
+      "narration": "Hamor offers a marriage arrangement and says the families could live and trade together. Dinah's brothers have their own response. But Genesis tells us something essential before we even hear their terms: they aren't speaking honestly.",
+      "scripture": [
+        {
+          "reference": "Genesis 34:8–17",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/34/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Genesis say characterized the brothers' reply to Shechem and Hamor?",
+        "answer": "DECEIT"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The brothers' words and their actual intentions didn't match."
+        },
+        {
+          "level": 2,
+          "text": "They presented a condition while concealing what they planned."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 34:13 directly describes their reply as dishonest."
+        }
+      ],
+      "explanation": "Genesis 34:13 says Jacob's sons answered deceitfully. Their anger followed a real injustice, but their hidden plan would lead to more harm. Knowing how the Bible describes their answer helps us see why the proposed agreement wasn't genuine.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d03",
+      "sequence": 3,
+      "title": "An Offer with an Ulterior Hope",
+      "narration": "The men at the city gate hear Hamor's proposal. He describes peaceful trade and intermarriage, but he also points to something more tempting: Jacob's animals and possessions might eventually become theirs.",
+      "scripture": [
+        {
+          "reference": "Genesis 34:18–24",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/34/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Hamor tell his city the arrangement could bring them from Jacob's household?",
+        "answer": "WEALTH"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Hamor mentioned more than peace between households."
+        },
+        {
+          "level": 2,
+          "text": "He referred to possessions, livestock, and material gain."
+        },
+        {
+          "level": 3,
+          "text": "Think of a word for everything valuable someone owns."
+        }
+      ],
+      "explanation": "Hamor appealed to the men of his city by suggesting that Jacob's property and livestock could become theirs. Genesis 34:23 records the appeal. The promise of material gain was part of the city's decision, not just the language of peace.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d04",
+      "sequence": 4,
+      "title": "Violence Does Not Undo a Wrong",
+      "narration": "Simeon and Levi attack the city while its men are suffering. They kill its men, and other brothers plunder it. Genesis doesn't present this as a happy victory. Dinah had been wronged, and now terrible harm spreads further.",
+      "scripture": [
+        {
+          "reference": "Genesis 34:25–29",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/34/"
+        },
+        {
+          "reference": "Genesis 49:5–7",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/49/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What turned the deceitful agreement into a deadly tragedy?",
+        "answer": "VIOLENCE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This wasn't a peaceful settlement."
+        },
+        {
+          "level": 2,
+          "text": "The brothers used weapons and people were killed."
+        },
+        {
+          "level": 3,
+          "text": "Think of the opposite of a safe, nonviolent resolution."
+        }
+      ],
+      "explanation": "Simeon and Levi killed the men of the city, and Jacob's other sons plundered it. Their actions did not undo the wrong done to Dinah. Later Jacob spoke against the brothers' fierce anger and violent conduct. (Genesis 49:5–7)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d05",
+      "sequence": 5,
+      "title": "Jacob Sees Another Danger",
+      "narration": "Jacob confronts Simeon and Levi. His household is small compared with the peoples around them, and he worries that their violence has put everyone in danger. The brothers are still focused on the wrong done to Dinah.",
+      "scripture": [
+        {
+          "reference": "Genesis 34:30–31",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/34/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob fear the surrounding peoples might do to his family?",
+        "answer": "ATTACK"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Jacob worried about a response from nearby peoples."
+        },
+        {
+          "level": 2,
+          "text": "He feared they might unite against his household."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 34:30 describes what they might do if they gathered against him."
+        }
+      ],
+      "explanation": "Jacob feared that the surrounding Canaanites and Perizzites might gather to attack him and his household. The brothers gave their own defense, but the account doesn't treat the danger to the wider family as imaginary.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d06",
+      "sequence": 6,
+      "title": "A Place Worth Returning To",
+      "narration": "The next direction Jacob receives is clear: he is to go to a place connected with the night he fled from Esau. Years earlier, he had heard Jehovah's promise there. Now he is being told to return.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:1",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Where did God tell Jacob to go and build an altar?",
+        "answer": "BETHEL"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This was a place Jacob had visited on his earlier journey."
+        },
+        {
+          "level": 2,
+          "text": "He had dreamed about a stairway reaching heaven there."
+        },
+        {
+          "level": 3,
+          "text": "The name means “House of God.”"
+        }
+      ],
+      "explanation": "God directed Jacob to go to Bethel and build an altar there. That was the place where God had appeared to him when he was fleeing from Esau. His journey back connected the family with Jehovah's earlier promise.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d07",
+      "sequence": 7,
+      "title": "A Household Makes a Change",
+      "narration": "Before leaving for Bethel, Jacob speaks to everyone with him. He tells them to remove the foreign gods they have, cleanse themselves, and change their garments. They hand over those objects, and Jacob puts them away.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:2–4",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob tell everyone to remove from the household before they traveled?",
+        "answer": "IDOLS"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "These were not ordinary tools or clothing."
+        },
+        {
+          "level": 2,
+          "text": "They were objects connected with worship of gods other than Jehovah."
+        },
+        {
+          "level": 3,
+          "text": "The Bible calls them foreign gods; another familiar word begins with I."
+        }
+      ],
+      "explanation": "Jacob told the household to get rid of foreign gods. They gave him those objects along with their earrings, and he buried them near Shechem. The journey to Bethel involved a deliberate change in what the family kept and practiced.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d08",
+      "sequence": 8,
+      "title": "Under the Big Tree",
+      "narration": "Jacob doesn't carry the household's old religious objects to Bethel. He leaves them behind beneath a big tree near Shechem. Then the family continues traveling, and nearby cities do not pursue them.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:4–5",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob do with the foreign gods and earrings near Shechem?",
+        "answer": "BURIED"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The objects weren't taken on the journey."
+        },
+        {
+          "level": 2,
+          "text": "Genesis describes placing them out of sight beneath the ground."
+        },
+        {
+          "level": 3,
+          "text": "The action used the earth under the large tree."
+        }
+      ],
+      "explanation": "Jacob buried the foreign gods and earrings under a large tree near Shechem. Genesis also says the surrounding cities did not chase the family as they traveled. The family left those religious objects behind before reaching Bethel.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d09",
+      "sequence": 9,
+      "title": "A Place of Worship",
+      "narration": "Jacob reaches Bethel with his household. He remembers how Jehovah had been with him during his earlier flight, and he builds something there connected with worship. The place receives a name that points back to God.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:6–8",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob build at Bethel after arriving with his household?",
+        "answer": "ALTAR"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "It was built from materials available in the ancient landscape."
+        },
+        {
+          "level": 2,
+          "text": "It was connected with offering worship, not housing the family."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 35:7 says Jacob built it at Bethel."
+        }
+      ],
+      "explanation": "Jacob built an altar at Bethel and named the place El-bethel, meaning “God of Bethel.” Genesis connects it with God's earlier appearance when Jacob was fleeing from Esau. The journey brought him back to a meaningful place.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d10",
+      "sequence": 10,
+      "title": "A Promise Beyond One Family",
+      "narration": "At Bethel, God blesses Jacob and confirms the name Israel. His words look far beyond this one traveling family: nations will come from Jacob's descendants, and future rulers will come from his line.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:9–15",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Jehovah spoke of nations and future rulers coming from Jacob. What kind of rulers did he mention?",
+        "answer": "KINGS"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The promise concerned leadership in later generations."
+        },
+        {
+          "level": 2,
+          "text": "These rulers would lead nations or kingdoms."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 35:11 names the kind of rulers who would descend from Jacob."
+        }
+      ],
+      "explanation": "God said nations and kings would come from Jacob and promised the land to his offspring. These were promises about the future; the family standing at Bethel was not itself already a kingdom.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d11",
+      "sequence": 11,
+      "title": "A Son and a Farewell",
+      "narration": "The journey brings a heartbreaking moment. Rachel struggles during childbirth and gives birth to a son, but she dies. She gives the baby one name, while Jacob gives him another. The family has a new child and a painful loss.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:16–20",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What name did Jacob give the son Rachel bore before she died?",
+        "answer": "BENJAMIN"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The child was Joseph's younger brother."
+        },
+        {
+          "level": 2,
+          "text": "His father chose a different name from the one Rachel spoke."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 35:18 records the name Jacob chose."
+        }
+      ],
+      "explanation": "Rachel named the baby Ben-oni, but Jacob called him Benjamin. Rachel died and was buried on the road to Ephrath, or Bethlehem. The account holds the joy of a son's birth beside the sorrow of losing his mother.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g13-d12",
+      "sequence": 12,
+      "title": "Two Sons Say Goodbye",
+      "narration": "Jacob finally comes to the place where Isaac has been living. Isaac dies at 180 after a long life. Genesis gives us a quiet closing detail: Esau and Jacob come together again to bury their father.",
+      "scripture": [
+        {
+          "reference": "Genesis 35:27–29",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/35/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What was the family relationship between the two men who buried Isaac together?",
+        "answer": "BROTHERS"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Isaac was the father of both men."
+        },
+        {
+          "level": 2,
+          "text": "They had once been estranged but later reunited."
+        },
+        {
+          "level": 3,
+          "text": "Esau and Jacob were sons of the same parents."
+        }
+      ],
+      "explanation": "Esau and Jacob buried their father Isaac together. Genesis says Isaac lived 180 years. After the brothers' difficult history and their earlier reunion, the Bible records them taking part in their father's burial.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    }
+  ],
+  "words": {
+    "g13-d01": {
+      "clue": "Which daughter of Jacob was seriously harmed by Shechem?",
+      "answer": "DINAH",
+      "explanation": "Dinah was Jacob and Leah's daughter. Genesis says that Shechem violated her. She was wronged, and nothing about the account makes her responsible for what he did. What happens next shows how additional bad decisions can deepen a family's suffering.",
+      "hint1": "The young woman was Leah's daughter.",
+      "hint2": "Her father was Jacob, and her brothers were away with the herds.",
+      "hint3": "Genesis 34 begins by naming Jacob's daughter.",
+      "basis": "scripture",
+      "reference": "Genesis 34:1–7"
+    },
+    "g13-d02": {
+      "clue": "What did Genesis say characterized the brothers' reply to Shechem and Hamor?",
+      "answer": "DECEIT",
+      "explanation": "Genesis 34:13 says Jacob's sons answered deceitfully. Their anger followed a real injustice, but their hidden plan would lead to more harm. Knowing how the Bible describes their answer helps us see why the proposed agreement wasn't genuine.",
+      "hint1": "The brothers' words and their actual intentions didn't match.",
+      "hint2": "They presented a condition while concealing what they planned.",
+      "hint3": "Genesis 34:13 directly describes their reply as dishonest.",
+      "basis": "scripture",
+      "reference": "Genesis 34:8–17"
+    },
+    "g13-d03": {
+      "clue": "What did Hamor tell his city the arrangement could bring them from Jacob's household?",
+      "answer": "WEALTH",
+      "explanation": "Hamor appealed to the men of his city by suggesting that Jacob's property and livestock could become theirs. Genesis 34:23 records the appeal. The promise of material gain was part of the city's decision, not just the language of peace.",
+      "hint1": "Hamor mentioned more than peace between households.",
+      "hint2": "He referred to possessions, livestock, and material gain.",
+      "hint3": "Think of a word for everything valuable someone owns.",
+      "basis": "scripture",
+      "reference": "Genesis 34:18–24"
+    },
+    "g13-d04": {
+      "clue": "What turned the deceitful agreement into a deadly tragedy?",
+      "answer": "VIOLENCE",
+      "explanation": "Simeon and Levi killed the men of the city, and Jacob's other sons plundered it. Their actions did not undo the wrong done to Dinah. Later Jacob spoke against the brothers' fierce anger and violent conduct. (Genesis 49:5–7)",
+      "hint1": "This wasn't a peaceful settlement.",
+      "hint2": "The brothers used weapons and people were killed.",
+      "hint3": "Think of the opposite of a safe, nonviolent resolution.",
+      "basis": "interpretation",
+      "reference": "Genesis 34:25–29"
+    },
+    "g13-d05": {
+      "clue": "What did Jacob fear the surrounding peoples might do to his family?",
+      "answer": "ATTACK",
+      "explanation": "Jacob feared that the surrounding Canaanites and Perizzites might gather to attack him and his household. The brothers gave their own defense, but the account doesn't treat the danger to the wider family as imaginary.",
+      "hint1": "Jacob worried about a response from nearby peoples.",
+      "hint2": "He feared they might unite against his household.",
+      "hint3": "Genesis 34:30 describes what they might do if they gathered against him.",
+      "basis": "scripture",
+      "reference": "Genesis 34:30–31"
+    },
+    "g13-d06": {
+      "clue": "Where did God tell Jacob to go and build an altar?",
+      "answer": "BETHEL",
+      "explanation": "God directed Jacob to go to Bethel and build an altar there. That was the place where God had appeared to him when he was fleeing from Esau. His journey back connected the family with Jehovah's earlier promise.",
+      "hint1": "This was a place Jacob had visited on his earlier journey.",
+      "hint2": "He had dreamed about a stairway reaching heaven there.",
+      "hint3": "The name means “House of God.”",
+      "basis": "scripture",
+      "reference": "Genesis 35:1"
+    },
+    "g13-d07": {
+      "clue": "What did Jacob tell everyone to remove from the household before they traveled?",
+      "answer": "IDOLS",
+      "explanation": "Jacob told the household to get rid of foreign gods. They gave him those objects along with their earrings, and he buried them near Shechem. The journey to Bethel involved a deliberate change in what the family kept and practiced.",
+      "hint1": "These were not ordinary tools or clothing.",
+      "hint2": "They were objects connected with worship of gods other than Jehovah.",
+      "hint3": "The Bible calls them foreign gods; another familiar word begins with I.",
+      "basis": "scripture",
+      "reference": "Genesis 35:2–4"
+    },
+    "g13-d08": {
+      "clue": "What did Jacob do with the foreign gods and earrings near Shechem?",
+      "answer": "BURIED",
+      "explanation": "Jacob buried the foreign gods and earrings under a large tree near Shechem. Genesis also says the surrounding cities did not chase the family as they traveled. The family left those religious objects behind before reaching Bethel.",
+      "hint1": "The objects weren't taken on the journey.",
+      "hint2": "Genesis describes placing them out of sight beneath the ground.",
+      "hint3": "The action used the earth under the large tree.",
+      "basis": "scripture",
+      "reference": "Genesis 35:4–5"
+    },
+    "g13-d09": {
+      "clue": "What did Jacob build at Bethel after arriving with his household?",
+      "answer": "ALTAR",
+      "explanation": "Jacob built an altar at Bethel and named the place El-bethel, meaning “God of Bethel.” Genesis connects it with God's earlier appearance when Jacob was fleeing from Esau. The journey brought him back to a meaningful place.",
+      "hint1": "It was built from materials available in the ancient landscape.",
+      "hint2": "It was connected with offering worship, not housing the family.",
+      "hint3": "Genesis 35:7 says Jacob built it at Bethel.",
+      "basis": "scripture",
+      "reference": "Genesis 35:6–8"
+    },
+    "g13-d10": {
+      "clue": "Jehovah spoke of nations and future rulers coming from Jacob. What kind of rulers did he mention?",
+      "answer": "KINGS",
+      "explanation": "God said nations and kings would come from Jacob and promised the land to his offspring. These were promises about the future; the family standing at Bethel was not itself already a kingdom.",
+      "hint1": "The promise concerned leadership in later generations.",
+      "hint2": "These rulers would lead nations or kingdoms.",
+      "hint3": "Genesis 35:11 names the kind of rulers who would descend from Jacob.",
+      "basis": "scripture",
+      "reference": "Genesis 35:9–15"
+    },
+    "g13-d11": {
+      "clue": "What name did Jacob give the son Rachel bore before she died?",
+      "answer": "BENJAMIN",
+      "explanation": "Rachel named the baby Ben-oni, but Jacob called him Benjamin. Rachel died and was buried on the road to Ephrath, or Bethlehem. The account holds the joy of a son's birth beside the sorrow of losing his mother.",
+      "hint1": "The child was Joseph's younger brother.",
+      "hint2": "His father chose a different name from the one Rachel spoke.",
+      "hint3": "Genesis 35:18 records the name Jacob chose.",
+      "basis": "scripture",
+      "reference": "Genesis 35:16–20"
+    },
+    "g13-d12": {
+      "clue": "What was the family relationship between the two men who buried Isaac together?",
+      "answer": "BROTHERS",
+      "explanation": "Esau and Jacob buried their father Isaac together. Genesis says Isaac lived 180 years. After the brothers' difficult history and their earlier reunion, the Bible records them taking part in their father's burial.",
+      "hint1": "Isaac was the father of both men.",
+      "hint2": "They had once been estranged but later reunited.",
+      "hint3": "Esau and Jacob were sons of the same parents.",
+      "basis": "scripture",
+      "reference": "Genesis 35:27–29"
+    }
+  },
+  "artPlan": {
+    "g13-d01": {
+      "filename": "g13-d01.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Dignified ancient Near Eastern household after unsettling news, family members speaking seriously in the courtyard, Dinah depicted as a respected young adult at a distance, no depiction of assault. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob's household gathers after learning that Dinah was harmed",
+      "reference": "Genesis 34:1–7",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d02": {
+      "filename": "g13-d02.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Ancient city entrance with Jacob's sons speaking sternly with Hamor and Shechem, adult men in modest tunics, no threats or weapons raised. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob's sons speak with Hamor and Shechem",
+      "reference": "Genesis 34:8–17",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d03": {
+      "filename": "g13-d03.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Adult city elders discuss livestock and trade at the gateway of an ancient walled town, pack animals outside, no violence. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "City elders discuss the proposed agreement near the city gate",
+      "reference": "Genesis 34:18–24",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d04": {
+      "filename": "g13-d04.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Somber aftermath outside an ancient city gate, Jacob's adult sons walking away in silence, no bodies, blood, action combat or graphic violence. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "A tense aftermath outside the city following the brothers' violent actions",
+      "reference": "Genesis 34:25–29",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d05": {
+      "filename": "g13-d05.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Jacob speaking sternly with two grown sons beside family tents, worried relatives and sheep at a distance, no combat. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob questions Simeon and Levi after the attack",
+      "reference": "Genesis 34:30–31",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d06": {
+      "filename": "g13-d06.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Jacob's family caravan heading toward Bethel through rocky central Canaan highlands, distant familiar stone hill, no fantasy architecture. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob and his household travel toward Bethel",
+      "reference": "Genesis 35:1",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d07": {
+      "filename": "g13-d07.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Ancient family household with adults handing small household figurines and earrings to Jacob, restrained historical depiction, no magical glow. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Members of Jacob's household give up foreign religious objects",
+      "reference": "Genesis 35:2–4",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d08": {
+      "filename": "g13-d08.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Ancient large terebinth-like tree near Shechem, Jacob placing a small wrapped bundle into an earthen hole, family preparing to travel beyond. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob buries the household's old religious objects beneath a tree",
+      "reference": "Genesis 35:4–5",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d09": {
+      "filename": "g13-d09.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Simple historically grounded stone altar built on open hillside near Bethel with Jacob and family standing respectfully at a distance, no fire fantasy. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob stands near a stone altar at Bethel",
+      "reference": "Genesis 35:6–8",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d10": {
+      "filename": "g13-d10.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Jacob and gathered family listening in reverent silence outdoors at Bethel beneath clear sky, no depiction of God or supernatural figure. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob and his family at Bethel after receiving a promise about future generations",
+      "reference": "Genesis 35:9–15",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d11": {
+      "filename": "g13-d11.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Ancient family at peaceful graveside along a dusty roadside near Ephrath, adult Jacob holding a swaddled baby, respectful no depiction of childbirth or suffering. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Jacob holds his newborn son after Rachel's death",
+      "reference": "Genesis 35:16–20",
+      "width": 640,
+      "height": 360
+    },
+    "g13-d12": {
+      "filename": "g13-d12.webp",
+      "brief": "ONE continuous photorealistic 16:9 historically grounded ancient Near East scene: Somber peaceful ancient Near Eastern burial site, adult brothers Esau and Jacob standing together at a stone family tomb, family members behind, no death depiction. Dignified, no romanticizing violence, no crosses, halos, collages, modern items, text or watermarks.",
+      "alt": "Esau and Jacob stand together after burying their father Isaac",
+      "reference": "Genesis 35:27–29",
+      "width": 640,
+      "height": 360
+    }
+  }
+}
