@@ -37,3 +37,17 @@ Research first from NWT 2013 and JW.org; warm conversational language, natural c
 - **GitHub PR / commit URLs**, next unfinished chapter and any genuine blockers.
 
 Current Genesis 12 candidate: **13 new authored discoveries; zero native-integrated playable chapters yet**.
+
+
+## Follow-up native implementation checkpoint (added later on 2026-11-15)
+The earlier "not playable yet" assessment above describes the **initial authoring-only** checkpoint. It has now advanced:
+
+- Added \`story-adventure-content/genesis-episode12-native-preview.js\`, registered through \`journey-progress-caption.js\` ONLY when the query contains \`?bu_story_dev=genesis12\`.
+- In the explicit DEV session, it adds a plainly labeled chapter card for Episode 12 without changing any normal Journey unlocks. That card opens the existing \`bu3857Open\` chapter controller, existing \`BU_HQ_WORDS\` wheel and existing saved progress.
+- Added 13 single-scene labeled development placeholders (real new scene artwork is **still missing**, intentionally not substituted with unrelated artwork).
+- Native help follows the three **thinking** clues approved for Episodes 10–11 (free, 15 tokens, 25 tokens); purchase receipts persist atomically in the shared wallet, and the third clue does not expose wheel letters. Costs do not change in other chapters.
+- Added \`scripts/qa_genesis12_native_preview.cjs\`: Chromium tests at 320×568 and 390×844 cover entering the dev card, 13 actual native word wheels, two paid contextual hints, resuming after page reload and reaching the finale. Uses synthetic browser profiles.
+- An initial GitHub "Genesis 12 development wheel smoke" run passed the interactive test before the durable-payment adapter was strengthened. The follow-up adapter and updated tests require their *own* green run before treating the final head as verified.
+- No LIVE or main deployment, no physical Samsung/iPhone approval, no original-game change. Draft PR #22 is based on draft PR #21; it is deliberately not release-ready.
+
+**Next work:** finish CI on the latest head; address any browser failures; build approved 16:9 scene images; get independent Scripture/wording review; then continue authoring and implementing Genesis 34 onward, keeping future public episode/menu locks.
