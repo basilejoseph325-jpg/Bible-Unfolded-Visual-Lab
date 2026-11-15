@@ -1,5 +1,8 @@
 name: Genesis 13 development wheel smoke (no deployment)
 on:
+  push:
+    branches:
+      - 'assistant/genesis13-native-candidate-20261115'
   workflow_dispatch:
   pull_request:
     paths:
