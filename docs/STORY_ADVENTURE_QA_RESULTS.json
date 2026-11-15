@@ -1,0 +1,242 @@
+{
+  "baseline": "bf101f8",
+  "gameplayCheckpoint": "5625395",
+  "editorialCheckpoint": "40337ce",
+  "environment": "local Chromium, synthetic player profiles",
+  "fullPlayerPaths": {
+    "viewports": [
+      {
+        "width": 320,
+        "height": 568,
+        "modern": 80,
+        "legacy": 84,
+        "finales": 17,
+        "hints": [
+          {
+            "id": "genesis",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          },
+          {
+            "id": "genesis_ep07",
+            "prices": [
+              15,
+              20,
+              25
+            ],
+            "balance": 440
+          },
+          {
+            "id": "genesis_ep10",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "genesis_ep11",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "exodus-10",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          }
+        ],
+        "overflow": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "modern": 80,
+        "legacy": 84,
+        "finales": 17,
+        "hints": [
+          {
+            "id": "genesis",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          },
+          {
+            "id": "genesis_ep07",
+            "prices": [
+              15,
+              20,
+              25
+            ],
+            "balance": 440
+          },
+          {
+            "id": "genesis_ep10",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "genesis_ep11",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "exodus-10",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          }
+        ],
+        "overflow": []
+      }
+    ],
+    "errors": []
+  },
+  "touchAndRecovery": {
+    "touchTapDiscoveries": 3,
+    "touchSwipeDiscoveries": 1,
+    "pointerCancel": true,
+    "incorrectWordNoRewardBothEngines": true,
+    "gentleWrongCueBothEngines": true,
+    "failedRevealNoCharge": true,
+    "revealOnceBothEngines": true,
+    "corruptPrimaryRecovery": true,
+    "malformedCheckpoint": true,
+    "menuContinueAndRestart": true,
+    "interactiveRevealSolutions": 30,
+    "physicalDevice": false
+  },
+  "editorialHintPaths": {
+    "exodusDiscoveries": 30,
+    "paidStages": 60,
+    "freeHints": 30,
+    "noRepeatCharges": 30,
+    "prices": [
+      0,
+      15,
+      30
+    ],
+    "pointsUnaffected": true,
+    "noahReferenceCorrect": true,
+    "genesisFlashbackClear": true,
+    "independentHumanReview": false
+  },
+  "nonStoryBoundaryParity": {
+    "home-watch": {
+      "path": "/index.html",
+      "active": [
+        "btn3926-home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-trivia": {
+      "path": "/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-family": {
+      "path": "/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-builder": {
+      "path": "/index.html",
+      "active": [
+        "wb36"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-cross": {
+      "path": "/index.html",
+      "active": [
+        "home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-crossword-packs": {
+      "path": "/index.html",
+      "active": [
+        "cross-pick"
+      ],
+      "wordTrailsOverlay": true,
+      "help": false,
+      "shop": false
+    },
+    "home-shop": {
+      "path": "/index.html",
+      "active": [
+        "rewards"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-help": {
+      "path": "/index.html",
+      "active": [
+        "home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": true,
+      "shop": false
+    },
+    "home-books": {
+      "path": "/bible-book-guides/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    }
+  },
+  "existingGenesis11Hints": {
+    "390x705": "passed",
+    "320x568": "passed",
+    "isolatedPlayerProfiles": true
+  },
+  "static": {
+    "nativeParts": 5,
+    "assembledNativeSyntax": "passed",
+    "inlineScripts": 238,
+    "editorialFieldChanges": 68,
+    "changedDiscoveries": 56,
+    "genesis11PackageIntegrity": "passed"
+  },
+  "renderedScreenshotsInspected": 3,
+  "physicalAndroidTested": false,
+  "physicalIPhoneTested": false,
+  "independentEditorialAcceptance": false,
+  "exhaustiveHistoricalEditorialAuditComplete": false,
+  "deployed": false,
+  "releaseApproved": false,
+  "existingCheckerDiscrepancy": "Legacy all-mode smoke expects an obsolete Bible Books token gate; baseline and candidate now share the reader route. Entry parity passed.",
+  "retryCheckpoint": "baa0f8b",
+  "continuousIntegration": "workflow added; hosted run not yet executed at local evidence capture"
+}

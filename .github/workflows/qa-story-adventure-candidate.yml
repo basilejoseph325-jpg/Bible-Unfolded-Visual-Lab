@@ -1,0 +1,61 @@
+name: Story Adventure candidate (no deployment)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'bible_unfolded_core_part*.js'
+      - 'index.html'
+      - 'story-adventure-*'
+      - 'story-adventure-content/**'
+      - 'story-chapter-complete-v2-test.js'
+      - 'scripts/*story*.cjs'
+      - '.github/workflows/qa-story-adventure-candidate.yml'
+permissions:
+  contents: read
+jobs:
+  local-player-paths:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Select installed browser and start local game
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8893 --bind 127.0.0.1 > work/http.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8893/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Syntax and integrated content checks
+        run: node scripts/check_story_sources.cjs
+      - name: Both engines, 164 discoveries, two phone viewports
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+          STORY_EVIDENCE: work/story-release-evidence.json
+        run: node scripts/qa_story_adventure_release.cjs
+      - name: Real browser touch, navigation, reveal payment and recovery
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_story_touch_and_recovery.cjs
+      - name: All 30 Exodus hint ladders and source corrections
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_story_editorial_hints.cjs
+      - name: Preserve other modes against baseline
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_story_mode_boundaries.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: story-adventure-player-path-evidence
+          path: work/story-release-evidence.json
+          if-no-files-found: ignore
