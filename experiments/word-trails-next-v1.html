@@ -22,7 +22,7 @@
 
 <meta name="description" content="Bible Unfolded Visual Lab — next-generation Word Trails puzzle preview.">
 <title>Word Trails NEXT · 30 Bible Levels • Bible Unfolded</title>
-<link rel="stylesheet" href="word-trails-next-v1.css?v=scenic-map-seals-v8">
+<link rel="stylesheet" href="word-trails-next-v1.css?v=next-seal-progress-v1-20261115">
 <link rel="stylesheet" href="word-trails-feel-v2.css?v=gold-win-v5-final-20261107">
 <link rel="stylesheet" href="word-trails-unified-menu-v1.css?v=standard-menu-v1">
 <link rel="stylesheet" href="word-trails-native-wheel-v1.css?v=faithful-ocean-solid-20261109">
@@ -36,7 +36,7 @@
 <script src="word-trails-main-settings-v1.js?v=single-audio-owner-20261113" defer></script>
 <script src="word-trails-native-wheel-v1.js?v=faithful-ocean-holdfix-20261109" defer></script>
 <script src="word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27" defer></script>
-<script src="word-trails-next-v1.js?v=progress-voice-retry-20261109" defer></script>
+<script src="word-trails-next-v1.js?v=next-seal-progress-v1-20261115" defer></script>
 </head>
 <body>
 <div id="app">
@@ -102,6 +102,7 @@
     <div class="reward-coin" aria-label="Level reward"><span>✦</span><strong id="finish-reward">+20 TEST COINS</strong></div>
     <div class="finish-stats" id="finish-words"></div>
     <p class="finish-spark" id="finish-spark"></p>
+    <p class="finish-next-seal" id="finish-next-seal" aria-live="polite"></p>
     <button type="button" class="primary-action" id="next-level">Next Level</button>
     <button type="button" class="secondary-action" id="stay">Keep exploring</button>
   </div>
@@ -111,7 +112,12 @@
     <button type="button" id="map-x" class="map-x" aria-label="Close level map">×</button>
     <div class="finish-small">VISUAL LAB ONLY</div>
     <h2 id="map-title">Your Word Journey</h2>
-    <p>Levels unlock in order. Your test coins, words, and discoveries stay separate from the live game.</p>
+    <p>Earn TEST coins from Bible words, bonus words and levels. Spend 15 on extra letter hints after your free hint. Every five levels earns a Journey Seal and +60 bonus TEST coins.</p>
+    <section id="wt-map-seal-progress" class="wt-seal-progress" aria-labelledby="wt-map-seal-title">
+      <strong id="wt-map-seal-title">NEXT JOURNEY SEAL</strong>
+      <span id="wt-map-seal-detail">0 of 5 levels completed</span>
+      <div id="wt-map-seal-track" class="wt-seal-progress-track" role="progressbar" aria-label="Next Journey Seal progress" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><i id="wt-map-seal-fill"></i></div>
+    </section>
     <div id="map-list" class="map-list"></div>
     <div class="map-actions">
       <button type="button" id="reset-level">↻ Restart current puzzle</button>

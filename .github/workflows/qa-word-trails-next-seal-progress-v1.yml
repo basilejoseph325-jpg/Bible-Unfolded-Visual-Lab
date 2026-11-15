@@ -1,0 +1,38 @@
+name: QA Word Trails next Journey Seal progress (TEST only)
+on:
+  pull_request:
+    paths:
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/word-trails-next-v1.css'
+      - 'scripts/qa_word_trails_next_seal_progress_v1.cjs'
+      - '.github/workflows/qa-word-trails-next-seal-progress-v1.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  mobile-seal-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax check
+        run: |
+          node --check experiments/word-trails-next-v1.js
+          node --check scripts/qa_word_trails_next_seal_progress_v1.cjs
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start local TEST game
+        run: |
+          mkdir -p work
+          python3 -m http.server 8890 --bind 127.0.0.1 > work/word-trails-seal.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8890/experiments/word-trails-next-v1.html > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Eight mobile preview cases, real Level 1 wheel and save isolation
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_word_trails_next_seal_progress_v1.cjs
