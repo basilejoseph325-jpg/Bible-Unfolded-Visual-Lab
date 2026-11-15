@@ -45,8 +45,13 @@ for(const [width,height] of [[320,568],[390,844]]){
   const art=await page.evaluate(()=>{
    const d=bu3857Current(),img=document.querySelector('#bu3857-content figure.bu3863-image img');
    const wheel=document.getElementById('buhq-wheel');
+   const stage=document.querySelector('#bu3857-content .bu3863-stage');
+   const scripture=document.getElementById('bu3863-scripture');
+   const sr=scripture?.getBoundingClientRect();
    return {id:d.id,src:img?.getAttribute('src'),alt:img?.alt,top:img?.getBoundingClientRect().top,
-    wheelTop:wheel?.getBoundingClientRect().top};
+    wheelTop:wheel?.getBoundingClientRect().top,
+    nativeSlot:img?.closest('figure')?.parentElement===stage,
+    scriptureVisible:!!sr&&sr.top>=-2&&sr.bottom<=innerHeight+2};
   });
   if(i===0)console.log('G12_LAYOUT_'+width,JSON.stringify(await page.evaluate(()=>{
    const root=document.getElementById('bu3857-content'),figure=root?.querySelector('figure.bu3863-image'),
@@ -58,6 +63,8 @@ for(const [width,height] of [[320,568],[390,844]]){
   })));
   assert.equal(art.src,'story-adventure-art/genesis12/'+art.id+'.webp','Incorrect scene art '+art.id);
   assert(art.alt?.length>30&&art.top<art.wheelTop,'Artwork/accessibility or vertical layout broken '+art.id);
+  assert(art.nativeSlot,'Scene art must be direct child of native Story stage '+art.id);
+  assert(art.scriptureVisible,'Scripture action pushed offscreen '+art.id);
   const result=await page.evaluate(()=>{
    const d=bu3857Current(),answer=BU_HQ_WORDS[d.id].answer,tiles=[...document.querySelectorAll('#buhq-wheel [data-buhq]')],used=new Set();
    if(tiles.length!==answer.length)throw Error('Tile count incorrect '+d.id);
