@@ -37,3 +37,23 @@ Research first from NWT 2013 and JW.org; warm conversational language, natural c
 - **GitHub PR / commit URLs**, next unfinished chapter and any genuine blockers.
 
 Current Genesis 12 candidate: **13 new authored discoveries; zero native-integrated playable chapters yet**.
+
+
+## NEW IMPLEMENTATION STATUS — 2026-11-15, after Genesis 12 wheel integration
+
+The earlier note above saying Episode 12 is "not playable" describes its CONTENT-ONLY starting checkpoint. Subsequent development has now integrated it as an **opt-in TEST developer preview**, still not released. Do not redo this work.
+
+- **Genesis Episode 12 (Genesis 32–33):** 13 new native wheel discoveries integrated and verified end-to-end in Chromium at 320×568 and 390×844, including 0/15/25-token thinking hints, all 13 successful letter-wheel solves, reload/resume and finale. Verification: https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43685781950. Source candidate and dev integration live on draft PR #22: https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pull/22.
+- **Genesis Episode 13 (Genesis 34–35):** 12 new NWT-based word-wheel discoveries, content, hints and native-engine opt-in developer integration added in separate draft PR #23: https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pull/23. CI/player-path verification is **pending**, not claimed. Genesis 34 includes the Dinah account and requires particular sensitivity/accuracy review.
+- In both drafts, the normal public Bible-book/Journey locks are unchanged. A developer must use an explicit query parameter `?bu_story_dev=genesis12` or `?bu_story_dev=genesis13` in the TEST development build to open the preview from the Genesis episode list. Never confuse this with a released player-facing chapter.
+- **Artwork remains incomplete:** each episode has scene-by-scene illustration specifications and neutral developer placeholders, not 13/12 finished illustrations. Real-device Samsung/iPhone, sound, safe-area/accessibility and independent Bible editorial checks still pending.
+- PR #21 with previous fixes/review is the protected development base; draft PR #22 builds upon it, and draft PR #23 builds upon PR #22. None are merged into `main` or LIVE.
+
+### Highest priority next
+
+1. Read the current PR #22 and #23 implementation/test evidence. Don't re-review the previous 164 discoveries.
+2. Repair any **actual failing** Episode 13 native smoke tests, then finish unique 16:9 scene artwork and physical-phone acceptance for Episodes 12 and 13.
+3. Continue creating and IMPLEMENTING (not just drafting) new Bible-based Story chapters after Genesis 35, maintaining the approved native word wheel, save state, pay-once hints, and locked progression.
+4. Report counts of newly playable Chapters **separately** from authored, unintegrated drafts. Never promote unreviewed art/text to LIVE.
+
+**Goal remains whole Story Adventure game completion; two development previews do not mean the book of Genesis or full mode is finished.**
