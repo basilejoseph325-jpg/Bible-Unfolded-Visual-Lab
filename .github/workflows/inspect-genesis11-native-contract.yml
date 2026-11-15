@@ -1,0 +1,51 @@
+name: Inspect Genesis 11 existing native Story integration (read only)
+on:
+  push:
+    branches: [feature/genesis11-family-haran-20261114]
+    paths: ['.github/workflows/inspect-genesis11-native-contract.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect exact relevant Episode 10 native code and Episode 11 insertion points
+        run: |
+          python3 - <<'PY'
+          import json,re
+          from pathlib import Path
+          parts=[]
+          for i in range(1,6):
+            raw=Path(f"bible_unfolded_core_part{i}.js").read_text()
+            m=re.search(r'__BU_STAGE41_CORE_PARTS__\[\d+\] = (".*");',raw,re.S)
+            assert m
+            parts.append(json.loads(m.group(1)))
+          src=''.join(parts)
+          terms=["const BU_GENESIS_IDS=", "Object.assign(BU3857_DATA,",
+            "Object.assign(BU_HQ_WORDS,", "const BU_EP10_SCENE_ART=",
+            "const BU_EP10_SCENE_ALT=", "const sceneSrc=",
+            "BU_EP10_SCENE_ART[d.id]", "BU_EP10_SCENE_ALT[d.id]",
+            "if(s.book==='genesis_ep10')", "bu3857State.book==='genesis_ep10'",
+            "Genesis Episodes 7–10", "done===10", "done/10*100",
+            "aria-valuemax','10", "of 10 episodes available",
+            "of 10 playable episodes", "ch.chapterNumber<10",
+            "ch.chapterNumber<11", "Next Genesis Episode →",
+            "const max=2+entry.answer.length;",
+            "['Jacob and Esau','Genesis 25–28 · 10 interactive discoveries']",
+            "!!completedChapters.genesis_ep09",
+            "genesis_ep10", "genesis_ep11"]
+          for term in terms:
+            a=[m.start() for m in re.finditer(re.escape(term),src)]
+            print('ANCHOR',repr(term),'COUNT',len(a),'PARTS',[i+1 for i,p in enumerate(parts) if term in p])
+            for at in a[:3]:
+              print('SURROUND',repr(term),repr(src[max(0,at-320):at+580])[:1300])
+          for term in ("const BU_EP10_SCENE_ART=", "const BU_EP10_SCENE_ALT="):
+            at=src.find(term)
+            print('MAP_FULL',term,repr(src[at:at+1600]))
+          html=Path('index.html').read_text()
+          for term in ["bu3857Hint=function(){","genesis_ep10","const ep10=st.book===","bible_unfolded_core_part3.js","bible_unfolded_core_part5.js"]:
+            a=html.find(term)
+            print('HTML',term,'COUNT',html.count(term),'AT',a,'SNIP',repr(html[max(0,a-300):a+1100])[:1500])
+          PY
