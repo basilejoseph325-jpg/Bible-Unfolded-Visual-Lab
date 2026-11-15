@@ -197,10 +197,10 @@ window.BUWTLevels31to35=Object.freeze([
       },
       {
         "word": "SEAL",
-        "clue": "What was on the scroll that John saw in Revelation chapter 5?",
-        "reference": "Revelation 5:1",
-        "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/5/",
-        "insight": "John saw a scroll held in the right hand of the One seated on the throne. It was sealed tightly with seven seals."
+        "clue": "What did the Lamb open first in John's vision of the scroll?",
+        "reference": "Revelation 6:1",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/6/",
+        "insight": "John watched the Lamb open the first of the seven seals on the scroll. The next part of his vision began."
       }
     ],
     "bonus": "MEAL MUSE SEAM",
