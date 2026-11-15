@@ -27,6 +27,18 @@ window.addEventListener('click',event=>{
  const levels=!home && levelsMenuItem(target);
  if(!home&&!levels)return;
  if(home&&nativeOnce){nativeOnce=false;return;}
+ // Guard the Books menu before any later click listeners: the standalone shelf
+ // is unlocked only by the existing TEST James economy, not this router.
+ if(home){
+  const economy=window.BUJamesReturnLoopV1;
+  if(!economy?.inspect?.()?.owned?.includes('books')){
+   event.preventDefault();
+   event.stopImmediatePropagation();
+   event.stopPropagation();
+   economy?.requestBookUnlock?.();
+   return;
+  }
+ }
  event.preventDefault();
  event.stopImmediatePropagation();
  event.stopPropagation();
