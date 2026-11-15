@@ -21,7 +21,20 @@ for(const [width,height] of [[320,568],[390,844]]){
    words:Object.keys(BU_HQ_WORDS).filter(k=>k.startsWith('g12-d')).length};
  });
  assert.deepEqual(entry,{cards:12,locked:true,words:13});
- await page.evaluate(()=>{economy.coins=500;saveEconomy();bu3857Open('genesis_ep12',true);document.getElementById('bu3857-hint').click()});
+ // Simulate a previously completed Episode 11 and exercise its real
+ // "Next Episode" button, not just a direct programmatic chapter open.
+ const nextChapter=await page.evaluate(()=>{
+  completedChapters.genesis_ep11=true;
+  bu3857Open('genesis_ep11',true);
+  bu3857State.complete=true;
+  bu3857Render();
+  const button=document.getElementById('bu3857-next-episode');
+  const label=button?.textContent?.trim();
+  button?.click();
+  return {label,book:bu3857State?.book,first:bu3857Current()?.id};
+ });
+ assert.deepEqual(nextChapter,{label:'Next Genesis Episode →',book:'genesis_ep12',first:'g12-d01'});
+ await page.evaluate(()=>{economy.coins=500;saveEconomy();document.getElementById('bu3857-hint').click()});
  assert.equal(await page.evaluate(()=>economy.coins),500,'Free clue charged tokens');
  for(const balance of [485,460]){
   await page.$eval('#bu3864-modal-layer .bu3864-modal-body .gold-button',b=>b.click());
@@ -73,6 +86,7 @@ for(const [width,height] of [[320,568],[390,844]]){
   });
   assert(result.solved,'Actual wheel did not solve '+result.id);
   assert(!result.overflow,'Horizontal overflow '+result.id);
+  if(i===12)assert.equal(await page.$eval('#bu3857-continue',b=>b.textContent.trim()),'Complete Chapter ✦');
   await page.$eval('#bu3857-continue',b=>b.click());
   if(i===2){
    await page.reload({waitUntil:'load',timeout:120000});
