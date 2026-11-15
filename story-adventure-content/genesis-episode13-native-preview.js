@@ -10,7 +10,7 @@
       !location.pathname.includes('/Bible-Unfolded-Visual-Lab/')) return;
 
   const preview = { status: 'loading', chapterId: CHAPTER_ID, discoveries: 0 };
-  window.BUGenesis12DevPreview = preview;
+  window.BUGenesis13DevPreview = preview;
 
   const text = value => String(value == null ? '' : value);
   const firstLine = value => text(value).replace(/\s+/g, ' ').trim();
