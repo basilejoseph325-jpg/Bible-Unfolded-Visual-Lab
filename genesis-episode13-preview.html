@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Bible Unfolded · Episode 13 review candidate</title>
+<style>html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061c27;color:#f6e7c6;font-family:system-ui}iframe{display:block;border:0;width:100%;height:100%;height:100dvh}#preview-error{position:fixed;inset:0;padding:24px;background:#061c27}a{color:#ffe1a1}</style></head>
+<body><iframe id="native-game" title="Bible Unfolded native game · Genesis Episode 13 development preview" src="index.html?bu_story_dev=genesis13" allow="autoplay; fullscreen"></iframe>
+<div id="preview-error" role="alert" hidden>Episode 13 preview couldn't load. <a href="index.html">Return to the game</a></div>
+<script>
+'use strict';
+// Review-only entry point. No copy of the game, shared loader edit or public unlock.
+const frame=document.getElementById('native-game');
+frame.addEventListener('load',()=>{
+ try{
+  const doc=frame.contentDocument;
+  // An intentional navigation to another native page must not inject this adapter.
+  if(!doc||new URL(frame.contentWindow.location.href).pathname.split('/').pop()!=='index.html')return;
+  if(doc.getElementById('bu-genesis13-isolated-preview'))return;
+  const script=doc.createElement('script');script.id='bu-genesis13-isolated-preview';
+  script.src='story-adventure-content/genesis-episode13-native-preview.js';
+  script.onerror=()=>{document.getElementById('preview-error').hidden=false;};
+  doc.head.appendChild(script);
+ }catch(error){document.getElementById('preview-error').hidden=false;}
+});
+</script></body></html>
