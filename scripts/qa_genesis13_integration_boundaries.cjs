@@ -3,12 +3,17 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),cp=require('node:child_process'),crypto=require('node:crypto'),p=require('puppeteer-core');
 const event=process.env.GITHUB_EVENT_PATH?JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH)):{};
 const baseline=event.pull_request?.base?.sha||'14bdc2b',head=event.pull_request?.head?.sha||'HEAD';
+// PR checkout is a synthetic merge commit. Its first parent is the REAL current
+// TEST base, which may be newer than the base.sha recorded when this PR opened.
+// Compare protected assets against that parent, not an obsolete PR-base SHA.
+const parents=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{encoding:'utf8'}).trim().split(' ');
+const protectedBase=event.pull_request&&parents.length>=3?parents[1]:baseline;
 const allowed=new Set(['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode13-integration-test.js','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-art/genesis13/manifest.json','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_public_integration.cjs','scripts/qa_genesis13_integration_boundaries.cjs','scripts/qa_genesis12_native.cjs','scripts/qa_genesis11_complete_native_playpath_v1.cjs','scripts/qa_story_adventure_release.cjs','.github/workflows/qa-genesis13-test-integration.yml','.github/workflows/qa-story-adventure-candidate.yml','docs/GENESIS13_TEST_INTEGRATION.md']);
 for(const f of cp.execFileSync('git',['diff','--name-only',baseline+'...'+head],{encoding:'utf8'}).trim().split('\n').filter(Boolean))assert(allowed.has(f),'Unrelated file changed: '+f);
 const original=f=>cp.execFileSync('git',['show',baseline+':'+f],{encoding:'utf8',maxBuffer:40000000});
-const tree=cp.execFileSync('git',['ls-tree','-r','--name-only',baseline],{encoding:'utf8'}).trim().split('\n');
+const tree=cp.execFileSync('git',['ls-tree','-r','--name-only',protectedBase],{encoding:'utf8'}).trim().split('\n');
 const protectedFiles=tree.filter(f=>/word[-_]trails/i.test(f)||/\.(mp3|wav|ogg|m4a)$/i.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||['premium-sfx.js','bu-platform-rewards-v1.js','bu-platform-saves-v2.js','story-adventure-episode12-integration-test.js','story-adventure-content/genesis-episode12-return-to-esau-v1.json'].includes(f));
-for(const f of protectedFiles)assert.equal(cp.execFileSync('git',['hash-object',f],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',baseline+':'+f],{encoding:'utf8'}).trim(),'Protected file changed: '+f);
+for(const f of protectedFiles)assert.equal(cp.execFileSync('git',['hash-object',f],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',protectedBase+':'+f],{encoding:'utf8'}).trim(),'Protected file changed: '+f);
 const oldHtml=original('index.html'),html=fs.readFileSync('index.html','utf8');assert.equal(html.replace('journey-progress-caption.js?v=20261115-genesis13-integration-v1','journey-progress-caption.js?v=20261114-books-chrome-route-v4'),oldHtml,'HTML changed beyond loader cache token');
 assert(fs.readFileSync('journey-progress-caption.js','utf8').startsWith(original('journey-progress-caption.js')),'Existing loader content changed');
 const manifest=JSON.parse(fs.readFileSync('story-adventure-art/genesis13/manifest.json'));
