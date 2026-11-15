@@ -15,7 +15,7 @@ const WHEELS='bible-unfolded-wheel-ownership-v3825-backup';
 const VOICE='bible-unfolded-private-voice-pref-v381';
 const SENTINEL='bu-wt-all30-webkit-test-sentinel';
 const seed={
- [TEST]:JSON.stringify({level:0,unlocked:39,coins:317,points:0,
+ [TEST]:JSON.stringify({level:0,unlocked:44,coins:317,points:0,
   completed:[],sparks:[],claimedSparks:[],boardBible:[],
   paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:false,progress:null}),
  [LIVE]:JSON.stringify({level:15,unlocked:16,coins:233,completed:[0,1,2,3],unique:'DO_NOT_TOUCH_LIVE'}),
