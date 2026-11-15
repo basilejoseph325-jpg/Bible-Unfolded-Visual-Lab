@@ -1,4 +1,4 @@
-name: QA published TEST Genesis Episode 11 10 scenes and native wheels
+name: QA published TEST Genesis Episodes 11 and 12 native illustrated gameplay
 on:
   push:
     branches: [main]
@@ -7,6 +7,10 @@ on:
       - 'bible_unfolded_core_part3.js'
       - 'bible_unfolded_core_part5.js'
       - 'story-adventure-art/genesis11/**'
+      - 'story-adventure-art/genesis12/**'
+      - 'story-adventure-episode12-integration-test.js'
+      - 'story-adventure-content/genesis-episode12-return-to-esau-v1.json'
+      - 'scripts/qa_genesis12_native.cjs'
       - 'scripts/qa_genesis11_complete_native_playpath_v1.cjs'
       - 'scripts/qa_genesis11_three_thinking_hints_v1.cjs'
   workflow_dispatch:
@@ -29,8 +33,12 @@ jobs:
             'bible_unfolded_core_part2.js',
             'bible_unfolded_core_part3.js',
             'bible_unfolded_core_part5.js',
-            'story-adventure-content/genesis-episode11-haran-v1.json'
+            'story-adventure-content/genesis-episode11-haran-v1.json',
+            'journey-progress-caption.js',
+            'story-adventure-episode12-integration-test.js',
+            'story-adventure-content/genesis-episode12-return-to-esau-v1.json'
           ]
+          paths += [f'story-adventure-art/genesis12/g12-d{i:02d}.webp' for i in range(1,14)]
           markers=[
             'bible_unfolded_core_part3.js?v=story-adventure-candidate-1',
             'bible_unfolded_core_part5.js?v=story-adventure-candidate-1'
@@ -67,7 +75,8 @@ jobs:
           set -euo pipefail
           npm install --prefix /tmp/bu-genesis11-public-qa puppeteer-core@24 --silent --no-audit --no-fund
           export NODE_PATH=/tmp/bu-genesis11-public-qa/node_modules
-          export STORY_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?genesis11=public-qa-v1'
+          export STORY_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?story=published-ep11-ep12-v2'
           node scripts/qa_genesis11_complete_native_playpath_v1.cjs
           node scripts/qa_genesis11_three_thinking_hints_v1.cjs
-          echo 'PASS_PUBLIC_TEST_GENESIS11_FULL_GAMEPLAY all 10 pictures, 10 solved word wheels, 3 contextual hints and resume'
+          node scripts/qa_genesis12_native.cjs
+          echo 'PASS_PUBLIC_TEST_GENESIS11_12_FULL_GAMEPLAY 10 previous + 13 new scene images and wheels, hints, resume and replay'
