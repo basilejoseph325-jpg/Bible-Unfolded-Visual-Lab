@@ -144,29 +144,29 @@ async function gameFrame(page){
     const saved=await snapshot(page,[TEST,...protectedKeys]);
     const state=JSON.parse(saved[TEST]);
     assert.equal(state.level,44,'Final visited 45th level should persist');
-    assert.equal(state.unlocked,39);
+    assert.equal(state.unlocked,44,'Browsing levels must preserve the synthetic 45-level unlock');
     assert.equal(state.coins,317,'Browsing levels must not mint/spend TEST coins');
     for(const key of protectedKeys)assert.equal(saved[key],before[key],
-     'Browsing 30 levels altered protected state '+key);
-    // Refresh from Word Trails must return home; reopening restores level 30.
+     'Browsing 45 levels altered protected state '+key);
+    // Refresh from Word Trails must return home; reopening restores level 45.
     await page.reload({waitUntil:'domcontentloaded',timeout:110000});
     await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
      !window.BUWTNativeShell?.active?.(),null,{timeout:100000});
     await page.locator('#home-cross').evaluate(el=>el.click());
     const resumed=await gameFrame(page);
     assert((await resumed.locator('#level-label').textContent()).includes('LEVEL 45 / 45'),
-     'Reentry must resume level 30 after refresh');
+     'Reentry must resume level 45 after refresh');
     const after=await snapshot(page,protectedKeys);
     for(const key of protectedKeys)assert.equal(after[key],before[key],
      'Refresh/reentry altered protected '+key);
-    assert.deepEqual(errors,[],'Browser exceptions during actual 30-level navigation');
+    assert.deepEqual(errors,[],'Browser exceptions during actual 45-level navigation');
     assert.deepEqual(badArtwork,[],'Some story art files returned 404');
     console.log('PASS_WORD_TRAILS_ALL30_WEBKIT_V12',JSON.stringify({
      viewport:width+'x'+height,levelsNavigated:checked,
      nativeHomeAndIframe:true,actualLevelMapNavigation:true,
      gridSizes:[...boardSizes].sort(),minWheelLetters:minWheel,maxWheelLetters:maxWheel,
      horizontalAndVerticalKeyControlsWithinViewport:true,
-     reloadReturnsHomeThenResumesLevel30:true,
+     reloadReturnsHomeThenResumesLevel45:true,
      testCoinsUnchanged:true,originalLiveWalletWheelsVoicesUnchanged:true,
      zeroJsExceptions:true,missingArtwork404:0,physicalIphoneCertified:false
     }));
