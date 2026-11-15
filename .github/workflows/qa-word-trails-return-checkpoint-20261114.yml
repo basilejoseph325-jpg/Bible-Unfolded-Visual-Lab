@@ -57,13 +57,26 @@ jobs:
              await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
                document.getElementById('home-cross'),{timeout:85000});
              await page.evaluate(()=>document.getElementById('home-cross').click());
+             await new Promise(r=>setTimeout(r,3500));
+             const diagnostic=await page.evaluate(()=>{
+               const frame=document.getElementById('bu-wt-native-game'),c=frame?.contentWindow;
+               return {native:window.BUWTNativeShell?.active?.(),frame:!!frame,
+                 frameSrc:frame?.getAttribute('src'),url:c?.location?.href,
+                 readyState:c?.document?.readyState,
+                 level:c?.document?.getElementById('level-label')?.textContent,
+                 wheel:c?.document?.querySelectorAll('#wheel .wheel-letter').length,
+                 annon:!!c?.BUWTAnnouncer,ocean:!!c?.BUWTWheelNative,
+                 mainSrc:!!c?.BUWTPolish,
+                 htmlLength:c?.document?.documentElement?.outerHTML?.length};
+             });
+             console.log('DIAG_PUBLIC_WORD_TRAILS',JSON.stringify({viewport:width+'x'+height,...diagnostic,errors}));
              await page.waitForFunction(()=>{
                const child=document.getElementById('bu-wt-native-game')?.contentWindow;
                return !!window.BUWTNativeShell?.active?.() &&
                  !!child?.BUWTAnnouncer && !!child?.BUWTWheelNative &&
                  child?.document?.getElementById('level-label')?.textContent?.includes('/ 30') &&
                  child?.document?.querySelectorAll('#wheel .wheel-letter').length >= 4;
-             },{timeout:85000});
+             },{timeout:18000});
              const state=await page.evaluate(()=>{
                const frame=document.getElementById('bu-wt-native-game');
                const child=frame.contentWindow,doc=child.document;
