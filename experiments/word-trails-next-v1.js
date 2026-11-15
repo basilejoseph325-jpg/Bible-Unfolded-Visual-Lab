@@ -153,6 +153,12 @@ if(Array.isArray(window.BUWTLevels31to35)){
   LEVELS.push(next);EXTRA_SPARKS.push(next.extraSparks);
  }
 }
+if(Array.isArray(window.BUWTLevels36to40)){
+ for(const next of window.BUWTLevels36to40){
+  if(!next||!Array.isArray(next.words)||!Array.isArray(next.extraSparks))throw Error('Broken 36–40 level data');
+  LEVELS.push(next);EXTRA_SPARKS.push(next.extraSparks);
+ }
+}
 const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
  {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
  ...EXTRA_SPARKS[i]
@@ -164,9 +170,10 @@ const MILESTONE_SEALS=Object.freeze({
  20:{symbol:'✦',name:'Steadfast Seal',detail:'Twenty trails explored'},
  25:{symbol:'✥',name:'Discovery Compass',detail:'Twenty-five journeys finished'},
  30:{symbol:'✺',name:'Scripture Scholar',detail:'Thirty levels completed'},
- 35:{symbol:'✧',name:'Scripture Explorer',detail:'Thirty-five levels completed'}
+ 35:{symbol:'✧',name:'Scripture Explorer',detail:'Thirty-five levels completed'},
+ 40:{symbol:'✦',name:'Steady Journey',detail:'Forty levels completed'}
 });
-const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues','Faith and Discovery'];
+const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues','Faith and Discovery','Growing in Knowledge'];
 const STORAGE='bu-visual-lab-wordtrails-next-v1';
 const $=id=>document.getElementById(id);
 const F=(name,value)=>document.documentElement.style.setProperty(name,value);
@@ -230,6 +237,7 @@ function load(){
   // A player who had finished Level 30 before the 35-level update had no
   // Level 31 to unlock. Allow entry without replaying or paying rewards again.
   if(LEVELS.length>30&&x.completed.includes(29))x.unlocked=Math.max(x.unlocked,30);
+  if(LEVELS.length>35&&x.completed.includes(34))x.unlocked=Math.max(x.unlocked,35);
   if(!Array.isArray(x.claimedSparks))x.claimedSparks=[];
   if(!Array.isArray(x.boardBible))x.boardBible=[];
   // Migration: a completed old single star was the FIRST Bible word in its level.
@@ -250,7 +258,7 @@ function nextSealProgress(){
  const completed=new Set(save.completed.filter(n=>Number.isInteger(n)&&n>=0&&n<LEVELS.length));
  const targets=Object.keys(MILESTONE_SEALS).map(Number).sort((a,b)=>a-b);
  const target=targets.find(n=>!completed.has(n-1));
- if(!target)return {all:true,done:5,goal:5,title:'All seven Journey Seals collected'};
+ if(!target)return {all:true,done:5,goal:5,title:'All eight Journey Seals collected'};
  const start=target-5;
  const done=Array.from({length:5},(_,offset)=>start+offset).filter(n=>completed.has(n)).length;
  return {all:false,done,goal:5,title:MILESTONE_SEALS[target].name,target};
@@ -260,17 +268,17 @@ function renderNextSealProgress(){
  const mapLabel=$('wt-map-seal-title'),mapDetail=$('wt-map-seal-detail'),
   mapBar=$('wt-map-seal-track'),mapFill=$('wt-map-seal-fill'),
   finishLabel=$('finish-next-seal');
- if(mapLabel)mapLabel.textContent=seal.all?'✦ All seven Journey Seals collected':
+ if(mapLabel)mapLabel.textContent=seal.all?'✦ All eight Journey Seals collected':
   'NEXT JOURNEY SEAL · '+seal.title;
- if(mapDetail)mapDetail.textContent=seal.all?'Your 35-level journey is complete!':
+ if(mapDetail)mapDetail.textContent=seal.all?'Your 40-level journey is complete!':
   seal.done+' of '+seal.goal+' levels completed · +60 bonus TEST coins at Level '+seal.target;
  if(mapBar){
   mapBar.setAttribute('aria-valuenow',String(seal.done));
-  mapBar.setAttribute('aria-label',seal.all?'All seven Journey Seals collected':
+  mapBar.setAttribute('aria-label',seal.all?'All eight Journey Seals collected':
    seal.title+': '+seal.done+' of 5 levels complete');
  }
  if(mapFill)mapFill.style.width=(seal.done/seal.goal*100)+'%';
- if(finishLabel)finishLabel.textContent=seal.all?'✦ All seven Journey Seals collected!':
+ if(finishLabel)finishLabel.textContent=seal.all?'✦ All eight Journey Seals collected!':
   'UP NEXT · '+seal.title+' · '+seal.done+'/5 levels toward your next seal';
 }
 let found=new Set(),bonuses=new Set(),hinted=new Set(),chosen=[],letters=[],combo=0;

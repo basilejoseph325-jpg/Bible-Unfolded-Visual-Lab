@@ -15,7 +15,7 @@ const WHEELS='bible-unfolded-wheel-ownership-v3825-backup';
 const VOICE='bible-unfolded-private-voice-pref-v381';
 const SENTINEL='bu-wt-all30-webkit-test-sentinel';
 const seed={
- [TEST]:JSON.stringify({level:0,unlocked:34,coins:317,points:0,
+ [TEST]:JSON.stringify({level:0,unlocked:39,coins:317,points:0,
   completed:[],sparks:[],claimedSparks:[],boardBible:[],
   paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:false,progress:null}),
  [LIVE]:JSON.stringify({level:15,unlocked:16,coins:233,completed:[0,1,2,3],unique:'DO_NOT_TOUCH_LIVE'}),
@@ -81,7 +81,7 @@ async function gameFrame(page){
       'Native wallet must have valid coins/points when present');
     }
     let checked=0,minWheel=99,maxWheel=0,boardSizes=new Set();
-    for(let i=0;i<35;i++){
+    for(let i=0;i<40;i++){
      // Real UI navigation, no direct access to closure-private game methods.
      await child.locator('#level-map').evaluate(el=>el.click());
      await child.waitForFunction(()=>document.querySelector('#map')?.open);
@@ -89,8 +89,8 @@ async function gameFrame(page){
       const items=[...document.querySelectorAll('#map-list .map-level')];
       return {count:items.length,unlocked:items.filter(el=>!el.disabled).length};
      });
-     assert.deepEqual(availability,{count:35,unlocked:35},
-      'All 35 fictional unlocked map entries should be accessible');
+     assert.deepEqual(availability,{count:40,unlocked:40},
+      'All 40 fictional unlocked map entries should be accessible');
      await child.evaluate(i=>{
       const b=document.querySelectorAll('#map-list .map-level')[i];
       if(!b||b.disabled)throw Error('Level map inaccessible at '+(i+1));
@@ -98,7 +98,7 @@ async function gameFrame(page){
      },i);
      await child.waitForFunction(level=>
       !document.querySelector('#map')?.open&&
-      document.querySelector('#level-label')?.textContent.includes('LEVEL '+level+' / 35'),
+      document.querySelector('#level-label')?.textContent.includes('LEVEL '+level+' / 40'),
       i+1,{timeout:20000});
      const row=await child.evaluate(()=>{
       const take=id=>{
@@ -143,8 +143,8 @@ async function gameFrame(page){
     }
     const saved=await snapshot(page,[TEST,...protectedKeys]);
     const state=JSON.parse(saved[TEST]);
-    assert.equal(state.level,34,'Final visited 35th level should persist');
-    assert.equal(state.unlocked,34);
+    assert.equal(state.level,39,'Final visited 40th level should persist');
+    assert.equal(state.unlocked,39);
     assert.equal(state.coins,317,'Browsing levels must not mint/spend TEST coins');
     for(const key of protectedKeys)assert.equal(saved[key],before[key],
      'Browsing 30 levels altered protected state '+key);
@@ -154,7 +154,7 @@ async function gameFrame(page){
      !window.BUWTNativeShell?.active?.(),null,{timeout:100000});
     await page.locator('#home-cross').evaluate(el=>el.click());
     const resumed=await gameFrame(page);
-    assert((await resumed.locator('#level-label').textContent()).includes('LEVEL 35 / 35'),
+    assert((await resumed.locator('#level-label').textContent()).includes('LEVEL 40 / 40'),
      'Reentry must resume level 30 after refresh');
     const after=await snapshot(page,protectedKeys);
     for(const key of protectedKeys)assert.equal(after[key],before[key],
