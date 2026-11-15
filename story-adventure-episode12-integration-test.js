@@ -12,6 +12,46 @@ for(const d of chapter.discoveries){
  if(!words[d.id]||words[d.id].answer!==d.interaction.answer||d.interaction.type!=='word_connect'||d.progressiveHints?.length!==3)throw Error('G12 puzzle mismatch: '+d.id);
 }
 BU3857_DATA[ID]=chapter;Object.assign(BU_HQ_WORDS,words);
+chapter.illustrationStatus='13 individual approved 640x360 historical reconstructions';
+const G12_ART=Object.freeze(Object.fromEntries(chapter.discoveries.map(d=>{
+ const plan=chapter.artPlan?.[d.id];
+ if(!plan||plan.filename!==d.id+'.webp')throw Error('Missing Genesis 12 art plan '+d.id);
+ return [d.id,Object.freeze({
+  src:'story-adventure-art/genesis12/'+plan.filename,
+  alt:plan.alt+'; artistic historical reconstruction'
+ })];
+})));
+/* Let the original engine use its own figure styling whenever its maps
+   support extension. Otherwise add the exact same image to its rendered
+   native discovery, without touching earlier chapter art or the wheel. */
+if(typeof BU3857_SCENE_ART!=='undefined'&&typeof BU3857_SCENE_ALT!=='undefined'&&
+   Object.isExtensible(BU3857_SCENE_ART)&&Object.isExtensible(BU3857_SCENE_ALT)){
+ for(const [id,a] of Object.entries(G12_ART)){
+  BU3857_SCENE_ART[id]=a.src;BU3857_SCENE_ALT[id]=a.alt;
+ }
+}
+const originalG12Render=bu3857Render;
+bu3857Render=function(){
+ const result=originalG12Render.apply(this,arguments);
+ if(bu3857State?.book!==ID)return result;
+ const d=bu3857Current?.(),a=d&&G12_ART[d.id];
+ if(!a)return result;
+ const root=document.getElementById('bu3857-content');
+ if(!root)return result;
+ let figure=root.querySelector('figure.bu3863-image');
+ if(!figure){
+  figure=document.createElement('figure');figure.className='bu3863-image';
+  const story=root.querySelector('#bu3863-story');
+  const anchor=story||root.querySelector('#buhq-wheel');
+  if(anchor?.parentNode)anchor.parentNode.insertBefore(figure,anchor);
+  else root.prepend(figure);
+ }
+ let img=figure.querySelector('img');
+ if(!img){img=document.createElement('img');figure.prepend(img)}
+ if(img.getAttribute('src')!==a.src)img.setAttribute('src',a.src);
+ img.alt=a.alt;img.loading='eager';img.decoding='async';
+ return result;
+};
 if(!BU_GENESIS_IDS.includes(ID))BU_GENESIS_IDS.push(ID);
 if(!EPISODES.some(e=>e[0]===chapter.title))EPISODES.push([chapter.title,'Genesis 32–33 · 13 interactive discoveries']);
 try{
@@ -29,7 +69,7 @@ makeEpisodes=function(){
  card.classList.toggle('available',available);
  const statusNode=card.querySelector('.episode-status');if(statusNode)statusNode.textContent=status;
  const image=card.querySelector('.episode-thumb img');
- if(image){image.src='bible-book-art/01_genesis.webp';image.alt='Genesis book art; Episode 12 scene illustrations pending';}
+ if(image){image.src=G12_ART['g12-d01'].src;image.alt='Jacob encounters angels near Mahanaim; Episode 12 artwork';}
  card.setAttribute('aria-label',chapter.title+': '+status);
  card.onclick=function(){if(available)bu3857Open(ID);else notify('Finish Genesis Episode 11 to unlock this chapter.');};
  const sub=document.querySelector('#episodes .episode-headline small');
@@ -114,5 +154,5 @@ bu3857Hint=function(){
  };
  refresh();
 };
-window.BUStoryGenesis12Test=Object.freeze({chapterId:ID,discoveryCount:13,wordCount:13,artStatus:'not yet integrated'});
+window.BUStoryGenesis12Test=Object.freeze({chapterId:ID,discoveryCount:13,wordCount:13,artStatus:'13 individual 640x360 approved scene illustrations'});
 })();
