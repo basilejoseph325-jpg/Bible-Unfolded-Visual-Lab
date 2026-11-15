@@ -39,7 +39,7 @@
           "text": "Jacob moved it away from the mouth of the well."
         }
       ],
-      "explanation": "Jacob rolled the large stone away from the mouth of the well and watered the sheep belonging to Laban. The Bible doesn't tell us that the shepherds couldn't have moved it—only that Jacob did. (Genesis 29:1–10)",
+      "explanation": "The stone normally covered the well until all the flocks were gathered. Jacob moved it when Rachel arrived and watered Laban's sheep. Their meeting took place during the work of an ordinary shepherding day.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -107,7 +107,7 @@
           "text": "Genesis 29:20 gives his affection as the reason."
         }
       ],
-      "explanation": "Jacob worked seven years for Rachel, but the time seemed short because he loved her. That's the reason Genesis 29:20 itself gives. (Genesis 29:18–20)",
+      "explanation": "Jacob offered to serve seven years for Rachel when Laban asked him to name his wages. His love helps explain both that offer and why those years seemed short to him.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -118,7 +118,7 @@
       "narration": "The seven years end, and Laban holds a feast. But during the evening, he brings Leah instead of Rachel. When morning comes, Jacob discovers what happened and confronts Laban. The Bible doesn't soften that deception.",
       "scripture": [
         {
-          "reference": "Genesis 29:21–26",
+          "reference": "Genesis 29:21–26; 31–35",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
         }
       ],
@@ -141,7 +141,7 @@
           "text": "Her name is given in Genesis 29:23–25."
         }
       ],
-      "explanation": "During the evening, Laban brought Leah to Jacob. Jacob discovered the deception in the morning and asked Laban why he had tricked him. (Genesis 29:21–26)",
+      "explanation": "Laban brought Leah to Jacob, and Jacob discovered it in the morning. When challenged, Laban appealed to the custom of marrying the older daughter first. His explanation came after Jacob had served for Rachel.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -149,7 +149,7 @@
       "id": "g11-d05",
       "sequence": 5,
       "title": "A Difficult Agreement",
-      "narration": "Laban tells Jacob he can also marry Rachel after Leah's wedding week—but Jacob must work seven more years. Jacob agrees. The account doesn't invite us to pretend the family situation was simple; it tells us what happened.",
+      "narration": "Laban tells Jacob he can also marry Rachel after Leah's wedding week, in exchange for seven more years of work. Jacob agrees. He marries Rachel after the week and then serves those additional years.",
       "scripture": [
         {
           "reference": "Genesis 29:27–30",
@@ -209,7 +209,7 @@
           "text": "Genesis 29:35 records an expression of gratitude to God."
         }
       ],
-      "explanation": "At the birth of Judah, Leah said that she would praise Jehovah. The Bible records her hurt as well as this expression of thanks. (Genesis 29:31–35)",
+      "explanation": "Judah's name is linked with praise. Leah had spoken of her distress at the births of earlier sons; this time she directed her words to praising Jehovah. The names let us hear what she herself said.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -217,7 +217,7 @@
       "id": "g11-d07",
       "sequence": 7,
       "title": "Rachel Welcomes Joseph",
-      "narration": "Rachel has waited so long for a child. The account says God remembers her and hears her. At last she has a son, and she calls him Joseph. Imagine the relief and happiness she must have felt!",
+      "narration": "Rachel has waited a long time for a child. God hears her and enables her to become pregnant. She gives birth to Joseph and says that God has taken away her reproach.",
       "scripture": [
         {
           "reference": "Genesis 30:22–24",
@@ -260,7 +260,7 @@
       ],
       "interaction": {
         "type": "word_connect",
-        "prompt": "Which kind of marked animals were included in Jacob's agreed wages?",
+        "prompt": "Which word in the wage agreement describes animals covered with small scattered spots?",
         "answer": "SPECKLED"
       },
       "progressiveHints": [
@@ -277,7 +277,7 @@
           "text": "Genesis 30:32 mentions animals with scattered spots."
         }
       ],
-      "explanation": "Jacob and Laban agreed that speckled, color-patched, and some dark-colored animals would be counted as Jacob's wages. The flocks grew in the years that followed. (Genesis 30:31–43)",
+      "explanation": "The agreement included speckled and color-patched goats and dark-brown young rams. Speckled describes the small scattered spots. These markings mattered because they helped distinguish which animals counted as Jacob's wages.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -311,7 +311,7 @@
           "text": "He was told to go back to the land of his fathers."
         }
       ],
-      "explanation": "Jehovah told Jacob to return to the land of his fathers and relatives, promising to be with him. Jacob then explained the situation to Rachel and Leah. (Genesis 31:1–18)",
+      "explanation": "Jehovah's direction included a promise that he would continue with Jacob. Jacob spoke with Rachel and Leah, who encouraged him to do what God had said. The move involved his whole household.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -345,7 +345,7 @@
           "text": "Genesis 31:44 describes making a formal bond between the men."
         }
       ],
-      "explanation": "Jacob and Laban made a covenant. They set up a pillar and a heap of stones as a witness to the agreement, and Laban returned home. (Genesis 31:43–55)",
+      "explanation": "A covenant is a serious agreement. The heap of stones and the pillar witnessed the limits Jacob and Laban agreed to respect: neither was to pass them to harm the other. They parted after making that agreement.",
       "tone": "conversational_story",
       "graphicViolence": false
     }
@@ -354,7 +354,7 @@
     "g11-d01": {
       "clue": "What did Jacob roll away before watering Rachel's sheep?",
       "answer": "STONE",
-      "explanation": "Jacob rolled the large stone away from the mouth of the well and watered the sheep belonging to Laban. The Bible doesn't tell us that the shepherds couldn't have moved it—only that Jacob did. (Genesis 29:1–10)",
+      "explanation": "The stone normally covered the well until all the flocks were gathered. Jacob moved it when Rachel arrived and watered Laban's sheep. Their meeting took place during the work of an ordinary shepherding day.",
       "hint1": "The flocks had gathered, but they still couldn't drink.",
       "hint2": "Something heavy covered the water.",
       "hint3": "Jacob moved it away from the mouth of the well.",
@@ -374,7 +374,7 @@
     "g11-d03": {
       "clue": "What made seven years of work feel like only a few days to Jacob?",
       "answer": "LOVE",
-      "explanation": "Jacob worked seven years for Rachel, but the time seemed short because he loved her. That's the reason Genesis 29:20 itself gives. (Genesis 29:18–20)",
+      "explanation": "Jacob offered to serve seven years for Rachel when Laban asked him to name his wages. His love helps explain both that offer and why those years seemed short to him.",
       "hint1": "Think about how Jacob felt toward Rachel.",
       "hint2": "Long work can feel different when the reason matters deeply.",
       "hint3": "Genesis 29:20 gives his affection as the reason.",
@@ -384,10 +384,10 @@
     "g11-d04": {
       "clue": "Whom did Laban bring to Jacob instead of Rachel?",
       "answer": "LEAH",
-      "explanation": "During the evening, Laban brought Leah to Jacob. Jacob discovered the deception in the morning and asked Laban why he had tricked him. (Genesis 29:21–26)",
-      "hint1": "It was Laban's older daughter.",
-      "hint2": "The two sisters were not treated fairly by Laban's decision.",
-      "hint3": "Her name is given in Genesis 29:23–25.",
+      "explanation": "Laban brought Leah to Jacob, and Jacob discovered it in the morning. When challenged, Laban appealed to the custom of marrying the older daughter first. His explanation came after Jacob had served for Rachel.",
+      "hint1": "The bride belonged to Rachel's own household.",
+      "hint2": "She was Laban's firstborn daughter, while Rachel was the younger.",
+      "hint3": "She later became the mother of Reuben, Simeon, Levi, and Judah.",
       "basis": "scripture",
       "reference": "Genesis 29:21–26"
     },
@@ -404,7 +404,7 @@
     "g11-d06": {
       "clue": "When Judah was born, what did Leah say she would give Jehovah?",
       "answer": "PRAISE",
-      "explanation": "At the birth of Judah, Leah said that she would praise Jehovah. The Bible records her hurt as well as this expression of thanks. (Genesis 29:31–35)",
+      "explanation": "Judah's name is linked with praise. Leah had spoken of her distress at the births of earlier sons; this time she directed her words to praising Jehovah. The names let us hear what she herself said.",
       "hint1": "Leah wasn't talking about getting more possessions.",
       "hint2": "She wanted to honor Jehovah with her words.",
       "hint3": "Genesis 29:35 records an expression of gratitude to God.",
@@ -422,11 +422,11 @@
       "reference": "Genesis 30:22–24"
     },
     "g11-d08": {
-      "clue": "Which kind of marked animals were included in Jacob's agreed wages?",
+      "clue": "Which word in the wage agreement describes animals covered with small scattered spots?",
       "answer": "SPECKLED",
-      "explanation": "Jacob and Laban agreed that speckled, color-patched, and some dark-colored animals would be counted as Jacob's wages. The flocks grew in the years that followed. (Genesis 30:31–43)",
+      "explanation": "The agreement included speckled and color-patched goats and dark-brown young rams. Speckled describes the small scattered spots. These markings mattered because they helped distinguish which animals counted as Jacob's wages.",
       "hint1": "Not all the animals in the agreement had one plain coat.",
-      "hint2": "Think of small spots and patches among the sheep and goats.",
+      "hint2": "Their coats had many small spots rather than broad areas of one color.",
       "hint3": "Genesis 30:32 mentions animals with scattered spots.",
       "basis": "scripture",
       "reference": "Genesis 30:25–43"
@@ -434,7 +434,7 @@
     "g11-d09": {
       "clue": "What did Jehovah tell Jacob to do when it was time to leave Laban's household?",
       "answer": "RETURN",
-      "explanation": "Jehovah told Jacob to return to the land of his fathers and relatives, promising to be with him. Jacob then explained the situation to Rachel and Leah. (Genesis 31:1–18)",
+      "explanation": "Jehovah's direction included a promise that he would continue with Jacob. Jacob spoke with Rachel and Leah, who encouraged him to do what God had said. The move involved his whole household.",
       "hint1": "Jehovah wasn't telling Jacob to remain where he was.",
       "hint2": "The journey would take him toward his family and homeland.",
       "hint3": "He was told to go back to the land of his fathers.",
@@ -444,7 +444,7 @@
     "g11-d10": {
       "clue": "What formal agreement did Jacob and Laban make before parting?",
       "answer": "COVENANT",
-      "explanation": "Jacob and Laban made a covenant. They set up a pillar and a heap of stones as a witness to the agreement, and Laban returned home. (Genesis 31:43–55)",
+      "explanation": "A covenant is a serious agreement. The heap of stones and the pillar witnessed the limits Jacob and Laban agreed to respect: neither was to pass them to harm the other. They parted after making that agreement.",
       "hint1": "It marked the end of their argument with a serious commitment.",
       "hint2": "The heap of stones served as a witness to their promise.",
       "hint3": "Genesis 31:44 describes making a formal bond between the men.",

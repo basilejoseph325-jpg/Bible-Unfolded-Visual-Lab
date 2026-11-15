@@ -9,7 +9,9 @@ const browser=await puppeteer.launch({headless:true,executablePath:chrome,
  args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],protocolTimeout:110000});
 try{
 for(const [width,height] of [[390,705],[320,568]]){
- const page=await browser.newPage(),errors=[];
+ // Each viewport uses an independent player profile; paid receipts intentionally persist across pages.
+ const context=await browser.createBrowserContext();
+ const page=await context.newPage(),errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
  await page.goto(base,{waitUntil:'domcontentloaded',timeout:110000});
@@ -67,7 +69,7 @@ for(const [width,height] of [[390,705],[320,568]]){
  assert.equal(await page.evaluate(()=>!!BU_HQ_WORDS['g10-d01']&&!!document.getElementById('buhq-wheel')),true);
  assert.deepEqual(errors,[]);
  console.log('PASS_GENESIS11_CONTEXTUAL_HINTS',JSON.stringify({viewport:width+'x'+height,free:0,paid1:15,paid2:25,lettersRevealed:0,priorEpisode:true}));
- await page.close();
+ await context.close();
 }
 }finally{await browser.close();}
 })().catch(e=>{console.error('FAIL_GENESIS11_CONTEXTUAL_HINTS',e.stack||e);process.exitCode=1});

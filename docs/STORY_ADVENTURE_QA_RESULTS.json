@@ -1,0 +1,384 @@
+{
+  "baseline": "bf101f8",
+  "gameplayCheckpoint": "5625395",
+  "editorialCheckpoint": "b9897de",
+  "environment": "local Chromium, synthetic player profiles",
+  "fullPlayerPaths": {
+    "viewports": [
+      {
+        "width": 320,
+        "height": 568,
+        "modern": 80,
+        "legacy": 84,
+        "finales": 17,
+        "hints": [
+          {
+            "id": "genesis",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          },
+          {
+            "id": "genesis_ep07",
+            "prices": [
+              15,
+              20,
+              25
+            ],
+            "balance": 440
+          },
+          {
+            "id": "genesis_ep10",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "genesis_ep11",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "exodus-10",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          }
+        ],
+        "overflow": []
+      },
+      {
+        "width": 390,
+        "height": 844,
+        "modern": 80,
+        "legacy": 84,
+        "finales": 17,
+        "hints": [
+          {
+            "id": "genesis",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          },
+          {
+            "id": "genesis_ep07",
+            "prices": [
+              15,
+              20,
+              25
+            ],
+            "balance": 440
+          },
+          {
+            "id": "genesis_ep10",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "genesis_ep11",
+            "prices": [
+              15,
+              25
+            ],
+            "balance": 460
+          },
+          {
+            "id": "exodus-10",
+            "prices": [
+              15,
+              30
+            ],
+            "balance": 455
+          }
+        ],
+        "overflow": []
+      }
+    ],
+    "errors": []
+  },
+  "touchAndRecovery": {
+    "touchTapDiscoveries": 3,
+    "touchSwipeDiscoveries": 1,
+    "pointerCancel": true,
+    "incorrectWordNoRewardBothEngines": true,
+    "gentleWrongCueBothEngines": true,
+    "failedRevealNoCharge": true,
+    "revealOnceBothEngines": true,
+    "corruptPrimaryRecovery": true,
+    "malformedCheckpoint": true,
+    "menuContinueAndRestart": true,
+    "interactiveRevealSolutions": 30,
+    "physicalDevice": false
+  },
+  "editorialHintPaths": {
+    "exodusDiscoveries": 30,
+    "paidStages": 60,
+    "freeHints": 30,
+    "noRepeatCharges": 30,
+    "prices": [
+      0,
+      15,
+      30
+    ],
+    "pointsUnaffected": true,
+    "noahReferenceCorrect": true,
+    "genesisFlashbackClear": true,
+    "independentHumanReview": false
+  },
+  "nonStoryBoundaryParity": {
+    "home-watch": {
+      "path": "/index.html",
+      "active": [
+        "btn3926-home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-trivia": {
+      "path": "/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-family": {
+      "path": "/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-builder": {
+      "path": "/index.html",
+      "active": [
+        "wb36"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-cross": {
+      "path": "/index.html",
+      "active": [
+        "home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-crossword-packs": {
+      "path": "/index.html",
+      "active": [
+        "cross-pick"
+      ],
+      "wordTrailsOverlay": true,
+      "help": false,
+      "shop": false
+    },
+    "home-shop": {
+      "path": "/index.html",
+      "active": [
+        "rewards"
+      ],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    },
+    "home-help": {
+      "path": "/index.html",
+      "active": [
+        "home"
+      ],
+      "wordTrailsOverlay": false,
+      "help": true,
+      "shop": false
+    },
+    "home-books": {
+      "path": "/bible-book-guides/index.html",
+      "active": [],
+      "wordTrailsOverlay": false,
+      "help": false,
+      "shop": false
+    }
+  },
+  "existingGenesis11Hints": {
+    "390x705": "passed",
+    "320x568": "passed",
+    "isolatedPlayerProfiles": true
+  },
+  "static": {
+    "nativeParts": 5,
+    "assembledNativeSyntax": "passed",
+    "inlineScripts": 238,
+    "editorialFieldChanges": 68,
+    "changedDiscoveries": 56,
+    "genesis11PackageIntegrity": "passed"
+  },
+  "renderedScreenshotsInspected": 3,
+  "physicalAndroidTested": false,
+  "physicalIPhoneTested": false,
+  "independentEditorialAcceptance": false,
+  "exhaustiveHistoricalEditorialAuditComplete": false,
+  "deployed": false,
+  "releaseApproved": false,
+  "existingCheckerDiscrepancy": "Legacy all-mode smoke expects an obsolete Bible Books token gate; baseline and candidate now share the reader route. Entry parity passed.",
+  "retryCheckpoint": "baa0f8b",
+  "continuousIntegration": {
+    "workflow": "Story Adventure candidate (no deployment)",
+    "url": "https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43682848810",
+    "testedHead": "2f7a275e491b75c346cb6f48b00913717afbca51",
+    "status": "completed",
+    "conclusion": "success",
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/setup-node@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0",
+        "conclusion": "success"
+      },
+      {
+        "name": "Select installed browser and start local game",
+        "conclusion": "success"
+      },
+      {
+        "name": "Syntax and integrated content checks",
+        "conclusion": "success"
+      },
+      {
+        "name": "Reviewed content, compound Bible links and finale controls",
+        "conclusion": "success"
+      },
+      {
+        "name": "Both engines, 164 discoveries, two phone viewports",
+        "conclusion": "success"
+      },
+      {
+        "name": "Real browser touch, navigation, reveal payment and recovery",
+        "conclusion": "success"
+      },
+      {
+        "name": "All 30 Exodus hint ladders and source corrections",
+        "conclusion": "success"
+      },
+      {
+        "name": "Genesis 11 contextual clues at both phone sizes",
+        "conclusion": "success"
+      },
+      {
+        "name": "Preserve other modes against baseline",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/setup-node@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ],
+    "followupScope": "Documentation-only record of the verified run; player code unchanged."
+  },
+  "editorialCompletionPass": {
+    "date": "2026-11-15",
+    "remainingDiscoveryReviews": 108,
+    "revisedExistingContent": 99,
+    "retainedExistingContent": 9,
+    "individualEarlyIntroductions": 84,
+    "laterEndingMessages": 8,
+    "officialSourceReceipts": 43,
+    "ledger": "STORY_ADVENTURE_DISCOVERY_REVIEW_2026-11-15.json",
+    "independentHumanReview": false
+  },
+  "round2TouchRecovery": "PASS_STORY_TOUCH_RECOVERY {\"touchTapDiscoveries\":3,\"touchSwipeDiscoveries\":1,\"pointerCancel\":true,\"incorrectWordNoRewardBothEngines\":true,\"gentleWrongCueBothEngines\":true,\"failedRevealNoCharge\":true,\"revealOnceBothEngines\":true,\"corruptPrimaryRecovery\":true,\"malformedCheckpoint\":true,\"menuContinueAndRestart\":true,\"interactiveRevealSolutions\":30,\"physicalDevice\":false}",
+  "round2NonStoryBoundaries": "PASS_NON_STORY_BASELINE_PARITY {\"home-watch\":{\"path\":\"/index.html\",\"active\":[\"btn3926-home\"],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-trivia\":{\"path\":\"/index.html\",\"active\":[],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-family\":{\"path\":\"/index.html\",\"active\":[],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-builder\":{\"path\":\"/index.html\",\"active\":[\"wb36\"],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-cross\":{\"path\":\"/index.html\",\"active\":[\"home\"],\"wordTrailsOverlay\":true,\"help\":false,\"shop\":false},\"home-crossword-packs\":{\"path\":\"/index.html\",\"active\":[\"cross-pick\"],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-shop\":{\"path\":\"/index.html\",\"active\":[\"rewards\"],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false},\"home-help\":{\"path\":\"/index.html\",\"active\":[\"home\"],\"wordTrailsOverlay\":false,\"help\":true,\"shop\":false},\"home-books\":{\"path\":\"/bible-book-guides/index.html\",\"active\":[],\"wordTrailsOverlay\":false,\"help\":false,\"shop\":false}}",
+  "round2Preservation": {
+    "baseline": "bf101f8",
+    "stableWordAnswers": 134,
+    "stableInteractionSolutions": 70,
+    "unchangedDeclarations": [
+      "BU3868_QUESTIONS",
+      "bu3899FitLaterWheel",
+      "saveEconomy",
+      "awardOnce",
+      "awardChapter",
+      "canSpend",
+      "uniqueTriviaRounds",
+      "bank",
+      "questions",
+      "BU34_BANK",
+      "bu35TriviaBody",
+      "bu37UniqueQuestions",
+      "bu37OriginalTriviaHome",
+      "bu374OriginalTriviaHome",
+      "bu374OriginalTriviaDraw",
+      "bu381OldTriviaChoose",
+      "bu381OldTriviaFinish",
+      "bu385FitStory",
+      "bu386Trivia"
+    ],
+    "part4Unchanged": true,
+    "artAndAudioChanged": []
+  },
+  "initialRound2Failures": {
+    "parallelTouch": "Initial touch run timed out on original-wheel retry. The unchanged test passed when rerun with fewer competing browsers. No product input change was made in this pass.",
+    "nonStoryBoundary": "Fixed the test fixture to wait for the existing 235ms Word Trails launch instead of sampling at 100ms; baseline/candidate parity then passed."
+  },
+  "completionCodeCheckpoint": "c3b16fc41c0e8ab684085ebae7e3407fc7dc2d41",
+  "round2ReviewIntegration": "PASS_STORY_REVIEW_INTEGRATION {\"remainingDiscoveries\":108,\"sceneIntroductions\":84,\"chapterEndingMessages\":8,\"sourceReceipts\":43,\"compoundBibleLinks\":true,\"focusRestored\":true,\"independentHumanReview\":false,\"physicalPhones\":false}",
+  "round2ExodusHints": "PASS_STORY_EDITORIAL_HINTS {\"exodusDiscoveries\":30,\"paidStages\":60,\"freeHints\":30,\"noRepeatCharges\":30,\"prices\":[0,15,30],\"pointsUnaffected\":true,\"noahReferenceCorrect\":true,\"genesisFlashbackClear\":true,\"independentHumanReview\":false}",
+  "round2Genesis11ContextualHints": [
+    "PASS_GENESIS11_CONTEXTUAL_HINTS {\"viewport\":\"390x705\",\"free\":0,\"paid1\":15,\"paid2\":25,\"lettersRevealed\":0,\"priorEpisode\":true}",
+    "PASS_GENESIS11_CONTEXTUAL_HINTS {\"viewport\":\"320x568\",\"free\":0,\"paid1\":15,\"paid2\":25,\"lettersRevealed\":0,\"priorEpisode\":true}"
+  ],
+  "round2RenderedInspection": {
+    "viewport": "320×568, local Chromium",
+    "contextPopup": "Inspected after entry animation completed; opaque panel, readable scene text and reachable Close controls.",
+    "chapterEnding": "Inspected Genesis 9 scene-specific message and existing next/replay/chapters controls.",
+    "physicalDevice": false
+  },
+  "round2Syntax": {
+    "fiveTransports": true,
+    "assembledNative": true,
+    "inlineScriptsCompiled": 238,
+    "gitDiffCheck": true
+  },
+  "remainingGates": [
+    "Physical Samsung Chrome/Samsung Internet and iPhone Safari, audio, accessibility, interruptions and browser-close persistence",
+    "Independent human source/editorial acceptance",
+    "Owner acceptance and separate release authorization"
+  ]
+}

@@ -1,0 +1,5 @@
+/* Help marks the purchased wheel letter; no change to locked wheel sizing/themes. */
+#play #wheel .tile.bu-story-guided-letter:not(.chosen),
+#bu3857-screen #buhq-wheel .buhq-letter.bu-story-guided-letter:not(.picked){
+ outline:3px solid #fff2bf!important;outline-offset:2px;
+}
