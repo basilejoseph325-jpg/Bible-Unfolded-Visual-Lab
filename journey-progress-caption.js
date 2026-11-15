@@ -283,3 +283,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Bible Books Made Simple: isolated homepage entry for separate reading library. */
 (()=>{'use strict';if(document.getElementById('bu-books-made-simple-card-loader'))return;const s=document.createElement('script');s.id='bu-books-made-simple-card-loader';s.defer=true;s.src='bible-books-made-simple-card-v1.js?v=20261114-books-home-card-v1';document.head.appendChild(s)})();
+
+/* Genesis Episode 12 TEST-only native registration. The existing Story engines
+ * are untouched; include this only in the isolated candidate branch. */
+(()=>{'use strict';
+ const id='bu-story-genesis12-native-loader';
+ if(document.getElementById(id))return;
+ const s=document.createElement('script');s.id=id;s.async=false;
+ s.src='story-adventure-episode12-integration-test.js?v=20261115-native-g12-v1';
+ s.onerror=()=>console.warn('[Genesis12] Candidate episode script did not load');
+ document.head.appendChild(s);
+})();
