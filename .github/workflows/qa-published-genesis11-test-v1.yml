@@ -17,25 +17,49 @@ jobs:
     timeout-minutes: 18
     steps:
       - uses: actions/checkout@v4
-      - name: Confirm GitHub Pages serves the Episode 11 revision
+      - name: Confirm GitHub Pages serves CURRENT Story release files
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import urllib.request,time
-          url='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?genesis11-published=20261114-v1'
-          for attempt in range(26):
+          import hashlib, os, pathlib, time, urllib.request
+          base='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/'
+          paths=[
+            'bible_unfolded_core_part1.js',
+            'bible_unfolded_core_part2.js',
+            'bible_unfolded_core_part3.js',
+            'bible_unfolded_core_part5.js',
+            'story-adventure-content/genesis-episode11-haran-v1.json'
+          ]
+          markers=[
+            'bible_unfolded_core_part3.js?v=story-adventure-candidate-1',
+            'bible_unfolded_core_part5.js?v=story-adventure-candidate-1'
+          ]
+          token=os.environ.get('GITHUB_SHA','release')[:12]
+          for attempt in range(20):
             try:
-              with urllib.request.urlopen(url,timeout=40) as r:
+              suffix='?published-story-check='+token+'-'+str(attempt)
+              with urllib.request.urlopen(base+suffix,timeout=40) as r:
                 html=r.read().decode('utf-8')
-              if 'genesis11-haran-test-v1' in html:
-                print('PASS_PUBLIC_TEST_GENESIS11_CURRENT_HTML',len(html),'attempt',attempt+1)
-                break
-              print('TEST Pages still serving previous release; retry',attempt+1)
+              if not all(marker in html for marker in markers):
+                print('Pages HTML not yet on current Story build:',attempt+1)
+              else:
+                mismatches=[]
+                for path in paths:
+                  with urllib.request.urlopen(base+path+suffix,timeout=40) as r:
+                    published=r.read()
+                  expected=pathlib.Path(path).read_bytes()
+                  if hashlib.sha256(published).digest()!=hashlib.sha256(expected).digest():
+                    mismatches.append(path)
+                if not mismatches:
+                  print('PASS_PUBLIC_TEST_CURRENT_STORY_FILES',
+                        len(html),'all',len(paths),'files match commit',token)
+                  break
+                print('Pages asset propagation pending:',attempt+1,','.join(mismatches))
             except Exception as e:
-              print('Waiting on TEST Pages',attempt+1,str(e)[:160])
+              print('Pages request pending:',attempt+1,str(e)[:160])
             time.sleep(9)
-          else:raise SystemExit('New Genesis11 TEST revision is not live; cannot claim published')
+          else: raise SystemExit('Published TEST not yet consistent with this commit; no gameplay claim')
           PY
       - name: Run real Chrome through ten public Story wheels and thinking hints
         shell: bash
