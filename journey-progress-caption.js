@@ -295,3 +295,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
   script.async=false;
   document.head.appendChild(script);
 })();
+
+
+/* TEST-only, explicit Genesis Episode 12 preview; ordinary book/Journey locks unchanged. */
+(()=>{'use strict';
+ if(new URLSearchParams(location.search).get('bu_story_preview')!=='genesis_ep12')return;
+ const script=document.createElement('script');
+ script.src='story-adventure-genesis12-native-test-v1.js?v=1';
+ script.async=false;
+ document.head.appendChild(script);
+})();
