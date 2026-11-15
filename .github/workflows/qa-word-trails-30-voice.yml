@@ -6,6 +6,7 @@ on:
       - 'experiments/word-trails-levels-12-30-v1.js'
       - 'experiments/word-trails-levels-31-35-v1.js'
       - 'experiments/word-trails-levels-36-40-v1.js'
+      - 'experiments/word-trails-levels-41-45-v1.js'
       - 'experiments/word-trails-next-v1.js'
       - 'experiments/word-trails-next-v1.html'
       - 'experiments/word-trails-announcer-v1.js'
@@ -106,7 +107,7 @@ jobs:
              localStorage.setItem('bible-unfolded-private-voice-pref-v381',JSON.stringify({mode:'charlie',volume:65}));
             });
             await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
-            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 40'));
+            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 45'));
             const dims=()=>page.evaluate(()=>{
              const b=document.querySelector('#board').getBoundingClientRect();
              const w=document.querySelector('#wheel').getBoundingClientRect();
@@ -163,11 +164,11 @@ jobs:
              }
              document.querySelector('#submit').click();
             },word);
-            for(let i=0;i<29;i++){
-             const data=await page.evaluate(i=>[...window.BUWTAdditionalLevels,...window.BUWTLevels31to35,...window.BUWTLevels36to40][i],i);
+            for(let i=0;i<34;i++){
+             const data=await page.evaluate(i=>[...window.BUWTAdditionalLevels,...window.BUWTLevels31to35,...window.BUWTLevels36to40,...window.BUWTLevels41to45][i],i);
              const targetLevel=i+12;
              const label=await page.$eval('#level-label',el=>el.textContent);
-             assert(label.includes('LEVEL '+targetLevel+' / 40'),'Wrong level label '+label);
+             assert(label.includes('LEVEL '+targetLevel+' / 45'),'Wrong level label '+label);
              // Actual gameplay: early six-letter rack supports TWO good bonus
              // words; later racks use the usual three-word satchel.
              if(targetLevel===12||targetLevel===13){
@@ -212,10 +213,10 @@ jobs:
              assert((await page.$eval('#finish-spark',e=>e.textContent)).includes('Bible discoveries'));
              console.log('SOLVED_LEVEL',JSON.stringify({level:targetLevel,title:data.title,
                words:data.words.length,bible:data.bibleBoard.length,gems:gems.length,milestone}));
-             if(targetLevel!==40){await page.click('#next-level');await new Promise(r=>setTimeout(r,80))}
+             if(targetLevel!==45){await page.click('#next-level');await new Promise(r=>setTimeout(r,80))}
             }
             const stored=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')));
-            assert.equal(stored.completed.length,40);
+            assert.equal(stored.completed.length,45);
             assert(stored.claimedSparks.length>=48);
             console.log('SAVED_30_LEVELS',JSON.stringify({completed:stored.completed.length,
              claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
@@ -229,10 +230,10 @@ jobs:
              seals:[...document.querySelectorAll('#map .map-milestone-status')].length
             }));
             console.log('SCENIC_LEVEL_MAP',JSON.stringify(mapQA));
-            assert.equal(mapQA.levels,40);
-            assert.equal(mapQA.chapters,8,'Eight five-level scenic chapters');
-            assert.equal(mapQA.scenePreviews,40,'All 40 levels need illustrated map previews');
-            assert.equal(mapQA.seals,8,'All eight milestone seals must show on the level map');
+            assert.equal(mapQA.levels,45);
+            assert.equal(mapQA.chapters,9,'Nine five-level scenic chapters');
+            assert.equal(mapQA.scenePreviews,45,'All 45 levels need illustrated map previews');
+            assert.equal(mapQA.seals,9,'All nine milestone seals must show on the level map');
             await page.click('#map-x');
             for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
              await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
@@ -245,8 +246,8 @@ jobs:
             const oldBalance=await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).coins);
             await page.click('#level-map');
             await page.waitForSelector('#map[open]');
-            await page.evaluate(()=>document.querySelectorAll('#map .map-level')[39].click());
-            const replayData=await page.evaluate(()=>window.BUWTLevels36to40[4]);
+            await page.evaluate(()=>document.querySelectorAll('#map .map-level')[44].click());
+            const replayData=await page.evaluate(()=>window.BUWTLevels41to45[4]);
             for(const [word] of replayData.words)await play(word);
             await page.waitForSelector('#finish[open]',{timeout:13000});
             assert.equal(await page.$eval('#finish-reward',e=>e.textContent),'Replay complete');
