@@ -312,7 +312,7 @@
           "text": "The NWT calls the payment 20 pieces of this metal; it doesn't describe minted coins."
         }
       ],
-      "explanation": "Joseph was sold for 20 pieces of silver. Genesis mentions both Midianite merchants and Ishmaelites in the trading account; it doesn't describe two separate sales at the pit. Reuben returned afterward and found Joseph gone. His distress reminds us that his intention to rescue Joseph hadn't protected him from the sale.",
+      "explanation": "Joseph was sold for 20 pieces of silver. Reuben returned to the pit afterward and found him gone. His plan to bring Joseph home hadn't protected him from the sale. Joseph was being taken toward Egypt alive, but as a slave. His own brothers had traded away his freedom.",
       "tone": "conversational_story",
       "graphicViolence": false
     },
@@ -503,7 +503,7 @@
     "g14-d09": {
       "answer": "SILVER",
       "clue": "Which metal was used for the 20 pieces paid when Joseph was sold?",
-      "explanation": "Joseph was sold for 20 pieces of silver. Genesis mentions both Midianite merchants and Ishmaelites in the trading account; it doesn't describe two separate sales at the pit. Reuben returned afterward and found Joseph gone. His distress reminds us that his intention to rescue Joseph hadn't protected him from the sale.",
+      "explanation": "Joseph was sold for 20 pieces of silver. Reuben returned to the pit afterward and found him gone. His plan to bring Joseph home hadn't protected him from the sale. Joseph was being taken toward Egypt alive, but as a slave. His own brothers had traded away his freedom.",
       "hint1": "The price wasn't paid in livestock or grain.",
       "hint2": "It's a precious metal, but the passage doesn't say gold.",
       "hint3": "The NWT calls the payment 20 pieces of this metal; it doesn't describe minted coins.",
@@ -749,7 +749,7 @@
       },
       "g14-d09": {
         "reference": "Genesis 37:28–30",
-        "reviewNote": "Twenty pieces of silver and Reuben returning afterward are explicit. Use pieces not minted coins. Avoid inventing multiple transactions from the Midianite/Ishmaelite wording.",
+        "reviewNote": "Twenty pieces of silver and Reuben returning afterward are explicit. Use pieces not minted coins. Avoid inventing multiple transactions from the Midianite/Ishmaelite wording. Separate read-aloud revision centers the price, failed rescue and loss of freedom rather than an unnecessary discussion of trader labels.",
         "claimType": "explicit Scripture; definitions and observations are original commentary, not quotation",
         "answerLogic": "SILVER answers the specific clue, with a native wheel containing its complete letter multiset. No alternative spelling required.",
         "hintReview": "Context, narrower evidence, then strongest specific clue; no complete answer or purchased letters. Native free/15/25 token ladder retained.",
