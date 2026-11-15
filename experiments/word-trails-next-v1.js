@@ -284,17 +284,17 @@ function renderNextSealProgress(){
  const mapLabel=$('wt-map-seal-title'),mapDetail=$('wt-map-seal-detail'),
   mapBar=$('wt-map-seal-track'),mapFill=$('wt-map-seal-fill'),
   finishLabel=$('finish-next-seal');
- if(mapLabel)mapLabel.textContent=seal.all?'✦ All nine Journey Seals collected':
+ if(mapLabel)mapLabel.textContent=seal.all?'✦ All ten Journey Seals collected':
   'NEXT JOURNEY SEAL · '+seal.title;
  if(mapDetail)mapDetail.textContent=seal.all?'Your 50-level journey is complete!':
   seal.done+' of '+seal.goal+' levels completed · +60 bonus TEST coins at Level '+seal.target;
  if(mapBar){
   mapBar.setAttribute('aria-valuenow',String(seal.done));
-  mapBar.setAttribute('aria-label',seal.all?'All nine Journey Seals collected':
+  mapBar.setAttribute('aria-label',seal.all?'All ten Journey Seals collected':
    seal.title+': '+seal.done+' of 5 levels complete');
  }
  if(mapFill)mapFill.style.width=(seal.done/seal.goal*100)+'%';
- if(finishLabel)finishLabel.textContent=seal.all?'✦ All nine Journey Seals collected!':
+ if(finishLabel)finishLabel.textContent=seal.all?'✦ All ten Journey Seals collected!':
   'UP NEXT · '+seal.title+' · '+seal.done+'/5 levels toward your next seal';
 }
 let found=new Set(),bonuses=new Set(),hinted=new Set(),chosen=[],letters=[],combo=0;
