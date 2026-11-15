@@ -57,9 +57,13 @@ jobs:
              await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
                document.getElementById('home-cross'),{timeout:85000});
              await page.evaluate(()=>document.getElementById('home-cross').click());
-             await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
-               document.getElementById('bu-wt-native-game')?.contentWindow?.document
-                 .getElementById('level-label')?.textContent?.includes('/ 30'),{timeout:85000});
+             await page.waitForFunction(()=>{
+               const child=document.getElementById('bu-wt-native-game')?.contentWindow;
+               return !!window.BUWTNativeShell?.active?.() &&
+                 !!child?.BUWTAnnouncer && !!child?.BUWTWheelNative &&
+                 child?.document?.getElementById('level-label')?.textContent?.includes('/ 30') &&
+                 child?.document?.querySelectorAll('#wheel .wheel-letter').length >= 4;
+             },{timeout:85000});
              const state=await page.evaluate(()=>{
                const frame=document.getElementById('bu-wt-native-game');
                const child=frame.contentWindow,doc=child.document;
