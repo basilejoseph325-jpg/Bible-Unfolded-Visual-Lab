@@ -200,7 +200,7 @@
       ],
       "interaction": {
         "type": "word_connect",
-        "prompt": "Jacob sent Esau's animals in separate traveling groups. What were those groups called?",
+        "prompt": "Jacob sent animals to Esau in separate traveling groups. What were those groups called?",
         "answer": "DROVES"
       },
       "progressiveHints": [
@@ -512,7 +512,7 @@
       "reference": "Genesis 32:9–10"
     },
     "g12-d06": {
-      "clue": "Jacob sent Esau's animals in separate traveling groups. What were those groups called?",
+      "clue": "Jacob sent animals to Esau in separate traveling groups. What were those groups called?",
       "answer": "DROVES",
       "explanation": "Jacob arranged the gift in separate droves so the groups would arrive one after another. He hoped the gift would help Esau receive him kindly; the Bible explains Jacob's thinking rather than guaranteeing how Esau would respond.",
       "hint1": "The animals did not all move together.",
