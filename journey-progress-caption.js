@@ -283,3 +283,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 
 /* Bible Books Made Simple: isolated homepage entry for separate reading library. */
 (()=>{'use strict';if(document.getElementById('bu-books-made-simple-card-loader'))return;const s=document.createElement('script');s.id='bu-books-made-simple-card-loader';s.defer=true;s.src='bible-books-made-simple-card-v1.js?v=20261114-books-home-card-v1';document.head.appendChild(s)})();
+
+/* Genesis 32–33 Story Adventure native preview: opt-in development only.
+ * The public Genesis/Journey locks and main game remain unchanged. */
+(()=>{'use strict';
+  if(new URLSearchParams(location.search).get('bu_story_dev')!=='genesis12')return;
+  if(document.getElementById('bu-genesis12-dev-loader'))return;
+  const script=document.createElement('script');
+  script.id='bu-genesis12-dev-loader';
+  script.src='story-adventure-content/genesis-episode12-native-preview.js?v=dev-20261115-1';
+  script.async=false;
+  document.head.appendChild(script);
+})();

@@ -58,6 +58,12 @@ jobs:
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
         run: node scripts/qa_genesis11_three_thinking_hints_v1.cjs
+      - name: Genesis 12 candidate source and wheel configuration
+        run: node scripts/qa_genesis12_content_candidate.cjs
+      - name: Genesis 12 DEV preview — 13 working wheels and reload at two sizes
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_genesis12_native_preview.cjs
       - name: Preserve other modes against baseline
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
