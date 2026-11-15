@@ -1,0 +1,537 @@
+{
+  "schemaVersion": "1.0.0",
+  "chapterId": "genesis_ep11",
+  "chapterNumber": 11,
+  "title": "Jacob's Years in Haran",
+  "coverage": "Genesis 29–31",
+  "translation": "New World Translation (2013 revision), jw.org",
+  "contentStatus": "artwork_and_native_integration_pending",
+  "saveKey": "bible-unfolded-genesis-adventure-v3860",
+  "rules": "Use original Story Adventure wheel, free contextual hint + 15 and 25-token thinking hints, no letter purchase on Episode 11; only JW.org links, no new game mode",
+  "discoveries": [
+    {
+      "id": "g11-d01",
+      "sequence": 1,
+      "title": "The Stone at the Well",
+      "narration": "Jacob reaches the land of the people of the East and sees shepherds beside a well. A large stone covers its opening. Then Rachel arrives with her father's sheep! Jacob moves the stone and waters her flock. What a way to meet a relative.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:1–10",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob roll away before watering Rachel's sheep?",
+        "answer": "STONE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The flocks had gathered, but they still couldn't drink."
+        },
+        {
+          "level": 2,
+          "text": "Something heavy covered the water."
+        },
+        {
+          "level": 3,
+          "text": "Jacob moved it away from the mouth of the well."
+        }
+      ],
+      "explanation": "Jacob rolled the large stone away from the mouth of the well and watered the sheep belonging to Laban. The Bible doesn't tell us that the shepherds couldn't have moved it—only that Jacob did. (Genesis 29:1–10)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d02",
+      "sequence": 2,
+      "title": "A Welcome in Haran",
+      "narration": "Rachel runs to tell Laban that Rebekah's son has arrived. Laban hurries to meet Jacob, embraces him, and brings him home. Jacob has traveled far, but here he finds relatives who recognize him.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:11–14",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "After his long trip, Jacob found his mother's relatives. What kind of bond connected them?",
+        "answer": "FAMILY"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Laban already knew Jacob's mother."
+        },
+        {
+          "level": 2,
+          "text": "Their connection wasn't a business arrangement."
+        },
+        {
+          "level": 3,
+          "text": "Rebekah and Laban belonged to the same household of relatives."
+        }
+      ],
+      "explanation": "Laban was Rebekah's brother, and Jacob was Rebekah's son. Laban welcomed Jacob into his house after hearing who he was. (Genesis 29:12–14)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d03",
+      "sequence": 3,
+      "title": "Seven Years That Felt Short",
+      "narration": "Jacob loves Rachel. Laban asks him to name his wages, so Jacob offers to work seven years to marry her. The Bible says those years seemed like just a few days to him because he loved her. Seven years! That's a remarkable way to describe a long wait.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:15–20",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What made seven years of work feel like only a few days to Jacob?",
+        "answer": "LOVE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Think about how Jacob felt toward Rachel."
+        },
+        {
+          "level": 2,
+          "text": "Long work can feel different when the reason matters deeply."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 29:20 gives his affection as the reason."
+        }
+      ],
+      "explanation": "Jacob worked seven years for Rachel, but the time seemed short because he loved her. That's the reason Genesis 29:20 itself gives. (Genesis 29:18–20)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d04",
+      "sequence": 4,
+      "title": "The Morning Surprise",
+      "narration": "The seven years end, and Laban holds a feast. But during the evening, he brings Leah instead of Rachel. When morning comes, Jacob discovers what happened and confronts Laban. The Bible doesn't soften that deception.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:21–26",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Whom did Laban bring to Jacob instead of Rachel?",
+        "answer": "LEAH"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "It was Laban's older daughter."
+        },
+        {
+          "level": 2,
+          "text": "The two sisters were not treated fairly by Laban's decision."
+        },
+        {
+          "level": 3,
+          "text": "Her name is given in Genesis 29:23–25."
+        }
+      ],
+      "explanation": "During the evening, Laban brought Leah to Jacob. Jacob discovered the deception in the morning and asked Laban why he had tricked him. (Genesis 29:21–26)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d05",
+      "sequence": 5,
+      "title": "A Difficult Agreement",
+      "narration": "Laban tells Jacob he can also marry Rachel after Leah's wedding week—but Jacob must work seven more years. Jacob agrees. The account doesn't invite us to pretend the family situation was simple; it tells us what happened.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:27–30",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jacob agree to give Laban for another seven years?",
+        "answer": "SERVICE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Jacob's payment wasn't a bag of coins."
+        },
+        {
+          "level": 2,
+          "text": "He was expected to keep working for Laban."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 29:30 describes another seven years of work."
+        }
+      ],
+      "explanation": "Laban required Jacob to serve seven more years after he was given Rachel as a wife. (Genesis 29:27–30)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d06",
+      "sequence": 6,
+      "title": "Leah Gives Thanks",
+      "narration": "Leah feels the pain of being less loved. She becomes the mother of Reuben, Simeon, Levi, and Judah. When Judah is born, she says something beautiful: this time, she will praise Jehovah.",
+      "scripture": [
+        {
+          "reference": "Genesis 29:31–35",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "When Judah was born, what did Leah say she would give Jehovah?",
+        "answer": "PRAISE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Leah wasn't talking about getting more possessions."
+        },
+        {
+          "level": 2,
+          "text": "She wanted to honor Jehovah with her words."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 29:35 records an expression of gratitude to God."
+        }
+      ],
+      "explanation": "At the birth of Judah, Leah said that she would praise Jehovah. The Bible records her hurt as well as this expression of thanks. (Genesis 29:31–35)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d07",
+      "sequence": 7,
+      "title": "Rachel Welcomes Joseph",
+      "narration": "Rachel has waited so long for a child. The account says God remembers her and hears her. At last she has a son, and she calls him Joseph. Imagine the relief and happiness she must have felt!",
+      "scripture": [
+        {
+          "reference": "Genesis 30:22–24",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/30/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Rachel name the son born after God heard her?",
+        "answer": "JOSEPH"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "She had long hoped to become a mother."
+        },
+        {
+          "level": 2,
+          "text": "The name she chose also appears later in Genesis as a major Bible character."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 30:24 gives the child's name."
+        }
+      ],
+      "explanation": "God enabled Rachel to become pregnant and she gave birth to Joseph. She said Jehovah was adding another son to her. (Genesis 30:22–24)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d08",
+      "sequence": 8,
+      "title": "A Flock of His Own",
+      "narration": "Jacob wants to provide for his own household after years of work for Laban. They make an agreement about which animals will count as Jacob's wages. The spotted, patched, and dark-colored animals matter a lot in this chapter.",
+      "scripture": [
+        {
+          "reference": "Genesis 30:25–43",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/30/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which kind of marked animals were included in Jacob's agreed wages?",
+        "answer": "SPECKLED"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Not all the animals in the agreement had one plain coat."
+        },
+        {
+          "level": 2,
+          "text": "Think of small spots and patches among the sheep and goats."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 30:32 mentions animals with scattered spots."
+        }
+      ],
+      "explanation": "Jacob and Laban agreed that speckled, color-patched, and some dark-colored animals would be counted as Jacob's wages. The flocks grew in the years that followed. (Genesis 30:31–43)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d09",
+      "sequence": 9,
+      "title": "Jehovah Says Go Home",
+      "narration": "Things aren't going well between Jacob and Laban. Jacob sees that Laban's attitude has changed. Then Jehovah tells Jacob to return to the land of his relatives and promises to stay with him. Jacob speaks with Rachel and Leah, and they support the decision.",
+      "scripture": [
+        {
+          "reference": "Genesis 31:1–18",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/31/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What did Jehovah tell Jacob to do when it was time to leave Laban's household?",
+        "answer": "RETURN"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Jehovah wasn't telling Jacob to remain where he was."
+        },
+        {
+          "level": 2,
+          "text": "The journey would take him toward his family and homeland."
+        },
+        {
+          "level": 3,
+          "text": "He was told to go back to the land of his fathers."
+        }
+      ],
+      "explanation": "Jehovah told Jacob to return to the land of his fathers and relatives, promising to be with him. Jacob then explained the situation to Rachel and Leah. (Genesis 31:1–18)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g11-d10",
+      "sequence": 10,
+      "title": "A Peaceful Parting",
+      "narration": "Laban catches up with Jacob after the family leaves. Both men have plenty to say, and the discussion becomes tense. Finally, they make a formal agreement and set up stones as a witness. It's an important step toward parting without further conflict.",
+      "scripture": [
+        {
+          "reference": "Genesis 31:22–55",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/31/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What formal agreement did Jacob and Laban make before parting?",
+        "answer": "COVENANT"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "It marked the end of their argument with a serious commitment."
+        },
+        {
+          "level": 2,
+          "text": "The heap of stones served as a witness to their promise."
+        },
+        {
+          "level": 3,
+          "text": "Genesis 31:44 describes making a formal bond between the men."
+        }
+      ],
+      "explanation": "Jacob and Laban made a covenant. They set up a pillar and a heap of stones as a witness to the agreement, and Laban returned home. (Genesis 31:43–55)",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    }
+  ],
+  "words": {
+    "g11-d01": {
+      "clue": "What did Jacob roll away before watering Rachel's sheep?",
+      "answer": "STONE",
+      "explanation": "Jacob rolled the large stone away from the mouth of the well and watered the sheep belonging to Laban. The Bible doesn't tell us that the shepherds couldn't have moved it—only that Jacob did. (Genesis 29:1–10)",
+      "hint1": "The flocks had gathered, but they still couldn't drink.",
+      "hint2": "Something heavy covered the water.",
+      "hint3": "Jacob moved it away from the mouth of the well.",
+      "basis": "scripture",
+      "reference": "Genesis 29:1–10"
+    },
+    "g11-d02": {
+      "clue": "After his long trip, Jacob found his mother's relatives. What kind of bond connected them?",
+      "answer": "FAMILY",
+      "explanation": "Laban was Rebekah's brother, and Jacob was Rebekah's son. Laban welcomed Jacob into his house after hearing who he was. (Genesis 29:12–14)",
+      "hint1": "Laban already knew Jacob's mother.",
+      "hint2": "Their connection wasn't a business arrangement.",
+      "hint3": "Rebekah and Laban belonged to the same household of relatives.",
+      "basis": "scripture",
+      "reference": "Genesis 29:11–14"
+    },
+    "g11-d03": {
+      "clue": "What made seven years of work feel like only a few days to Jacob?",
+      "answer": "LOVE",
+      "explanation": "Jacob worked seven years for Rachel, but the time seemed short because he loved her. That's the reason Genesis 29:20 itself gives. (Genesis 29:18–20)",
+      "hint1": "Think about how Jacob felt toward Rachel.",
+      "hint2": "Long work can feel different when the reason matters deeply.",
+      "hint3": "Genesis 29:20 gives his affection as the reason.",
+      "basis": "scripture",
+      "reference": "Genesis 29:15–20"
+    },
+    "g11-d04": {
+      "clue": "Whom did Laban bring to Jacob instead of Rachel?",
+      "answer": "LEAH",
+      "explanation": "During the evening, Laban brought Leah to Jacob. Jacob discovered the deception in the morning and asked Laban why he had tricked him. (Genesis 29:21–26)",
+      "hint1": "It was Laban's older daughter.",
+      "hint2": "The two sisters were not treated fairly by Laban's decision.",
+      "hint3": "Her name is given in Genesis 29:23–25.",
+      "basis": "scripture",
+      "reference": "Genesis 29:21–26"
+    },
+    "g11-d05": {
+      "clue": "What did Jacob agree to give Laban for another seven years?",
+      "answer": "SERVICE",
+      "explanation": "Laban required Jacob to serve seven more years after he was given Rachel as a wife. (Genesis 29:27–30)",
+      "hint1": "Jacob's payment wasn't a bag of coins.",
+      "hint2": "He was expected to keep working for Laban.",
+      "hint3": "Genesis 29:30 describes another seven years of work.",
+      "basis": "scripture",
+      "reference": "Genesis 29:27–30"
+    },
+    "g11-d06": {
+      "clue": "When Judah was born, what did Leah say she would give Jehovah?",
+      "answer": "PRAISE",
+      "explanation": "At the birth of Judah, Leah said that she would praise Jehovah. The Bible records her hurt as well as this expression of thanks. (Genesis 29:31–35)",
+      "hint1": "Leah wasn't talking about getting more possessions.",
+      "hint2": "She wanted to honor Jehovah with her words.",
+      "hint3": "Genesis 29:35 records an expression of gratitude to God.",
+      "basis": "scripture",
+      "reference": "Genesis 29:31–35"
+    },
+    "g11-d07": {
+      "clue": "What did Rachel name the son born after God heard her?",
+      "answer": "JOSEPH",
+      "explanation": "God enabled Rachel to become pregnant and she gave birth to Joseph. She said Jehovah was adding another son to her. (Genesis 30:22–24)",
+      "hint1": "She had long hoped to become a mother.",
+      "hint2": "The name she chose also appears later in Genesis as a major Bible character.",
+      "hint3": "Genesis 30:24 gives the child's name.",
+      "basis": "scripture",
+      "reference": "Genesis 30:22–24"
+    },
+    "g11-d08": {
+      "clue": "Which kind of marked animals were included in Jacob's agreed wages?",
+      "answer": "SPECKLED",
+      "explanation": "Jacob and Laban agreed that speckled, color-patched, and some dark-colored animals would be counted as Jacob's wages. The flocks grew in the years that followed. (Genesis 30:31–43)",
+      "hint1": "Not all the animals in the agreement had one plain coat.",
+      "hint2": "Think of small spots and patches among the sheep and goats.",
+      "hint3": "Genesis 30:32 mentions animals with scattered spots.",
+      "basis": "scripture",
+      "reference": "Genesis 30:25–43"
+    },
+    "g11-d09": {
+      "clue": "What did Jehovah tell Jacob to do when it was time to leave Laban's household?",
+      "answer": "RETURN",
+      "explanation": "Jehovah told Jacob to return to the land of his fathers and relatives, promising to be with him. Jacob then explained the situation to Rachel and Leah. (Genesis 31:1–18)",
+      "hint1": "Jehovah wasn't telling Jacob to remain where he was.",
+      "hint2": "The journey would take him toward his family and homeland.",
+      "hint3": "He was told to go back to the land of his fathers.",
+      "basis": "scripture",
+      "reference": "Genesis 31:1–18"
+    },
+    "g11-d10": {
+      "clue": "What formal agreement did Jacob and Laban make before parting?",
+      "answer": "COVENANT",
+      "explanation": "Jacob and Laban made a covenant. They set up a pillar and a heap of stones as a witness to the agreement, and Laban returned home. (Genesis 31:43–55)",
+      "hint1": "It marked the end of their argument with a serious commitment.",
+      "hint2": "The heap of stones served as a witness to their promise.",
+      "hint3": "Genesis 31:44 describes making a formal bond between the men.",
+      "basis": "scripture",
+      "reference": "Genesis 31:22–55"
+    }
+  },
+  "artPlan": {
+    "g11-d01": {
+      "filename": "g11-d01.webp",
+      "brief": "Wide cinematic first-century-BCE ancient Near Eastern countryside at a stone-capped well, adult Jacob in simple woven tunic pushing the large circular well-cover stone aside while young adult shepherdess Rachel with sheep approaches from the distance, no romantic embracing; realistic hands, semi-arid hills, sheep, historical pastoral setting",
+      "alt": "Jacob removes a large stone from a well as Rachel approaches with her father's sheep",
+      "reference": "Genesis 29:1–10",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d02": {
+      "filename": "g11-d02.webp",
+      "brief": "Warm documentary portrait ancient Near East adult male Jacob with travel cloak standing at doorway of a modest cloth-and-mudbrick pastoral dwelling as older Laban greets him with open arms; Rachel nearby, natural body language, warm daylight",
+      "alt": "Laban greets his nephew Jacob at the entrance to his household",
+      "reference": "Genesis 29:11–14",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d03": {
+      "filename": "g11-d03.webp",
+      "brief": "Cinematic historical pastoral hillside, adult Jacob shepherding sheep with staff and Laban's pasture, distant Rachel observing sheep near family tents, respectful distant gaze between couple, golden late afternoon and sense of time passing, natural realistic scene no wedding",
+      "alt": "Jacob shepherds a flock during the seven years he worked to marry Rachel",
+      "reference": "Genesis 29:15–20",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d04": {
+      "filename": "g11-d04.webp",
+      "brief": "Respectful ancient Near Eastern morning scene outside family tents: adult Jacob looking shocked as older Laban talks with him in a tense but nonviolent conversation; adult Leah at a distance near a tent entrance, face not shamed or mocked, daylight realistic single scene, no bed or suggestive content",
+      "alt": "Jacob questions Laban after learning he had been deceived about his marriage",
+      "reference": "Genesis 29:21–26",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d05": {
+      "filename": "g11-d05.webp",
+      "brief": "Historically grounded old Near Eastern sheepfold at sunrise, adult Jacob caring attentively for a flock, older Laban observing their livestock from opposite side of fence, simple tents and low hills, no exaggerated conflict or romanticized plural marriage",
+      "alt": "Jacob continues working for Laban by tending the family's sheep",
+      "reference": "Genesis 29:27–30",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d06": {
+      "filename": "g11-d06.webp",
+      "brief": "Single quiet historical interior of an ancient Near Eastern tent: adult Leah in modest woven clothing holding swaddled newborn infant Judah, calm thoughtful expression, gentle daylight through woven tent opening, small domestic vessels, empathetic scene, no deformed anatomy, infant normal size and hands",
+      "alt": "Leah holds her newborn son Judah, reflecting on her gratitude to Jehovah",
+      "reference": "Genesis 29:31–35",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d07": {
+      "filename": "g11-d07.webp",
+      "brief": "Warm realistic historical family scene adult Rachel sitting comfortably cradling a swaddled healthy newborn while adult Jacob stands nearby smiling gently, simple ancient Near Eastern tent interior woven textiles, anatomically correct normal abdomen, no extra hands, dignified no fantasy",
+      "alt": "Rachel holds baby Joseph while Jacob stands nearby",
+      "reference": "Genesis 30:22–24",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d08": {
+      "filename": "g11-d08.webp",
+      "brief": "Photorealistic ancient near eastern pasture with adult Jacob inspecting a mixed flock of speckled goats spotted sheep and dark lambs near simple wood fence, markings physically realistic, Laban in distance near tents, warm dawn single wide scene",
+      "alt": "Jacob examines the speckled and color-patched animals that were part of his wages",
+      "reference": "Genesis 30:25–43",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d09": {
+      "filename": "g11-d09.webp",
+      "brief": "Historic ancient Near Eastern caravan preparing to leave pasture camp, adult Jacob talks respectfully to adult Rachel and adult Leah beside pack animals and sheep, wide semi-arid scenery, family tents and bundled belongings, natural modest costumes, daytime",
+      "alt": "Jacob discusses returning home with Rachel and Leah as their household prepares to travel",
+      "reference": "Genesis 31:1–18",
+      "width": 640,
+      "height": 360
+    },
+    "g11-d10": {
+      "filename": "g11-d10.webp",
+      "brief": "Photorealistic ancient Near East historical Gilead hills, adult Jacob and older Laban standing in respectful but guarded agreement beside a waist-high rough heap of stones and a single upright witness pillar, other shepherds far back, sunset, no clasped unnatural fingers, no writing text, no fantasy",
+      "alt": "Jacob and Laban stand beside their heap of witness stones following their agreement",
+      "reference": "Genesis 31:22–55",
+      "width": 640,
+      "height": 360
+    }
+  }
+}
