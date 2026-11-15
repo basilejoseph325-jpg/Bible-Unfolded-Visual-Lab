@@ -15,7 +15,7 @@
       "narration": "Abraham dies at 175 years old. Isaac and Ishmael bury their father, and Jehovah continues to bless Isaac. Abraham's life has ended, but Jehovah's promise hasn't.",
       "scripture": [
         {
-          "reference": "Genesis 25:7–11",
+          "reference": "Genesis 25:7–11; 17:19–21",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
         }
       ],
@@ -61,7 +61,7 @@
           "text": "Genesis 25:11 tells us Jehovah blessed Isaac afterward."
         }
       ],
-      "explanation": "Genesis 25:7–11 describes Abraham's death, his burial by Isaac and Ishmael, and Jehovah's continued blessing on Isaac.",
+      "explanation": "Isaac and Ishmael buried Abraham together, and God continued blessing Isaac after his father's death. Abraham's life had ended, but the promise concerning his offspring continued through the next generation.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -203,7 +203,7 @@
           "text": "Genesis 25:28 says which son Isaac loved."
         }
       ],
-      "explanation": "Genesis 25:27, 28 describes each brother and records the parents' preferences.",
+      "explanation": "Esau was a skilled hunter; Jacob lived in tents. Isaac favored Esau, while Rebekah favored Jacob. Those family preferences help us follow the later struggle over the blessing.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -265,7 +265,7 @@
           "text": "Esau swears before he eats the bread and stew."
         }
       ],
-      "explanation": "Genesis 25:29–34 records Esau selling his birthright to Jacob for bread and lentil stew. The Bible says Esau despised the birthright.",
+      "explanation": "The birthright was Esau's standing as firstborn. Jacob asked for it, and Esau swore that he would sell it for the meal. Genesis adds its own judgment: Esau despised that birthright.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -278,6 +278,10 @@
         {
           "reference": "Genesis 26:1–6",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/26/"
+        },
+        {
+          "reference": "Genesis 12:10–15",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/12/"
         }
       ],
       "interaction": {
@@ -327,7 +331,7 @@
           "text": "Do not choose a move to Egypt; Jehovah told him not to go there."
         }
       ],
-      "explanation": "Genesis 26:1–6 describes the famine, Jehovah's direction to Isaac, and the promise that all nations would receive a blessing through his offspring.",
+      "explanation": "Along with the instruction about where to live, Jehovah renewed the oath he'd sworn to Abraham. Isaac stayed in Gerar as a foreigner, with the promise still looking ahead to his offspring.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -389,7 +393,7 @@
           "text": "The final well in this sequence is called Rehoboth."
         }
       ],
-      "explanation": "Genesis 26:12–22 describes Isaac's prosperity, the wells stopped up by the Philistines, disputes over water, and a well Isaac named Rehoboth.",
+      "explanation": "Rehoboth means Broad Places. Two earlier wells had brought quarrels, but this one wasn't disputed. Isaac linked its name with Jehovah having given them ample room.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -451,7 +455,7 @@
           "text": "The news about the well comes after the agreement."
         }
       ],
-      "explanation": "Genesis 26:23–33 tells us about Jehovah's reassurance, Isaac's altar, the peaceful agreement, and a newly found well.",
+      "explanation": "Abimelech's delegation acknowledged that Jehovah was with Isaac. After sharing a meal, the men swore to one another the next morning and parted in peace. Their agreement followed the earlier disputes.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -462,7 +466,7 @@
       "narration": "Isaac has grown old, and his eyesight is weak. He sends Esau to hunt and prepare food. Rebekah overhears him and prepares another plan for Jacob. Things are about to become complicated for this family.",
       "scripture": [
         {
-          "reference": "Genesis 27:1–17",
+          "reference": "Genesis 27:1–23",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/27/"
         }
       ],
@@ -513,7 +517,7 @@
           "text": "Choose the request, Rebekah's preparations, and the goatskins—not Isaac seeing clearly."
         }
       ],
-      "explanation": "Genesis 27:1–17 describes Isaac's weak eyesight, the request he makes to Esau, and Rebekah's preparations for Jacob.",
+      "explanation": "The disguise used both clothing and touch: Rebekah took Esau's garments and covered Jacob's hands and neck with young goats' skins. Isaac later felt Jacob's hands and didn't recognize him. The details explain how the deception worked.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -593,7 +597,7 @@
           "text": "Esau's threat is recorded in verse 41."
         }
       ],
-      "explanation": "Genesis 27:18–46 records Jacob pretending to be Esau, Isaac's blessing, Esau's reaction, and Rebekah's concern for Jacob's safety.",
+      "explanation": "Isaac's blessing spoke about abundant produce and authority within the family. Esau cried out when he learned Jacob had received it. These words mattered far beyond the meal he'd gone out to prepare.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     },
@@ -655,7 +659,7 @@
           "text": "Jacob names Bethel only after waking."
         }
       ],
-      "explanation": "Genesis 28:10–22 describes Jacob's journey, the dream, Jehovah's promise to remain with him, and Jacob naming the place Bethel.",
+      "explanation": "Bethel means House of God. Jehovah had promised to be with Jacob and bring him back to the land. Jacob marked the place with a stone pillar and made a vow before continuing his journey.",
       "tone": "exploration_not_trivia",
       "graphicViolence": false
     }
