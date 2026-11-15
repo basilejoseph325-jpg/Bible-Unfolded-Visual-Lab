@@ -43,18 +43,6 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
        active:[...document.querySelectorAll('.screen')].filter(e=>!e.hidden&&getComputedStyle(e).display!=='none').map(e=>e.id).slice(0,8),
        help:!document.getElementById('help-dialog')?.hidden
      }));
-     if(id==='home-books'){
-      const diag=await page.evaluate(()=>({
-       jamesLoaded:!!window.BUJamesReturnLoopV1,
-       jamesOwned:window.BUJamesReturnLoopV1?.inspect?.().owned,
-       jamesLoader:!!document.getElementById('bu-james-return-loop-loader'),
-       routeLoader:!!document.getElementById('bu-books-fullpage-nav-v3'),
-       nativeRoute:typeof window.focusHome,
-       hasRewardsHost:!!document.getElementById('rewards'),
-       balance:window.BUJamesReturnLoopV1?.inspect?.().balance
-      }));
-      console.log('BOOKS_CLICK_DIAGNOSTIC_'+vp.width,JSON.stringify(diag));
-     }
      await page.evaluate(id=>document.getElementById(id).click(),id);
      await new Promise(r=>setTimeout(r,200));
      const result=await page.evaluate(()=>({
