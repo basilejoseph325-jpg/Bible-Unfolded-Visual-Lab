@@ -27,6 +27,8 @@ const base=process.env.STORY_URL||'http://127.0.0.1:8893/index.html';
    const cards=[...document.querySelectorAll('#episode-list button[data-episode]')];
    return {first,now,saveKey:BU_GENESIS_KEY,allIDs:[...BU_GENESIS_IDS],cardCount:cards.length,
       lastTitle:cards.at(-1)?.textContent,thumb:cards.at(-1)?.querySelector('img')?.getAttribute('src'),
+       chapter11Title:cards.find(x=>x.dataset.episode==='10')?.textContent,
+       chapter11Thumb:cards.find(x=>x.dataset.episode==='10')?.querySelector('img')?.getAttribute('src'),
       baseExists:!!document.getElementById('home-journey'),
       booksExists:!!document.getElementById('home-books'),
       originalStory:!!document.getElementById('play'),
@@ -36,10 +38,12 @@ const base=process.env.STORY_URL||'http://127.0.0.1:8893/index.html';
   assert.equal(original.first,40,'All existing Genesis Episodes 7-10 answers preserved');
   assert.equal(original.now,10);
   assert.equal(original.saveKey,'bible-unfolded-genesis-adventure-v3860');
-  assert.deepEqual(original.allIDs,['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10','genesis_ep11']);
-  assert.equal(original.cardCount,11);
-  assert(original.lastTitle?.includes("Jacob's Years in Haran"));
-  assert(original.thumb?.endsWith('story-adventure-art/genesis11/g11-d01.webp'));
+  assert.deepEqual(original.allIDs,['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10','genesis_ep11','genesis_ep12']);
+  assert.equal(original.cardCount,12);
+  assert(original.chapter11Title?.includes("Jacob's Years in Haran"));
+  assert(original.chapter11Thumb?.endsWith('story-adventure-art/genesis11/g11-d01.webp'));
+  assert(original.lastTitle?.includes('Jacob and Esau'));
+  assert(original.thumb?.endsWith('story-adventure-art/genesis12/g12-d01.webp'));
   assert(original.baseExists&&original.booksExists&&original.originalStory&&original.noNehemiah);
   assert.equal(original.previousTitle,'Jacob and Esau');
   // The original episode10 ending must lead to Episode11.
