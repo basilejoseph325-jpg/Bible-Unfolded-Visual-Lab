@@ -1,0 +1,99 @@
+name: Genesis 14 isolated candidate (no deployment)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'genesis-episode14-preview.html'
+      - 'story-adventure-content/genesis-episode14-*'
+      - 'story-adventure-art/genesis14/**'
+      - 'scripts/qa_genesis14_*'
+      - '.github/workflows/qa-genesis14-candidate.yml'
+permissions:
+  contents: read
+jobs:
+  candidate:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NODE_PATH: '${{ github.workspace }}/work/node_modules'
+      STORY_URL: http://127.0.0.1:8899/index.html
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start local candidate server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8899 --bind 127.0.0.1 > work/http-g14.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8899/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Native syntax, content and unapproved art checks
+        run: |
+          node --check story-adventure-content/genesis-episode14-native-preview.js
+          node scripts/check_story_sources.cjs
+          node scripts/qa_genesis14_content_candidate.cjs
+      - name: Protect baseline files, prior saves, mode gameplay and audio controls
+        run: node scripts/qa_genesis14_boundaries.cjs
+      - name: Twelve discoveries, all hints, wrong answers, rewards, touch, resume and finale
+        env:
+          STORY_SHOTS: '1'
+          STORY_EVIDENCE: work/genesis14-native-evidence.json
+        run: node scripts/qa_genesis14_native_preview.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: genesis14-native-evidence
+          path: |
+            work/genesis14-native-evidence.json
+            work/genesis14-*.png
+          if-no-files-found: ignore
+  story-regression:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NODE_PATH: '${{ github.workspace }}/work/node_modules'
+      STORY_URL: http://127.0.0.1:8899/index.html
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start local candidate server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8899 --bind 127.0.0.1 > work/http-g14.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8899/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Both Story engines including Episodes 1–14 at 320px and 430px
+        env:
+          STORY_EVIDENCE: work/genesis14-full-story-evidence.json
+        run: node scripts/qa_genesis14_story_regression.cjs
+      - name: Unchanged Episode 13 and Episode 12 gameplay suites
+        run: |
+          node scripts/qa_genesis13_public_integration.cjs
+          node scripts/qa_genesis12_native.cjs
+      - name: Existing Word Trails native audio and wheel ownership
+        env:
+          BU_WT_NATIVE_PARITY_URL: http://127.0.0.1:8899/index.html
+        run: node scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: genesis14-full-story-evidence
+          path: work/genesis14-full-story-evidence.json
+          if-no-files-found: ignore
