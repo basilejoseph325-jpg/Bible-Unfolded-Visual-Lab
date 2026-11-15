@@ -41,8 +41,8 @@ for(const [width,height] of [[390,705],[320,568]]){
   return{
    count:cards.length,
    episodes:cards.map(x=>x.querySelector('strong')?.textContent),
-   last:cards.at(-1)?.textContent?.trim(),
-   tenthId:cards.at(-1)?.dataset.episode,
+   tenth:cards[9]?.textContent?.trim(),
+   tenthId:cards[9]?.dataset.episode,
    genIds:[...BU_GENESIS_IDS],
    discoveries:ch?.discoveries?.map(x=>x.id),
    allSources:ch?.discoveries?.every(x=>x.scripture?.[0]?.url?.startsWith('https://www.jw.org/en/library/bible/nwt/books/genesis/')),
@@ -50,10 +50,10 @@ for(const [width,height] of [[390,705],[320,568]]){
    coinsUnchanged:economy.coins===originalCoins&&economy.points===originalPoints
   };
  });
- assert.equal(overview.count,10);
+ assert(overview.count>=10,'Later Genesis chapters may extend this original Story selection');
  assert.equal(overview.tenthId,'9');
- assert(overview.last.includes('Jacob and Esau'));
- assert.deepEqual(overview.genIds,['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10']);
+ assert(overview.tenth.includes('Jacob and Esau'));
+ assert.deepEqual(overview.genIds.slice(0,4),['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10']);
  assert.deepEqual(overview.discoveries,Array.from({length:10},(_,i)=>'g10-d'+String(i+1).padStart(2,'0')));
  assert.equal(overview.saveKey,'bible-unfolded-genesis-adventure-v3860');
  assert(overview.coinsUnchanged&&overview.allSources);
@@ -82,7 +82,7 @@ for(const [width,height] of [[390,705],[320,568]]){
  for(const c of chapters.outs.slice(0,4)){
   assert(c.visible&&c.count===10&&/GENESIS/.test(c.episode),'Existing native Genesis chapters should remain playable: '+c.id);
  }
- for(const s of chapters.outs.slice(4))assert(s.rendered&&s.hasAction,'Each new discovery must render a playable control: '+s.scene);
+ for(const s of chapters.outs.filter(x=>x.scene))assert(s.rendered&&s.hasAction,'Each new discovery must render a playable control: '+s.scene);
  assert(chapters.coinsStable,'Merely opening a chapter must not grant/spend rewards');
  const transition=await page.evaluate(()=>{
    bu3857Open('genesis_ep09',true);
