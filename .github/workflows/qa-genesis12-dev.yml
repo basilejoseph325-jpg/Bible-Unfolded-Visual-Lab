@@ -4,8 +4,10 @@ on:
   pull_request:
     paths:
       - 'story-adventure-content/genesis-episode12-*'
+      - 'story-adventure-content/genesis-episode13-*'
       - 'journey-progress-caption.js'
       - 'scripts/qa_genesis12_*'
+      - 'scripts/qa_genesis13_*'
       - '.github/workflows/qa-genesis12-dev.yml'
 permissions:
   contents: read
@@ -35,3 +37,10 @@ jobs:
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
         run: node scripts/qa_genesis12_native_preview.cjs
+
+      - name: Check Genesis 13 authored Bible wheel content
+        run: node scripts/qa_genesis13_content_candidate.cjs
+      - name: Play Genesis 13 with the native wheel in Chromium, two phone sizes
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_genesis13_native_preview.cjs
