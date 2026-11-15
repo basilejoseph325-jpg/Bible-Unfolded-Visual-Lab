@@ -7,6 +7,7 @@ on:
       - 'experiments/word-trails-next-v1.css'
       - 'experiments/word-trails-next-v1.js'
       - 'experiments/word-trails-levels-41-45-v1.js'
+      - 'experiments/word-trails-levels-46-50-v1.js'
 permissions: {contents: read}
 jobs:
   test:
@@ -258,7 +259,7 @@ jobs:
               await page.click('#level-map');
               await page.waitForSelector('#map[open]');
               const buttons=await page.$$eval('.map-level',els=>els.map(el=>({disabled:el.disabled,complete:el.classList.contains('complete')})));
-              assert.equal(buttons.length,45,'Level map should now contain forty-five cards');
+              assert.equal(buttons.length,50,'Level map should now contain fifty cards');
               assert(buttons.slice(0,11).every(x=>!x.disabled&&x.complete),'All original eleven levels must be completed');
               assert(!buttons[11].disabled&&!buttons[11].complete,'Next level 12 must be unlocked, not pre-completed');
               assert(buttons.slice(12).every(x=>x.disabled),'Later Bible levels must remain locked in the 11-level regression');
