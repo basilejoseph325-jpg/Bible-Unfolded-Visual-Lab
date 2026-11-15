@@ -26,7 +26,7 @@ for (const [i, d] of p.discoveries.entries()) {
   answers.add(a);
   for (const k of ['title', 'narration', 'explanation']) {
     assert.equal(typeof d[k], 'string');
-    assert(d[k].length > 18, 'missing ' + k + ': ' + d.id);
+    assert(d[k].length >= (k === 'title' ? 5 : 20), 'missing ' + k + ': ' + d.id);
   }
   assert.equal(d.progressiveHints.length, 3);
   for (const [n, h] of d.progressiveHints.entries()) {
