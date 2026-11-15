@@ -84,6 +84,11 @@ Historical Trivia-only campaign restrictions do not replace this Story mission.
   Record both the initial parallel test timeout and the corrected delayed-launch
   fixture in `STORY_ADVENTURE_QA_RESULTS.json`; do not hide failed attempts.
 
+- [x] Verify hosted candidate CI success on `2f7a275`: syntax, reviewed UI,
+  all player paths, touch/recovery, both hint suites and non-Story parity.
+  [Read-only workflow evidence](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43682848810).
+  This final evidence update changes documentation only; no player code or deployment.
+
 ## Outstanding acceptance — do not mark release-ready
 
 - [ ] Independent human source/editorial acceptance across all 164 discoveries.

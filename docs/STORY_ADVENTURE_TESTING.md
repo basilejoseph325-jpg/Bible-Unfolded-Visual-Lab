@@ -118,3 +118,10 @@ fresh discovery reward. Blocked wallet writes abort the paid action.
 Revert the scoped branch commits to return code to `bf101f8`; do not reset player
 storage. Older code ignores the additive recovery/receipt entries. Do not use
 `reset --hard` on a working checkout containing uncommitted player/developer work.
+
+## Verified hosted candidate
+
+The [read-only candidate workflow](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43682848810) passed all steps on `2f7a275e491b75c346cb6f48b00913717afbca51`.
+It checks out the PR candidate and uses a local HTTP server with synthetic player
+profiles. No publishing or LIVE job runs. The subsequent evidence commit changes
+only documentation; the verified game code is unchanged.

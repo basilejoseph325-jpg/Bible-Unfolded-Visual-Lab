@@ -238,7 +238,80 @@
   "releaseApproved": false,
   "existingCheckerDiscrepancy": "Legacy all-mode smoke expects an obsolete Bible Books token gate; baseline and candidate now share the reader route. Entry parity passed.",
   "retryCheckpoint": "baa0f8b",
-  "continuousIntegration": "Previous candidate run succeeded at 36e065a; refreshed candidate run pending push.",
+  "continuousIntegration": {
+    "workflow": "Story Adventure candidate (no deployment)",
+    "url": "https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43682848810",
+    "testedHead": "2f7a275e491b75c346cb6f48b00913717afbca51",
+    "status": "completed",
+    "conclusion": "success",
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/setup-node@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0",
+        "conclusion": "success"
+      },
+      {
+        "name": "Select installed browser and start local game",
+        "conclusion": "success"
+      },
+      {
+        "name": "Syntax and integrated content checks",
+        "conclusion": "success"
+      },
+      {
+        "name": "Reviewed content, compound Bible links and finale controls",
+        "conclusion": "success"
+      },
+      {
+        "name": "Both engines, 164 discoveries, two phone viewports",
+        "conclusion": "success"
+      },
+      {
+        "name": "Real browser touch, navigation, reveal payment and recovery",
+        "conclusion": "success"
+      },
+      {
+        "name": "All 30 Exodus hint ladders and source corrections",
+        "conclusion": "success"
+      },
+      {
+        "name": "Genesis 11 contextual clues at both phone sizes",
+        "conclusion": "success"
+      },
+      {
+        "name": "Preserve other modes against baseline",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/setup-node@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ],
+    "followupScope": "Documentation-only record of the verified run; player code unchanged."
+  },
   "editorialCompletionPass": {
     "date": "2026-11-15",
     "remainingDiscoveryReviews": 108,
