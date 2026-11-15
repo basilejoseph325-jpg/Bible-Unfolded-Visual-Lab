@@ -51,7 +51,7 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
       assert.equal(await page.evaluate(()=>buHQHintLetters[bu3857Current().id]),0,
         'Paid thinking hint revealed a wheel letter');
       assert(await page.evaluate(()=>
-        document.querySelector('#bu3864-modal-layer .bu3864-modal-body')?.textContent.includes('Stronger hint')===false),
+        document.querySelector('#bu3864-modal-layer button.gold-button')?.hidden===true),
         'Exhausted hint ladder still offered a purchase');
       assert.equal(await page.evaluate(()=>{
         const key='story-assist-v1:genesis_ep12:'+bu3857Current().id;
