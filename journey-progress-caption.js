@@ -305,3 +305,14 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  script.async=false;
  document.head.appendChild(script);
 })();
+
+/* Genesis 34–35: development-only native wheel entry; normal locks untouched. */
+(()=>{'use strict';
+ if(new URLSearchParams(location.search).get('bu_story_dev')!=='genesis13')return;
+ if(document.getElementById('bu-genesis13-dev-loader'))return;
+ const s=document.createElement('script');
+ s.id='bu-genesis13-dev-loader';
+ s.src='story-adventure-content/genesis-episode13-native-preview.js?v=dev-20261115-1';
+ s.async=false;
+ document.head.appendChild(s);
+})();
