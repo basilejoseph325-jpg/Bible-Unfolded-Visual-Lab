@@ -3145,11 +3145,11 @@ Object.defineProperty(window,'BUDailySeededRandom',{value:Object.freeze({hash:bu
  Object.defineProperty(window,'BUWordTrailsWordClassification',{value:Object.freeze({classify}),writable:false,configurable:false,enumerable:false});
 })();
 </script>
-<script src="bible_unfolded_core_part1.js"></script>
-<script src="bible_unfolded_core_part2.js"></script>
-<script src="bible_unfolded_core_part3.js?v=genesis11-haran-test-v1"></script>
+<script src="bible_unfolded_core_part1.js?v=story-adventure-candidate-1"></script>
+<script src="bible_unfolded_core_part2.js?v=story-adventure-candidate-1"></script>
+<script src="bible_unfolded_core_part3.js?v=story-adventure-candidate-1"></script>
 <script src="bible_unfolded_core_part4.js"></script>
-<script src="bible_unfolded_core_part5.js?v=genesis11-haran-test-v1"></script>
+<script src="bible_unfolded_core_part5.js?v=story-adventure-candidate-1"></script>
 
 
 <script id="bu3823-glitter-engine">
@@ -3909,9 +3909,10 @@ function bu3864HintButton(n){
  const btn=document.getElementById('scene-hint');if(!btn)return;
  const label=n===0?'Free hint':n===1?'Next hint: 15 Insight Tokens':n===2?'Next hint: 30 Insight Tokens':'Review hints';
  btn.textContent='💡';btn.setAttribute('aria-label',label);btn.title=label;
+ if(mode==='clue'&&document.getElementById('wheel'))updateTrace();
 }
 function bu3864Modal(title,content,opts={}){
- document.querySelector('#bu3864-modal-layer')?.remove();
+ document.querySelector('#bu3864-modal-layer')?.buClose?.();
  const layer=document.createElement('div');layer.id='bu3864-modal-layer';layer.className='bu3864-modal-layer';
  const box=document.createElement('div');box.className='bu3864-modal';box.setAttribute('role','dialog');box.setAttribute('aria-modal','true');box.setAttribute('aria-label',title);
  const x=document.createElement('button');x.className='bu3864-modal-close';x.type='button';x.setAttribute('aria-label','Close');x.textContent='×';
@@ -3925,6 +3926,7 @@ function bu3864Modal(title,content,opts={}){
  box.append(x,h,body,acts);layer.appendChild(box);document.body.appendChild(layer);
  const restore=document.activeElement;
  function close(){layer.remove();document.removeEventListener('keydown',keys);if(restore?.isConnected)restore.focus({preventScroll:true});}
+ layer.buClose=close;
  function keys(e){if(e.key==='Escape'){e.preventDefault();close()}else if(e.key==='Tab'){
   const buttons=[...layer.querySelectorAll('button')],idx=buttons.indexOf(document.activeElement);
   if(e.shiftKey&&idx===0){e.preventDefault();buttons[buttons.length-1].focus()}else if(!e.shiftKey&&idx===buttons.length-1){e.preventDefault();buttons[0].focus()}
@@ -5925,7 +5927,19 @@ window.BUScholarHintInformationController.install({
   }catch(_){try{previousChime.apply(this,args)}catch(__){}}
  };
  function normalized(n){return Math.max(0,Math.trunc(Number(n)||0));}
- function hintPopup(getLines,getPrice,purchase){
+ // Hint level and token debit share the existing wallet write. A Story checkpoint
+ // may fail independently; this durable receipt restores help without a second fee.
+ function saveStoryHelp(key,next,cost){
+  bu3824RefreshWallet();
+  const before=JSON.parse(JSON.stringify(economy));
+  const prior=normalized(economy.hints[key]);
+  if(prior>=next)return true;
+  if(normalized(economy.coins)<cost)return false;
+  economy.hints[key]=next;economy.coins-=cost;
+  if(saveEconomy()!==true){economy=before;updateWallet();return false;}
+  updateWallet();if(cost)playCoinFx('spend');return true;
+ }
+ function hintPopup(getLines,getPrice,purchase,getLabel){
   // Reuse the APPROVED Story modal chrome and actions; only replace its content.
   bu3864Modal('Discovery hint','');
   const layer=document.getElementById(hintWindowId);
@@ -5946,7 +5960,7 @@ window.BUScholarHintInformationController.install({
    body.append(warning,buy);
    const price=getPrice();
    buy.hidden=!(price>0);
-   if(price>0){buy.textContent='Stronger hint · '+price+' Insight Tokens';buy.setAttribute('aria-label','Buy stronger hint for '+price+' Insight Tokens');}
+   if(price>0){buy.textContent=(getLabel?.()||'Stronger hint')+' · '+price+' Insight Tokens';buy.setAttribute('aria-label',buy.textContent);}
   }
   buy.onclick=()=>{
    const price=getPrice();if(!price)return;
@@ -5964,7 +5978,8 @@ window.BUScholarHintInformationController.install({
   const level=()=>Math.min(3,normalized(economy.hints[key]));
   const clue=String(beat.hint||STORY_RIDDLES[beat.word]||'Read the scripture and consider the answer.').trim();
   const answer=String(beat.word||'').toUpperCase();
-  if(level()===0)storyHint(beat); // Free, uses the unchanged existing hint engine.
+  if(level()===0&&!saveStoryHelp(key,1,0)){bu3864Modal('Hints unavailable','Your hint could not be saved. No tokens were deducted. Please try again.');return;}
+  bu3864HintButton(level());
   if(document.getElementById('note'))document.getElementById('note').textContent='';
   const lines=()=>{
    const n=level(),a=[clue];
@@ -5974,8 +5989,9 @@ window.BUScholarHintInformationController.install({
   };
   const price=()=>level()===1?15:level()===2?30:0;
   hintPopup(lines,price,()=>{
-   const was=level();storyHint(beat);if(document.getElementById('note'))document.getElementById('note').textContent='';return level()>was;
-  });
+   const was=level(),cost=price();if(!saveStoryHelp(key,was+1,cost))return false;
+   bu3864HintButton(level());return level()>was;
+  },()=>level()===1?'Reveal first letter':'Reveal second letter');
  };
  // Chapters 7–9 and the Exodus discovery engine: same free-then-optional-paid structure.
  // All legacy purchase prices, saved hint counters and earned-letter visuals remain intact.
@@ -5985,7 +6001,10 @@ window.BUScholarHintInformationController.install({
   const entry=BU_HQ_WORDS[d.id]||null;
   const ep10=(st.book==='genesis_ep10'||st.book==='genesis_ep11')&&!!entry;
   const max=ep10?3:(entry?2+entry.answer.length:3);
-  const level=()=>Math.min(max,normalized(st.hints[d.id]));
+  const receipt='story-assist-v1:'+st.book+':'+d.id;
+  bu3824RefreshWallet();
+  const level=()=>Math.min(max,Math.max(normalized(st.hints[d.id]),normalized(economy.hints[receipt])));
+  st.hints[d.id]=level();
   const hintText=(n)=>{
    if(entry){
     if(n===1)return entry.hint1||'Consider the meaning behind this discovery.';
@@ -6000,6 +6019,7 @@ window.BUScholarHintInformationController.install({
    return ep10?(n===1?15:25):(entry?(n===1?15:n===2?20:25):(n===1?15:30));
   };
   if(level()===0){
+   if(!saveStoryHelp(receipt,1,0)){bu3864Modal('Hints unavailable','Your hint could not be saved. No tokens were deducted. Please try again.');return;}
    st.hints[d.id]=1;st.feedback='';bu3857Save();bu3857Render();
   }
   hintPopup(()=>{
@@ -6010,11 +6030,11 @@ window.BUScholarHintInformationController.install({
    return lines;
   },price,()=>{
    const before=level();const cost=price();if(!cost||normalized(economy.coins)<cost)return false;
-   if(!canSpend(cost,true))return false;
    const next=before+1;
+   if(!saveStoryHelp(receipt,next,cost))return false;
    if(entry&&next>=3&&!ep10)buHQHintLetters[d.id]=next-2;
    st.hints[d.id]=next;st.feedback='';bu3857Save();bu3857Render();return true;
-  });
+  },()=>entry&&!ep10&&level()>=2?'Reveal letter '+(level()-1):'Stronger hint');
  };
 })();
 </script>
@@ -7770,5 +7790,6 @@ function bu39226SourceLink(q){
 <script defer src="bible-word-challenges-visual.js?v=4"></script>
 <script defer src="word-builder-players-visual.js?v=1"></script>
 <script defer src="word-builder-landing-banner.js?v=2"></script>
+<link rel="stylesheet" href="story-adventure-assistance.css?v=1">
 <script defer src="journey-progress-caption.js?v=20261114-books-chrome-route-v4"></script>
 </body></html>

@@ -1,0 +1,688 @@
+[
+  {
+    "id": "ex10-d06",
+    "field": "narration",
+    "before": "Aaron throws down his rod. Egypt’s magic-practicing priests respond, but the outcome surprises everyone.",
+    "after": "Aaron throws down his rod, and it becomes a big snake. Egypt's magic-practicing priests try to match the sign. Watch what happens when their rods meet Aaron's.",
+    "source": [
+      {
+        "reference": "Exodus 7:8-13",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/7/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d02",
+    "field": "explanation",
+    "before": "The sixth plague showed the priests’ powerlessness. Present it through posture and worried faces, without showing sores.",
+    "after": "Even Egypt's magic-practicing priests were affected by the boils. They couldn't stand before Moses, yet Pharaoh still wouldn't listen.",
+    "source": [
+      {
+        "reference": "Exodus 9:8-12",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/9/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d05",
+    "field": "interaction.prompt",
+    "before": "Turn each compass dial to reconstruct the two winds.",
+    "after": "Match each stage to the wind that moved the locusts.",
+    "source": [
+      {
+        "reference": "Exodus 10:12-19",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d06",
+    "field": "interaction.prompt",
+    "before": "Slide the light and darkness filters over the scenes to restore the contrast.",
+    "after": "Match each scene to the light or darkness described in the account.",
+    "source": [
+      {
+        "reference": "Exodus 10:21-23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d10",
+    "field": "explanation",
+    "before": "At the Passover meal they ate roasted meat, unleavened bread, and bitter greens, ready to depart. Show the tenth plague through somber reactions, never victims.",
+    "after": "The Israelites ate the Passover meal with sandals on and staffs in hand, ready to leave. When the Egyptians urged them to go, they carried their dough before it had time to rise.",
+    "source": [
+      {
+        "reference": "Exodus 11:4-8",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/11/"
+      },
+      {
+        "reference": "Exodus 12:8-11",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      },
+      {
+        "reference": "Exodus 12:29-39",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d02",
+    "field": "explanation",
+    "before": "Jehovah considered how the people might react to war. The route illustration is conceptual, not a claim about exact ancient coordinates.",
+    "after": "The nearer road led through Philistine territory. Jehovah chose another route because the people might turn back to Egypt if they faced war. The shortest road wasn't the one he chose for them.",
+    "source": [
+      {
+        "reference": "Exodus 13:17-18",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/13/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d05",
+    "field": "explanation",
+    "before": "The account locates the camp near Pi-hahiroth, with other landmarks named. This diagram shows relative positions only, not precise geography.",
+    "after": "The Israelites camped by the sea, near Pi-hahiroth. Pharaoh thought the wilderness had trapped them. That helps us understand why he saw their camp as a chance to attack.",
+    "source": [
+      {
+        "reference": "Exodus 14:1-4",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      },
+      {
+        "reference": "Exodus 14:8-9",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d09",
+    "field": "interaction.prompt",
+    "before": "Slide the water and dry-ground panels into place to reconstruct the opened path.",
+    "after": "Match the water and dry-ground panels to their places in the crossing.",
+    "source": [
+      {
+        "reference": "Exodus 14:16",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      },
+      {
+        "reference": "Exodus 14:21-22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d09",
+    "field": "explanation",
+    "before": "Jehovah used the strong east wind; the Israelites crossed on dry ground with water on both sides. This is a visual reconstruction, not player control of the miracle.",
+    "after": "The path wasn't shallow water or mud. Jehovah drove the sea back with a strong east wind, and the Israelites crossed on dry ground, with walls of water on both sides.",
+    "source": [
+      {
+        "reference": "Exodus 14:16",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      },
+      {
+        "reference": "Exodus 14:21-22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d10",
+    "field": "explanation",
+    "before": "The Egyptian army was overwhelmed, while Israel was safe. End on the rescued people and their growing faith, without depicting bodies.",
+    "after": "Israel reached safety while the Egyptian army was overwhelmed by the returning waters. Seeing Jehovah's power moved the people to put faith in him and in Moses.",
+    "source": [
+      {
+        "reference": "Exodus 14:23-31",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g11-d05",
+    "field": "narration",
+    "before": "Laban tells Jacob he can also marry Rachel after Leah's wedding week—but Jacob must work seven more years. Jacob agrees. The account doesn't invite us to pretend the family situation was simple; it tells us what happened.",
+    "after": "Laban tells Jacob he can also marry Rachel after Leah's wedding week, in exchange for seven more years of work. Jacob agrees. He marries Rachel after the week and then serves those additional years.",
+    "source": [
+      {
+        "reference": "Genesis 29:27–30",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/29/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g11-d07",
+    "field": "narration",
+    "before": "Rachel has waited so long for a child. The account says God remembers her and hears her. At last she has a son, and she calls him Joseph. Imagine the relief and happiness she must have felt!",
+    "after": "Rachel has waited a long time for a child. God hears her and enables her to become pregnant. She gives birth to Joseph and says that God has taken away her reproach.",
+    "source": [
+      {
+        "reference": "Genesis 30:22–24",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/30/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:0",
+    "answer": "BEGINNING",
+    "field": "hint",
+    "before": "The first verse mentions a planet together with the heavens.",
+    "after": "Think of the Bible's opening words, before it describes the first creative day.",
+    "source": [
+      {
+        "reference": "Genesis 1:1–2",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:1",
+    "answer": "DIFFUSED",
+    "field": "hint",
+    "before": "It helps make day visible, even before the fourth creative period.",
+    "after": "Think of light spread through clouds, rather than coming from a clearly visible sun. This is how Insight explains the first day's light.",
+    "source": [
+      {
+        "reference": "Genesis 1:3–5",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      },
+      {
+        "reference": "Insight on the Scriptures, Creation, first creative day",
+        "url": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Creation/"
+      }
+    ],
+    "claimType": "JW publication explanation, explicitly attributed and qualified",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:2",
+    "answer": "EXPANSE",
+    "field": "hint",
+    "before": "Jehovah named this expanse Heaven; look above you.",
+    "after": "It lay between the waters below and the waters above, and Jehovah named it Heaven.",
+    "source": [
+      {
+        "reference": "Genesis 1:6–8",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:3",
+    "answer": "HABITABLE",
+    "field": "hint",
+    "before": "This becomes visible once the waters collect into seas.",
+    "after": "Think of a place where living things can survive and make their home.",
+    "source": [
+      {
+        "reference": "Genesis 1:9–10",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:4",
+    "answer": "KINDS",
+    "field": "hint",
+    "before": "Think of seed-bearing vegetation and fruit trees.",
+    "after": "The plants and fruit trees produced seeds that would grow into plants of the same group.",
+    "source": [
+      {
+        "reference": "Genesis 1:11–13",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:5",
+    "answer": "SEASONS",
+    "field": "hint",
+    "before": "Think of the greater and lesser luminaries as seen from earth.",
+    "after": "Think of recurring parts of the year, rather than individual days or whole years.",
+    "source": [
+      {
+        "reference": "Genesis 1:14–19",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:6",
+    "answer": "ABUNDANCE",
+    "field": "hint",
+    "before": "Genesis 1:20 uses a verb meaning “become full of living creatures.”",
+    "after": "The water wasn't nearly empty. Picture it teeming with many living creatures.",
+    "source": [
+      {
+        "reference": "Genesis 1:20–23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:7",
+    "answer": "MULTIPLY",
+    "field": "hint",
+    "before": "Think of creatures flying across the heavens on the fifth day.",
+    "after": "The blessing told these creatures to become many, filling the seas and the earth with more life.",
+    "source": [
+      {
+        "reference": "Genesis 1:20–23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:8",
+    "answer": "VARIETY",
+    "field": "hint",
+    "before": "These are the kinds of animals often kept by people.",
+    "after": "The verse names several groups of land animals, rather than just one uniform sort.",
+    "source": [
+      {
+        "reference": "Genesis 1:24–25",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "genesis:9",
+    "answer": "PURPOSE",
+    "field": "hint",
+    "before": "Jehovah told the first humans to bring the earth under responsible care.",
+    "after": "Jehovah gave humans work to do and something worthwhile to live for, rather than leaving them without direction.",
+    "source": [
+      {
+        "reference": "Genesis 1:26–31",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "cain:0",
+    "answer": "CAIN",
+    "field": "hint",
+    "before": "Eve said she had produced a son with Jehovah’s help; find his four-letter name.",
+    "after": "Eve's firstborn was the older brother of Abel.",
+    "source": [
+      {
+        "reference": "Genesis 4:1–2",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/4/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "moses_midian:6",
+    "answer": "REUEL",
+    "field": "hint",
+    "before": "His name is recorded immediately after the daughters returned home.",
+    "after": "He was the priest whose seven daughters returned from the well earlier than usual.",
+    "source": [
+      {
+        "reference": "Exodus 2:18–20",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/2/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "moses_midian:7",
+    "answer": "ZIPPORAH",
+    "field": "hint",
+    "before": "Her name begins with Z.",
+    "after": "She was one of the priest of Midian's daughters and became the mother of Gershom.",
+    "source": [
+      {
+        "reference": "Exodus 2:21–22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/2/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "moses_midian:8",
+    "answer": "GERSHOM",
+    "field": "hint",
+    "before": "The name begins with G and refers to his foreign residence.",
+    "after": "Moses explained the name by saying he was a foreign resident in a foreign land.",
+    "source": [
+      {
+        "reference": "Exodus 2:22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/2/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "moses_bush:1",
+    "answer": "HOREB",
+    "field": "hint",
+    "before": "This mountain is named in Exodus 3:1.",
+    "after": "This was called the mountain of the true God. Moses had led his flock there.",
+    "source": [
+      {
+        "reference": "Exodus 3:1",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/3/"
+      }
+    ],
+    "claimType": "explicit Scripture or a plain-language summary of the cited detail",
+    "reason": "Align clue with actual answer; replace obsolete positional or letter-count/name-prefix help.",
+    "answerChanged": false,
+    "paidBehaviorChanged": false,
+    "sourceRead": "JW.org NWT 2013 chapter / identified Insight article, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g07-d01",
+    "field": "explanation",
+    "before": "Genesis 13:6–7 says their possessions had become too numerous to dwell together; it mentions a dispute between the herders, not a specific quarrel at a watering hole.",
+    "after": "Their flocks grew so large that they couldn't share the same land. Notice what happened next: Abram looked for a peaceful solution instead of letting the herders' dispute divide them.",
+    "source": [
+      {
+        "reference": "Genesis 13:1–7",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/13/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g07-d09",
+    "field": "explanation",
+    "before": "Genesis 15:1–6 links the star comparison with Abram’s faith; later in Genesis 15 the covenant is described, but do not conflate each moment.",
+    "after": "Abram thought a member of his household would be his heir. Jehovah promised him a son of his own and invited him to look at the stars. Abram put faith in that promise.",
+    "source": [
+      {
+        "reference": "Genesis 15:1–6",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/15/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g08-d03",
+    "field": "explanation",
+    "before": "Genesis 18:10–15 shows Sarah overhearing the promise, laughing to herself and then being confronted about it; the account should not be played as cruelty.",
+    "after": "Sarah laughed to herself because she and Abraham were so old. Jehovah's response turned the focus from their age to his power: could anything be too extraordinary for him?",
+    "source": [
+      {
+        "reference": "Genesis 18:9–15",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/18/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g08-d04",
+    "field": "explanation",
+    "before": "Genesis 18:24–32 records Abraham’s successive questions; do not imply ten righteous people were actually found or the city was spared.",
+    "after": "Abraham kept asking about fewer righteous people, going from 50 down to 10. His questions show why he appealed to the Judge of all the earth to do what is right.",
+    "source": [
+      {
+        "reference": "Genesis 18:16–33",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/18/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g09-d02",
+    "field": "explanation",
+    "before": "Genesis 24:10 specifies ten camels and all sorts of good things taken on the journey. The illustration is representative; count ten from the verse, not from the artwork.",
+    "after": "The servant took ten camels and all sorts of good things from Abraham. At the well he prayed for help, then watched for the generous response he had described.",
+    "source": [
+      {
+        "reference": "Genesis 24:5–10",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/24/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g09-d09",
+    "field": "explanation",
+    "before": "Genesis 24:59–61 describes Rebekah, her nurse, female attendants and the traveling group setting out on camels. Rebekah’s nurse accompanied her (Genesis 24:59); the image does not single her out.",
+    "after": "Rebekah didn't travel alone. Her nurse and female attendants went with her. Her family's farewell blessing looked ahead to descendants and their future victories.",
+    "source": [
+      {
+        "reference": "Genesis 24:59–61",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/24/"
+      }
+    ],
+    "claimType": "explicit Scripture; interaction wording also checked against actual tap-to-match controls",
+    "reason": "Remove implementation notes/unsupported emotion; clarify chronology or actual interaction; natural spoken wording.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 full chapter on JW.org, retrieved 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "noah:7",
+    "answer": "DOVE",
+    "field": "reference",
+    "before": "Genesis 8:6–9",
+    "after": "Genesis 8:6–12",
+    "source": [
+      {
+        "reference": "Genesis 8:6–12",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/8/"
+      }
+    ],
+    "claimType": "explicit Scripture",
+    "reason": "The question asks about the dove returning with a leaf; verse 11 was outside the former preview range. Extend the passage to include it.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 Genesis 8, verses 6–12 in context, 2026-11-14",
+    "readability": "reference corrected; question retained",
+    "independentHumanReview": "pending"
+  }
+]

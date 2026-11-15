@@ -106,7 +106,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
    Decorative book/laurel, engraved title plaque, beveled navigation and brief
    noninteractive gold confetti only when a chapter-completion screen renders. */
 (()=>{if(document.getElementById('bu-story-chapter-complete-v2-css'))return;const l=document.createElement('link');l.id='bu-story-chapter-complete-v2-css';l.rel='stylesheet';l.href='story-chapter-complete-v2-test.css?v=20261105-story-finale-parity-v10';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-story-chapter-complete-v2-js'))return;const s=document.createElement('script');s.id='bu-story-chapter-complete-v2-js';s.src='story-chapter-complete-v2-test.js?v=20261105-paired-actions-v11b';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-story-chapter-complete-v2-js'))return;const s=document.createElement('script');s.id='bu-story-chapter-complete-v2-js';s.src='story-chapter-complete-v2-test.js?v=story-17-chapters-art-1';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Visual Lab ONLY — V11 structural Story completion parity.

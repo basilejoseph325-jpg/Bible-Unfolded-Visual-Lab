@@ -1,0 +1,17 @@
+{
+  "baseline": "bf101f8",
+  "nativeParts": 5,
+  "protectedBankDeclarationsUnchanged": 11,
+  "part4Unchanged": true,
+  "assetsModified": false,
+  "originalRepositoryAccessed": false,
+  "liveDeployment": false,
+  "protectedFunctions": [
+    "canSpend",
+    "awardOnce",
+    "awardChapter",
+    "saveEconomy",
+    "bu3899FitLaterWheel",
+    "bu385FitStory"
+  ]
+}

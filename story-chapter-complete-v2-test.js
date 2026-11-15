@@ -56,10 +56,12 @@
   const found=heading.match(/(GENESIS|EXODUS)\s*[·•\-]\s*EPISODE\s*(\d+)/i);
   if(!found)return null;
   const book=found[1].toUpperCase(),number=Number(found[2]);
-  if(book==='GENESIS'&&number>=7&&number<=9){
+  if(book==='GENESIS'&&number>=7){
    const key='g'+String(number).padStart(2,'0')+(ending?'-d10':'-d01');
    if(typeof BU_GENESIS_SCENE_ART!=='undefined'){
-    const src=BU_GENESIS_SCENE_ART[key];
+    const src=BU_GENESIS_SCENE_ART[key]||
+      (typeof BU_EP10_SCENE_ART!=='undefined'&&BU_EP10_SCENE_ART[key])||
+      (typeof BU_EP11_SCENE_ART!=='undefined'&&BU_EP11_SCENE_ART[key]);
     if(src)return {src};
    }
    const cover=document.querySelector('#episode-list .episode-card[data-episode="'+(number-1)+'"] img');
