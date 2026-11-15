@@ -1,4 +1,5 @@
 /* Genesis 13 public TEST integration candidate. Reuses PR #28 native chapter logic.
+ * Revalidated as a PR candidate against current Visual Lab TEST main (50 Word Trails levels); no LIVE changes.
  * Only Episode 12 completion unlocks the new chapter; existing saves stay additive. */
 (() => {
   'use strict';
