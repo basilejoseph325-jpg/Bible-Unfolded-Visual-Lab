@@ -38,13 +38,17 @@ bu3857Render=function(){
  if(!a)return result;
  const root=document.getElementById('bu3857-content');
  if(!root)return result;
- let figure=root.querySelector('figure.bu3863-image');
+ // The original Story renderer places its picture as a direct child
+ // of the stage, BEFORE the heading and the toolbar. Never insert it next
+ // to #bu3863-story: that button lives INSIDE the toolbar and would push
+ // Scripture and Hint controls out of the viewport at some phone widths.
+ const stage=root.querySelector('.bu3863-stage');
+ if(!stage)return result;
+ let figure=stage.querySelector(':scope > figure.bu3863-image');
  if(!figure){
-  figure=document.createElement('figure');figure.className='bu3863-image';
-  const story=root.querySelector('#bu3863-story');
-  const anchor=story||root.querySelector('#buhq-wheel');
-  if(anchor?.parentNode)anchor.parentNode.insertBefore(figure,anchor);
-  else root.prepend(figure);
+  figure=document.createElement('figure');
+  figure.className='bu3863-image';
+  stage.prepend(figure);
  }
  let img=figure.querySelector('img');
  if(!img){img=document.createElement('img');figure.prepend(img)}
