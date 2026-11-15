@@ -1,0 +1,58 @@
+{
+  "chapterId": "genesis_ep13",
+  "scenes": {
+    "g13-d01": {
+      "path": "story-adventure-art/genesis13/g13-d01.webp",
+      "approved": false
+    },
+    "g13-d02": {
+      "path": "story-adventure-art/genesis13/g13-d02.webp",
+      "approved": false
+    },
+    "g13-d03": {
+      "path": "story-adventure-art/genesis13/g13-d03.webp",
+      "approved": false
+    },
+    "g13-d04": {
+      "path": "story-adventure-art/genesis13/g13-d04.webp",
+      "approved": false
+    },
+    "g13-d05": {
+      "path": "story-adventure-art/genesis13/g13-d05.webp",
+      "approved": false
+    },
+    "g13-d06": {
+      "path": "story-adventure-art/genesis13/g13-d06.webp",
+      "approved": false
+    },
+    "g13-d07": {
+      "path": "story-adventure-art/genesis13/g13-d07.webp",
+      "approved": false
+    },
+    "g13-d08": {
+      "path": "story-adventure-art/genesis13/g13-d08.webp",
+      "approved": false
+    },
+    "g13-d09": {
+      "path": "story-adventure-art/genesis13/g13-d09.webp",
+      "approved": false
+    },
+    "g13-d10": {
+      "path": "story-adventure-art/genesis13/g13-d10.webp",
+      "approved": false
+    },
+    "g13-d11": {
+      "path": "story-adventure-art/genesis13/g13-d11.webp",
+      "approved": false
+    },
+    "g13-d12": {
+      "path": "story-adventure-art/genesis13/g13-d12.webp",
+      "approved": false
+    }
+  },
+  "ending": {
+    "heroDiscovery": "g13-d09",
+    "backgroundDiscovery": "g13-d09",
+    "caption": "An altar at Bethel"
+  }
+}

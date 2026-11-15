@@ -294,3 +294,13 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  s.onerror=()=>console.warn('[Genesis12] Candidate episode script did not load');
  document.head.appendChild(s);
 })();
+
+/* Genesis Episode 13 TEST integration; wait for the existing Episode 12 registration. */
+(()=>{'use strict';
+ const start=()=>{if(document.getElementById('bu-story-genesis13-native-loader'))return;
+  const script=document.createElement('script');script.id='bu-story-genesis13-native-loader';script.async=false;
+  script.src='story-adventure-episode13-integration-test.js?v=20261115-g13-integration-v1';
+  script.onerror=()=>console.warn('[Genesis13] TEST chapter integration did not load');document.head.appendChild(script);};
+ if(window.BUStoryGenesis12Test)start();
+ else document.getElementById('bu-story-genesis12-native-loader')?.addEventListener('load',start,{once:true});
+})();

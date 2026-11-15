@@ -45,6 +45,7 @@
  // Reuse the chapter's existing artwork rather than flattening a mockup
  // (which would bake in text and buttons). Missing art leaves teal untouched.
  function chapterArt(modern,ending=false){
+  if(modern&&typeof bu3857State!=='undefined'&&bu3857State?.book==='genesis_ep13')return window.BUStoryGenesis13Test?.currentArtwork?.()||null;
   if(!modern){
    const frame=document.querySelector('#scene .scene-img.show');
    const image=frame?.style.backgroundImage||'';
@@ -112,7 +113,7 @@
   try{
    const state=typeof bu3857State!=='undefined'?bu3857State:null;
    const chapter=state&&typeof BU3857_DATA!=='undefined'?BU3857_DATA[state.book]:null;
-   const caption=chapter?.discoveries?.[0]?.title;
+   const caption=art.caption||chapter?.discoveries?.[0]?.title;
    if(caption){
     const label=document.createElement('div');
     label.className='bu-story-finale-scene-label';
