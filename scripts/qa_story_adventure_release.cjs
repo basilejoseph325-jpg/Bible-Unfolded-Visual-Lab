@@ -94,6 +94,19 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
      }
      return {id:d.id,out};
     });
+    if(id==='genesis_ep12'&&width===390&&n===0){
+      const measures=await page.evaluate(()=>{
+       const root=document.getElementById('bu3857-content'),fig=root.querySelector('figure.bu3863-image'),
+        story=root.querySelector('#bu3863-story'),scripture=root.querySelector('#bu3863-scripture'),
+        wheel=root.querySelector('#buhq-wheel');
+       const m=e=>e?{top:Math.round(e.getBoundingClientRect().top),bottom:Math.round(e.getBoundingClientRect().bottom),
+        height:Math.round(e.getBoundingClientRect().height),position:getComputedStyle(e).position,scrollHeight:e.scrollHeight}:null;
+       return {viewport:[innerWidth,innerHeight],scroll:document.documentElement.scrollHeight,
+        root:m(root),fig:m(fig),story:m(story),scripture:m(scripture),wheel:m(wheel),
+        chapter:bu3857State?.book};
+      });
+      console.log('G12_FULL_FLOW_LAYOUT',JSON.stringify(measures));
+    }
     row.overflow.push(...problem.out.map(control=>({id:problem.id,control})));
     await page.waitForFunction(()=>!!bu3857State.solved[bu3857Current().id]);
     await close();await page.$eval('#bu3857-continue',b=>b.click());row.modern++;
