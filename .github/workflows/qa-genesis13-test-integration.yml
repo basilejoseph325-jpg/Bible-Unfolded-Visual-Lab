@@ -1,0 +1,63 @@
+name: Genesis 13 public TEST integration (no deployment)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'journey-progress-caption.js'
+      - 'story-chapter-complete-v2-test.js'
+      - 'story-adventure-episode13-integration-test.js'
+      - 'story-adventure-content/genesis-episode13-*'
+      - 'story-adventure-art/genesis13/**'
+      - 'scripts/qa_genesis13_*'
+      - '.github/workflows/qa-genesis13-test-integration.yml'
+permissions:
+  contents: read
+jobs:
+  normal-entry:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Local TEST server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8893 --bind 127.0.0.1 > work/http-g13.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8893/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Compile and validate unchanged Episode 13 content
+        run: |
+          node --check story-adventure-episode13-integration-test.js
+          node scripts/check_story_sources.cjs
+          node scripts/qa_genesis13_content_candidate.cjs
+      - name: Normal entry, locks, all 12 puzzles and native saves
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+          STORY_EVIDENCE: work/genesis13-public-evidence.json
+        run: node scripts/qa_genesis13_public_integration.cjs
+      - name: Protected files, public navigation and approved/pending art routing
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_genesis13_integration_boundaries.cjs
+      - name: Episode 12 completion enters Episode 13; shared navigation regression
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: |
+          node scripts/qa_genesis12_native.cjs
+          node scripts/qa_story_mode_boundaries.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: genesis13-public-test-evidence
+          path: work/genesis13-public-evidence.json
+          if-no-files-found: ignore
