@@ -36,7 +36,7 @@ noah,noah:6,ARARAT,original word wheel,Genesis 8:3–5,Bible icon resolves NWT b
 noah,noah:7,DOVE,original word wheel,Genesis 8:6–12,Bible icon resolves NWT book/chapter,True,pending
 noah,noah:8,OLIVE,original word wheel,Genesis 8:10–12,Bible icon resolves NWT book/chapter,False,pending
 noah,noah:9,RAINBOW,original word wheel,Genesis 9:8–17,Bible icon resolves NWT book/chapter,False,pending
-babel,babel:0,LANGUAGE,original word wheel,Genesis 11:1,Bible icon resolves NWT book/chapter,False,pending
+babel,babel:0,LANGUAGE,original word wheel,Genesis 11:1,Bible icon resolves NWT book/chapter,True,pending
 babel,babel:1,SHINAR,original word wheel,Genesis 11:2,Bible icon resolves NWT book/chapter,False,pending
 babel,babel:2,BRICKS,original word wheel,Genesis 11:3,Bible icon resolves NWT book/chapter,False,pending
 babel,babel:3,BITUMEN,original word wheel,Genesis 11:3,Bible icon resolves NWT book/chapter,False,pending
@@ -83,34 +83,34 @@ moses_bush,moses_bush:6,ROD,original word wheel,Exodus 4:1–5,Bible icon resolv
 moses_bush,moses_bush:7,HAND,original word wheel,Exodus 4:6–8,Bible icon resolves NWT book/chapter,False,pending
 moses_bush,moses_bush:8,AARON,original word wheel,Exodus 4:10–16,Bible icon resolves NWT book/chapter,False,pending
 moses_bush,moses_bush:9,ELDERS,original word wheel,Exodus 4:27–31,Bible icon resolves NWT book/chapter,False,pending
-exodus-10,ex10-d01,interaction solution,order_cards,Exodus 5:1-4,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,False,pending
-exodus-10,ex10-d02,interaction solution,sort_zones,Exodus 5:6-13,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,False,pending
-exodus-10,ex10-d03,interaction solution,connect_pairs,Exodus 5:14-23,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,False,pending
-exodus-10,ex10-d04,interaction solution,order_cards,Exodus 6:5-9,https://www.jw.org/en/library/bible/nwt/books/exodus/6/,False,pending
-exodus-10,ex10-d05,interaction solution,connect_pairs,Exodus 7:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/7/,False,pending
+exodus-10,ex10-d01,interaction solution,order_cards,Exodus 5:1-4,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,True,pending
+exodus-10,ex10-d02,interaction solution,sort_zones,Exodus 5:6-13,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,True,pending
+exodus-10,ex10-d03,interaction solution,connect_pairs,Exodus 5:14-23,https://www.jw.org/en/library/bible/nwt/books/exodus/5/,True,pending
+exodus-10,ex10-d04,interaction solution,order_cards,Exodus 6:5-9,https://www.jw.org/en/library/bible/nwt/books/exodus/6/,True,pending
+exodus-10,ex10-d05,interaction solution,connect_pairs,Exodus 7:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/7/,True,pending
 exodus-10,ex10-d06,interaction solution,order_cards,Exodus 7:8-13,https://www.jw.org/en/library/bible/nwt/books/exodus/7/,True,pending
-exodus-10,ex10-d07,interaction solution,find_hotspots,Exodus 7:17-24,https://www.jw.org/en/library/bible/nwt/books/exodus/7/,False,pending
-exodus-10,ex10-d08,interaction solution,find_hotspots,Exodus 8:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/8/,False,pending
-exodus-10,ex10-d09,interaction solution,connect_pairs,Exodus 8:16-19,https://www.jw.org/en/library/bible/nwt/books/exodus/8/,False,pending
-exodus-10,ex10-d10,interaction solution,sort_zones,Exodus 8:20-24; Exodus 8:29-32,https://www.jw.org/en/library/bible/nwt/books/exodus/8/; https://www.jw.org/en/library/bible/nwt/books/exodus/8/,False,pending
-exodus-11,ex11-d01,interaction solution,sort_zones,Exodus 9:1-7,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,False,pending
+exodus-10,ex10-d07,interaction solution,find_hotspots,Exodus 7:17-24,https://www.jw.org/en/library/bible/nwt/books/exodus/7/,True,pending
+exodus-10,ex10-d08,interaction solution,find_hotspots,Exodus 8:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/8/,True,pending
+exodus-10,ex10-d09,interaction solution,connect_pairs,Exodus 8:16-19,https://www.jw.org/en/library/bible/nwt/books/exodus/8/,True,pending
+exodus-10,ex10-d10,interaction solution,sort_zones,Exodus 8:20-24; Exodus 8:29-32,https://www.jw.org/en/library/bible/nwt/books/exodus/8/; https://www.jw.org/en/library/bible/nwt/books/exodus/8/,True,pending
+exodus-11,ex11-d01,interaction solution,sort_zones,Exodus 9:1-7,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,True,pending
 exodus-11,ex11-d02,interaction solution,order_cards,Exodus 9:8-12,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,True,pending
-exodus-11,ex11-d03,interaction solution,connect_pairs,Exodus 9:18-26,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,False,pending
-exodus-11,ex11-d04,interaction solution,sort_zones,Exodus 9:31-32,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,False,pending
+exodus-11,ex11-d03,interaction solution,connect_pairs,Exodus 9:18-26,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,True,pending
+exodus-11,ex11-d04,interaction solution,sort_zones,Exodus 9:31-32,https://www.jw.org/en/library/bible/nwt/books/exodus/9/,True,pending
 exodus-11,ex11-d05,interaction solution,wind_dial,Exodus 10:12-19,https://www.jw.org/en/library/bible/nwt/books/exodus/10/,True,pending
 exodus-11,ex11-d06,interaction solution,lighting_rebuild,Exodus 10:21-23,https://www.jw.org/en/library/bible/nwt/books/exodus/10/,True,pending
-exodus-11,ex11-d07,interaction solution,order_cards,Exodus 10:7-11; Exodus 10:21-26,https://www.jw.org/en/library/bible/nwt/books/exodus/10/; https://www.jw.org/en/library/bible/nwt/books/exodus/10/,False,pending
-exodus-11,ex11-d08,interaction solution,timeline_place,Exodus 12:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/12/,False,pending
-exodus-11,ex11-d09,interaction solution,doorframe_trace,Exodus 12:7-13; Exodus 12:21-23,https://www.jw.org/en/library/bible/nwt/books/exodus/12/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/,False,pending
+exodus-11,ex11-d07,interaction solution,order_cards,Exodus 10:7-11; Exodus 10:21-26,https://www.jw.org/en/library/bible/nwt/books/exodus/10/; https://www.jw.org/en/library/bible/nwt/books/exodus/10/,True,pending
+exodus-11,ex11-d08,interaction solution,timeline_place,Exodus 12:1-6,https://www.jw.org/en/library/bible/nwt/books/exodus/12/,True,pending
+exodus-11,ex11-d09,interaction solution,doorframe_trace,Exodus 12:7-13; Exodus 12:21-23,https://www.jw.org/en/library/bible/nwt/books/exodus/12/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/,True,pending
 exodus-11,ex11-d10,interaction solution,order_cards,Exodus 11:4-8; Exodus 12:8-11; Exodus 12:29-39,https://www.jw.org/en/library/bible/nwt/books/exodus/11/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/,True,pending
-exodus-12,ex12-d01,interaction solution,find_hotspots,Exodus 13:3-10,https://www.jw.org/en/library/bible/nwt/books/exodus/13/,False,pending
+exodus-12,ex12-d01,interaction solution,find_hotspots,Exodus 13:3-10,https://www.jw.org/en/library/bible/nwt/books/exodus/13/,True,pending
 exodus-12,ex12-d02,interaction solution,route_trace,Exodus 13:17-18,https://www.jw.org/en/library/bible/nwt/books/exodus/13/,True,pending
-exodus-12,ex12-d03,interaction solution,find_hotspots,Exodus 13:19; Exodus 12:34-38,https://www.jw.org/en/library/bible/nwt/books/exodus/13/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/,False,pending
-exodus-12,ex12-d04,interaction solution,place_markers,Exodus 13:20-22,https://www.jw.org/en/library/bible/nwt/books/exodus/13/,False,pending
+exodus-12,ex12-d03,interaction solution,find_hotspots,Exodus 13:19; Exodus 12:34-38,https://www.jw.org/en/library/bible/nwt/books/exodus/13/; https://www.jw.org/en/library/bible/nwt/books/exodus/12/,True,pending
+exodus-12,ex12-d04,interaction solution,place_markers,Exodus 13:20-22,https://www.jw.org/en/library/bible/nwt/books/exodus/13/,True,pending
 exodus-12,ex12-d05,interaction solution,place_markers,Exodus 14:1-4; Exodus 14:8-9,https://www.jw.org/en/library/bible/nwt/books/exodus/14/; https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
-exodus-12,ex12-d06,interaction solution,find_hotspots,Exodus 14:5-10,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,False,pending
-exodus-12,ex12-d07,interaction solution,order_cards,Exodus 14:10-16,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,False,pending
-exodus-12,ex12-d08,interaction solution,cloud_relocate,Exodus 14:19-20,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,False,pending
+exodus-12,ex12-d06,interaction solution,find_hotspots,Exodus 14:5-10,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
+exodus-12,ex12-d07,interaction solution,order_cards,Exodus 14:10-16,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
+exodus-12,ex12-d08,interaction solution,cloud_relocate,Exodus 14:19-20,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
 exodus-12,ex12-d09,interaction solution,scene_rebuild,Exodus 14:16; Exodus 14:21-22,https://www.jw.org/en/library/bible/nwt/books/exodus/14/; https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
 exodus-12,ex12-d10,interaction solution,order_cards,Exodus 14:23-31,https://www.jw.org/en/library/bible/nwt/books/exodus/14/,True,pending
 genesis_ep07,g07-d01,CROWDING,word wheel,Genesis 13:1–7,https://www.jw.org/en/library/bible/nwt/books/genesis/13/,True,pending
@@ -144,7 +144,7 @@ genesis_ep09,g09-d08,CONSENT,word wheel,Genesis 24:50–58,https://www.jw.org/en
 genesis_ep09,g09-d09,BLESSING,word wheel,Genesis 24:59–61,https://www.jw.org/en/library/bible/nwt/books/genesis/24/,True,pending
 genesis_ep09,g09-d10,COMFORT,word wheel,Genesis 24:62–67,https://www.jw.org/en/library/bible/nwt/books/genesis/24/,False,pending
 genesis_ep10,g10-d01,PROMISE,word wheel,Genesis 25:7–11,https://www.jw.org/en/library/bible/nwt/books/genesis/25/,False,pending
-genesis_ep10,g10-d02,GUIDANCE,word wheel,Genesis 25:19–26,https://www.jw.org/en/library/bible/nwt/books/genesis/25/,False,pending
+genesis_ep10,g10-d02,GUIDANCE,word wheel,Genesis 25:19–26,https://www.jw.org/en/library/bible/nwt/books/genesis/25/,True,pending
 genesis_ep10,g10-d03,HUNTING,word wheel,Genesis 25:24–28,https://www.jw.org/en/library/bible/nwt/books/genesis/25/,False,pending
 genesis_ep10,g10-d04,BIRTHRIGHT,word wheel,Genesis 25:29–34,https://www.jw.org/en/library/bible/nwt/books/genesis/25/,False,pending
 genesis_ep10,g10-d05,EGYPT,word wheel,Genesis 26:1–6,https://www.jw.org/en/library/bible/nwt/books/genesis/26/,False,pending

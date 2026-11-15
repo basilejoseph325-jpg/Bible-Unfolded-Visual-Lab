@@ -684,5 +684,691 @@
     "sourceRead": "NWT 2013 Genesis 8, verses 6–12 in context, 2026-11-14",
     "readability": "reference corrected; question retained",
     "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d01",
+    "field": "progressiveHints[2].text",
+    "before": "Put the message first, the refusal second, and the order to work last.",
+    "after": "Keep Pharaoh's command to return to work until after he has heard and rejected the request.",
+    "source": [
+      {
+        "reference": "Exodus 5:1-4",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/5/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d02",
+    "field": "progressiveHints[2].text",
+    "before": "Before: straw supplied, same quota. After: gather straw, quota unchanged.",
+    "after": "Pharaoh changed where the workers had to get their materials, while insisting that their daily output stay unchanged.",
+    "source": [
+      {
+        "reference": "Exodus 5:6-13",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/5/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d03",
+    "field": "progressiveHints[2].text",
+    "before": "Link the foremen to Pharaoh; the foremen to Moses and Aaron; Moses to Jehovah.",
+    "after": "Moses spoke about the people's worsening situation to the one who had sent him, rather than taking his complaint back to the king.",
+    "source": [
+      {
+        "reference": "Exodus 5:14-23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/5/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d04",
+    "field": "progressiveHints[2].text",
+    "before": "Heard → rescue → become his people → receive the land.",
+    "after": "The last promise names a land already promised to Abraham, Isaac, and Jacob. It comes after rescue and a new relationship with Jehovah.",
+    "source": [
+      {
+        "reference": "Exodus 6:5-9",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/6/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d05",
+    "field": "progressiveHints[2].text",
+    "before": "Moses: receive and pass on instructions. Aaron: speak to Pharaoh.",
+    "after": "Moses was to repeat what Jehovah told him. Think about who would then carry those words to the king.",
+    "source": [
+      {
+        "reference": "Exodus 7:1-6",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/7/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d06",
+    "field": "progressiveHints[2].text",
+    "before": "Aaron’s rod → priests’ rods → Aaron’s rod swallows theirs.",
+    "after": "The priests had to see Aaron's sign before trying to imitate it. The final action involved the rods themselves.",
+    "source": [
+      {
+        "reference": "Exodus 7:8-13",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/7/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d07",
+    "field": "progressiveHints[2].text",
+    "before": "Find changed water, people not drinking it, and people digging near the river.",
+    "after": "Look for the people's search for another drinking supply, rather than ordinary features of a riverside scene.",
+    "source": [
+      {
+        "reference": "Exodus 7:17-24",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/7/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d08",
+    "field": "progressiveHints[2].text",
+    "before": "Check the bed, the oven, and the kneading trough.",
+    "after": "Two of the places were used to prepare food; the other belonged to the sleeping area.",
+    "source": [
+      {
+        "reference": "Exodus 8:1-6",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/8/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d09",
+    "field": "progressiveHints[2].text",
+    "before": "Aaron → gnats; priests’ attempt → failure; their conclusion → God’s power.",
+    "after": "Their admission came after they tried and failed to reproduce the plague. That failure changed what they said about its source.",
+    "source": [
+      {
+        "reference": "Exodus 8:16-19",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/8/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex10-d10",
+    "field": "progressiveHints[2].text",
+    "before": "Egypt: swarms and invaded homes. Goshen: Israelites and no gadflies.",
+    "after": "Find the part of the scene where Jehovah's people lived. The plague was kept out of that area even while Egyptian houses were invaded.",
+    "source": [
+      {
+        "reference": "Exodus 8:20-24",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/8/"
+      },
+      {
+        "reference": "Exodus 8:29-32",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/8/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d01",
+    "field": "progressiveHints[2].text",
+    "before": "Egyptian: plagued, investigated. Israelite: spared, not one died.",
+    "after": "Pharaoh sent to check the report, but not a single animal belonging to the Israelites had died.",
+    "source": [
+      {
+        "reference": "Exodus 9:1-7",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/9/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d02",
+    "field": "progressiveHints[2].text",
+    "before": "Soot → thrown into air → boils → priests cannot stand before Moses.",
+    "after": "The priests couldn't stand before Moses because they were affected too. Put that result after the soot has been thrown into the air.",
+    "source": [
+      {
+        "reference": "Exodus 9:8-12",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/9/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d03",
+    "field": "progressiveHints[2].text",
+    "before": "Heeded → shelter; ignored → fields; Goshen → no hail.",
+    "after": "Being an Egyptian didn't prevent a servant from taking shelter. What mattered was whether he took the warning seriously.",
+    "source": [
+      {
+        "reference": "Exodus 9:18-26",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/9/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d04",
+    "field": "progressiveHints[2].text",
+    "before": "Barley and flax: struck. Wheat and spelt: not struck then.",
+    "after": "The damaged crops were already in the ear or in flower. Match them separately from the crops that were still seasonally late.",
+    "source": [
+      {
+        "reference": "Exodus 9:31-32",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/9/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d05",
+    "field": "progressiveHints[2].text",
+    "before": "East wind → arrival. West wind → removal toward the Red Sea.",
+    "after": "For the arrival, think of the direction of sunrise. For the removal, think of the opposite direction.",
+    "source": [
+      {
+        "reference": "Exodus 10:12-19",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d06",
+    "field": "progressiveHints[2].text",
+    "before": "Darkness over Egypt; light in the Israelites’ dwellings.",
+    "after": "For three days Egyptians couldn't see one another or get up from their places. Israelite homes were unaffected by that darkness.",
+    "source": [
+      {
+        "reference": "Exodus 10:21-23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d07",
+    "field": "progressiveHints[2].text",
+    "before": "Men only → families without livestock → Moses insists livestock also go.",
+    "after": "Moses said they needed the animals for Jehovah's service. They didn't yet know which ones they would use.",
+    "source": [
+      {
+        "reference": "Exodus 10:7-11",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      },
+      {
+        "reference": "Exodus 10:21-26",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/10/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d08",
+    "field": "progressiveHints[2].text",
+    "before": "10th: choose. 10th–14th: care for it. 14th at twilight: sacrifice.",
+    "after": "The selection date was four days earlier than the sacrifice date. The sacrifice was at twilight.",
+    "source": [
+      {
+        "reference": "Exodus 12:1-6",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d09",
+    "field": "progressiveHints[2].text",
+    "before": "Mark both doorposts and the upper part of the doorway.",
+    "after": "Picture the doorway's frame: the instruction names its two sides and the part above the entrance, not the surface people stepped on.",
+    "source": [
+      {
+        "reference": "Exodus 12:7-13",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      },
+      {
+        "reference": "Exodus 12:21-23",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d10",
+    "field": "progressiveHints[2].text",
+    "before": "Passover → midnight plague → Pharaoh’s order → quick departure.",
+    "after": "They were ready to travel before the final plague, but Pharaoh's instruction to leave came afterward.",
+    "source": [
+      {
+        "reference": "Exodus 11:4-8",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/11/"
+      },
+      {
+        "reference": "Exodus 12:8-11",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      },
+      {
+        "reference": "Exodus 12:29-39",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d01",
+    "field": "progressiveHints[2].text",
+    "before": "Select the sourdough starter and the leavened loaf.",
+    "after": "The rule covered what was kept in the house as well as what was eaten. Don't overlook an ingredient simply because it isn't a finished loaf.",
+    "source": [
+      {
+        "reference": "Exodus 13:3-10",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/13/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d02",
+    "field": "progressiveHints[2].text",
+    "before": "Follow Egypt → wilderness route → toward the Red Sea.",
+    "after": "The nearer road ran through Philistine territory, where war might make the people turn back.",
+    "source": [
+      {
+        "reference": "Exodus 13:17-18",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/13/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d03",
+    "field": "progressiveHints[2].text",
+    "before": "Find the item representing Joseph’s remains.",
+    "after": "Joseph had died in Egypt, but his request looked ahead to the day God would bring his people out. Moses was keeping that old promise.",
+    "source": [
+      {
+        "reference": "Exodus 13:19",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/13/"
+      },
+      {
+        "reference": "Exodus 12:34-38",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d04",
+    "field": "progressiveHints[2].text",
+    "before": "Day: cloud. Night: fire.",
+    "after": "Match the form that provided light to the hours when travelers couldn't rely on daylight.",
+    "source": [
+      {
+        "reference": "Exodus 13:20-22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/13/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d05",
+    "field": "progressiveHints[2].text",
+    "before": "Inland: Egyptians. Middle: camp. Ahead: sea.",
+    "after": "Put the camp on the shore. The army caught up from the direction the people had traveled, rather than coming across the water.",
+    "source": [
+      {
+        "reference": "Exodus 14:1-4",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      },
+      {
+        "reference": "Exodus 14:8-9",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d06",
+    "field": "progressiveHints[2].text",
+    "before": "Locate the chariots, the horses, and the cavalrymen.",
+    "after": "One choice is a vehicle, another is the animal that pulled it, and the third is the mounted soldiers.",
+    "source": [
+      {
+        "reference": "Exodus 14:5-10",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d07",
+    "field": "progressiveHints[2].text",
+    "before": "Do not fear → stand firm → see salvation → Jehovah will fight.",
+    "after": "Moses' words move from calming the people's fear to directing their attention to what Jehovah would do for them.",
+    "source": [
+      {
+        "reference": "Exodus 14:10-16",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d08",
+    "field": "progressiveHints[2].text",
+    "before": "Egyptian side: dark. Between: cloud. Israelite side: light.",
+    "after": "The cloud became a barrier, keeping the pursuers from reaching Israel all night. The protected camp still had light.",
+    "source": [
+      {
+        "reference": "Exodus 14:19-20",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d09",
+    "field": "progressiveHints[2].text",
+    "before": "Water wall, dry ground, water wall.",
+    "after": "The people walked on dry ground rather than wading. Keep that walking surface between the parts showing water.",
+    "source": [
+      {
+        "reference": "Exodus 14:16",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      },
+      {
+        "reference": "Exodus 14:21-22",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex12-d10",
+    "field": "progressiveHints[2].text",
+    "before": "Pursuit → wheel trouble → water returns → Israel recognizes the rescue.",
+    "after": "The pursuing army was still in the passage when its chariots began to fail. Israel's response belongs after the rescue was visible.",
+    "source": [
+      {
+        "reference": "Exodus 14:23-31",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Replace a complete enumerated solution with a contextual clue. The separate eye control still delivers the full solution for the approved Points cost.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "ex11-d08",
+    "field": "progressiveHints[1].text",
+    "before": "It is chosen on the 10th, cared for until the 14th, and sacrificed at twilight.",
+    "after": "The household had to choose the animal several days before the sacrifice, not on the day of departure.",
+    "source": [
+      {
+        "reference": "Exodus 12:1-6",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/12/"
+      }
+    ],
+    "claimType": "source-grounded contextual/semantic aid; not a new Bible quotation",
+    "reason": "Second hint previously listed the entire date solution; retain a separate stronger reasoning clue.",
+    "answerChanged": false,
+    "hintPricesChanged": false,
+    "sourceRead": "NWT 2013 Exodus 5–14 in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g08-d03",
+    "field": "narration",
+    "before": "Sarah overhears a renewed promise that she will have a son, laughs inwardly because of her age, and is gently challenged about her reaction.",
+    "after": "Sarah overhears the promise that she will have a son and laughs to herself because of her age. Jehovah asks Abraham why she laughed and reminds him that nothing is too extraordinary for him.",
+    "source": [
+      {
+        "reference": "Genesis 18:10–15",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/18/"
+      }
+    ],
+    "claimType": "plain-language summary of explicit Scripture",
+    "reason": "Replace an undocumented tone of voice with what the account says.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 cited chapters in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "g10-d02",
+    "field": "narration",
+    "before": "Rebekah is expecting twins, but their movements trouble her. She asks Jehovah what is happening. His answer shows that these two boys will matter far beyond their own household.",
+    "after": "Now let's look back at an earlier part of Isaac's life. Rebekah is expecting twins, but their movements trouble her. She asks Jehovah what is happening. His answer shows that these boys will matter far beyond their own household.",
+    "source": [
+      {
+        "reference": "Genesis 25:7–11, 19–26; 21:5",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/25/"
+      },
+      {
+        "reference": "Genesis 21:5",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/21/"
+      }
+    ],
+    "claimType": "explicit Scripture; chronology is a calculation from stated ages",
+    "reason": "Clarify the flashback without reordering stable discovery IDs: Abraham died at 175; Isaac was born when Abraham was 100 and had the twins at 60.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 cited chapters in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
+  },
+  {
+    "id": "babel:0",
+    "field": "fact",
+    "before": "One shared language made cooperation effortless. But people can work together toward a goal that conflicts with what Jehovah instructed. (Genesis 11:1–4; 9:1)",
+    "after": "A shared language helped the builders work together. But their project was meant to keep them from spreading across the earth, contrary to Jehovah's direction. (Genesis 11:1–4; 9:1)",
+    "source": [
+      {
+        "reference": "Genesis 11:1–4",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/11/"
+      },
+      {
+        "reference": "Genesis 9:1",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/9/"
+      }
+    ],
+    "claimType": "plain-language summary of explicit Scripture",
+    "reason": "Remove the unsupported absolute claim that cooperation was effortless.",
+    "answerChanged": false,
+    "hintsChanged": false,
+    "sourceRead": "NWT 2013 cited chapters in context on JW.org, 2026-11-14",
+    "readability": "rewritten; separate deliberate first-read pass by same assistant",
+    "independentHumanReview": "pending"
   }
 ]
