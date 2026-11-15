@@ -248,10 +248,10 @@ window.BUWTLevels36to40=Object.freeze([
     "title": "The Gift of a Ransom",
     "scene": "54_1_timothy.webp",
     "spark": "RAM",
-    "clue": "What animal did Abraham see caught in a thicket and offer in place of Isaac?",
-    "reference": "Genesis 22:13",
-    "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/22/",
-    "insight": "Abraham found a ram caught by its horns in a thicket and offered it as a burnt offering instead of Isaac.",
+    "clue": "What animal was used for the installation offering when Aaron and his sons became priests?",
+    "reference": "Leviticus 8:22",
+    "url": "https://www.jw.org/en/library/bible/nwt/books/leviticus/8/",
+    "insight": "Moses brought a second ram for the installation of Aaron and his sons as priests. This is a different account from Abraham's offering.",
     "words": [
       [
         "RANSOM",
