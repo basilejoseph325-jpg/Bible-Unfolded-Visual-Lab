@@ -1,0 +1,49 @@
+name: QA published TEST Genesis Episode 11 10 scenes and native wheels
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/qa-published-genesis11-test-v1.yml'
+      - 'bible_unfolded_core_part3.js'
+      - 'bible_unfolded_core_part5.js'
+      - 'story-adventure-art/genesis11/**'
+      - 'scripts/qa_genesis11_complete_native_playpath_v1.cjs'
+      - 'scripts/qa_genesis11_three_thinking_hints_v1.cjs'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  published-test-story:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Confirm GitHub Pages serves the Episode 11 revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import urllib.request,time
+          url='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?genesis11-published=20261114-v1'
+          for attempt in range(26):
+            try:
+              with urllib.request.urlopen(url,timeout=40) as r:
+                html=r.read().decode('utf-8')
+              if 'genesis11-haran-test-v1' in html:
+                print('PASS_PUBLIC_TEST_GENESIS11_CURRENT_HTML',len(html),'attempt',attempt+1)
+                break
+              print('TEST Pages still serving previous release; retry',attempt+1)
+            except Exception as e:
+              print('Waiting on TEST Pages',attempt+1,str(e)[:160])
+            time.sleep(9)
+          else:raise SystemExit('New Genesis11 TEST revision is not live; cannot claim published')
+          PY
+      - name: Run real Chrome through ten public Story wheels and thinking hints
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-genesis11-public-qa puppeteer-core@24 --silent --no-audit --no-fund
+          export NODE_PATH=/tmp/bu-genesis11-public-qa/node_modules
+          export STORY_URL='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?genesis11=public-qa-v1'
+          node scripts/qa_genesis11_complete_native_playpath_v1.cjs
+          node scripts/qa_genesis11_three_thinking_hints_v1.cjs
+          echo 'PASS_PUBLIC_TEST_GENESIS11_FULL_GAMEPLAY all 10 pictures, 10 solved word wheels, 3 contextual hints and resume'
