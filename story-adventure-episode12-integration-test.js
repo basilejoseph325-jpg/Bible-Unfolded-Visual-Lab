@@ -14,11 +14,11 @@ for(const d of chapter.discoveries){
 BU3857_DATA[ID]=chapter;Object.assign(BU_HQ_WORDS,words);
 chapter.illustrationStatus='13 individual approved 640x360 historical reconstructions';
 const G12_ART=Object.freeze(Object.fromEntries(chapter.discoveries.map(d=>{
+ if(!/^g12-d(0[1-9]|1[0-3])$/.test(d.id))throw Error('Invalid Genesis 12 image id '+d.id);
  const plan=chapter.artPlan?.[d.id];
- if(!plan||plan.filename!==d.id+'.webp')throw Error('Missing Genesis 12 art plan '+d.id);
  return [d.id,Object.freeze({
-  src:'story-adventure-art/genesis12/'+plan.filename,
-  alt:plan.alt+'; artistic historical reconstruction'
+  src:'story-adventure-art/genesis12/'+d.id+'.webp',
+  alt:(plan?.alt||('Historical reconstruction: '+d.title+' (Genesis 32–33)'))+'; artistic reconstruction'
  })];
 })));
 /* Let the original engine use its own figure styling whenever its maps
