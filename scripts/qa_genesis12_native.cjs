@@ -48,6 +48,14 @@ for(const [width,height] of [[320,568],[390,844]]){
    return {id:d.id,src:img?.getAttribute('src'),alt:img?.alt,top:img?.getBoundingClientRect().top,
     wheelTop:wheel?.getBoundingClientRect().top};
   });
+  if(i===0)console.log('G12_LAYOUT_'+width,JSON.stringify(await page.evaluate(()=>{
+   const root=document.getElementById('bu3857-content'),figure=root?.querySelector('figure.bu3863-image'),
+    story=document.getElementById('bu3863-story'),wheel=document.getElementById('buhq-wheel'),scripture=document.getElementById('bu3863-scripture');
+   const pos=x=>x?{top:Math.round(x.getBoundingClientRect().top),bottom:Math.round(x.getBoundingClientRect().bottom),
+    height:Math.round(x.getBoundingClientRect().height)}:null;
+   return {viewport:{w:innerWidth,h:innerHeight},root:pos(root),figure:pos(figure),story:pos(story),wheel:pos(wheel),scripture:pos(scripture),
+    scroll:document.documentElement.scrollHeight,rootScroll:root?.scrollHeight};
+  })));
   assert.equal(art.src,'story-adventure-art/genesis12/'+art.id+'.webp','Incorrect scene art '+art.id);
   assert(art.alt?.length>30&&art.top<art.wheelTop,'Artwork/accessibility or vertical layout broken '+art.id);
   const result=await page.evaluate(()=>{
