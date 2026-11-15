@@ -36,20 +36,33 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
       await page.$eval('[data-bu-genesis12-dev]',btn=>btn.click());
       assert.equal(await page.evaluate(()=>bu3857State.book),'genesis_ep12');
 
-      // Three thinking clues: free, 15 and 25 tokens, with no letters revealed.
+      // Existing native Story modal and durable hint receipt: free →15→25.
       await page.evaluate(()=>{economy.coins=100;saveEconomy()});
-      const hints=[];
-      for(const expected of [100,85,60]){
-        await page.$eval('#bu3857-hint',btn=>btn.click());
-        await pause(100);
-        assert.equal(await page.evaluate(()=>economy.coins),expected);
-        hints.push(await page.evaluate(()=>bu3857State.hints[bu3857Current().id]));
-        await page.evaluate(()=>document.querySelector('#bu3863-dialog-layer')?.buClose?.());
-      }
-      assert.deepEqual(hints,[1,2,3]);
       await page.$eval('#bu3857-hint',btn=>btn.click());
-      assert.equal(await page.evaluate(()=>economy.coins),60,'Exhausted hints charged again');
-      await page.evaluate(()=>document.querySelector('#bu3863-dialog-layer')?.buClose?.());
+      await page.waitForSelector('#bu3864-modal-layer .bu3864-modal-body');
+      assert.equal(await page.evaluate(()=>economy.coins),100,'Free hint charged coins');
+      assert.equal(await page.evaluate(()=>bu3857State.hints[bu3857Current().id]),1);
+      await page.$eval('#bu3864-modal-layer button.gold-button',btn=>btn.click());
+      assert.equal(await page.evaluate(()=>economy.coins),85,'15-token hint charge incorrect');
+      assert.equal(await page.evaluate(()=>bu3857State.hints[bu3857Current().id]),2);
+      await page.$eval('#bu3864-modal-layer button.gold-button',btn=>btn.click());
+      assert.equal(await page.evaluate(()=>economy.coins),60,'25-token hint charge incorrect');
+      assert.equal(await page.evaluate(()=>bu3857State.hints[bu3857Current().id]),3);
+      assert.equal(await page.evaluate(()=>buHQHintLetters[bu3857Current().id]),0,
+        'Paid thinking hint revealed a wheel letter');
+      assert(await page.evaluate(()=>
+        document.querySelector('#bu3864-modal-layer .bu3864-modal-body')?.textContent.includes('Stronger hint')===false),
+        'Exhausted hint ladder still offered a purchase');
+      assert.equal(await page.evaluate(()=>{
+        const key='story-assist-v1:genesis_ep12:'+bu3857Current().id;
+        return economy.hints[key];
+      }),3,'Durable purchase receipt missing');
+      await page.evaluate(()=>{
+        const layer=document.getElementById('bu3864-modal-layer');
+        const close=layer?.querySelector('[aria-label="Close"],[data-close],.bu3864-modal-close');
+        if(close)close.click();
+        else if(layer)layer.remove();
+      });
 
       const seen=[];
       for(let i=0;i<13;i++){
