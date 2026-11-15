@@ -15,7 +15,8 @@ const scenarios=[
  {name:'legacy30',completed:Array.from({length:30},(_,i)=>i),level:29,unlocked:29,coins:700,title:'Scripture Explorer',done:0},
  {name:'legacy35',completed:Array.from({length:35},(_,i)=>i),level:34,unlocked:34,coins:700,title:'Steady Journey',done:0},
  {name:'legacy40',completed:Array.from({length:40},(_,i)=>i),level:39,unlocked:39,coins:700,title:'Purposeful Paths',done:0},
- {name:'all-seals',completed:Array.from({length:45},(_,i)=>i),level:44,unlocked:44,coins:700,title:'All nine Journey Seals collected',done:5}
+ {name:'legacy45',completed:Array.from({length:45},(_,i)=>i),level:44,unlocked:44,coins:700,title:'Listening Heart',done:0},
+ {name:'all-seals',completed:Array.from({length:50},(_,i)=>i),level:49,unlocked:49,coins:700,title:'All ten Journey Seals collected',done:5}
 ];
 const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--autoplay-policy=no-user-gesture-required'],protocolTimeout:120000};
 (async()=>{
@@ -45,6 +46,7 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
         level31Unlocked:!document.querySelectorAll('#map-list .map-level')[30].disabled,
         level36Unlocked:!document.querySelectorAll('#map-list .map-level')[35].disabled,
         level41Unlocked:!document.querySelectorAll('#map-list .map-level')[40].disabled,
+        level46Unlocked:!document.querySelectorAll('#map-list .map-level')[45].disabled,
         storedUnlocked:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).unlocked,
         bodyOverflow:document.documentElement.scrollWidth>innerWidth+1
       };
@@ -54,7 +56,7 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     assert.equal(map.now,String(scenario.done),'Milestone count wrong '+scenario.name);
     assert.equal(map.max,'5');
     assert.equal(map.fill,scenario.done*20+'%');
-    assert.equal(map.levels,45,'Expected 45 levels');
+    assert.equal(map.levels,50,'Expected 50 levels');
     if(scenario.name==='legacy30'){
       assert.equal(map.storedUnlocked,30,'Completed Level 30 must unlock Level 31');
       assert(map.level31Unlocked,'Level 31 must be playable without replaying Level 30');
@@ -66,6 +68,10 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     if(scenario.name==='legacy40'){
       assert.equal(map.storedUnlocked,40,'Completed Level 40 must unlock Level 41');
       assert(map.level41Unlocked,'Level 41 must be playable without replaying Level 40');
+    }
+    if(scenario.name==='legacy45'){
+      assert.equal(map.storedUnlocked,45,'Completed Level 45 must unlock Level 46');
+      assert(map.level46Unlocked,'Level 46 must be playable without replaying Level 45');
     }
     assert(map.coinExplainer.includes('15')&&map.coinExplainer.includes('free hint'),'Coin spending unclear');
     assert(!map.bodyOverflow,'Horizontal overflow at '+width);
