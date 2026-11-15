@@ -318,6 +318,9 @@ function boot(){if(start())return;let tries=0;const id=setInterval(()=>{if(start
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
 window.BUJamesReturnLoopV1=Object.freeze({
  version:'1.0.0-test',storageKey:KEY,
+ // Explicit API for the standalone Books router's window-capture handler.
+ // Prevents a click-order race from bypassing this TEST-only unlock screen.
+ requestBookUnlock:()=>{if(state.owned.includes('books'))return false;showBookGate();return true},
  inspect:()=>({balance:state.balance,lives:state.lives,refillAt:state.refillAt,pot:state.pot,chain:state.chain,best:state.best,
   totalCorrect:state.totalCorrect,insurance:state.insurance,owned:[...state.owned],achievements:[...state.achievements],
   mastery:{...state.mastery},answerCount}),
