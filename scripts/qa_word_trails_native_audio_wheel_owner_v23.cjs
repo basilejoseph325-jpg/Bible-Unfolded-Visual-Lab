@@ -79,7 +79,16 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    await new Promise(r=>setTimeout(r,55));
    return {ignored,during,restored,duringVolume,target,
     feelUnchanged:ownSound===localStorage.getItem('bu-wt-next-feel-v2'),
-    shadowUnchanged:shadow===localStorage.getItem('bu-platform-audio-preferences-v1'),
+    // The parent legitimately updates the shared record's timestamp when
+    // its real Settings controls change. Compare its values and ownership,
+    // not the raw serialized record, which should advance on native input.
+    shadowParentOwned:(()=>{
+      const after=JSON.parse(localStorage.getItem('bu-platform-audio-preferences-v1')||'null');
+      const parent=window.BUWTNativeShell.audioPrefs();
+      return !!after&&after.source==='main'&&
+        (!shadow||JSON.parse(shadow)?.source==='main')&&
+        ['music','sfx','musicVolume','sfxVolume','motion'].every(k=>after[k]===parent[k]);
+    })(),
     childPref:child.BUWTPolish.state(),
     parentPref:window.BUWTNativeShell.audioPrefs()};
   });
@@ -88,7 +97,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(shared.restored,true);
   assert.equal(shared.duringVolume,shared.target);
   assert.equal(shared.feelUnchanged,true,'No duplicate local audio snapshot');
-  assert.equal(shared.shadowUnchanged,true,'No fake global audio preference record');
+  assert.equal(shared.shadowParentOwned,true,'Native Settings alone must own the shared audio record');
 
   // The real native announcer must remain the only playback owner.
   const voice=await page.evaluate(()=>{
