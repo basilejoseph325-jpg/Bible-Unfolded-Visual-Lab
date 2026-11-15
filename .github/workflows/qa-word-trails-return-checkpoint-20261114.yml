@@ -1,0 +1,94 @@
+name: QA Word Trails 2026 return-to-game baseline, 30 playable levels, public Android
+on:
+  push:
+    branches: [work/word-trails-qa-engagement-20261114]
+    paths: ['.github/workflows/qa-word-trails-return-checkpoint-20261114.yml']
+permissions: {contents: read}
+jobs:
+  entire-30-level-game:
+    uses: ./.github/workflows/qa-word-trails-30-voice.yml
+  baseline-samsung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 17
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate content, native settings and gameplay routing source
+        shell: bash
+        run: |
+          set -euo pipefail
+          node scripts/word_trails_quality_gate.mjs
+          node scripts/word_trails_shared_rewards_integration_test.mjs
+          node scripts/qa_word_trails_public_native_route_v36.cjs
+          node --check word-trails-native-shell-v1.js
+          node --check word-trails-next-launcher.js
+          node --check experiments/word-trails-next-v1.js
+          node --check experiments/word-trails-feel-v2.js
+      - name: Run owner-reported Chrome back, refresh and return regressions
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-wt-review-20261114 puppeteer-core@24 --silent --no-audit --no-fund
+          export NODE_PATH=/tmp/bu-wt-review-20261114/node_modules
+          python3 -m http.server 8902 --bind 127.0.0.1 >/tmp/bu-wt-review-http.log 2>&1 &
+          sleep 2
+          node scripts/word_trails_phone_feedback_repro.cjs
+      - name: Verify actual public TEST Word Trails with real native menu and 30 levels
+        shell: bash
+        run: |
+          set -euo pipefail
+          export NODE_PATH=/tmp/bu-wt-review-20261114/node_modules
+          node <<'JS'
+          const assert=require('node:assert/strict');
+          const puppeteer=require('puppeteer-core');
+          const {execSync}=require('node:child_process');
+          const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
+          (async()=>{
+           const browser=await puppeteer.launch({headless:true,executablePath:chrome,
+             args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage'],protocolTimeout:120000});
+           try{
+            for(const [width,height] of [[390,705],[320,568]]){
+             const page=await browser.newPage(),errors=[];
+             page.on('pageerror',err=>errors.push(err.message));
+             page.setDefaultTimeout(65000);
+             await page.setViewport({width,height,deviceScaleFactor:2,isMobile:true,hasTouch:true});
+             const resp=await page.goto('https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/?wordtrails-current-20261114',
+                {waitUntil:'domcontentloaded',timeout:115000});
+             assert([200,304].includes(resp.status()));
+             await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
+               document.getElementById('home-cross'),{timeout:85000});
+             await page.evaluate(()=>document.getElementById('home-cross').click());
+             await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
+               document.getElementById('bu-wt-native-game')?.contentWindow?.document
+                 .getElementById('level-label')?.textContent?.includes('/ 30'),{timeout:85000});
+             const state=await page.evaluate(()=>{
+               const frame=document.getElementById('bu-wt-native-game');
+               const child=frame.contentWindow,doc=child.document;
+               const root=doc.getElementById('app');
+               const wheel=doc.getElementById('wheel');
+               const level=doc.getElementById('level-label')?.textContent;
+               const board=doc.getElementById('board');
+               const original=doc.querySelectorAll('.wheel-letter').length;
+               return {level,original,board:!!board,app:!!root,
+                 nativeMenu:!!document.getElementById('game-menu'),
+                 nativeSettings:!!document.getElementById('settings-dialog'),
+                 nativeActive:window.BUWTNativeShell.active(),
+                 coins:doc.getElementById('points')?.textContent,
+                 url:location.hash,
+                 overflow:doc.documentElement.scrollWidth>child.innerWidth+2,
+                 scratch:!!doc.getElementById('reset-level'),
+                 announcer:!!child.BUWTAnnouncer,
+                 oceanSkin:!!child.BUWTWheelNative,
+                 freshSource:child.LEVELS?.length??null};
+             });
+             assert(state.nativeActive&&state.nativeMenu&&state.nativeSettings&&state.board&&state.app);
+             assert(state.original>=4);
+             assert(state.level.includes('1 / 30'));
+             assert(!state.overflow,'Word Trails must not scroll sideways');
+             assert(state.scratch&&state.announcer&&state.oceanSkin);
+             assert.equal(errors.length,0,'No native page exceptions: '+errors.join(' | '));
+             console.log('PASS_PUBLIC_WORD_TRAILS_GAMEPLAY_SHELL',JSON.stringify({viewport:width+'x'+height,...state}));
+             await page.close();
+            }
+           }finally{await browser.close()}
+          })().catch(e=>{console.error('FAIL_PUBLIC_WORD_TRAILS_GAMEPLAY_SHELL',e.stack||e);process.exitCode=1});
+          JS
