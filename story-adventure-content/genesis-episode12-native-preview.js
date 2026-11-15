@@ -64,30 +64,86 @@
     if (typeof bu3857Hint !== 'function') throw Error('Native Story help handler is unavailable.');
     const oldHint = bu3857Hint;
     bu3857Hint = function genesis12Hint(...args) {
-      if (!bu3857State || bu3857State.book !== CHAPTER_ID) {
-        return oldHint.apply(this, args);
+      const st=typeof bu3857State==='undefined'?null:bu3857State;
+      if(!st||st.book!==CHAPTER_ID)return oldHint.apply(this,args);
+      if(st.complete)return;
+      const d=bu3857Current();
+      if(!d||st.solved[d.id])return;
+      const entry=BU_HQ_WORDS[d.id],receipt='story-assist-v1:'+CHAPTER_ID+':'+d.id;
+      if(!entry||typeof saveEconomy!=='function'||typeof bu3824RefreshWallet!=='function')
+        throw Error('Native saved-wallet hint service unavailable');
+      const norm=n=>Math.max(0,Math.trunc(Number(n)||0));
+      const level=()=>Math.min(3,Math.max(norm(st.hints[d.id]),norm(economy.hints[receipt])));
+      const price=()=>level()===1?15:level()===2?25:0;
+      // Use PR#21's durable wallet receipt model: the purchase level and token debit
+      // are saved in one wallet write. A failed chapter save cannot charge twice.
+      function saveHelp(next,cost){
+        bu3824RefreshWallet();
+        const before=JSON.parse(JSON.stringify(economy));
+        if(norm(economy.hints[receipt])>=next)return true;
+        if(norm(economy.coins)<cost)return false;
+        economy.hints[receipt]=next;
+        economy.coins-=cost;
+        if(saveEconomy()!==true){economy=before;updateWallet();return false;}
+        updateWallet();
+        if(cost)try{playCoinFx('spend')}catch(_){}
+        return true;
       }
-      const state = bu3857State;
-      const discovery = bu3857Current();
-      const item = BU_HQ_WORDS[discovery.id];
-      let level = Math.max(0, Number(state.hints[discovery.id]) || 0);
-      const clues = [item?.hint1, item?.hint2, item?.hint3];
-      if (!item || clues.some(c => !c)) return oldHint.apply(this, args);
-      if (level >= 3) {
-        state.feedback = 'All three story clues are available. The strongest clue: ' + clues[2];
-        bu3857Render();
-        return;
+      st.hints[d.id]=level();
+      if(level()===0){
+        if(!saveHelp(1,0)){bu3864Modal('Hints unavailable','Your hint could not be saved. No tokens were deducted.');return;}
+        st.hints[d.id]=1;st.feedback='';bu3857Save();bu3857Render();
       }
-      const cost = level === 0 ? 0 : level === 1 ? 15 : 25;
-      if (cost && !canSpend(cost, true)) {
-        state.feedback = 'Not enough Insight Tokens; none deducted.';
-        bu3857Render();
-        return;
+      bu3864Modal('Discovery hint','');
+      const layer=document.getElementById('bu3864-modal-layer');
+      const body=layer?.querySelector('.bu3864-modal-body');
+      if(!body)throw Error('Existing Story hint dialog is unavailable');
+      const buy=document.createElement('button');
+      buy.type='button';buy.className='gold-button';
+      buy.style.cssText='width:100%;min-height:44px;padding:10px 13px;border-radius:12px;font-weight:800;margin-top:8px';
+      const warning=document.createElement('p');
+      warning.setAttribute('role','status');
+      warning.style.cssText='font-size:13px;color:#ffe2a3;margin:8px 0 0';
+      function refresh(){
+        const lines=[entry.hint1||d.progressiveHints[0].text];
+        if(level()>=2)lines.push(entry.hint2||d.progressiveHints[1].text);
+        if(level()>=3)lines.push(entry.hint3||d.progressiveHints[2].text);
+        body.replaceChildren();
+        for(const [i,line] of lines.entries()){
+          const p=document.createElement('p'),tag=document.createElement('strong');
+          tag.textContent=i===0?'Free hint: ':'Additional hint: ';
+          p.append(tag,document.createTextNode(String(line)));
+          body.appendChild(p);
+        }
+        body.append(warning,buy);
+        buy.hidden=price()===0;
+        if(!buy.hidden)buy.textContent='Stronger hint · '+price()+' Insight Tokens';
       }
-      state.hints[discovery.id] = level + 1;
-      state.feedback = (cost ? '−' + cost + ' Insight Tokens · ' : 'Free hint · ') + clues[level];
-      bu3857Save();
-      bu3857Render();
+      buy.onclick=()=>{
+        const cost=price();if(!cost)return;
+        if(!saveHelp(level()+1,cost)){warning.textContent='Hint not purchased; no additional tokens deducted.';return;}
+        st.hints[d.id]=level();st.feedback='';bu3857Save();bu3857Render();
+        warning.textContent='';refresh();
+      };
+      refresh();
+    };
+  }
+
+  function installWheelClueGuard() {
+    // The historical wheel binder derives displayed answer letters from hint level.
+    // Genesis 12's third paid THINKING clue may never expose a letter.
+    if(typeof buHQBind!=='function'||typeof buHQUpdate!=='function')throw Error('Original wheel binder missing');
+    const originalBind=buHQBind;
+    buHQBind=function genesis12NativeWheel(...args) {
+      const result=originalBind.apply(this,args);
+      if(bu3857State?.book===CHAPTER_ID){
+        const discovery=bu3857Current();
+        if(discovery&&typeof buHQHintLetters!=='undefined'){
+          buHQHintLetters[discovery.id]=0;
+          buHQUpdate();
+        }
+      }
+      return result;
     };
   }
 
@@ -152,6 +208,7 @@
     }
 
     installHintLadder();
+    installWheelClueGuard();
     installScenePlaceholder();
     const originalMakeEpisodes = makeEpisodes;
     makeEpisodes = function genesis12Episodes(...args) {
