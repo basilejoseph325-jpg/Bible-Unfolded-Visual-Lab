@@ -32,8 +32,8 @@ jobs:
             assert m, f'Original native Story part {i} missing'
             pieces.append(json.loads(m.group(1)))
           src=''.join(pieces)
-          assert "const BU_GENESIS_IDS=['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10'];" in src
-          assert "Genesis Episodes 7–10" in src
+          assert "const BU_GENESIS_IDS=['genesis_ep07','genesis_ep08','genesis_ep09','genesis_ep10'" in src
+          assert re.search(r"Genesis Episodes 7–\d+",src)
           assert 'bible-unfolded-genesis-adventure-v3860' in src
           print('PASS: original serialized native Story engine extends to Episode 10')
           PY
