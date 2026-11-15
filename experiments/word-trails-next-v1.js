@@ -233,6 +233,35 @@ function load(){
  }catch(_){return DEFAULT()}
 }
 let save=load(),index=save.level,level=LEVELS[index],cells=BOARDS[index];
+/* Motivating next-step preview based ONLY on existing completed-level IDs.
+   Does not create rewards, change coin totals, or write a new save key. */
+function nextSealProgress(){
+ const completed=new Set(save.completed.filter(n=>Number.isInteger(n)&&n>=0&&n<LEVELS.length));
+ const targets=Object.keys(MILESTONE_SEALS).map(Number).sort((a,b)=>a-b);
+ const target=targets.find(n=>!completed.has(n-1));
+ if(!target)return {all:true,done:5,goal:5,title:'All six Journey Seals collected'};
+ const start=target-5;
+ const done=Array.from({length:5},(_,offset)=>start+offset).filter(n=>completed.has(n)).length;
+ return {all:false,done,goal:5,title:MILESTONE_SEALS[target].name,target};
+}
+function renderNextSealProgress(){
+ const seal=nextSealProgress();
+ const mapLabel=$('wt-map-seal-title'),mapDetail=$('wt-map-seal-detail'),
+  mapBar=$('wt-map-seal-track'),mapFill=$('wt-map-seal-fill'),
+  finishLabel=$('finish-next-seal');
+ if(mapLabel)mapLabel.textContent=seal.all?'✦ All six Journey Seals collected':
+  'NEXT JOURNEY SEAL · '+seal.title;
+ if(mapDetail)mapDetail.textContent=seal.all?'Your 30-level journey is complete!':
+  seal.done+' of '+seal.goal+' levels completed · +60 bonus TEST coins at Level '+seal.target;
+ if(mapBar){
+  mapBar.setAttribute('aria-valuenow',String(seal.done));
+  mapBar.setAttribute('aria-label',seal.all?'All six Journey Seals collected':
+   seal.title+': '+seal.done+' of 5 levels complete');
+ }
+ if(mapFill)mapFill.style.width=(seal.done/seal.goal*100)+'%';
+ if(finishLabel)finishLabel.textContent=seal.all?'✦ All six Journey Seals collected!':
+  'UP NEXT · '+seal.title+' · '+seal.done+'/5 levels toward your next seal';
+}
 let found=new Set(),bonuses=new Set(),hinted=new Set(),chosen=[],letters=[],combo=0;
 let dragging=false,dragActive=false,start=null,pointer=null,suppressClickUntil=0;
 let timer=null,locked=false,completionShown=false;
@@ -517,6 +546,7 @@ function completeLevel(){
  $('finish-reward').textContent=already?'Replay complete':('+'+reward+' TEST COINS');
  $('finish-words').textContent=level.words.length+' crossword words · '+bonuses.size+' bonus '+(bonuses.size===1?'word':'words');
  $('finish-spark').textContent='★ '+sparksFound()+' / '+sparkTotal()+' Bible discoveries collected';
+ renderNextSealProgress();
  $('next-level').textContent=index===LEVELS.length-1?'Explore Level Map':'Next Level';
  $('stay').textContent=sparksFound()===sparkTotal()?'Replay this level':'Find more Bible words';
  $('finish').showModal();
@@ -612,6 +642,7 @@ function toggleSound(){
  else{music?.pause();ctx?.suspend().catch(()=>{})}
 }
 function levelMap(){
+ renderNextSealProgress();
  const host=$('map-list');host.replaceChildren();
  LEVELS.forEach((lev,i)=>{
   if(i%5===0){
