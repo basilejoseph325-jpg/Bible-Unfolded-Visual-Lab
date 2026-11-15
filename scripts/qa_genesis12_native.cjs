@@ -38,6 +38,18 @@ for(const [width,height] of [[320,568],[390,844]]){
  assert.deepEqual(wrong,{solved:false,unchanged:true});
  await new Promise(r=>setTimeout(r,850));
  for(let i=0;i<13;i++){
+  await page.waitForFunction(()=>{
+   const d=bu3857Current?.(),img=document.querySelector('#bu3857-content figure.bu3863-image img');
+   return !!d&&!!img&&img.complete&&img.naturalWidth===640&&img.naturalHeight===360;
+  },{timeout:20000});
+  const art=await page.evaluate(()=>{
+   const d=bu3857Current(),img=document.querySelector('#bu3857-content figure.bu3863-image img');
+   const wheel=document.getElementById('buhq-wheel');
+   return {id:d.id,src:img?.getAttribute('src'),alt:img?.alt,top:img?.getBoundingClientRect().top,
+    wheelTop:wheel?.getBoundingClientRect().top};
+  });
+  assert.equal(art.src,'story-adventure-art/genesis12/'+art.id+'.webp','Incorrect scene art '+art.id);
+  assert(art.alt?.length>30&&art.top<art.wheelTop,'Artwork/accessibility or vertical layout broken '+art.id);
   const result=await page.evaluate(()=>{
    const d=bu3857Current(),answer=BU_HQ_WORDS[d.id].answer,tiles=[...document.querySelectorAll('#buhq-wheel [data-buhq]')],used=new Set();
    if(tiles.length!==answer.length)throw Error('Tile count incorrect '+d.id);
@@ -64,7 +76,7 @@ for(const [width,height] of [[320,568],[390,844]]){
  });
  assert.deepEqual(await page.evaluate(()=>[economy.points,economy.coins]),before,'Replay farmed points');
  assert.deepEqual(errors,[],'Browser errors');
- console.log('PASS_GENESIS12_NATIVE',JSON.stringify({width,height,solved:13,hints:[0,15,25],resume:true,replay:true,art:'pending'}));
+ console.log('PASS_GENESIS12_NATIVE',JSON.stringify({width,height,solved:13,hints:[0,15,25],resume:true,replay:true,art:13}));
  await ctx.close();
 }
 }finally{await browser.close()}
