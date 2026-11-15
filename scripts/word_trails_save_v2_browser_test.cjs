@@ -168,7 +168,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   });
   console.log('RESTORED_PUZZLE_IN_REAL_GAME',JSON.stringify(progress));
   console.log('TEST_SAVE_AFTER_CHILD_LOAD',JSON.stringify(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'))));
-  assert.equal(progress.level,'LEVEL 1 / 45');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');
+  assert.equal(progress.level,'LEVEL 1 / 50');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');
   // Older TEST saves lacked the later claimedSparks/boardBible ledgers.
   const legacyWT=await page.evaluate(()=>{
    const source=window.BUPlatformSaves.makeBackup();
