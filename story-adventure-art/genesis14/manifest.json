@@ -1,0 +1,58 @@
+{
+  "chapterId": "genesis_ep14",
+  "scenes": {
+    "g14-d01": {
+      "path": "story-adventure-art/genesis14/g14-d01.webp",
+      "approved": false
+    },
+    "g14-d02": {
+      "path": "story-adventure-art/genesis14/g14-d02.webp",
+      "approved": false
+    },
+    "g14-d03": {
+      "path": "story-adventure-art/genesis14/g14-d03.webp",
+      "approved": false
+    },
+    "g14-d04": {
+      "path": "story-adventure-art/genesis14/g14-d04.webp",
+      "approved": false
+    },
+    "g14-d05": {
+      "path": "story-adventure-art/genesis14/g14-d05.webp",
+      "approved": false
+    },
+    "g14-d06": {
+      "path": "story-adventure-art/genesis14/g14-d06.webp",
+      "approved": false
+    },
+    "g14-d07": {
+      "path": "story-adventure-art/genesis14/g14-d07.webp",
+      "approved": false
+    },
+    "g14-d08": {
+      "path": "story-adventure-art/genesis14/g14-d08.webp",
+      "approved": false
+    },
+    "g14-d09": {
+      "path": "story-adventure-art/genesis14/g14-d09.webp",
+      "approved": false
+    },
+    "g14-d10": {
+      "path": "story-adventure-art/genesis14/g14-d10.webp",
+      "approved": false
+    },
+    "g14-d11": {
+      "path": "story-adventure-art/genesis14/g14-d11.webp",
+      "approved": false
+    },
+    "g14-d12": {
+      "path": "story-adventure-art/genesis14/g14-d12.webp",
+      "approved": false
+    }
+  },
+  "ending": {
+    "heroDiscovery": "g14-d12",
+    "backgroundDiscovery": "g14-d12",
+    "caption": "Joseph arrives at an Egyptian household"
+  }
+}
