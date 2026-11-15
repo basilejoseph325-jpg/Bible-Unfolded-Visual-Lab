@@ -62,6 +62,7 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
        visible:!!document.querySelector('#bu-james-gate[role="dialog"]'),
        price:document.querySelector('#bu-james-gate')?.textContent||''
       }));
+      assert.equal(result.root,'/index.html','Unowned Books tap cannot navigate away before the TEST token purchase');
       assert(gate.visible&&gate.price.includes('180'),'Unowned Bible Books must show a functional token gate');
       // The unlocked mode deliberately opens its own full-page reading shelf.
       // Wait for the actual navigation, then verify purchased ownership persists.
