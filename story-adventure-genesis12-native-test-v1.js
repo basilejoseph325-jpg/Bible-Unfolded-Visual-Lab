@@ -71,6 +71,80 @@ async function setup(){
    window.__buGenesis12WheelHintGuard=true;
   }
 
+  // Use the existing Story modal, durable wallet receipts, and approved
+  // Episode 10/11 free → 15 → 25 contextual-help pricing.
+  // This preview-specific adapter does NOT buy/reveal letters.
+  if(!window.__buGenesis12HintGuard){
+   const originalHint=bu3857Hint;
+   bu3857Hint=function(...args){
+    const st=typeof bu3857State==='undefined'?null:bu3857State;
+    if(!st||st.book!==BOOK)return originalHint.apply(this,args);
+    if(st.complete)return;
+    const d=bu3857Current();
+    if(!d||st.solved[d.id])return;
+    const entry=BU_HQ_WORDS[d.id],receipt='story-assist-v1:'+BOOK+':'+d.id;
+    if(!entry||typeof saveEconomy!=='function'||typeof bu3824RefreshWallet!=='function'||typeof bu3864Modal!=='function'){
+     status('Native hint service unavailable in this preview',true);return;
+    }
+    const normalized=n=>Math.max(0,Math.trunc(Number(n)||0));
+    function level(){
+     return Math.min(3,Math.max(normalized(st.hints[d.id]),normalized(economy.hints[receipt])));
+    }
+    function saveHelp(next,cost){
+     bu3824RefreshWallet();
+     const before=JSON.parse(JSON.stringify(economy));
+     if(normalized(economy.hints[receipt])>=next)return true;
+     if(normalized(economy.coins)<cost)return false;
+     economy.hints[receipt]=next;
+     economy.coins-=cost;
+     if(saveEconomy()!==true){economy=before;updateWallet();return false;}
+     updateWallet();
+     if(cost)try{playCoinFx('spend')}catch(_){}
+     return true;
+    }
+    st.hints[d.id]=level();
+    if(level()===0){
+     if(!saveHelp(1,0)){bu3864Modal('Hints unavailable','Your free hint could not be saved. No tokens were deducted.');return;}
+     st.hints[d.id]=1;bu3857Save();bu3857Render();
+    }
+    bu3864Modal('Discovery hint','');
+    const layer=document.getElementById('bu3864-modal-layer');
+    const body=layer?.querySelector('.bu3864-modal-body');
+    if(!body){status('Native hint popup unavailable',true);return;}
+    const buy=document.createElement('button');
+    buy.type='button';buy.className='gold-button';
+    buy.style.cssText='width:100%;min-height:44px;padding:10px 13px;border-radius:12px;font-weight:800;margin-top:8px';
+    const warning=document.createElement('p');
+    warning.setAttribute('role','status');
+    warning.style.cssText='font-size:13px;color:#ffe2a3;margin:8px 0 0';
+    const price=()=>level()===1?15:level()===2?25:0;
+    function refresh(){
+     body.replaceChildren();
+     const lines=[entry.hint1||d.progressiveHints[0].text];
+     if(level()>=2)lines.push(entry.hint2||d.progressiveHints[1].text);
+     if(level()>=3)lines.push(entry.hint3||d.progressiveHints[2].text);
+     for(const [i,line] of lines.entries()){
+      const p=document.createElement('p'),tag=document.createElement('strong');
+      tag.textContent=i===0?'Free hint: ':'Additional hint: ';
+      p.append(tag,document.createTextNode(String(line)));
+      body.appendChild(p);
+     }
+     body.append(warning,buy);
+     buy.hidden=price()===0;
+     if(!buy.hidden)buy.textContent='Stronger hint · '+price()+' Insight Tokens';
+    }
+    buy.onclick=()=>{
+     const cost=price();
+     if(!cost)return;
+     if(!saveHelp(level()+1,cost)){warning.textContent='Hint not purchased; no additional tokens deducted.';return;}
+     st.hints[d.id]=level();st.feedback='';bu3857Save();bu3857Render();
+     warning.textContent='';refresh();
+    };
+    refresh();
+   };
+   window.__buGenesis12HintGuard=true;
+  }
+
   window.__buGenesis12Preview={chapterId:BOOK,discoveries:chapter.discoveries.length,integrated:true,access:'explicit-url-test-only',artwork:'not-integrated'};
   status('TEST ONLY · Genesis 12 preview · Not released · Artwork pending');
   // Start through the EXISTING engine. Do not alter book/Journey menu locks.
