@@ -33,6 +33,13 @@ if(typeof BU3857_SCENE_ART!=='undefined'&&typeof BU3857_SCENE_ALT!=='undefined'&
 const originalG12Render=bu3857Render;
 bu3857Render=function(){
  const result=originalG12Render.apply(this,arguments);
+ // Episode 11's finale should continue naturally into the next unlocked
+ // Genesis episode. Keep the original chapter and all its save data intact.
+ if(bu3857State?.book==='genesis_ep11'&&bu3857State.complete){
+  const next=document.getElementById('bu3857-next-episode');
+  if(next){next.textContent='Next Genesis Episode →';next.onclick=()=>bu3857Open(ID);}
+  return result;
+ }
  if(bu3857State?.book!==ID)return result;
  const d=bu3857Current?.(),a=d&&G12_ART[d.id];
  if(!a)return result;
@@ -54,6 +61,12 @@ bu3857Render=function(){
  if(!img){img=document.createElement('img');figure.prepend(img)}
  if(img.getAttribute('src')!==a.src)img.setAttribute('src',a.src);
  img.alt=a.alt;img.loading='eager';img.decoding='async';
+ // The native ten-scene footer uses a hard-coded last step (9); Episode 12
+ // has 13 scenes, so show the correct final action without rewriting engine.
+ const next=document.getElementById('bu3857-continue');
+ if(next&&bu3857State?.solved?.[d.id]&&bu3857State.step===chapter.discoveries.length-1){
+  next.textContent='Complete Chapter ✦';
+ }
  return result;
 };
 if(!BU_GENESIS_IDS.includes(ID))BU_GENESIS_IDS.push(ID);
