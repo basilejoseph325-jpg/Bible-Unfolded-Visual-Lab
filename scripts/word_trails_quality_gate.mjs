@@ -21,11 +21,16 @@ const match31to35=source31to35.match(/Object\.freeze\((\[[\s\S]*\])\);?/);
 assert(match31to35,'Additional levels 31–35 must be parseable JSON');
 const more=JSON.parse(match31to35[1]);
 assert.equal(more.length,5,'Exactly five new levels expected');
-const later=[...originalLater,...more],levels=[...initial.LEVELS,...later];
+const source36to40=fs.readFileSync('experiments/word-trails-levels-36-40-v1.js','utf8');
+const match36to40=source36to40.match(/Object\.freeze\((\[[\s\S]*\])\);?/);
+assert(match36to40,'Levels 36–40 must be parseable JSON');
+const latest=JSON.parse(match36to40[1]);
+assert.equal(latest.length,5,'Exactly five new levels expected');
+const later=[...originalLater,...more,...latest],levels=[...initial.LEVELS,...later];
 const extra=[...initial.EXTRA_SPARKS,...later.map(x=>x.extraSparks)];
 assert.equal(initial.LEVELS.length,11,'Do not change initial 11 levels silently');
 assert.equal(originalLater.length,19,'Keep original levels 12–30 untouched');
-assert.equal(later.length,24,'Expected levels 12–35');
+assert.equal(later.length,29,'Expected levels 12–40');
 const fail=[],review=[],summaries=[],titles=new Set();
 const canMake=(rack,word)=>{
  const m={};for(const ch of rack)m[ch]=(m[ch]||0)+1;
@@ -120,7 +125,7 @@ for(let i=0;i<levels.length;i++){
  summaries.push({level:n,title:l.title,grid:size,answers:words.length,crossings,unwantedTouch,
   bibleOnBoard:bible.length,bibleHidden:secret.length,playableBonuses:usable,scene:l.scene});
 }
-// Across all 35 levels Bible finds must not recycle the same source passage,
+// Across all 40 levels Bible finds must not recycle the same source passage,
 // clue or insight for the same answer; original eleven gameplay data is untouched.
 const reviewedClues=new Map(),reviewedInsights=new Map(),reviewedWordPassages=new Map();
 const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
@@ -149,12 +154,12 @@ const totals={
  levels:summaries.length,newLevels:later.length,
  visibleBible:summaries.reduce((n,x)=>n+x.bibleOnBoard,0),
  hiddenBible:summaries.reduce((n,x)=>n+x.bibleHidden,0),
- realBonuses12to35:summaries.slice(11).reduce((n,x)=>n+x.playableBonuses,0),
- uniqueScenes12to35:scenery.size,editorialWarnings:review.length,errors:fail.length
+ realBonuses12to40:summaries.slice(11).reduce((n,x)=>n+x.playableBonuses,0),
+ uniqueScenes12to40:scenery.size,editorialWarnings:review.length,errors:fail.length
 };
 console.log('WORD_TRAILS_QUALITY_SUMMARY',JSON.stringify(totals));
 console.log('WORD_TRAILS_LEVEL_MATRIX',JSON.stringify(summaries));
 for(const w of review)console.log('EDITORIAL_LAYOUT_REVIEW',w);
 for(const f of fail)console.error('PUZZLE_FAILURE',f);
 assert.equal(fail.length,0,fail.length+' critical puzzle errors; do not release');
-console.log('PASS: 35 puzzles have valid intersections, connected boards, source fields, playable bonuses and scenic assets.');
+console.log('PASS: 40 puzzles have valid intersections, connected boards, source fields, playable bonuses and scenic assets.');
