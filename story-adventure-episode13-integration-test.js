@@ -326,6 +326,10 @@
     };
     installJourneyProgress();
     makeEpisodes();
+    // Refresh only an already visible hub or Episode 12 ending after async data arrives.
+    // Never reopen Story on refresh or redraw a player's in-progress word.
+    if(!document.getElementById('journey').hidden)updateJourney(false);
+    if(bu3857State?.book==='genesis_ep12'&&bu3857State.complete&&!document.getElementById('bu3857-screen').hidden)bu3857Render();
     preview.status = 'ready';
     preview.discoveries = chapter.discoveries.length;
     console.info('Genesis Episode 13 TEST candidate registered: 12 scenes, unlocks after Episode 12.');
