@@ -12,7 +12,7 @@ const scenarios=[
  {name:'new',completed:[],level:0,unlocked:0,coins:60,title:'First Steps',done:0},
  {name:'one-away',completed:[0,1,2,3],level:4,unlocked:4,coins:180,title:'First Steps',done:4},
  {name:'next-chapter',completed:[0,1,2,3,4],level:5,unlocked:5,coins:240,title:'Courage Crest',done:0},
- {name:'all-seals',completed:Array.from({length:30},(_,i)=>i),level:29,unlocked:29,coins:700,title:'All six Journey Seals collected',done:5}
+ {name:'all-seals',completed:Array.from({length:35},(_,i)=>i),level:34,unlocked:34,coins:700,title:'All seven Journey Seals collected',done:5}
 ];
 const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--autoplay-policy=no-user-gesture-required'],protocolTimeout:120000};
 (async()=>{
@@ -47,7 +47,7 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     assert.equal(map.now,String(scenario.done),'Milestone count wrong '+scenario.name);
     assert.equal(map.max,'5');
     assert.equal(map.fill,scenario.done*20+'%');
-    assert.equal(map.levels,30,'Old levels missing');
+    assert.equal(map.levels,35,'Expected 35 levels');
     assert(map.coinExplainer.includes('15')&&map.coinExplainer.includes('free hint'),'Coin spending unclear');
     assert(!map.bodyOverflow,'Horizontal overflow at '+width);
     const after=await page.evaluate(key=>localStorage.getItem(key),SAVE_KEY);
