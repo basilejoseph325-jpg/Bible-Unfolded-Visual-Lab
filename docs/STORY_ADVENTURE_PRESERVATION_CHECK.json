@@ -13,5 +13,33 @@
     "saveEconomy",
     "bu3899FitLaterWheel",
     "bu385FitStory"
-  ]
+  ],
+  "completionPass20261115": {
+    "baseline": "bf101f8",
+    "stableWordAnswers": 134,
+    "stableInteractionSolutions": 70,
+    "unchangedDeclarations": [
+      "BU3868_QUESTIONS",
+      "bu3899FitLaterWheel",
+      "saveEconomy",
+      "awardOnce",
+      "awardChapter",
+      "canSpend",
+      "uniqueTriviaRounds",
+      "bank",
+      "questions",
+      "BU34_BANK",
+      "bu35TriviaBody",
+      "bu37UniqueQuestions",
+      "bu37OriginalTriviaHome",
+      "bu374OriginalTriviaHome",
+      "bu374OriginalTriviaDraw",
+      "bu381OldTriviaChoose",
+      "bu381OldTriviaFinish",
+      "bu385FitStory",
+      "bu386Trivia"
+    ],
+    "part4Unchanged": true,
+    "artAndAudioChanged": []
+  }
 }

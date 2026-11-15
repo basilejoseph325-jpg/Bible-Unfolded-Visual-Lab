@@ -68,7 +68,9 @@ messages, verifies source receipt shape, and exercises compound Bible references
 through the actual Story buttons. Miriam's cross-book references, Genesis 23/24,
 and inherited Genesis 24:47–48 open the correct chapter destinations. Closing
 restores keyboard focus. Ending actions remain reachable at both phone viewports.
-It does not turn a source hash or text assertion into an editorial judgment.
+All 84 early context popups are also exercised at both sizes. Settled-popup
+and chapter-ending screenshots were inspected at 320×568. It does not turn a
+source hash or text assertion into an editorial judgment.
 
 The ledger records a separate deliberate readability pass by the same assistant;
 no independent human reviewer, physical-device test, or release approval is implied.

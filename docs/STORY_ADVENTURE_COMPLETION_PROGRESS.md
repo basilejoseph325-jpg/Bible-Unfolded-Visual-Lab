@@ -77,6 +77,13 @@ Historical Trivia-only campaign restrictions do not replace this Story mission.
   eight ending messages, compound links, focus restoration and reachable finale
   controls at 320×568 and 390×844. This is browser automation, not phone acceptance.
 
+- [x] Re-run all 164 player paths and 17 finales at both 320×568 and 390×844;
+  no gameplay-control overflow. Touch/recovery, all 30 Exodus hint ladders,
+  Genesis 11 contextual hints at both sizes, and nine-mode baseline parity pass.
+- [x] Inspect settled context popup and Genesis 9 ending at 320×568 in Chromium.
+  Record both the initial parallel test timeout and the corrected delayed-launch
+  fixture in `STORY_ADVENTURE_QA_RESULTS.json`; do not hide failed attempts.
+
 ## Outstanding acceptance — do not mark release-ready
 
 - [ ] Independent human source/editorial acceptance across all 164 discoveries.
