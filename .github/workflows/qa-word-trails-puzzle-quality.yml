@@ -12,6 +12,7 @@ on:
       - 'journey-progress-caption.js'
       - 'experiments/word-trails-levels-12-30-v1.js'
       - 'experiments/word-trails-levels-31-35-v1.js'
+      - 'experiments/word-trails-levels-36-40-v1.js'
       - 'experiments/word-trails-next-v1.js'
       - '.github/workflows/qa-word-trails-puzzle-quality.yml'
 permissions: {contents: read}
@@ -21,7 +22,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: Check all 35 puzzle definitions, bonus banks, sources and art
+      - name: Check all 40 puzzle definitions, bonus banks, sources and art
         run: |
           node --check scripts/word_trails_quality_gate.mjs
           node scripts/word_trails_quality_gate.mjs
