@@ -8,6 +8,19 @@ window.addEventListener('click',event=>{
  if(allowNative)return;
  const target=event.target?.closest?.('#home-books');
  if(!target)return;
+ // The James TEST return loop owns the locked Books purchase. Its document
+ // capture handler must see unowned clicks before this full-page router acts.
+ // A window capture listener runs first, so do not intercept unowned clicks.
+ const economy=window.BUJamesReturnLoopV1;
+ if(!economy?.inspect?.()?.owned?.includes('books')){
+  // Claim the click here, ahead of native handlers, and delegate the prompt
+  // to the original TEST wallet. Never spend tokens in this router.
+  event.preventDefault();
+  event.stopPropagation();
+  event.stopImmediatePropagation();
+  economy?.requestBookUnlock?.();
+  return;
+ }
  event.preventDefault();
  event.stopPropagation();
  event.stopImmediatePropagation();
