@@ -9,6 +9,7 @@ on:
       - 'story-adventure-content/**'
       - 'story-chapter-complete-v2-test.js'
       - 'scripts/*story*.cjs'
+      - 'scripts/qa_genesis11_three_thinking_hints_v1.cjs'
       - '.github/workflows/qa-story-adventure-candidate.yml'
 permissions:
   contents: read
@@ -36,6 +37,10 @@ jobs:
           exit 1
       - name: Syntax and integrated content checks
         run: node scripts/check_story_sources.cjs
+      - name: Reviewed content, compound Bible links and finale controls
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_story_review_integration.cjs
       - name: Both engines, 164 discoveries, two phone viewports
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
@@ -49,6 +54,10 @@ jobs:
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
         run: node scripts/qa_story_editorial_hints.cjs
+      - name: Genesis 11 contextual clues at both phone sizes
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_genesis11_three_thinking_hints_v1.cjs
       - name: Preserve other modes against baseline
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'

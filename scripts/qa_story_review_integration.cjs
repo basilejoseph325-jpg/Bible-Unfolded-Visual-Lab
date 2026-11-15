@@ -27,5 +27,32 @@ const links=await page.evaluate(()=>{
 });
 assert.deepEqual(links.miriam.map(x=>x.href),['https://www.jw.org/en/library/bible/nwt/books/exodus/2/','https://www.jw.org/en/library/bible/nwt/books/numbers/26/','https://www.jw.org/en/library/bible/nwt/books/exodus/15/']);assert.equal(links.restored,'scene-scripture');
 assert.deepEqual(links.purchase.map(x=>x.href),['https://www.jw.org/en/library/bible/nwt/books/genesis/23/','https://www.jw.org/en/library/bible/nwt/books/genesis/24/']);assert(links.worship[1].text.includes('Genesis 24:47–48'));assert(links.worship.every(x=>x.href.endsWith('/genesis/24/')));assert.equal(new URL(page.url()).hostname,'127.0.0.1');
+// Rendering-only finale checks supplement the separate full player-path suite.
+for(const [width,height] of [[320,568],[390,844]]){
+ await page.setViewport({width,height,isMobile:true,hasTouch:true});
+ console.log('CHECK_REVIEWED_STORY_UI',width,height);
+ for(const r of ledger.sceneIntroductions){
+  const [book,i]=r.id.split(':');
+  const result=await page.evaluate(({book,i,text})=>{if(activeBook!==book){focusHome();startChapter(book,false,true)}stage=+i;render();document.getElementById('scene-context').click();const layer=document.getElementById('bu3864-modal-layer'),ok=layer.textContent.includes(text),overflow=layer.scrollWidth>innerWidth+1;layer.buClose();return {ok,overflow}},{book,i,text:r.narration});
+  assert(result.ok&&!result.overflow,r.id+' scene context display');
+ }
+ for(const [id,message] of Object.entries(ledger.finales)){
+  await page.evaluate(id=>{bu3857Open(id,true);bu3857State.complete=true;bu3857Render()},id);
+  await page.waitForSelector('.bu-story-finale-actions');
+  assert(await page.$eval('.bu3863-finale',(el,text)=>el.textContent.includes(text),message),id+' ending message');
+  for(const selector of ['#bu3857-next-episode','#bu3857-replay','#bu-story-finale-chapters']){
+   const bounds=await page.$eval(selector,el=>{el.scrollIntoView({block:'center'});const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:innerWidth,height:innerHeight}});
+   assert(bounds.left>=-1&&bounds.right<=bounds.width+1&&bounds.top>=-1&&bounds.bottom<=bounds.height+1,id+' unreachable finale action '+JSON.stringify(bounds));
+  }
+ }
+}
+if(process.env.STORY_SHOTS){
+ await page.setViewport({width:320,height:568,isMobile:true,hasTouch:true});
+ await page.evaluate(()=>{focusHome();startChapter('moses',false,true);stage=4;render();document.getElementById('scene-context').click()});
+ await page.$eval('#bu3864-modal-layer',el=>Promise.all(el.getAnimations().map(a=>a.finished)));
+ await page.screenshot({path:'work/story-reviewed-context-320.png'});
+ await page.evaluate(()=>{document.getElementById('bu3864-modal-layer').buClose();bu3857Open('genesis_ep09',true);bu3857State.complete=true;bu3857Render()});
+ await page.waitForSelector('.bu-story-finale-actions');await page.screenshot({path:'work/story-reviewed-finale-320.png'});
+}
 assert.deepEqual(errors,[]);console.log('PASS_STORY_REVIEW_INTEGRATION',JSON.stringify({remainingDiscoveries:108,sceneIntroductions:84,chapterEndingMessages:8,sourceReceipts:Object.keys(ledger.sources).length,compoundBibleLinks:true,focusRestored:true,independentHumanReview:false,physicalPhones:false}));
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack||e);process.exitCode=1});

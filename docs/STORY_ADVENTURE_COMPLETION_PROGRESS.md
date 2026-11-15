@@ -53,12 +53,36 @@ Historical Trivia-only campaign restrictions do not replace this Story mission.
 - [x] Add reproducible local QA and a read-only candidate CI workflow with no
   deployment step. See `STORY_ADVENTURE_TESTING.md` and the QA results JSON.
 
+## Second completion pass — 2026-11-15
+
+- [x] Finish the **108 previously outstanding discovery reviews**: 67 early
+  discoveries and 41 later Genesis discoveries. Each has an individual reason,
+  before/after text, official source URLs and source snapshot hashes in
+  `STORY_ADVENTURE_DISCOVERY_REVIEW_2026-11-15.json`.
+- [x] Revise existing content in 99 of those discoveries; deliberately retain
+  existing questions/hints/explanations in nine. These are item decisions, not
+  an automated replacement count. Earlier 56 discovery reviews remain preserved.
+- [x] Replace the shared generic context narration with **84 individually written
+  introductions** across all early chapters, including scene context not addressed
+  by the earlier field-level changes. Preserve the approved popup/layout.
+- [x] Add eight scene-specific later chapter ending messages within the approved
+  completion template; preserve Replay, Chapters and next-episode handlers.
+- [x] Correct misleading Cain warning chronology, unsupported field isolation/
+  altar motives, Rebekah jewelry ordering, ambiguous speckled-animal question,
+  weak verse-only hints, and repetitive early Moses explanations.
+- [x] Normalize compound Story Bible references: explicit new books, inherited
+  chapters and inherited verse ranges now get the appropriate JW.org destinations.
+  Keep the shared Scripture viewer and other modes' callers intact.
+- [x] Integration checks confirm all 108 review snapshots, 84 introductions,
+  eight ending messages, compound links, focus restoration and reachable finale
+  controls at 320×568 and 390×844. This is browser automation, not phone acceptance.
+
 ## Outstanding acceptance — do not mark release-ready
 
-- [ ] Complete independent source/editorial acceptance across all 164 discoveries.
-  The changed-item ledger covers 56 discoveries; it is not a newly completed
-  exhaustive editorial review of all historical content. The other 108 entries
-  remain in the inventory for continued review. No independent human signoff claimed.
+- [ ] Independent human source/editorial acceptance across all 164 discoveries.
+  Assistant review now covers the earlier 56 plus the remaining 108, with separate
+  source/readability records. Independent human signoff is still pending; automated
+  integration assertions do not supply that acceptance.
 - [ ] Physical Samsung Chrome/Samsung Internet and iPhone Safari: input, safe
   areas, larger text, landscape, interruptions, wheel purchases/effects and save
   retention across closing/reopening the browser.
@@ -74,9 +98,9 @@ They were not unlocked or replaced with filler chapters. The currently playable
 set is 11 Genesis episodes (through Jacob in Haran) and 6 Exodus episodes (through
 the Red Sea). Do not label this as completion of the whole biblical narrative.
 
-Resume with the 108 unchanged content entries in the inventory, source-first,
-then independent review of the changed-item ledger. Do not repeat the completed
-runtime fixes. Expand planned story coverage only through researched content that
+Resume with the physical-device and independent human acceptance gates above.
+The 108-item assistant review is complete; do not repeat it or the runtime fixes.
+Use both dated editorial ledgers for focused review of any reported concern. Expand planned story coverage only through researched content that
 passes the governing editorial/gameplay rules, preserving existing stable progress.
 
 No branch merge, LIVE deployment, or owner physical-device approval is implied

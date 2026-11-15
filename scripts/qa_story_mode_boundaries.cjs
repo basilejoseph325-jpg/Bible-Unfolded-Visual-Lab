@@ -16,6 +16,7 @@ for(const baseline of [true,false]){
  for(const id of ['home-watch','home-trivia','home-family','home-builder','home-cross','home-crossword-packs','home-shop','home-help','home-books']){
   await page.evaluate(id=>{window.BUWTNativeShell?.close?.();closeDialog();closeMenu();focusHome();document.getElementById('daily-close')?.click();document.getElementById(id).click()},id);
   if(id==='home-books')await page.waitForFunction(()=>location.pathname.includes('bible-book-guides/'));
+  else if(id==='home-cross')await page.waitForFunction(()=>!!window.BUWTNativeShell?.active?.());
   else await new Promise(r=>setTimeout(r,100));
   modes[id]=await page.evaluate(()=>({path:location.pathname,active:[...document.querySelectorAll('.screen,.wb36-screen')].filter(e=>!e.hidden&&getComputedStyle(e).display!=='none').map(e=>e.id),wordTrailsOverlay:!!window.BUWTNativeShell?.active?.(),help:!!document.getElementById('help-dialog')&&!document.getElementById('help-dialog').hidden,shop:!!document.getElementById('bu-native-boost-shop-v1')}));
  }

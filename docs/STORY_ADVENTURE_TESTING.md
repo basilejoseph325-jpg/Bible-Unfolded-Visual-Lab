@@ -19,6 +19,7 @@ In another terminal, from the repository root:
 export NODE_PATH="$PWD/work/node_modules"
 export CHROME_BIN="$(command -v chromium || command -v google-chrome)"
 node scripts/check_story_sources.cjs
+node scripts/qa_story_review_integration.cjs
 STORY_EVIDENCE=work/story-release-evidence.json node scripts/qa_story_adventure_release.cjs
 node scripts/qa_story_touch_and_recovery.cjs
 node scripts/qa_story_editorial_hints.cjs
@@ -59,6 +60,21 @@ permissions and a local server; it has no deployment job.
 - Three Chromium screenshots inspected: Genesis 11 gameplay, its cinematic
   finale, and original Genesis gameplay at 320×568. Physical acceptance is separate.
 
+## 2026-11-15 content and link verification
+
+`qa_story_review_integration.cjs` asserts the current text against all 108 dated
+item records, checks all 84 authored early introductions and eight completion
+messages, verifies source receipt shape, and exercises compound Bible references
+through the actual Story buttons. Miriam's cross-book references, Genesis 23/24,
+and inherited Genesis 24:47–48 open the correct chapter destinations. Closing
+restores keyboard focus. Ending actions remain reachable at both phone viewports.
+It does not turn a source hash or text assertion into an editorial judgment.
+
+The ledger records a separate deliberate readability pass by the same assistant;
+no independent human reviewer, physical-device test, or release approval is implied.
+Full official source dumps remain uncommitted to avoid copying publications into
+the repository. URLs, exact references and snapshot hashes are retained instead.
+
 ## Existing checker discrepancies
 
 `visual_lab_all_mode_smoke_test.cjs` still expects Bible Books to show an older
@@ -73,10 +89,12 @@ its unchanged price/no-letter assertions pass at both sizes.
 
 ## Release acceptance still required
 
-- Independent Scripture/editorial acceptance for all 164 discoveries. The ledger
-  records **68 changed fields in 56 discoveries**, not a claim that every historical
-  item received a new exhaustive source/readability audit. Unchanged items remain
-  listed in the inventory for continuation. No independent human review is claimed.
+- Independent human Scripture/editorial acceptance for all 164 discoveries.
+  The first ledger records 68 field changes in 56 discoveries; the 2026-11-15
+  ledger supplies the other 108 item reviews (99 revised, nine retained), all
+  84 early introductions and eight later endings. Each remaining item has an
+  individual decision and official source receipts. Assistant editorial work and
+  automated integration are complete; independent human acceptance is not claimed.
 - Samsung Chrome/Samsung Internet and iPhone Safari: tap/swipe reliability, all
   purchased wheel effects, browser interruptions, larger system text, landscape,
   safe areas, screen-reader/focus behavior, and persisted progress after closing
