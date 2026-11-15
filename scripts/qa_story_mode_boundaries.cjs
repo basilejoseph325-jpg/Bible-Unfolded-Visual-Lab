@@ -13,12 +13,26 @@ for(const baseline of [true,false]){
  await page.goto(process.env.STORY_URL||'http://127.0.0.1:8893/index.html',{waitUntil:'load',timeout:120000});
  await page.waitForFunction(()=>window.BUPlatformRewards?.hasNativeHost?.());
  const modes={};
- for(const id of ['home-watch','home-trivia','home-family','home-builder','home-cross','home-crossword-packs','home-shop','home-help','home-books']){
+ for(const id of ['home-watch','home-trivia','home-family','home-builder','home-cross','home-crossword-packs','home-shop','home-help']){
   await page.evaluate(id=>{window.BUWTNativeShell?.close?.();closeDialog();closeMenu();focusHome();document.getElementById('daily-close')?.click();document.getElementById(id).click()},id);
   if(id==='home-books')await page.waitForFunction(()=>location.pathname.includes('bible-book-guides/'));
   else if(id==='home-cross')await page.waitForFunction(()=>!!window.BUWTNativeShell?.active?.());
   else await new Promise(r=>setTimeout(r,100));
   modes[id]=await page.evaluate(()=>({path:location.pathname,active:[...document.querySelectorAll('.screen,.wb36-screen')].filter(e=>!e.hidden&&getComputedStyle(e).display!=='none').map(e=>e.id),wordTrailsOverlay:!!window.BUWTNativeShell?.active?.(),help:!!document.getElementById('help-dialog')&&!document.getElementById('help-dialog').hidden,shop:!!document.getElementById('bu-native-boost-shop-v1')}));
+ }
+ // Bible Books deliberately differs from the old baseline: TEST now uses
+ // the independently validated 180-token James ownership gate before the
+ // standalone shelf. Exercise that newer contract separately rather than
+ // incorrectly treating this approved change as a regression in other modes.
+ if(!baseline){
+  await page.evaluate(()=>{window.BUWTNativeShell?.close?.();closeDialog();closeMenu();focusHome();document.getElementById('home-books').click()});
+  await page.waitForFunction(()=>!!document.getElementById('bu-james-gate')||location.pathname.includes('bible-book-guides/'),{timeout:20000});
+  const books=await page.evaluate(()=>({
+   shelf:location.pathname.includes('bible-book-guides/'),
+   gate:!!document.getElementById('bu-james-gate'),
+   owned:window.BUJamesReturnLoopV1?.inspect?.()?.owned?.includes('books')||false
+  }));
+  assert.deepEqual(books,{shelf:false,gate:true,owned:false},'Unowned TEST Books must present 180-token unlock, not bypass it');
  }
  assert.deepEqual(errors,[]);snapshots.push(modes);await page.close();
 }

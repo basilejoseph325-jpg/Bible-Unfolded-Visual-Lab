@@ -41,7 +41,11 @@ jobs:
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
         run: node scripts/qa_story_review_integration.cjs
-      - name: Both engines, 164 discoveries, two phone viewports
+      - name: Preserve other modes against baseline
+        env:
+          NODE_PATH: '${{ github.workspace }}/work/node_modules'
+        run: node scripts/qa_story_mode_boundaries.cjs
+      - name: Both engines, 177 discoveries, two phone viewports
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
           STORY_EVIDENCE: work/story-release-evidence.json
@@ -58,10 +62,6 @@ jobs:
         env:
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
         run: node scripts/qa_genesis11_three_thinking_hints_v1.cjs
-      - name: Preserve other modes against baseline
-        env:
-          NODE_PATH: '${{ github.workspace }}/work/node_modules'
-        run: node scripts/qa_story_mode_boundaries.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:

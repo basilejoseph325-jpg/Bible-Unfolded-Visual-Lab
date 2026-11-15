@@ -67,7 +67,9 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   const modern=await page.evaluate(()=>[...BU_GENESIS_IDS,...BU3857_IDS]);
   for(const id of modern){
    await open(id);console.log('PLAY_CHAPTER',id);
-   for(let n=0;n<10;n++){
+   const chapterScenes=await page.evaluate(id=>BU3857_DATA[id]?.discoveries?.length||0,id);
+   assert(Number.isInteger(chapterScenes)&&chapterScenes>=1,'Missing chapter discovery records '+id);
+   for(let n=0;n<chapterScenes;n++){
     await close();
     await page.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
     const problem=await page.evaluate(()=>{
@@ -119,7 +121,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    }
    assert.equal(await page.evaluate(()=>mode),'done');row.finales++;
   }
-  assert.equal(row.modern,80);assert.equal(row.legacy,84);assert.equal(row.finales,17);
+  assert.equal(row.modern,93);assert.equal(row.legacy,84);assert.equal(row.finales,18);
   assert.deepEqual(row.overflow,[],'Active controls clipped');
   evidence.viewports.push(row);console.log('PASS_STORY_ALL_PLAYABLE',JSON.stringify(row));await context.close();
  }

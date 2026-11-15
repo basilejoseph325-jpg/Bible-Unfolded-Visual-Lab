@@ -115,7 +115,12 @@ const base=process.env.STORY_URL||'http://127.0.0.1:8893/index.html';
   assert.equal(progress.originalAnswers,40);
   await page.evaluate(()=>document.getElementById('bu3857-continue')?.click());
   const final=await page.evaluate(()=>({done:bu3857State.complete,button:document.getElementById('bu3857-next-episode')?.textContent}));
-  assert(final.done&&final.button?.includes('Return to Genesis'),'Episode 11 needs actual chapter finale');
+  assert(final.done&&final.button?.includes('Next Genesis Episode'),'Episode 11 must link to Episode 12');
+  const forward12=await page.evaluate(()=>{
+   document.getElementById('bu3857-next-episode')?.click();
+   return {book:bu3857State?.book,scene:bu3857Current()?.id};
+  });
+  assert.deepEqual(forward12,{book:'genesis_ep12',scene:'g12-d01'},'Episode 11 finale must enter next playable chapter');
   await page.reload({waitUntil:'domcontentloaded',timeout:100000});
   await page.waitForFunction(()=>typeof bu3857Open==='function',{timeout:85000});
   const resumed=await page.evaluate(()=>{bu3857Open('genesis_ep11');return {completed:bu3857State.complete,book:bu3857State.book};});
