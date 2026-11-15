@@ -70,7 +70,7 @@ window.BUWTLevels31to35=Object.freeze([
     ]
   },
   {
-    "rack": "GIDEON",
+    "rack": "GIDEONE",
     "size": 6,
     "title": "Gideon and the Call",
     "scene": "07_judges.webp",
@@ -196,11 +196,11 @@ window.BUWTLevels31to35=Object.freeze([
         "insight": "Saul was a young man from the tribe of Benjamin. His life changed when he was selected to serve as king."
       },
       {
-        "word": "ELAM",
-        "clue": "One of Shem's descendants listed in Genesis",
-        "reference": "Genesis 10:22",
-        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/10/",
-        "insight": "Genesis names Elam among the sons of Shem, placing him in the early record of peoples and families."
+        "word": "SEAL",
+        "clue": "What was on the scroll that John saw in Revelation chapter 5?",
+        "reference": "Revelation 5:1",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/5/",
+        "insight": "John saw a scroll held in the right hand of the One seated on the throne. It was sealed tightly with seven seals."
       }
     ],
     "bonus": "MEAL MUSE SEAM",
