@@ -9,7 +9,7 @@ const POLICY=Object.freeze({
  journeySeal:3,paidLetterHint:15,
  extraBonusWord:0,combo:0,boardBibleWord:0
 });
-const MAX_LEVEL=50;
+const MAX_LEVEL=55; // Content may grow independently; 50-level budget remains the rollout gate.
 function transaction({type,level,word,cell}={}){
  if(!Number.isInteger(level)||level<1||level>MAX_LEVEL)return null;
  const id='trails:l'+level;
