@@ -884,14 +884,14 @@ if(SHARED_PREVIEW){
   if((n+1)%5===0)applied.push({type:'seal',level:n+1});
  }
  for(const raw of (Array.isArray(save.claimedSparks)?save.claimedSparks:[])){
-  const found=/^(\\d{1,2}):([A-Z]{3,12})$/.exec(String(raw));
+  const found=/^(\d{1,2}):([A-Z]{3,12})$/.exec(String(raw));
   if(!found)continue;
   const n=Number(found[1]),word=found[2];
   if(!BIBLE_SPARKS[n]?.some(item=>item.word===word))continue;
   applied.push({type:'discovery',level:n+1,word});
  }
  for(const raw of (Array.isArray(save.paidBonuses)?save.paidBonuses:[])){
-  const found=/^satchel:(\\d{1,2})$/.exec(String(raw));
+  const found=/^satchel:(\d{1,2})$/.exec(String(raw));
   if(!found)continue;
   const n=Number(found[1]);
   if(n>=0&&n<LEVELS.length)applied.push({type:'satchel',level:n+1});
