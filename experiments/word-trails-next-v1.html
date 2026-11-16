@@ -17,6 +17,8 @@
   location.replace('../index.html?wt_launch=native');
  }
  }catch(_){}})();
+</script>
+<script>
 // Intercept actual Android touch-generated clicks inside the iframe itself.
 document.addEventListener('click',event=>{
  const entry=event.target?.closest?.('[data-wt-open-daily]');
