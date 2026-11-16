@@ -104,6 +104,13 @@ const BASE='http://127.0.0.1:8894/index.html?bu_shared_wallet_preview=1';
    return window.BUWTNativeShell?.active?.()&&
     c?.document?.getElementById('points')?.textContent==='0';
   },null,{timeout:30000});
+  const badge=await page.evaluate(()=>{
+   const c=document.getElementById('bu-wt-native-game').contentWindow;
+   return {symbol:c.document.querySelector('.top-actions .points span')?.textContent,
+    label:c.document.querySelector('.top-actions .points')?.getAttribute('aria-label')};
+  });
+  assert.equal(badge.symbol,'◈','Word Trails must use the native Insight Token symbol, not the Points star');
+  assert.equal(badge.label,'Shared Insight Tokens');
   await page.evaluate(()=>window.BUWTNativeShell.close());
   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable&&
