@@ -267,7 +267,10 @@ function finishTrace(x,y){
   // browsers' sometimes stale/coalesced last pointermove position.
   const b=document.elementFromPoint(x,y)?.closest('.daily-wheel-letter');
   lastTrace={liftX:x,liftY:y,hit:b?.textContent||null,before:chosen.map(i=>letters[i]).join('')};
-  if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
+  if(b&&wheel.contains(b)){
+   const id=Number(b.dataset.letterIndex);
+   if(!chosen.includes(id))selectLetter(id); // finger lift must not toggle off the last traced tile
+  }
   suppressClickUntil=performance.now()+350;
   submit();
  }
