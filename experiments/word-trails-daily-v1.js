@@ -248,11 +248,12 @@ wheel.addEventListener('click',event=>{
 wheel.addEventListener('pointerdown',event=>{
  const b=event.target.closest('.daily-wheel-letter');
  if(!b||!sameDay())return;
- drag={id:event.pointerId,x:event.clientX,y:event.clientY,start:Number(b.dataset.letterIndex),tracing:false};
+ drag={id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,start:Number(b.dataset.letterIndex),tracing:false};
 });
 document.addEventListener('pointermove',event=>{
  if(!drag||event.pointerId!==drag.id)return;
  const moved=Math.hypot(event.clientX-drag.x,event.clientY-drag.y);
+ drag.lastX=event.clientX;drag.lastY=event.clientY;
  if(!drag.tracing&&moved>10){drag.tracing=true;chosen=[];selectLetter(drag.start);}
  if(!drag.tracing)return;
  const b=document.elementFromPoint(event.clientX,event.clientY)?.closest('.daily-wheel-letter');
@@ -261,7 +262,9 @@ document.addEventListener('pointermove',event=>{
 document.addEventListener('pointerup',event=>{
  if(!drag||event.pointerId!==drag.id)return;
  if(drag.tracing){
-  const b=document.elementFromPoint(event.clientX,event.clientY)?.closest('.daily-wheel-letter');
+  // Some touch browsers report an inconsistent pointerup coordinate. The
+  // last real move is the reliable finger-lift location for a wheel gesture.
+  const b=document.elementFromPoint(drag.lastX,drag.lastY)?.closest('.daily-wheel-letter');
   if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
   suppressClickUntil=performance.now()+350;
   submit();
