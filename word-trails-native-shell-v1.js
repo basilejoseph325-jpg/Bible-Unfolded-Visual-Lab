@@ -92,7 +92,8 @@ function openDaily(){
  try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-enter'))}catch(_){}
  const daily=document.createElement('iframe');
  daily.id='bu-wt-daily-frame';daily.title='Daily Word Trail';
- daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=back-button-20261116';
+ daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=back-button-20261116'+
+  (window.BUPreviewStorageFence?.active?'&bu_shared_wallet_preview=1':'');
  daily.allow='autoplay';
  shell.appendChild(daily);dailyFrame=daily;
  history.pushState({buWtDaily:true},'','#daily-word-trail');
