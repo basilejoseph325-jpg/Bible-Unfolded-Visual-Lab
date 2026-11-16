@@ -18,7 +18,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   page.on('pageerror',e=>evidence.errors.push(e.message));
   await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:1});
   await page.goto(base,{waitUntil:'load',timeout:120000});
-  await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof bu3864AskHint==='function'&&window.BUStoryGenesis13Test?.status==='ready');
+  await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof bu3864AskHint==='function'&&window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready');
   const row={width,height,modern:0,legacy:0,finales:0,hints:[],overflow:[],pendingArt:[]};
   // Ledger snapshots make replay checks independent of daily welcome rewards.
   const ledger=()=>page.evaluate(()=>({points:economy.points,coins:economy.coins}));
@@ -55,7 +55,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   await page.evaluate(()=>{economy.coins=100;saveEconomy();document.getElementById('bu3857-hint').click();window.originalStorySetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k===BU_GENESIS_KEY)throw new DOMException('Simulated chapter write failure','QuotaExceededError');return window.originalStorySetItem.call(this,k,v)}});
   await buy();assert.equal((await ledger()).coins,85);
   await page.evaluate(()=>Storage.prototype.setItem=window.originalStorySetItem);
-  console.log('RELOADING');await page.reload({waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready');
+  console.log('RELOADING');await page.reload({waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready');
   assert(await page.$eval('#home',e=>!e.hidden),'Reload must return home');
   await page.evaluate(()=>bu3857Open('genesis_ep09'));
   assert.equal(await page.evaluate(()=>bu3857State.hints['g09-d01']),2,'Paid receipt must recover after chapter save failure');
