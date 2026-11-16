@@ -15,6 +15,22 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   const page=await browser.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   await page.setViewport({...vp,isMobile:true,hasTouch:true,deviceScaleFactor:2});
+  // Inspect the real detached Word Trails Audio element without production instrumentation.
+  await page.evaluateOnNewDocument(()=>{
+   const Original=window.Audio;
+   window.Audio=function(...args){
+    const player=new Original(...args);
+    if(String(args[0]||'').includes('bible-wordtrails-theme.mp3')){
+     window.__qaWordTrailsMusic=player;
+     window.__qaWordTrailsPlays=0;window.__qaWordTrailsPauses=0;
+     const play=player.play.bind(player),pause=player.pause.bind(player);
+     player.play=function(){window.__qaWordTrailsPlays++;return play()};
+     player.pause=function(){window.__qaWordTrailsPauses++;return pause()};
+    }
+    return player;
+   };
+   window.Audio.prototype=Original.prototype;
+  });
   await page.goto(process.env.BU_WT_NATIVE_PARITY_URL||'http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:90000});
   await page.evaluate(()=>document.getElementById('home-cross').click());
@@ -182,6 +198,28 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(menus.parentMenuHidden,false);
   assert.equal(menus.childMenuOpen,false);
   assert.equal(menus.childOverflow,false);
+  // Begin the normal Word Trails song with a real finger gesture before Daily.
+  await page.evaluate(()=>{window.closeMenu?.();window.closeDialog?.()});
+  const startPoint=await page.evaluate(()=>{
+   const iframe=document.getElementById('bu-wt-native-game'),f=iframe.getBoundingClientRect();
+   const letter=iframe.contentDocument.querySelector('.wheel-letter'),r=letter.getBoundingClientRect();
+   return {x:Math.round(f.left+r.left+r.width/2),y:Math.round(f.top+r.top+r.height/2)};
+  });
+  await page.touchscreen.tap(startPoint.x,startPoint.y);
+  await page.waitForFunction(()=>{
+   const child=document.getElementById('bu-wt-native-game')?.contentWindow;
+   return !!child?.__qaWordTrailsMusic&&!child.__qaWordTrailsMusic.paused;
+  },{timeout:15000});
+  const musicBefore=await page.evaluate(()=>{
+   const c=document.getElementById('bu-wt-native-game').contentWindow;
+   window.__qaOwnedSong=c.__qaWordTrailsMusic;
+   return {paused:window.__qaOwnedSong.paused,
+    src:window.__qaOwnedSong.currentSrc||window.__qaOwnedSong.src,
+    volume:window.__qaOwnedSong.volume,playCalls:c.__qaWordTrailsPlays,
+    pauseCalls:c.__qaWordTrailsPauses};
+  });
+  assert(!musicBefore.paused&&musicBefore.src.includes('bible-wordtrails-theme.mp3'),
+   'Normal Word Trails theme must be playing before opening Daily');
   // Real DAILY tap and back button must not navigate through /index.html.
   // The original Word Trails frame (and unsaved on-screen letters) survives.
   const beforeDaily=await page.evaluate(()=>{
@@ -205,6 +243,24 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   });
   assert(dailyOpen.stillSameFrame&&dailyOpen.dailyEmbedded&&dailyOpen.rootAlive,'DAILY must overlay the existing puzzle');
   assert.equal(dailyOpen.hash,'#daily-word-trail');
+  const musicDuring=await page.evaluate(()=>{
+   const child=document.getElementById('bu-wt-native-game').contentWindow;
+   return {sameSong:child.__qaWordTrailsMusic===window.__qaOwnedSong,
+     paused:child.__qaWordTrailsMusic?.paused,
+     playCalls:child.__qaWordTrailsPlays,pauseCalls:child.__qaWordTrailsPauses,
+     volume:child.__qaWordTrailsMusic?.volume,
+     nativeMusicMuted:['music-navigation','music-story','music-trails','music',
+      'music-daily','music-builder','music-name'].every(id=>
+       !document.getElementById(id)||document.getElementById(id).muted)};
+  });
+  assert(musicDuring.sameSong&&!musicDuring.paused,
+   'Daily must keep the same Word Trails theme playing continuously');
+  assert.equal(musicDuring.pauseCalls,musicBefore.pauseCalls,
+   'Opening Daily must not pause Word Trails');
+  assert.equal(musicDuring.playCalls,musicBefore.playCalls,
+   'Opening Daily must not restart the track');
+  assert.equal(musicDuring.volume,musicBefore.volume,'Daily must preserve music volume');
+  assert(musicDuring.nativeMusicMuted,'Native parent music must remain muted');
   await page.evaluate(()=>document.getElementById('bu-wt-daily-frame').contentDocument.querySelector('.daily-back').click());
   await page.waitForFunction(()=>location.hash==='#word-trails'&&!document.getElementById('bu-wt-daily-frame'),
    {timeout:15000});
@@ -218,6 +274,17 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    'Back from Daily must return to existing Word Trails without homepage reload');
   assert.equal(afterDaily.puzzle,beforeDaily.puzzle,'Daily round-trip must preserve the board');
   assert.equal(afterDaily.page,dailyOpen.url,'No intermediate homepage navigation is allowed');
+  const musicAfter=await page.evaluate(()=>{
+   const c=document.getElementById('bu-wt-native-game').contentWindow;
+   return {sameSong:c.__qaWordTrailsMusic===window.__qaOwnedSong,
+     paused:c.__qaWordTrailsMusic?.paused,
+     pauseCalls:c.__qaWordTrailsPauses,playCalls:c.__qaWordTrailsPlays};
+  });
+  assert(musicAfter.sameSong&&!musicAfter.paused,'Theme must continue after Daily Back');
+  assert.equal(musicAfter.pauseCalls,musicBefore.pauseCalls,
+   'Daily round trip must never pause the theme');
+  assert.equal(musicAfter.playCalls,musicBefore.playCalls,
+   'Daily round trip must never restart the theme');
   // Previous synthetic .click() QA missed the real Samsung tap. Use the
   // touchscreen and detect any full-document request by the top-level page.
   const topDocumentRequests=[];
@@ -260,7 +327,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    viewport:vp.width+'x'+vp.height,
    nativeSettingsOnly:true,nativeAudioPropagation:true,shadowStorageUnchanged:true,
    originalAnnouncerDelegated:true,curvedOceanGlow:true,glowHalo:true,swipeMist:true,microGlitter:true,
-   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,dailyOverlayRoundTrip:true,realTouchDailyBack:true,zeroHomeNavigations:true,puzzlePreserved:true,pageErrors:errors.length}));
+   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,dailyOverlayRoundTrip:true,realTouchDailyBack:true,zeroHomeNavigations:true,sameSongThroughDaily:true,noAudioRestartOrPause:true,rootMusicStillMuted:true,puzzlePreserved:true,pageErrors:errors.length}));
   await page.close();
  }
  }finally{await browser.close()}

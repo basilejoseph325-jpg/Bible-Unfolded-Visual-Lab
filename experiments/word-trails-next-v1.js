@@ -363,11 +363,15 @@ function haptic(ms){if(window.BUWTPolish){window.BUWTPolish.haptic(ms);return;}
 function startMusicFromGesture(){
  if(!dailyOverlayActive&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))soundReady()
 }
-window.addEventListener('bu-wt-daily-enter',()=>{dailyOverlayActive=true;music?.pause()});
+// Daily is an overlay in the SAME Word Trails session. Do not pause, restart,
+// or create another soundtrack when it opens: keep this exact theme playing.
+window.addEventListener('bu-wt-daily-enter',()=>{dailyOverlayActive=true});
 window.addEventListener('bu-wt-daily-leave',()=>{
  dailyOverlayActive=false;
- if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))
-  music?.play().catch(()=>{});
+ // Normal playback stays uninterrupted. Recover only if the browser itself
+ // suspended this already-unlocked track while switching overlay focus.
+ if(music?.paused&&unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))
+  music.play().catch(()=>{});
 });
 window.addEventListener('pointerdown',startMusicFromGesture,{capture:true});
 window.addEventListener('keydown',startMusicFromGesture,{capture:true});
@@ -783,13 +787,12 @@ window.addEventListener('keydown',e=>{
 });
 window.addEventListener('resize',()=>{drawWheel()});
 window.addEventListener('bu-wt-audio-change',()=>{
- if(dailyOverlayActive){music?.pause();return}
  if(!window.BUWTPolish)return;
  if(!window.BUWTPolish.musicEnabled()){music?.pause();return}
  if(music)music.volume=.15*window.BUWTPolish.musicVolume()/100;
  unlockedSound=false;soundReady();
 });
-document.addEventListener('visibilitychange',()=>{if(document.hidden||dailyOverlayActive)music?.pause();else if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))music?.play().catch(()=>{})});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)music?.pause();else if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))music?.play().catch(()=>{})});
 window.addEventListener('pagehide',()=>music?.pause());
 showLevel(index,true);
 })();

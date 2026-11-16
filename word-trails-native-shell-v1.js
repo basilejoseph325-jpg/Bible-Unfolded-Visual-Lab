@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=daily-buttons-no-home-20261116-v26';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=daily-music-same-song-20261116-v27';
 let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
