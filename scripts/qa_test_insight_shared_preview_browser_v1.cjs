@@ -14,7 +14,13 @@ const rawWallet={points:999,coins:987,earned:['qa-sentinel-live'],purchases:['go
 const ORIGINAL={
  [LIVE]:JSON.stringify(rawWallet),[RECOVERY]:JSON.stringify(rawWallet),
  [OWN]:JSON.stringify({owned:['goldwheel']}),
- [CROSS]:JSON.stringify({level:4,unlocked:4,completed:[0,1,2],coins:400,points:20})
+ [CROSS]:JSON.stringify({level:4,unlocked:4,completed:[0,1,2],coins:400,points:20}),
+ 'bu-james-return-loop-v1-test-only':'{"v":1,"balance":777}',
+ 'bu-native-boost-shop-v1-test-only':'{"version":1,"tokens":333}',
+ 'bu-wt-next-feel-v2':'{"music":true}',
+ 'bu-visual-lab-wordtrails-next-v1':JSON.stringify({level:0,unlocked:0,
+  coins:600,points:12,completed:[],sparks:[],claimedSparks:[],paidBonuses:[]}),
+ 'other-app-unrelated-key':'do-not-touch'
 };
 async function run(engine,browser){
  for(const [width,height] of [[320,568],[430,932]]){
@@ -40,6 +46,10 @@ async function run(engine,browser){
      backup:guard.originalKeyValue('bible-unfolded-rewards-v17-recovery-v3811'),
      ownership:guard.originalKeyValue('bible-unfolded-wheel-ownership-v3825'),
      crossword:guard.originalKeyValue('bible-unfolded-word-trails-next-v1'),
+     other:Object.fromEntries(['bu-james-return-loop-v1-test-only',
+       'bu-native-boost-shop-v1-test-only','bu-wt-next-feel-v2',
+       'bu-visual-lab-wordtrails-next-v1','other-app-unrelated-key']
+       .map(k=>[k,guard.originalKeyValue(k)])),
      originalMarker:document.getElementById('bu-preview-wallet-banner')?.textContent,
      overflow:document.documentElement.scrollWidth>innerWidth+2
     };
@@ -49,6 +59,7 @@ async function run(engine,browser){
    assert.equal(initial.backup,ORIGINAL[RECOVERY]);
    assert.equal(initial.ownership,ORIGINAL[OWN]);
    assert.equal(initial.crossword,ORIGINAL[CROSS]);
+   for(const [key,value] of Object.entries(initial.other))assert.equal(value,ORIGINAL[key],'Existing TEST save was touched: '+key);
    assert(initial.originalMarker?.includes('ISOLATED COIN TEST'),'preview must be visibly labeled');
    assert.equal(initial.overflow,false,'root preview overflow '+width);
    const rootEarn=await page.evaluate(()=>{
@@ -167,13 +178,18 @@ async function run(engine,browser){
     return {coins:economy.coins,primary:g.originalKeyValue('bible-unfolded-rewards-v17'),
      recovery:g.originalKeyValue('bible-unfolded-rewards-v17-recovery-v3811'),
      ownership:g.originalKeyValue('bible-unfolded-wheel-ownership-v3825'),
-     crossword:g.originalKeyValue('bible-unfolded-word-trails-next-v1')};
+     crossword:g.originalKeyValue('bible-unfolded-word-trails-next-v1'),
+     other:Object.fromEntries(['bu-james-return-loop-v1-test-only',
+       'bu-native-boost-shop-v1-test-only','bu-wt-next-feel-v2',
+       'bu-visual-lab-wordtrails-next-v1','other-app-unrelated-key']
+       .map(k=>[k,g.originalKeyValue(k)]))};
    });
    assert.equal(final.coins,spent.after,'shared native balance must survive full page reload');
    assert.equal(final.primary,ORIGINAL[LIVE]);
    assert.equal(final.recovery,ORIGINAL[RECOVERY]);
    assert.equal(final.ownership,ORIGINAL[OWN]);
    assert.equal(final.crossword,ORIGINAL[CROSS]);
+   for(const [key,value] of Object.entries(final.other))assert.equal(value,ORIGINAL[key],'Existing TEST save changed: '+key);
    const relevant=errors.filter(e=>/BUPreviewStorageFence|BUTestInsightBridge|shared-wallet/i.test(e));
    assert.deepEqual(relevant,[],'shared wallet browser errors');
    console.log('PASS',engine,width+'x'+height,
