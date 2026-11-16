@@ -1,0 +1,358 @@
+{
+  "translation": "New World Translation (2013 revision)",
+  "verifiedOn": "2026-11-16",
+  "independentHumanApproval": false,
+  "items": [
+    {
+      "id": "wt51-board-rebuild",
+      "word": "REBUILD",
+      "reference": "Nehemiah 2:17, 18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/nehemiah/2/",
+      "verse": 17,
+      "expectedExcerpt": "Finally I said to them: “You can see what a terrible situation",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-builder",
+      "word": "BUILDER",
+      "reference": "Hebrews 11:9, 10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/hebrews/11/",
+      "verse": 10,
+      "expectedExcerpt": "For he was awaiting the city having real foundations, whose designer and",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-rule",
+      "word": "RULE",
+      "reference": "Proverbs 29:2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/29/",
+      "verse": 2,
+      "expectedExcerpt": "When the righteous are many, the people rejoice, But when the wicked",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-bridle",
+      "word": "BRIDLE",
+      "reference": "Psalm 32:9",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/32/",
+      "verse": 9,
+      "expectedExcerpt": "Do not become like a horse or a mule, without understanding, Whose",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-build",
+      "word": "BUILD",
+      "reference": "Psalm 127:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/127/",
+      "verse": 1,
+      "expectedExcerpt": "Unless Jehovah builds the house, It is in vain that its builders",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-hidden-blue",
+      "word": "BLUE",
+      "reference": "Numbers 15:38, 39",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/numbers/15/",
+      "verse": 38,
+      "expectedExcerpt": "“Speak to the Israelites and tell them that they must make for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-hidden-lie",
+      "word": "LIE",
+      "reference": "Colossians 3:9, 10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/colossians/3/",
+      "verse": 9,
+      "expectedExcerpt": "Do not lie to one another. Strip off the old personality with",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-servant",
+      "word": "SERVANT",
+      "reference": "1 Samuel 3:10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/3/",
+      "verse": 10,
+      "expectedExcerpt": "Jehovah came and stood there, and he called as at the other",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-raven",
+      "word": "RAVEN",
+      "reference": "1 Kings 17:4-6",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/17/",
+      "verse": 4,
+      "expectedExcerpt": "You should drink from the stream, and I will command the ravens",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-near",
+      "word": "NEAR",
+      "reference": "Psalm 145:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/145/",
+      "verse": 18,
+      "expectedExcerpt": "Jehovah is near to all those calling on him, To all who",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-snare",
+      "word": "SNARE",
+      "reference": "Proverbs 29:25",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/29/",
+      "verse": 25,
+      "expectedExcerpt": "Trembling at men is a snare, But the one trusting in Jehovah",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-rest",
+      "word": "REST",
+      "reference": "Exodus 33:14",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/33/",
+      "verse": 14,
+      "expectedExcerpt": "So he said: “I myself will go with you, and I will",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-star",
+      "word": "STAR",
+      "reference": "Revelation 22:16",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/22/",
+      "verse": 16,
+      "expectedExcerpt": "“‘I, Jesus, sent my angel to bear witness to you about these",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-hidden-tear",
+      "word": "TEAR",
+      "reference": "Revelation 21:4",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/21/",
+      "verse": 4,
+      "expectedExcerpt": "And he will wipe out every tear from their eyes, and death",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-hidden-net",
+      "word": "NET",
+      "reference": "John 21:11",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/john/21/",
+      "verse": 11,
+      "expectedExcerpt": "So Simon Peter went on board and hauled the net ashore full",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-praised",
+      "word": "PRAISED",
+      "reference": "Psalm 113:3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/113/",
+      "verse": 3,
+      "expectedExcerpt": "From the rising of the sun to its setting, Let Jehovah’s name",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-pairs",
+      "word": "PAIRS",
+      "reference": "Luke 10:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/10/",
+      "verse": 1,
+      "expectedExcerpt": "After these things the Lord designated 70 others and sent them out",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-read",
+      "word": "READ",
+      "reference": "Acts 13:27",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/13/",
+      "verse": 27,
+      "expectedExcerpt": "For the inhabitants of Jerusalem and their rulers did not recognize this",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-spear",
+      "word": "SPEAR",
+      "reference": "1 Samuel 17:45-47",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 45,
+      "expectedExcerpt": "David replied to the Phi·lisʹtine: “You are coming against me with sword",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-spread",
+      "word": "SPREAD",
+      "reference": "Acts 6:7",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/6/",
+      "verse": 7,
+      "expectedExcerpt": "Consequently, the word of God continued to spread, and the number of",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-raised",
+      "word": "RAISED",
+      "reference": "Luke 7:22",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/7/",
+      "verse": 22,
+      "expectedExcerpt": "In reply he said to them: “Go and report to John what",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-hidden-pride",
+      "word": "PRIDE",
+      "reference": "Proverbs 16:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/16/",
+      "verse": 18,
+      "expectedExcerpt": "Pride is before a crash, And a haughty spirit before stumbling.",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-hidden-sea",
+      "word": "SEA",
+      "reference": "Psalm 95:5, 6",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/95/",
+      "verse": 5,
+      "expectedExcerpt": "The sea, which he made, belongs to him, And his hands formed",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-rescued",
+      "word": "RESCUED",
+      "reference": "Daniel 6:27",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/6/",
+      "verse": 27,
+      "expectedExcerpt": "He rescues, saves, and performs signs and wonders in the heavens and",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-cured",
+      "word": "CURED",
+      "reference": "Luke 8:43-48",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/8/",
+      "verse": 43,
+      "expectedExcerpt": "Now there was a woman who had a flow of blood for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-seed",
+      "word": "SEED",
+      "reference": "Genesis 1:11-13",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 11,
+      "expectedExcerpt": "Then God said: “Let the earth cause grass to sprout, seed-bearing plants",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-reeds",
+      "word": "REEDS",
+      "reference": "Exodus 2:3, 4",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/2/",
+      "verse": 3,
+      "expectedExcerpt": "When she was no longer able to conceal him, she took a",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-secure",
+      "word": "SECURE",
+      "reference": "Isaiah 32:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/isaiah/32/",
+      "verse": 18,
+      "expectedExcerpt": "My people will dwell in a peaceful abiding place, In secure dwellings",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-curse",
+      "word": "CURSE",
+      "reference": "Numbers 23:7-12",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/numbers/23/",
+      "verse": 7,
+      "expectedExcerpt": "Then he spoke this proverbial saying: “Baʹlak the king of Moʹab has",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-hidden-sure",
+      "word": "SURE",
+      "reference": "2 Peter 1:16-19",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/2-peter/1/",
+      "verse": 16,
+      "expectedExcerpt": "No, it was not by following artfully contrived false stories that we",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-hidden-cud",
+      "word": "CUD",
+      "reference": "Leviticus 11:3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/leviticus/11/",
+      "verse": 3,
+      "expectedExcerpt": "Every animal that has a split hoof and a cleft in its",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-teacher",
+      "word": "TEACHER",
+      "reference": "John 13:13-15",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/john/13/",
+      "verse": 13,
+      "expectedExcerpt": "You address me as ‘Teacher’ and ‘Lord,’ and you are correct, for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-reach",
+      "word": "REACH",
+      "reference": "Deuteronomy 30:11-14",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/deuteronomy/30/",
+      "verse": 11,
+      "expectedExcerpt": "“Now this commandment that I am commanding you today is not too",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-teach",
+      "word": "TEACH",
+      "reference": "Matthew 28:19, 20",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/28/",
+      "verse": 19,
+      "expectedExcerpt": "Go, therefore, and make disciples of people of all the nations, baptizing",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-heart",
+      "word": "HEART",
+      "reference": "Proverbs 4:23",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/4/",
+      "verse": 23,
+      "expectedExcerpt": "Above all the things that you guard, safeguard your heart, For out",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-create",
+      "word": "CREATE",
+      "reference": "Revelation 4:11",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/4/",
+      "verse": 11,
+      "expectedExcerpt": "“You are worthy, Jehovah our God, to receive the glory and the",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-earth",
+      "word": "EARTH",
+      "reference": "Genesis 1:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 1,
+      "expectedExcerpt": "In the beginning God created the heavens and the earth.",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-hidden-eat",
+      "word": "EAT",
+      "reference": "Ecclesiastes 3:13",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/ecclesiastes/3/",
+      "verse": 13,
+      "expectedExcerpt": "also that everyone should eat and drink and find enjoyment for all",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-hidden-hate",
+      "word": "HATE",
+      "reference": "Amos 5:15",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/amos/5/",
+      "verse": 15,
+      "expectedExcerpt": "Hate what is bad, and love what is good, Let justice prevail",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    }
+  ]
+}
