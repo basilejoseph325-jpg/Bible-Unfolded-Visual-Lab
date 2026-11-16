@@ -19,7 +19,8 @@ function scenario(preview=true){
   clear(){this.map.clear();}
   key(i){return [...this.map.keys()][i]||null;}
  }
- const storage=new Storage(),child={},foreign={},events=[],closed={active:true};
+ const storage=new Storage(),session=new Storage(),child={},foreign={},events=[],closed={active:true};
+ session.setItem('session-keep','untouched');
  const seed={coins:999,points:777,earned:['live-x'],purchases:['seawheel'],hints:{}};
  storage.setItem('bible-unfolded-rewards-v17',JSON.stringify(seed));
  storage.setItem('bible-unfolded-rewards-v17-recovery-v3811',JSON.stringify(seed));
@@ -30,14 +31,14 @@ function scenario(preview=true){
  const location={pathname:'/Bible-Unfolded-Visual-Lab/index.html',
   hostname:'basilejoseph325-jpg.github.io',
   search:preview?'?bu_shared_wallet_preview=1':''};
- const window={location,localStorage:storage,indexedDB:null,
+ const window={location,localStorage:storage,sessionStorage:session,indexedDB:null,
   addEventListener(){},parent:null,dispatchEvent:e=>events.push(e.type),
   BUWTNativeShell:{active:()=>closed.active}};
  window.parent=window;
  const document={readyState:'loading',addEventListener(){},
   getElementById:id=>id==='bu-wt-native-game'?{contentWindow:child}:null};
  const globals={Storage,window,document,location,
-  localStorage:storage,URLSearchParams,CustomEvent:class{constructor(type){this.type=type;}}};
+  localStorage:storage,sessionStorage:session,URLSearchParams,CustomEvent:class{constructor(type){this.type=type;}}};
  const ctx=vm.createContext(globals);
  vm.runInContext(load('experiments/bu-test-native-storage-fence-v1.js'),ctx);
  vm.runInContext(`
@@ -59,11 +60,18 @@ function scenario(preview=true){
  `,ctx);
  vm.runInContext(load('experiments/bu-test-word-trails-economy-v1.js'),ctx);
  vm.runInContext(load('experiments/bu-test-insight-native-bridge-v2.js'),ctx);
- return {storage,window,child,foreign,closed,ctx,events,legacy,live:JSON.stringify(seed)};
+ return {storage,session,window,child,foreign,closed,ctx,events,legacy,live:JSON.stringify(seed)};
 }
 {
  const x=scenario(true),api=x.window.BUTestInsightBridge;
  assert(x.window.BUPreviewStorageFence?.active,'preview fence must be installed');
+ x.session.setItem('same-session-key','ordinary');
+ assert.equal(x.session.getItem('same-session-key'),'ordinary');
+ assert.equal(x.session.getItem('session-keep'),'untouched');
+ assert.equal(x.session.key(0),'session-keep');
+ x.session.clear();
+ assert.equal(x.session.getItem('session-keep'),null);
+ assert.equal(x.session.getItem('same-session-key'),null);
  assert(api?.version.includes('native'),'native shared bridge must be installed');
  assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live);
  assert.equal(api.nativeBalance().balance,60);
