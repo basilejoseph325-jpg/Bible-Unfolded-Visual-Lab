@@ -17,6 +17,9 @@ const allowed=new Set([
  'journey-progress-caption.js',
  'story-adventure-episode14-integration-test.js',
  'scripts/qa_genesis13_public_integration.cjs',
+ 'scripts/qa_genesis13_integration_boundaries.cjs',
+ 'scripts/qa_genesis12_native.cjs',
+ 'scripts/qa_genesis11_complete_native_playpath_v1.cjs',
  'scripts/qa_story_adventure_release.cjs',
  'scripts/qa_story_ep14_public.cjs',
  '.github/workflows/qa-genesis14-public-test.yml'
