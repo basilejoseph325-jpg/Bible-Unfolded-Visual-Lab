@@ -107,6 +107,34 @@ async function make({pathname='/Bible-Unfolded-Visual-Lab/index.html',idb=new ID
  assert.equal(economy.transaction({type:'discovery',level:1,word:'CAIN'}).id,'trails:l1:discovery:cain');
  assert.equal(economy.transaction({type:'hint',level:5,cell:'bad'}),null);
  assert.equal(economy.transaction({type:'level',level:51}),null);
+ // Bridge is owned by the parent, never a free-for-all standalone child API.
+ const hostChild={},stranger={};let nativeActive=true;
+ const host={location:{pathname:'/Bible-Unfolded-Visual-Lab/index.html',hostname:'basilejoseph325-jpg.github.io'},
+  indexedDB:new IDBFactory(),BUWTNativeShell:{active:()=>nativeActive},
+  dispatchEvent(){}};host.parent=host;
+ const hostEnv={window:host,location:host.location,indexedDB:host.indexedDB,
+  document:{getElementById:id=>id==='bu-wt-native-game'?{contentWindow:hostChild}:null},
+  CustomEvent:class{constructor(type){this.type=type}},
+  BroadcastChannel:class{postMessage(){}close(){}},
+  get localStorage(){throw Error('LIVE localStorage accessed');}};
+ vm.runInNewContext(source,hostEnv,{timeout:2000});
+ vm.runInNewContext(economySource,hostEnv,{timeout:2000});
+ const bridgeSource=fs.readFileSync('experiments/bu-test-insight-word-trails-bridge-v1.js','utf8');
+ vm.runInNewContext(bridgeSource,hostEnv,{timeout:2000});
+ const bridge=host.BUTestInsightBridge;
+ assert.equal((await bridge.snapshot(stranger)).reason,'inactive-word-trails-frame');
+ assert.equal((await bridge.snapshot(hostChild)).balance,60);
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:1,delta:10000})).balance,64);
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:1})).duplicate,true);
+ assert.equal((await bridge.transact(hostChild,{type:'hint',level:1,cell:'2:4',delta:999})).balance,49);
+ assert.equal((await bridge.snapshot(hostChild)).balance,49);
+ assert.equal((await bridge.transact(hostChild,{type:'hint',level:1,cell:'2:4'})).duplicate,true);
+ assert.equal((await bridge.snapshot(hostChild)).balance,49);
+ assert.equal((await bridge.transact(stranger,{type:'level',level:2})).ok,false);
+ assert.equal((await bridge.transact(hostChild,{type:'unknown',level:2})).ok,false);
+ nativeActive=false;
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:2})).ok,false);
+ console.log('PASS parent bridge: frame ownership, no forged amounts, exact 15-token hints, idempotent receipts');
  console.log('PASS economy: maximum 380 newly earned tokens across 50 levels, 29 paid hints possible with starter balance');
  console.log('PASS TEST ledger: init, atomic spend/credit, 12 parallel receipts, dedupe, zero balance, backup recovery, corruption lock, storage failure, production isolation');
 })().catch(err=>{console.error(err);process.exitCode=1});
