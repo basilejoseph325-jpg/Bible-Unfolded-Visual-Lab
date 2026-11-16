@@ -21,17 +21,19 @@ const original={
 // explicitly performed through the read-only originalKeyValue API instead.
 const protectedKey=s=>!String(s).startsWith(PREFIX);
 const scoped=k=>{const name=String(k);return protectedKey(name)?PREFIX+name:name;};
-// Wrap all Storage instances on this *preview page*. This is safer than
-// relying on localStorage object identity across browser realms/proxies.
-proto.getItem=function(k){return original.getItem.call(this,scoped(k));};
-proto.setItem=function(k,v){return original.setItem.call(this,scoped(k),v);};
-proto.removeItem=function(k){return original.removeItem.call(this,scoped(k));};
+// Keep sessionStorage independent: only the localStorage area is namespaced.
+const isLocal=area=>area===storage;
+proto.getItem=function(k){return original.getItem.call(this,isLocal(this)?scoped(k):k);};
+proto.setItem=function(k,v){return original.setItem.call(this,isLocal(this)?scoped(k):k,v);};
+proto.removeItem=function(k){return original.removeItem.call(this,isLocal(this)?scoped(k):k);};
 proto.clear=function(){
- throw Error('Shared-wallet preview forbids clearing all browser saves');
+ if(isLocal(this))throw Error('Shared-wallet preview forbids clearing all browser saves');
+ return original.clear.call(this);
 };
 // Only namespaced keys are enumerated. Never expose any existing LIVE/TEST
 // store in the preview through localStorage.key() on the shared origin.
 proto.key=function(n){
+ if(!isLocal(this))return original.key.call(this,n);
  const keys=[];
  for(let i=0;i<this.length;i++){
   const item=original.key.call(this,i);
