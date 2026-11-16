@@ -106,7 +106,8 @@ async function make({pathname='/Bible-Unfolded-Visual-Lab/index.html',idb=new ID
  assert.equal(economy.transaction({type:'hint',level:5,cell:'2:4'}).delta,-15);
  assert.equal(economy.transaction({type:'discovery',level:1,word:'CAIN'}).id,'trails:l1:discovery:cain');
  assert.equal(economy.transaction({type:'hint',level:5,cell:'bad'}),null);
- assert.equal(economy.transaction({type:'level',level:51}),null);
+ assert.equal(economy.transaction({type:'level',level:55}).delta,4);
+ assert.equal(economy.transaction({type:'level',level:56}),null);
  // Bridge is owned by the parent, never a free-for-all standalone child API.
  const hostChild={},stranger={};let nativeActive=true;
  const host={location:{pathname:'/Bible-Unfolded-Visual-Lab/index.html',hostname:'basilejoseph325-jpg.github.io'},
