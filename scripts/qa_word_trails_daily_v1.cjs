@@ -50,7 +50,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     await page.$eval('#daily-kind',x=>x.click());
     await page.waitForSelector('#daily-clues[open]');
     const clueCount=await page.$eval('.daily-bible-clue',xs=>xs.length);
-    if(date>='2026-11-16')assert(clueCount>=3,'Daily clues must include Scripture-linked answers');
+    if(date>='2026-11-16')assert(clueCount>=3,'Daily clues must include Scripture-linked answers: '+JSON.stringify(await page.evaluate(()=>({day:BUWT_DAILY_QA.day(),index:BUWT_DAILY_QA.index(),sourceBibleCount:BUWT_DAILY_QA.bibleWordCount(),dialogOpen:document.querySelector('#daily-clues').open,children:document.querySelector('#daily-clue-list').innerHTML.slice(0,900)}))));
     await page.$eval('#daily-clues-close',x=>x.click());
     assert((await page.$eval('#daily-title',x=>x.textContent)).includes('Word Mix'),'Daily title must not imply every anagram is part of the Bible scene');
     assert((await page.$eval('#daily-kind',x=>x.textContent)).includes('Bible words'),'Daily subtitle should explain the biblical subset');
