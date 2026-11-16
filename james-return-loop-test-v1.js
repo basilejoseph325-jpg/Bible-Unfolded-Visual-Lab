@@ -6,6 +6,7 @@
 (()=>{'use strict';
 if(window.BUJamesReturnLoopV1)return;
 const KEY='bu-james-return-loop-v1-test-only';
+const SHARED_PREVIEW=window.BUPreviewStorageFence?.active===true;
 const NATIVE_WALLET='bible-unfolded-rewards-v17';
 const LIMIT=5,REFILL_MS=15*60*1000;
 const $=s=>document.querySelector(s);
@@ -23,9 +24,17 @@ const PRODUCTS=Object.freeze([
  {id:'royal',kind:'profile',name:'Royal Explorer Crest',desc:'Display your rare collector crest in the Rewards room.',cost:210,icon:'♛',art:'journey-art/04_judges_kings.webp'}
 ]);
 const BY_ID=Object.fromEntries(PRODUCTS.map(p=>[p.id,p]));
-function safeRaw(){try{return JSON.parse(localStorage.getItem(KEY)||'null')}catch(_){return null}}
+function safeRaw(){
+ try{
+  if(SHARED_PREVIEW){
+   const wallet=JSON.parse(localStorage.getItem(NATIVE_WALLET)||'null');
+   return wallet?.buJamesReturnState||null;
+  }
+  return JSON.parse(localStorage.getItem(KEY)||'null');
+ }catch(_){return null}
+}
 function nativeCoins(){try{const n=JSON.parse(localStorage.getItem(NATIVE_WALLET)||'null')?.coins;return Number.isSafeInteger(n)&&n>=0?n:0}catch(_){return 0}}
-const base=()=>({v:1,balance:Math.max(500,Math.min(900,nativeCoins())),lives:5,refillAt:0,pot:0,chain:0,best:0,totalCorrect:0,
+const base=()=>({v:1,balance:SHARED_PREVIEW?nativeCoins():Math.max(500,Math.min(900,nativeCoins())),lives:5,refillAt:0,pot:0,chain:0,best:0,totalCorrect:0,
  owned:[],profile:null,insurance:0,mastery:{active:false,progress:0,awarded:[]},achievements:[],
  history:[],recentDay:'',created:Date.now()});
 const saneInt=(v,max=1e8)=>Number.isSafeInteger(v)&&v>=0&&v<=max;
@@ -48,6 +57,27 @@ function normalize(v){
 let state=normalize(safeRaw());
 function commit(next,action){
  const n={...next,history:[...next.history,{action,at:Date.now(),balance:next.balance,pot:next.pot}].slice(-75)};
+ if(SHARED_PREVIEW){
+  // One native wallet JSON save contains BOTH the shared spendable tokens
+  // and Return Challenge achievements. No two-store purchase is possible.
+  // The original TEST ledger is never converted or changed.
+  try{
+   if(typeof economy==='undefined'||typeof saveEconomy!=='function'||
+      typeof bu3824RefreshWallet!=='function')return false;
+   bu3824RefreshWallet();
+   const before=JSON.parse(JSON.stringify(economy));
+   const delta=n.balance-state.balance;
+   const balance=economy.coins+delta;
+   if(!Number.isSafeInteger(delta)||!Number.isSafeInteger(balance)||balance<0)return false;
+   n.balance=balance;
+   economy.coins=balance;
+   economy.buJamesReturnState=n;
+   if(saveEconomy()!==true){economy=before;updateWallet();return false;}
+   state=n;updateWallet();
+   window.dispatchEvent(new CustomEvent('bu-james-economy-change',{detail:{action}}));
+   return true;
+  }catch(e){console.warn('[James shared TEST wallet] Could not save',e);return false;}
+ }
  try{const v=JSON.stringify(n);localStorage.setItem(KEY,v);if(localStorage.getItem(KEY)!==v)return false;state=n;window.dispatchEvent(new CustomEvent('bu-james-economy-change',{detail:{action}}));return true}catch(e){console.warn('[James TEST Economy] Cannot save',e);return false}
 }
 function freshLives(){
@@ -73,7 +103,7 @@ function feedback(message,positive=false){
  if(positive)try{window.BUPremiumSFX?.play?.('namePositive')}catch(_){}
 }
 function spend(cost,action,modify){
- freshLives();
+ freshLives();if(SHARED_PREVIEW)state.balance=nativeCoins();
  if(state.balance<cost){feedback('Need '+fmt(cost-state.balance)+' more TEST Insight Tokens. Earn them in Trivia.');return false}
  const next=modify({...state,balance:state.balance-cost});
  if(!next||!commit(next,action)){feedback('Could not save this purchase. No tokens spent.');return false}
@@ -98,6 +128,7 @@ function restoreLives(){
  return spend(75,'buy:lives',s=>({...s,lives:LIMIT,refillAt:0}));
 }
 function cashOut(){
+ if(SHARED_PREVIEW)state.balance=nativeCoins();
  if(!state.pot){feedback('Answer questions correctly to build a reward pot.');return false}
  const n=state.pot;
  if(!commit({...state,balance:state.balance+n,pot:0,chain:0,mastery:{...state.mastery,progress:0}},'bank:'+n)){feedback('Could not save payout; your pot is unchanged.');return false}
@@ -105,6 +136,7 @@ function cashOut(){
 }
 const milestone=chain=>({3:25,5:50,10:110})[chain]||0;
 function recordCorrect(){
+ if(SHARED_PREVIEW)state.balance=nativeCoins();
  const chain=state.chain+1,amount=10+Math.min(30,chain*4),bonus=milestone(chain);
  const pot=state.pot+amount+bonus;
  const awards=new Set(state.achievements);
@@ -222,13 +254,14 @@ function mountBar(){
    '<button data-buj-action="risk">Risk & continue</button>'+
    '<button data-buj-action="insurance">Insure · 60</button></div>');
 }
-function paint(){freshLives();mountShop();mountBar()}
+function paint(){freshLives();if(SHARED_PREVIEW)state.balance=nativeCoins();mountShop();mountBar()}
 function gateBooks(e){
  if(!e.target?.closest?.('#home-books')||state.owned.includes('books'))return false;
  e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();
  showBookGate();return true;
 }
 function showBookGate(){
+ if(SHARED_PREVIEW)state.balance=nativeCoins();
  const old=$('#bu-james-gate');old?.remove();
  const div=document.createElement('div');div.id='bu-james-gate';div.setAttribute('role','dialog');div.setAttribute('aria-modal','true');div.setAttribute('aria-label','Unlock Bible Books');
  div.innerHTML='<div class="bu-james-gate-card"><div class="bu-james-eyebrow">SPECIAL MODE · TEST</div>'+
@@ -321,7 +354,7 @@ window.BUJamesReturnLoopV1=Object.freeze({
  // Explicit API for the standalone Books router's window-capture handler.
  // Prevents a click-order race from bypassing this TEST-only unlock screen.
  requestBookUnlock:()=>{if(state.owned.includes('books'))return false;showBookGate();return true},
- inspect:()=>({balance:state.balance,lives:state.lives,refillAt:state.refillAt,pot:state.pot,chain:state.chain,best:state.best,
+ inspect:()=>({balance:SHARED_PREVIEW?nativeCoins():state.balance,lives:state.lives,refillAt:state.refillAt,pot:state.pot,chain:state.chain,best:state.best,
   totalCorrect:state.totalCorrect,insurance:state.insurance,owned:[...state.owned],achievements:[...state.achievements],
   mastery:{...state.mastery},answerCount}),
  testActions:Object.freeze({buy,bank:cashOut,insurance:buyInsurance,refill:restoreLives,correct:recordCorrect,wrong:recordWrong,mastery:startMastery})
