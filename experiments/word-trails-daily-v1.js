@@ -21,7 +21,15 @@ function dayOrdinal(day){
  const [year,month,date]=day.split('-').map(Number);
  return Math.floor(Date.UTC(year,month-1,date)/DAY_MS);
 }
-function sourceIndex(day){return ((dayOrdinal(day)*7)%source.length+source.length)%source.length;}
+// Keep all already-played days stable; begin a Bible-rich daily rotation Nov 16.
+// Each selected board has at least three Scripture-sourced answer clues.
+const DAILY_REFRESH_DATE='2026-11-16';
+const FEATURED_DAILY=Object.freeze([30,25,24,33,38,36,21,34,31,32,4,26,27,28,23,29,37]);
+function sourceIndex(day){
+ const ord=dayOrdinal(day),first=dayOrdinal(DAILY_REFRESH_DATE);
+ if(ord<first)return ((ord*7)%source.length+source.length)%source.length;
+ return FEATURED_DAILY[(ord-first)%FEATURED_DAILY.length];
+}
 function validWord(s){return /^[A-Z]{2,12}$/.test(s);}
 function canMake(rack,word){
  const letters=[...rack];
@@ -30,6 +38,11 @@ function canMake(rack,word){
 }
 function validateSource(){
  if(source.length!==39)throw Error('Daily catalog expected 39 existing, approved TEST puzzles; found '+source.length);
+ if(new Set(FEATURED_DAILY).size!==FEATURED_DAILY.length||FEATURED_DAILY.length<14)throw Error('Daily focus pool has duplicate or too few boards');
+ for(const index of FEATURED_DAILY){
+  const b=source[index];
+  if(!b||b.bibleBoard.filter(x=>b.words.some(w=>w[0]===x.word)).length<3)throw Error('Daily focus board needs 3+ Scripture-linked words '+index);
+ }
  for(const [idx,lev] of source.entries()){
   const n=lev.size||5;
   if(![5,6,7].includes(n)||!validWord(lev.rack)||!Array.isArray(lev.words)||lev.words.length<3||!Array.isArray(lev.bibleBoard)||!lev.bibleBoard.length)throw Error('Incomplete Daily Trail '+idx);
@@ -175,7 +188,8 @@ function updateLabels(){
  $('daily-date').textContent=new Date(today+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',weekday:'short'}).toUpperCase();
  const bibleWords=new Set(level.bibleBoard.map(x=>x.word).filter(w=>level.words.some(x=>x[0]===w)));
  $('daily-title').textContent=level.bibleBoard[0].word+' · Word Mix';
- $('daily-kind').textContent=level.title+' · '+bibleWords.size+' Bible '+(bibleWords.size===1?'word':'words');
+ $('daily-kind').textContent=bibleWords.size+' Bible '+(bibleWords.size===1?'word':'words')+' · See clues';
+ $('daily-kind').title=level.title+' — tap for Bible clues';
  $('daily-progress').textContent=record.solved.length+' / '+n+' WORDS';
  $('stamp-count').textContent=String(stampCount());
  const remains=Math.max(0,2-record.hints.length);
@@ -235,18 +249,49 @@ function showFinish(firstTime){
  $('daily-source').textContent='Read '+bible.reference+' on JW.org';
  if(!$('daily-finish').open)$('daily-finish').showModal();
 }
+function openBibleClues(){
+ if(!sameDay())return;
+ $('daily-story-title').textContent=level.title;
+ const root=$('daily-clue-list');root.replaceChildren();
+ for(const bible of level.bibleBoard.filter(x=>level.words.some(w=>w[0]===x.word))){
+  const clue=document.createElement('div');clue.className='daily-bible-clue';
+  const q=document.createElement('p');q.textContent=bible.clue;
+  const ref=document.createElement('span');ref.textContent=bible.reference;
+  clue.append(q,ref);root.append(clue);
+ }
+ if(!$('daily-clues').open)$('daily-clues').showModal();
+}
+function openJournal(date,entry){
+ const lev=source[entry.board];if(!lev||!entry.completed)return;
+ const bible=lev.bibleBoard[0];
+ $('daily-collection').close();
+ $('journal-heading').textContent=new Date(date+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',year:'numeric'});
+ $('journal-story').textContent=lev.title;
+ $('journal-thought').textContent=bible.insight;
+ $('journal-scripture').textContent=bible.reference;
+ $('journal-source').href=bible.url;
+ $('journal-source').textContent='Read '+bible.reference+' on JW.org';
+ if(!$('daily-journal-entry').open)$('daily-journal-entry').showModal();
+}
+function collectionMilestone(){
+ const n=stampCount(),steps=[[3,'First Steps'],[7,'Curious Explorer'],[14,'Bible Discoverer'],[30,'Discovery Guide']];
+ const next=steps.find(([target])=>n<target);
+ return next?n+' / '+next[0]+' stamps · Next: '+next[1]+' ✦':n+' stamps · Discovery Guide earned!';
+}
 function showCollection(){
  if(!sameDay())return;
  const stampList=$('daily-stamps');stampList.replaceChildren();
+ $('journal-milestone').textContent=collectionMilestone();
  const entries=Object.entries(state.days).filter(([,v])=>v.completed).sort((a,b)=>b[0].localeCompare(a[0]));
  if(!entries.length){
   const p=document.createElement('p');p.textContent='Finish today’s puzzle to collect your first Discovery Stamp.';stampList.append(p);
  }else{
   for(const [date,entry] of entries.slice(0,100)){
-   const row=document.createElement('div');row.className='stamp-row';
+   const row=document.createElement('button');row.type='button';row.className='stamp-row';
+   row.setAttribute('aria-label','Read saved Bible discovery for '+date);
    const label=document.createElement('span');label.textContent=date+' · '+(source[entry.board]?.title||'Bible discovery');
    const star=document.createElement('b');star.textContent='✦';
-   row.append(label,star);stampList.append(row);
+   row.append(label,star);row.addEventListener('click',()=>openJournal(date,entry));stampList.append(row);
   }
  }
  if(!$('daily-collection').open)$('daily-collection').showModal();
@@ -335,6 +380,9 @@ $('daily-submit').addEventListener('click',submit);
 $('daily-hint').addEventListener('click',hint);
 $('daily-shuffle').addEventListener('click',shuffle);
 $('collection').addEventListener('click',showCollection);
+$('daily-kind').addEventListener('click',openBibleClues);
+$('daily-clues-close').addEventListener('click',()=>$('daily-clues').close());
+$('daily-journal-close').addEventListener('click',()=>{$('daily-journal-entry').close();showCollection();});
 $('daily-help').addEventListener('click',()=>$('daily-instructions').showModal());
 $('daily-help-close').addEventListener('click',()=>$('daily-instructions').close());
 $('daily-collection-close').addEventListener('click',()=>$('daily-collection').close());
@@ -356,7 +404,8 @@ try{
  loadToday();
  // Test-only browser instrumentation; not exposed on GitHub Pages.
  if(isLocal)window.BUWT_DAILY_QA=Object.freeze({
-  day:()=>today,index:()=>index,boardCount:()=>source.length,
+  day:()=>today,index:()=>index,boardCount:()=>source.length,featuredCount:()=>FEATURED_DAILY.length,
+  historicalIndex:sourceIndex('2026-11-15'),bibleWordCount:()=>level.bibleBoard.filter(x=>level.words.some(w=>w[0]===x.word)).length,
   words:()=>level.words.map(w=>w[0]),
   rack:()=>level.rack,
   stampCount,record:()=>({...record}),
