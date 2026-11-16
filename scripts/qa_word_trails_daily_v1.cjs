@@ -76,6 +76,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:path[0].x,y:path[0].y,id:1}]});
     for(const b of path.slice(1)){
      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:b.x,y:b.y,id:1}]});
+     await new Promise(resolve=>setTimeout(resolve,38)); // human-paced finger movement, not CDP event coalescing
     }
     const inFlight=await page.$eval('#daily-word',e=>e.textContent);
     assert(word.startsWith(inFlight)&&inFlight.length>=word.length-1,
