@@ -1,0 +1,51 @@
+name: Genesis 14 public TEST integration (no deployment)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'story-adventure-episode14-integration-test.js'
+      - 'journey-progress-caption.js'
+      - 'scripts/qa_story_ep14_public.cjs'
+      - 'scripts/qa_story_adventure_release.cjs'
+      - 'scripts/qa_genesis13_public_integration.cjs'
+      - '.github/workflows/qa-genesis14-public-test.yml'
+permissions:
+  contents: read
+jobs:
+  test-public:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      NODE_PATH: '${{ github.workspace }}/work/node_modules'
+      STORY_URL: http://127.0.0.1:8893/index.html
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start isolated local web server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8893 --bind 127.0.0.1 > work/http-g14-public.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8893/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Source and native module syntax checks
+        run: |
+          node --check story-adventure-episode14-integration-test.js
+          node scripts/check_story_sources.cjs
+          node scripts/qa_genesis14_content_candidate.cjs
+      - name: Regular Genesis TEST menu, locks, artwork, saves and preview isolation
+        run: node scripts/qa_story_ep14_public.cjs
+      - name: Previous Episode 13 native regression
+        run: node scripts/qa_genesis13_public_integration.cjs
+      - name: Full Story release playthrough
+        run: node scripts/qa_story_adventure_release.cjs
+      - name: Other modes and shared controls remain intact
+        run: node scripts/qa_story_mode_boundaries.cjs

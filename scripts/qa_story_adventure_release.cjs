@@ -18,7 +18,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   page.on('pageerror',e=>evidence.errors.push(e.message));
   await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:1});
   await page.goto(base,{waitUntil:'load',timeout:120000});
-  await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof bu3864AskHint==='function'&&window.BUStoryGenesis13Test?.status==='ready');
+  await page.waitForFunction(()=>typeof bu3857Open==='function'&&typeof bu3864AskHint==='function'&&window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready');
   const row={width,height,modern:0,legacy:0,finales:0,hints:[],overflow:[],pendingArt:[]};
   // Ledger snapshots make replay checks independent of daily welcome rewards.
   const ledger=()=>page.evaluate(()=>({points:economy.points,coins:economy.coins}));
@@ -55,7 +55,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   await page.evaluate(()=>{economy.coins=100;saveEconomy();document.getElementById('bu3857-hint').click();window.originalStorySetItem=Storage.prototype.setItem;Storage.prototype.setItem=function(k,v){if(k===BU_GENESIS_KEY)throw new DOMException('Simulated chapter write failure','QuotaExceededError');return window.originalStorySetItem.call(this,k,v)}});
   await buy();assert.equal((await ledger()).coins,85);
   await page.evaluate(()=>Storage.prototype.setItem=window.originalStorySetItem);
-  console.log('RELOADING');await page.reload({waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready');
+  console.log('RELOADING');await page.reload({waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready');
   assert(await page.$eval('#home',e=>!e.hidden),'Reload must return home');
   await page.evaluate(()=>bu3857Open('genesis_ep09'));
   assert.equal(await page.evaluate(()=>bu3857State.hints['g09-d01']),2,'Paid receipt must recover after chapter save failure');
@@ -75,8 +75,8 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
     const problem=await page.evaluate(()=>{
      const root=document.getElementById('bu3857-content'),d=bu3857Current();
      const image=root.querySelector('figure img');
-     const pending=bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available;
-     if(pending){if(image||!root.querySelector('[data-bu-genesis13-scene]')?.textContent.includes('illustration pending'))throw Error('Unlabelled or substituted pending art '+d.id);}
+     const pending=(bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available)||(bu3857State.book==='genesis_ep14'&&!window.BUStoryGenesis14Test.artwork[d.id].available);
+     if(pending){if(image||!root.querySelector('[data-bu-genesis13-scene],[data-bu-genesis14-scene]')?.textContent.includes('illustration pending'))throw Error('Unlabelled or substituted pending art '+d.id);}
      else if(!image)throw Error('No scene art '+d.id);
      const viewport={w:innerWidth,h:innerHeight};
      const out=[...root.querySelectorAll('button')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(r.right>viewport.w+2||r.bottom>viewport.h+2||r.left< -2)}).map(e=>e.id||e.dataset.id||e.textContent);
@@ -130,7 +130,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    }
    assert.equal(await page.evaluate(()=>mode),'done');row.finales++;
   }
-  assert.equal(row.modern,105);assert.equal(row.legacy,84);assert.equal(row.finales,19);
+  assert.equal(row.modern,117);assert.equal(row.legacy,84);assert.equal(row.finales,20);
   assert.deepEqual(row.overflow,[],'Active controls clipped');
   evidence.viewports.push(row);console.log('PASS_STORY_ALL_PLAYABLE',JSON.stringify(row));await context.close();
  }

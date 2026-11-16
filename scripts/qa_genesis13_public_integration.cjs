@@ -13,7 +13,7 @@ for(const [width,height] of [[320,568],[390,844]]){
  const context=await browser.createBrowserContext(),page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('response',r=>{if(r.url().includes('genesis-episode13')&&r.status()>=400)errors.push('Episode 13 HTTP '+r.status()+' '+r.url())});
  await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:1});
  let game;
- async function load(){await page.goto(entry,{waitUntil:'load',timeout:120000});game=page;await game.waitForFunction(()=>['ready','failed'].includes(window.BUStoryGenesis13Test?.status),{timeout:60000});assert.equal(await game.evaluate(()=>window.BUStoryGenesis13Test.status),'ready');await game.evaluate(()=>document.getElementById('daily-close')?.click());}
+ async function load(){await page.goto(entry,{waitUntil:'load',timeout:120000});game=page;await game.waitForFunction(()=>['ready','failed'].includes(window.BUStoryGenesis13Test?.status),{timeout:60000});assert.equal(await game.evaluate(()=>window.BUStoryGenesis13Test.status),'ready');await game.waitForFunction(()=>window.BUStoryGenesis14Test?.status==='ready',{timeout:60000});await game.evaluate(()=>document.getElementById('daily-close')?.click());}
  const close=()=>game.evaluate(()=>{for(const id of ['bu3864-modal-layer','bu3863-dialog-layer','bu3898-scripture-layer'])document.getElementById(id)?.buClose?.()});
  const wallet=()=>game.evaluate(()=>({points:economy.points,coins:economy.coins}));
  const solve=async(touch=false)=>{
@@ -24,7 +24,7 @@ for(const [width,height] of [[320,568],[390,844]]){
   await game.waitForSelector('#bu3863-dialog-layer .bu3863-dialog-done');
  };
  await load();
- const ids=await game.evaluate(()=>BU_GENESIS_IDS.slice());assert.equal(ids.length,7);assert(ids.includes('genesis_ep13'));assert(ids.includes('genesis_ep12'));
+ const ids=await game.evaluate(()=>BU_GENESIS_IDS.slice());assert.equal(ids.length,8);assert(ids.includes('genesis_ep14'));assert(ids.includes('genesis_ep13'));assert(ids.includes('genesis_ep12'));
  await game.evaluate(()=>openEpisodes('genesis'));assert(await game.$('[data-genesis13]'));assert(!(await game.$eval('[data-genesis13]',b=>b.classList.contains('available'))));
  await game.$eval('[data-genesis13]',b=>b.click());assert.notEqual(await game.evaluate(()=>bu3857State?.book),'genesis_ep13');
  assert.equal(await game.evaluate(()=>bu3857Open('genesis_ep13')),false,'Direct open bypassed predecessor lock');

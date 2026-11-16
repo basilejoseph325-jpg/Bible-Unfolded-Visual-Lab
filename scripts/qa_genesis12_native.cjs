@@ -14,13 +14,13 @@ for(const [width,height] of [[320,568],[390,844]]){
  page.on('pageerror',e=>errors.push(e.message));
  await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:1});
  await page.goto(base,{waitUntil:'load',timeout:120000});
- await page.waitForFunction(()=>window.BUStoryGenesis12Test?.discoveryCount===13&&window.BUStoryGenesis13Test?.status==='ready',{timeout:80000});
+ await page.waitForFunction(()=>window.BUStoryGenesis12Test?.discoveryCount===13&&window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready',{timeout:80000});
  const entry=await page.evaluate(()=>{
   makeEpisodes();const card=document.querySelector('#episode-list [data-episode="11"]');
   return {cards:document.querySelectorAll('#episode-list .episode-card').length,locked:!card.classList.contains('available'),
    words:Object.keys(BU_HQ_WORDS).filter(k=>k.startsWith('g12-d')).length};
  });
- assert.deepEqual(entry,{cards:13,locked:true,words:13});
+ assert.deepEqual(entry,{cards:14,locked:true,words:13});
  // Simulate a previously completed Episode 11 and exercise its real
  // "Next Episode" button, not just a direct programmatic chapter open.
  const nextChapter=await page.evaluate(()=>{
@@ -90,7 +90,7 @@ for(const [width,height] of [[320,568],[390,844]]){
   await page.$eval('#bu3857-continue',b=>b.click());
   if(i===2){
    await page.reload({waitUntil:'load',timeout:120000});
-   await page.waitForFunction(()=>window.BUStoryGenesis12Test?.chapterId==='genesis_ep12'&&window.BUStoryGenesis13Test?.status==='ready');
+   await page.waitForFunction(()=>window.BUStoryGenesis12Test?.chapterId==='genesis_ep12'&&window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready');
    assert(await page.$eval('#home',x=>!x.hidden),'Refresh must return Home');
    await page.evaluate(()=>bu3857Open('genesis_ep12'));
    assert.equal(await page.evaluate(()=>bu3857State.step),3,'Resume checkpoint lost');
