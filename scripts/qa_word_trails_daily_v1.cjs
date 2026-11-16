@@ -16,6 +16,8 @@ assert(gameHTML.includes('id="daily-trail-entry"')&&gameHTML.includes('href="wor
 assert(gameHTML.includes('Play Today’s Daily Word Trail'),'Level map entry missing');
 const dailyScript=fs.readFileSync('experiments/word-trails-daily-v1.js','utf8');
 assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instrumentation not guarded');
+const dailyHTML=fs.readFileSync('experiments/word-trails-daily-v1.html','utf8');
+assert(dailyHTML.includes("if(wasReload&&!qaDaily)location.replace(new URL('../index.html'"),'Daily standalone refresh must return to home');
 const dailyCSS=fs.readFileSync('experiments/word-trails-daily-v1.css','utf8');
 assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must keep touch gestures inside the wheel');
 (async()=>{
@@ -40,6 +42,16 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     await page.waitForFunction(()=>window.BUWT_DAILY_QA?.boardCount()===39,{timeout:45000});
     assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.day()),date);
     assert.equal(await page.$eval('#daily-board',x=>x.children.length)>0,true);
+    if(date>='2026-11-16'){
+     assert((await page.evaluate(()=>BUWT_DAILY_QA.bibleWordCount()))>=3,'New Daily rotation must have 3+ Bible-linked words');
+     assert.equal(await page.evaluate(()=>BUWT_DAILY_QA.featuredCount()),17,'Bible-rich daily pool is fixed');
+     assert.equal(await page.evaluate(()=>BUWT_DAILY_QA.historicalIndex),12,'Earlier Babel day must retain its historic board');
+    }
+    await page.$eval('#daily-kind',x=>x.click());
+    await page.waitForSelector('#daily-clues[open]');
+    const clueCount=await page.evaluate(()=>document.querySelectorAll('.daily-bible-clue').length);
+    if(date>='2026-11-16')assert(clueCount>=3,'Daily clues must include Scripture-linked answers: '+JSON.stringify(await page.evaluate(()=>({day:BUWT_DAILY_QA.day(),index:BUWT_DAILY_QA.index(),sourceBibleCount:BUWT_DAILY_QA.bibleWordCount(),dialogOpen:document.querySelector('#daily-clues').open,children:document.querySelector('#daily-clue-list').innerHTML.slice(0,900)}))));
+    await page.$eval('#daily-clues-close',x=>x.click());
     assert((await page.$eval('#daily-title',x=>x.textContent)).includes('Word Mix'),'Daily title must not imply every anagram is part of the Bible scene');
     assert((await page.$eval('#daily-kind',x=>x.textContent)).includes('Bible words'),'Daily subtitle should explain the biblical subset');
     const layout=await page.evaluate(()=>{
@@ -97,6 +109,8 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     assert(traceResult.solved.includes(word),'Touch swipe did not solve '+word+'; '+JSON.stringify(traceResult));
     await new Promise(resolve=>setTimeout(resolve,410)); // next word starts after native ghost-click suppression
    }
+   const old=await openDate('2026-11-15');
+   assert.equal(old.index,12,'Previously served Nov 15 Babel crossword is unchanged');
    const one=await openDate(first);
    assert(one.words.length>=3&&one.words.length<=12);
    assert.equal(await page.$eval('#stamp-count',x=>x.textContent),'0');
@@ -125,7 +139,14 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
    assert(outcome.scripture.startsWith('https://www.jw.org/en/library/bible/nwt/books/'));
    await page.$eval('#daily-finish-close',x=>x.click());
    await page.$eval('#collection',x=>x.click());
-   assert.equal(await page.$$eval('.stamp-row',xs=>xs.length),1);
+   assert.equal(await page.evaluate(()=>document.querySelectorAll('.stamp-row').length),1);
+   assert((await page.$eval('#journal-milestone',x=>x.textContent)).includes('1 / 3'),'First journal milestone should show progress');
+   await page.$eval('.stamp-row',x=>x.click());
+   await page.waitForSelector('#daily-journal-entry[open]');
+   assert((await page.$eval('#journal-thought',x=>x.textContent)).length>45,'Saved journal note missing');
+   assert((await page.$eval('#journal-source',a=>a.href)).startsWith('https://www.jw.org/en/library/bible/nwt/books/'),'Journal source must be from JW.org');
+   await page.$eval('#daily-journal-close',x=>x.click());
+   assert.equal(await page.evaluate(()=>document.querySelectorAll('.stamp-row').length),1,'Back to journal must reopen entries');
    await page.$eval('#daily-collection-close',x=>x.click());
    await page.reload({waitUntil:'load',timeout:120000});
    await page.waitForFunction(()=>window.BUWT_DAILY_QA?.boardCount()===39);
@@ -171,5 +192,29 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
   assert((await page.$eval('.daily-back',a=>a.href)).includes('index.html?wt_launch=native'));
   console.log('PASS_WORD_TRAILS_NORMAL_ENTRY_TO_DAILY_TEST');
   await context.close();
+  // Browser refresh on the standalone Daily page returns home. QA date overrides are exempt.
+  const refreshContext=await browser.createBrowserContext(),refreshPage=await refreshContext.newPage();
+  await refreshPage.setViewport({width:390,height:844,isMobile:true,hasTouch:true});
+  await refreshPage.goto(daily.href,{waitUntil:'load'});
+  await refreshPage.waitForSelector('#daily-wheel .daily-wheel-letter');
+  await refreshPage.reload({waitUntil:'domcontentloaded'});
+  await refreshPage.waitForFunction(()=>location.pathname.endsWith('/index.html')&&location.search==='',{timeout:30000});
+  console.log('PASS_DAILY_REFRESH_RETURNS_TO_HOME');
+  await refreshContext.close();
+  // A stamp created before the new curated rotation remains readable and countable.
+  const priorContext=await browser.createBrowserContext(),priorPage=await priorContext.newPage();
+  const priorDate=new URL(daily);priorDate.searchParams.set('qaDate','2026-11-15');
+  await priorPage.goto(priorDate.href,{waitUntil:'load'});
+  await priorPage.evaluate(key=>localStorage.setItem(key,JSON.stringify({version:1,days:{'2026-11-15':{board:12,solved:['BABEL','ABEL','SABLE','BASE','SALE','BALES'],hints:[],completed:true}}})),KEY);
+  const future=new URL(daily);future.searchParams.set('qaDate','2026-11-16');
+  await priorPage.goto(future.href,{waitUntil:'load'});
+  await priorPage.waitForFunction(()=>window.BUWT_DAILY_QA?.boardCount()===39);
+  assert.equal(await priorPage.evaluate(()=>BUWT_DAILY_QA.stampCount()),1,'Historic earned stamp must survive new daily selection');
+  await priorPage.$eval('#collection',x=>x.click());
+  assert((await priorPage.$eval('.stamp-row',x=>x.textContent)).includes('A Confused City'),'Historical stamp title must remain associated with original board');
+  await priorPage.$eval('.stamp-row',x=>x.click());
+  assert((await priorPage.$eval('#journal-thought',x=>x.textContent)).includes('language'),'Historical Bible thought must survive');
+  console.log('PASS_DAILY_EXISTING_STAMP_AND_JOURNAL_MIGRATION');
+  await priorContext.close();
  }finally{await browser.close();}
 })().catch(error=>{console.error('FAIL_DAILY_TRAIL',error.stack||error);process.exitCode=1;});
