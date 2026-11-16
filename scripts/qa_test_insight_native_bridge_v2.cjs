@@ -6,7 +6,7 @@
 'use strict';
 const vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
 const load=p=>fs.readFileSync(p,'utf8');
-function scenario(preview=true){
+function scenario(preview=true,lockMode='owned'){
  class Storage {
   constructor(){this.map=new Map();this.block=false;}
   get length(){return this.map.size;}
@@ -37,7 +37,14 @@ function scenario(preview=true){
  window.parent=window;
  const document={readyState:'loading',addEventListener(){},
   getElementById:id=>id==='bu-wt-native-game'?{contentWindow:child}:null};
- const globals={Storage,window,document,location,
+ // The unit fixture acquires a mock lock synchronously; real Chromium/WebKit
+ // tests below verify actual asynchronous cross-tab Web Lock arbitration.
+ const navigator=lockMode==='unsupported'?{}:{locks:{request(name,options,callback){
+  const handle=lockMode==='conflict'?null:{name,mode:'exclusive'};
+  const outcome=callback(handle);
+  return Promise.resolve(outcome);
+ }}};
+ const globals={Storage,window,document,location,navigator,
   localStorage:storage,sessionStorage:session,URLSearchParams,CustomEvent:class{constructor(type){this.type=type;}}};
  const ctx=vm.createContext(globals);
  vm.runInContext(load('experiments/bu-test-native-storage-fence-v1.js'),ctx);
@@ -122,6 +129,21 @@ function scenario(preview=true){
  assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-wheel-ownership-v3825'),'{"owned":["seawheel"]}');
  assert.throws(()=>x.storage.clear(),/forbids clearing/);
  assert(x.events.includes('bu-test-insight-change'));
+}
+{
+ const x=scenario(true,'conflict');
+ assert.equal(x.window.BUPreviewStorageFence.writerStatus().status,'conflict');
+ assert.equal(x.window.BUPreviewStorageFence.writerStatus().writable,false);
+ assert.throws(()=>x.storage.setItem('bible-unfolded-rewards-v17','{}'),/read-only/);
+ assert.equal(x.window.BUTestInsightBridge.nativeBalance().ok,false);
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live);
+}
+{
+ const x=scenario(true,'unsupported');
+ assert.equal(x.window.BUPreviewStorageFence.writerStatus().status,'unsupported');
+ assert.throws(()=>x.storage.removeItem('bible-unfolded-rewards-v17'),/read-only/);
+ assert.equal(x.window.BUTestInsightBridge.nativeBalance().ok,false);
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live);
 }
 {
  const x=scenario(false);
