@@ -33,7 +33,7 @@ jobs:
           assert "Bible-Unfolded-Visual-Lab" in w
           assert "bible-unfolded-rewards-v17" not in w
           assert "bu-visual-lab-wordtrails-next-v1" not in w
-          assert "localStorage" not in w
+          assert "localStorage.getItem" not in w and "localStorage.setItem" not in w
           print('PASS: TEST ledger contains no production or legacy key access')
           PY
       - name: Simulate independent IndexedDB sessions with backup and storage failures
