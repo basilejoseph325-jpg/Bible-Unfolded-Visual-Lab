@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=combo-left-daily-overlay-20261115-v25';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=daily-buttons-no-home-20261116-v26';
 let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
@@ -92,7 +92,7 @@ function openDaily(){
  try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-enter'))}catch(_){}
  const daily=document.createElement('iframe');
  daily.id='bu-wt-daily-frame';daily.title='Daily Word Trail';
- daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails';
+ daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=back-button-20261116';
  daily.allow='autoplay';
  shell.appendChild(daily);dailyFrame=daily;
  history.pushState({buWtDaily:true},'','#daily-word-trail');
@@ -104,8 +104,10 @@ function bindDailyLinks(){
  if(!doc||doc.__buDailyBound)return;
  doc.__buDailyBound=true;
  doc.addEventListener('click',event=>{
-  const link=event.target?.closest?.('a[href^="word-trails-daily-v1.html"]');
-  if(link&&openDaily()){event.preventDefault();event.stopImmediatePropagation()}
+  const button=event.target?.closest?.('[data-wt-open-daily]');
+  if(!button)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  openDaily();
  },true);
 }
 function close({restoreHistory=true}={}){

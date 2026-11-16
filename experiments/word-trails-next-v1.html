@@ -16,13 +16,27 @@
      (args.get('native')==='1'&&args.get('standalone')!=='qa'))){
   location.replace('../index.html?wt_launch=native');
  }
-}catch(_){}})();
+ }catch(_){}})();
+</script>
+<script>
+// Intercept actual Android touch-generated clicks inside the iframe itself.
+document.addEventListener('click',event=>{
+ const entry=event.target?.closest?.('[data-wt-open-daily]');
+ if(!entry)return;
+ event.preventDefault();event.stopImmediatePropagation();
+ try{
+  const host=window.parent!==window&&window.parent.BUWTNativeShell;
+  if(host?.active?.()&&host.openDaily?.())return;
+ }catch(_){}
+ // Direct standalone QA retains a separate page; embedded play never unloads.
+ if(window.parent===window)window.location.assign('word-trails-daily-v1.html');
+},true);
 </script>
 <!-- Embedded Word Trails reload still resumes its protected crossword save. -->
 
 <meta name="description" content="Bible Unfolded Visual Lab — next-generation Word Trails puzzle preview.">
 <title>Word Trails NEXT · 50 Bible Levels • Bible Unfolded</title>
-<link rel="stylesheet" href="word-trails-next-v1.css?v=combo-left-daily-overlay-20261115-v4">
+<link rel="stylesheet" href="word-trails-next-v1.css?v=daily-real-touch-no-navigation-20261116-v5">
 <link rel="stylesheet" href="word-trails-feel-v2.css?v=gold-win-v5-final-20261107">
 <link rel="stylesheet" href="word-trails-unified-menu-v1.css?v=standard-menu-v1">
 <link rel="stylesheet" href="word-trails-native-wheel-v1.css?v=faithful-ocean-solid-20261109">
@@ -73,7 +87,7 @@
     <button type="button" id="hint" class="side-control hint" aria-label="Reveal a letter">
       <img src="../assets/ui/daily-gold-hint-v3.svg" alt=""><span id="hint-cost">FREE</span>
     </button>
-    <a class="daily-float" id="daily-trail-entry" href="word-trails-daily-v1.html" target="_top" aria-label="Play today’s Daily Word Trail" title="Daily Word Trail"><span class="daily-float-sun" aria-hidden="true">☀</span><span class="daily-float-label">DAILY</span></a>
+    <button type="button" class="daily-float" id="daily-trail-entry" data-wt-open-daily aria-label="Play today’s Daily Word Trail" title="Daily Word Trail"><span class="daily-float-sun" aria-hidden="true">☀</span><span class="daily-float-label">DAILY</span></button>
     <div class="combo" id="combo" aria-live="polite" style="left:10px!important;right:auto!important"></div>
   </section>
   <footer class="bottom">
@@ -125,7 +139,7 @@
     </section>
     <div id="map-list" class="map-list"></div>
     <div class="map-actions">
-      <a href="word-trails-daily-v1.html" target="_top" aria-label="Open the Daily Word Trail challenge" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(#f8dfad,#c39244);color:#153640;border:1px solid #fff0bf;border-radius:12px;padding:12px;font-size:14px;font-weight:900;min-height:44px">☀ Play Today’s Daily Word Trail</a>
+      <button type="button" data-wt-open-daily aria-label="Open the Daily Word Trail challenge" style="display:block;width:100%;text-align:center;background:linear-gradient(#f8dfad,#c39244);color:#153640;border:1px solid #fff0bf;border-radius:12px;padding:12px;font-size:14px;font-weight:900;min-height:44px">☀ Play Today’s Daily Word Trail</button>
       <button type="button" id="reset-level">↻ Restart current puzzle</button>
       <button type="button" id="reset-test">Reset all test progress</button>
     </div>

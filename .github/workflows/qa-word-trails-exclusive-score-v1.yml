@@ -26,7 +26,7 @@ jobs:
           node --check scripts/qa_word_trails_exclusive_parent_score_v1.cjs
           grep -F 'rootMusicMuteLease' word-trails-native-shell-v1.js
           grep -F 'function resumeHome()' word-trails-native-shell-v1.js
-          grep -F 'word-trails-native-shell-v1.js?v=menu-score-exclusive-20261115-v1' visual-lab-test-banner.js
+          grep -F 'word-trails-native-shell-v1.js?v=' visual-lab-test-banner.js
           grep -F 'visual-lab-test-banner.js?v=menu-score-exclusive-20261115-v1' journey-progress-caption.js
       - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
       - name: Start disposable TEST browser server

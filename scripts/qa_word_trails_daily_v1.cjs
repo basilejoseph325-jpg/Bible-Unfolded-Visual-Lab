@@ -12,12 +12,12 @@ const daily=new URL('experiments/word-trails-daily-v1.html',BASE);
 const normal=new URL('experiments/word-trails-next-v1.html?standalone=qa',BASE);
 const KEY='bu-visual-lab-daily-word-trail-v1';
 const gameHTML=fs.readFileSync('experiments/word-trails-next-v1.html','utf8');
-assert(gameHTML.includes('id="daily-trail-entry"')&&gameHTML.includes('href="word-trails-daily-v1.html"')&&gameHTML.includes('target="_top"'),'Existing Word Trails entry not wired');
+assert(gameHTML.includes('id="daily-trail-entry"')&&gameHTML.includes('data-wt-open-daily')&&!gameHTML.includes('target="_top"'),'Word Trails DAILY must be an in-game button without full-page browser navigation');
 assert(gameHTML.includes('Play Today’s Daily Word Trail'),'Level map entry missing');
 const dailyScript=fs.readFileSync('experiments/word-trails-daily-v1.js','utf8');
 assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instrumentation not guarded');
 const dailyHTML=fs.readFileSync('experiments/word-trails-daily-v1.html','utf8');
-assert(dailyHTML.includes("if(wasReload&&!qaDaily)location.replace(new URL('../index.html'"),'Daily standalone refresh must return to home');
+assert(dailyHTML.includes("if(wasReload&&!qaDaily)window.top.location.replace(new URL('../index.html'"),'Daily standalone refresh must return to home');
 const dailyCSS=fs.readFileSync('experiments/word-trails-daily-v1.css','utf8');
 assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must keep touch gestures inside the wheel');
 (async()=>{
@@ -186,7 +186,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
   await page.goto(normal.href,{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForSelector('#daily-trail-entry');
   await page.waitForSelector('.wheel-letter');
-  assert.equal(await page.$eval('#daily-trail-entry',a=>a.getAttribute('target')),'_top');
+  assert.equal(await page.$eval('#daily-trail-entry',a=>a.tagName),'BUTTON');
   assert.equal(await page.$eval('#daily-trail-entry',a=>a.closest('.play-region')!==null),true,'Daily entry belongs alongside the hint and wheel');
   assert.equal(await page.$eval('#daily-trail-entry',a=>a.innerText.includes('DAILY')),true,'Floating bubble label is readable');
   for(const [w,h] of [[320,568],[390,844],[430,932]]){
@@ -217,7 +217,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
   await page.$eval('#daily-trail-entry',a=>a.click());
   await page.waitForFunction(()=>location.pathname.endsWith('/word-trails-daily-v1.html'),{timeout:30000});
   await page.waitForSelector('#daily-wheel .daily-wheel-letter',{timeout:30000});
-  assert((await page.$eval('.daily-back',a=>a.href)).includes('index.html?wt_launch=native'));
+  assert.equal(await page.$eval('.daily-back',a=>a.tagName),'BUTTON');
   console.log('PASS_WORD_TRAILS_NORMAL_ENTRY_TO_DAILY_TEST');
   await context.close();
   // Browser refresh on the standalone Daily page returns home. QA date overrides are exempt.

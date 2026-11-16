@@ -51,7 +51,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    return {comboRight:comboRect.right,dailyLeft:dailyRect.left,
     comboLeft:comboRect.left,comboTop:comboRect.top,
     windowWidth:child.innerWidth,windowHeight:child.innerHeight,
-    dailyHref:daily.getAttribute('href'),pointerEvents};
+    dailyIsButton:daily.tagName==='BUTTON'&&daily.hasAttribute('data-wt-open-daily'),pointerEvents};
   });
   assert(comboLayout.comboRight+6<=comboLayout.dailyLeft,
    'COMBO number may not hide under the floating DAILY button');
@@ -59,8 +59,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    comboLayout.comboRight<=comboLayout.windowWidth,
    'COMBO indicator should remain fully readable at phone widths');
   assert.equal(comboLayout.pointerEvents,'none','Combo must not block wheel or DAILY taps');
-  assert.equal(comboLayout.dailyHref,'word-trails-daily-v1.html',
-   'Daily button route must remain unchanged');
+  assert.equal(comboLayout.dailyIsButton,true,
+   'DAILY must be a game button, never a target=_top navigation link');
 
   // A direct call that would once open the second Sound & Feel dialog must
   // delegate to the real parent Settings and never expose duplicate controls.
@@ -218,12 +218,49 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    'Back from Daily must return to existing Word Trails without homepage reload');
   assert.equal(afterDaily.puzzle,beforeDaily.puzzle,'Daily round-trip must preserve the board');
   assert.equal(afterDaily.page,dailyOpen.url,'No intermediate homepage navigation is allowed');
+  // Previous synthetic .click() QA missed the real Samsung tap. Use the
+  // touchscreen and detect any full-document request by the top-level page.
+  const topDocumentRequests=[];
+  page.on('request',request=>{
+   try{if(request.isNavigationRequest()&&request.frame()===page.mainFrame())
+    topDocumentRequests.push(request.url())}catch(_){}
+  });
+  const dailyPoint=await page.evaluate(()=>{
+   const frame=document.getElementById('bu-wt-native-game'),f=frame.getBoundingClientRect();
+   const btn=frame.contentDocument.getElementById('daily-trail-entry'),r=btn.getBoundingClientRect();
+   return {x:Math.round(f.left+r.left+r.width/2),y:Math.round(f.top+r.top+r.height/2)};
+  });
+  await page.touchscreen.tap(dailyPoint.x,dailyPoint.y);
+  await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentDocument?.querySelector('.daily-back'),{timeout:30000});
+  const backPoint=await page.evaluate(()=>{
+   const frame=document.getElementById('bu-wt-daily-frame'),f=frame.getBoundingClientRect();
+   const btn=frame.contentDocument.querySelector('.daily-back'),r=btn.getBoundingClientRect();
+   return {x:Math.round(f.left+r.left+r.width/2),y:Math.round(f.top+r.top+r.height/2)};
+  });
+  await page.touchscreen.tap(backPoint.x,backPoint.y);
+  await page.waitForFunction(()=>location.hash==='#word-trails'&&!document.getElementById('bu-wt-daily-frame'),{timeout:30000});
+  const touchResult=await page.evaluate(()=>({
+   sameFrame:document.getElementById('bu-wt-native-game')===window.__wtQaFrame,
+   sameRoot:document.getElementById('bu-wt-native-shell')===window.__wtQaRoot,
+   sameBoard:document.getElementById('bu-wt-native-game').contentDocument.getElementById('board').textContent===window.__wtQaFrame.contentDocument.getElementById('board').textContent
+  }));
+  assert(touchResult.sameFrame&&touchResult.sameRoot&&touchResult.sameBoard,
+   'Real touch DAILY/Back must preserve the exact same Word Trails frame');
+  assert.deepEqual(topDocumentRequests,[],
+   'Daily/Back caused a top-document reload: '+JSON.stringify(topDocumentRequests));
+  // Samsung's browser Back must close the Daily overlay without Home either.
+  await page.touchscreen.tap(dailyPoint.x,dailyPoint.y);
+  await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentDocument?.querySelector('.daily-back'),{timeout:30000});
+  await page.evaluate(()=>history.back());
+  await page.waitForFunction(()=>location.hash==='#word-trails'&&!document.getElementById('bu-wt-daily-frame'),{timeout:30000});
+  assert.equal(await page.evaluate(()=>document.getElementById('bu-wt-native-game')===window.__wtQaFrame),true);
+  assert.deepEqual(topDocumentRequests,[],'Browser Back from Daily must not load Home');
   assert.deepEqual(errors,[],'No JavaScript errors');
   console.log('PASS_WORD_TRAILS_NATIVE_AUDIO_WHEEL_OWNER_V23',JSON.stringify({
    viewport:vp.width+'x'+vp.height,
    nativeSettingsOnly:true,nativeAudioPropagation:true,shadowStorageUnchanged:true,
    originalAnnouncerDelegated:true,curvedOceanGlow:true,glowHalo:true,swipeMist:true,microGlitter:true,
-   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,dailyOverlayRoundTrip:true,puzzlePreserved:true,pageErrors:errors.length}));
+   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,dailyOverlayRoundTrip:true,realTouchDailyBack:true,zeroHomeNavigations:true,puzzlePreserved:true,pageErrors:errors.length}));
   await page.close();
  }
  }finally{await browser.close()}
