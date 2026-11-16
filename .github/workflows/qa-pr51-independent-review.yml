@@ -12,7 +12,7 @@ jobs:
       - name: Checkout exact untouched Codex PR51 candidate
         uses: actions/checkout@v4
         with:
-          ref: 3f3a612f5d135e8bd4fe2f55f8cce4678181ac8f
+          ref: f85bd62c3a0f30e302add64c0b8093e4562948cf
           fetch-depth: 0
       - name: Setup Node
         uses: actions/setup-node@v4
