@@ -142,6 +142,31 @@ function makePreviewBackup(){
  return data;
 }
 if(isTop){
+ // Keep in-preview navigation on the guarded Visual Lab pages. In particular,
+ // the Books home button uses JavaScript rather than a normal hyperlink.
+ document.addEventListener('click',event=>{
+  const homeBooks=event.target?.closest?.('#home-books');
+  if(homeBooks&&window.BUJamesReturnLoopV1?.inspect?.()?.owned?.includes('books')){
+   event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
+   location.assign(new URL('bible-book-guides/index.html?bu_shared_wallet_preview=1',
+     new URL('./',location.href)).href);
+   return;
+  }
+  const anchor=event.target?.closest?.('a[href]');
+  if(!anchor||anchor.download||anchor.target==='_blank')return;
+  let dest;
+  try{dest=new URL(anchor.href,location.href)}catch(_){return;}
+  if(dest.origin!==location.origin)return; // JW.org and other external sites stay unchanged.
+  const inside=/^\\/Bible-Unfolded-Visual-Lab(?:\\/|$)/.test(dest.pathname)||
+   ['localhost','127.0.0.1'].includes(location.hostname);
+  if(!inside){
+   event.preventDefault();event.stopImmediatePropagation();
+   alert('This link opens outside the protected shared coin preview. Open it from the regular TEST game instead.');
+   return;
+  }
+  dest.searchParams.set('bu_shared_wallet_preview','1');
+  anchor.href=dest.href;
+ },true);
  // Capture BEFORE the native TEST v2 listener. A v2 export would omit the
  // isolated Word Trails preview save and have an incompatible restore format.
  document.addEventListener('click',event=>{
