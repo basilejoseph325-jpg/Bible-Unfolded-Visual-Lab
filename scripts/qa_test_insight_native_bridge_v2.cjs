@@ -65,7 +65,7 @@ function scenario(preview=true){
  const x=scenario(true),api=x.window.BUTestInsightBridge;
  assert(x.window.BUPreviewStorageFence?.active,'preview fence must be installed');
  assert(api?.version.includes('native'),'native shared bridge must be installed');
- assert.equal(x.storage.getItem('bible-unfolded-rewards-v17'),x.live);
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live);
  assert.equal(api.nativeBalance().balance,60);
  const migrated=JSON.parse(x.storage.getItem('bu-visual-lab-shared-preview-20261116:bible-unfolded-rewards-v17'));
  assert.equal(migrated.wtPreviewMigration,1);
@@ -99,9 +99,9 @@ function scenario(preview=true){
  assert.equal(api.transact(x.child,{type:'level',level:3}).balance,55,'retry must succeed');
  x.closed.active=false;
  assert.equal(api.snapshot(x.child).ok,false,'closed iframe must never transact');
- assert.equal(x.storage.getItem('bible-unfolded-rewards-v17'),x.live,'LIVE primary stays byte-identical');
- assert.equal(x.storage.getItem('bible-unfolded-rewards-v17-recovery-v3811'),x.live,'LIVE recovery stays byte-identical');
- assert.equal(x.storage.getItem('bible-unfolded-wheel-ownership-v3825'),'{"owned":["seawheel"]}');
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live,'LIVE primary stays byte-identical');
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17-recovery-v3811'),x.live,'LIVE recovery stays byte-identical');
+ assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-wheel-ownership-v3825'),'{"owned":["seawheel"]}');
  assert.throws(()=>x.storage.clear(),/forbids clearing/);
  assert(x.events.includes('bu-test-insight-change'));
 }
