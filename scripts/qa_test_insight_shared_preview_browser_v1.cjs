@@ -18,6 +18,7 @@ const ORIGINAL={
  'bu-james-return-loop-v1-test-only':'{"v":1,"balance":777}',
  'bu-native-boost-shop-v1-test-only':'{"version":1,"tokens":333}',
  'bu-wt-next-feel-v2':'{"music":true}',
+ 'bu-visual-lab-daily-word-trail-v1':'{"version":1,"days":{"2026-11-16":{"board":0,"solved":[],"hints":[],"completed":true}}}',
  'bu-visual-lab-wordtrails-next-v1':JSON.stringify({level:0,unlocked:0,
   coins:600,points:12,completed:[],sparks:[],claimedSparks:[],paidBonuses:[]}),
  'other-app-unrelated-key':'do-not-touch'
@@ -49,7 +50,7 @@ async function run(engine,browser){
      crossword:guard.originalKeyValue('bible-unfolded-word-trails-next-v1'),
      other:Object.fromEntries(['bu-james-return-loop-v1-test-only',
        'bu-native-boost-shop-v1-test-only','bu-wt-next-feel-v2',
-       'bu-visual-lab-wordtrails-next-v1','other-app-unrelated-key']
+       'bu-visual-lab-wordtrails-next-v1','bu-visual-lab-daily-word-trail-v1','other-app-unrelated-key']
        .map(k=>[k,guard.originalKeyValue(k)])),
      originalMarker:document.getElementById('bu-preview-wallet-banner')?.textContent,
      overflow:document.documentElement.scrollWidth>innerWidth+2
@@ -254,6 +255,16 @@ async function run(engine,browser){
    // Daily remains its original independent Discovery Stamps overlay.
    await page.evaluate(()=>window.BUWTNativeShell.openDaily());
    await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentWindow?.document?.getElementById('daily-app'),null,{timeout:25000});
+   const daily=await page.evaluate(()=>{
+    const child=document.getElementById('bu-wt-daily-frame').contentWindow;
+    return {guard:child.BUPreviewStorageFence?.active===true,
+      local:child.localStorage.getItem('bu-visual-lab-daily-word-trail-v1'),
+      original:window.BUPreviewStorageFence.originalKeyValue('bu-visual-lab-daily-word-trail-v1')};
+   });
+   assert.equal(daily.guard,true,'Daily Word Trails must use isolated TEST storage fence');
+   assert.equal(daily.original,ORIGINAL['bu-visual-lab-daily-word-trail-v1'],
+    'normal Daily Discovery Stamps must stay untouched');
+   assert.notEqual(daily.local,daily.original,'Daily preview may not import normal stamps');
    assert.equal(await page.evaluate(()=>economy.coins),spent.after,'Daily entry must not mint shared coins');
    await page.evaluate(()=>window.BUWTNativeShell.closeDaily());
    await page.evaluate(()=>window.BUWTNativeShell.close());
@@ -269,7 +280,7 @@ async function run(engine,browser){
      crossword:g.originalKeyValue('bible-unfolded-word-trails-next-v1'),
      other:Object.fromEntries(['bu-james-return-loop-v1-test-only',
        'bu-native-boost-shop-v1-test-only','bu-wt-next-feel-v2',
-       'bu-visual-lab-wordtrails-next-v1','other-app-unrelated-key']
+       'bu-visual-lab-wordtrails-next-v1','bu-visual-lab-daily-word-trail-v1','other-app-unrelated-key']
        .map(k=>[k,g.originalKeyValue(k)]))};
    });
    assert.equal(final.coins,spent.after,'shared native balance must survive full page reload');
