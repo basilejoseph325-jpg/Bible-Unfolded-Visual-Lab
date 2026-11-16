@@ -49,7 +49,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     }
     await page.$eval('#daily-kind',x=>x.click());
     await page.waitForSelector('#daily-clues[open]');
-    const clueCount=await page.$eval('.daily-bible-clue',xs=>xs.length);
+    const clueCount=await page.evaluate(()=>document.querySelectorAll('.daily-bible-clue').length);
     if(date>='2026-11-16')assert(clueCount>=3,'Daily clues must include Scripture-linked answers: '+JSON.stringify(await page.evaluate(()=>({day:BUWT_DAILY_QA.day(),index:BUWT_DAILY_QA.index(),sourceBibleCount:BUWT_DAILY_QA.bibleWordCount(),dialogOpen:document.querySelector('#daily-clues').open,children:document.querySelector('#daily-clue-list').innerHTML.slice(0,900)}))));
     await page.$eval('#daily-clues-close',x=>x.click());
     assert((await page.$eval('#daily-title',x=>x.textContent)).includes('Word Mix'),'Daily title must not imply every anagram is part of the Bible scene');
@@ -139,14 +139,14 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
    assert(outcome.scripture.startsWith('https://www.jw.org/en/library/bible/nwt/books/'));
    await page.$eval('#daily-finish-close',x=>x.click());
    await page.$eval('#collection',x=>x.click());
-   assert.equal(await page.$eval('.stamp-row',xs=>xs.length),1);
+   assert.equal(await page.evaluate(()=>document.querySelectorAll('.stamp-row').length),1);
    assert((await page.$eval('#journal-milestone',x=>x.textContent)).includes('1 / 3'),'First journal milestone should show progress');
    await page.$eval('.stamp-row',x=>x.click());
    await page.waitForSelector('#daily-journal-entry[open]');
    assert((await page.$eval('#journal-thought',x=>x.textContent)).length>45,'Saved journal note missing');
    assert((await page.$eval('#journal-source',a=>a.href)).startsWith('https://www.jw.org/en/library/bible/nwt/books/'),'Journal source must be from JW.org');
    await page.$eval('#daily-journal-close',x=>x.click());
-   assert.equal(await page.$eval('.stamp-row',xs=>xs.length),1,'Back to journal must reopen entries');
+   assert.equal(await page.evaluate(()=>document.querySelectorAll('.stamp-row').length),1,'Back to journal must reopen entries');
    await page.$eval('#daily-collection-close',x=>x.click());
    await page.reload({waitUntil:'load',timeout:120000});
    await page.waitForFunction(()=>window.BUWT_DAILY_QA?.boardCount()===39);
