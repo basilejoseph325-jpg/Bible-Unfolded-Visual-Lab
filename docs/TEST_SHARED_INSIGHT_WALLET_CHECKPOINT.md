@@ -24,6 +24,7 @@
 - Interrupted winning-board completion and an already-saved but not-yet-credited level award now recover once on reload, without duplication. Passed Chromium/WebKit at both phone sizes on run `43940237292`.
 - Return Challenge's 180-token Bible Books purchase, unaffordable purchase, banked-earnings transfer and Word Trails balance passed Chromium/WebKit at 320px/430px on run `43941424613`.
 - Daily Discovery Stamps isolation and Books shelf/reader full navigation are covered by added browser tests; consult exact latest CI head result rather than treating code authoring as a pass.
+- **Native mode + exact-price boundary accepted in CI:** run [43976235418](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/43976235418) passed *Chromium and Linux WebKit* at 320×568 and 430×932. The test actually solved a Story Adventure word with the game's wheel buttons, answered a native Bible Trivia question, verified saved native earnings, then tested an already-used free-hint level at **14 tokens (blocked)** and **15 tokens (one purchased hint, resulting balance 0)**. Raw LIVE wallet, recovery, prior Word Trails and Bible Books reading data were byte-identical before/after. The test is `scripts/qa_test_insight_native_modes_v1.cjs`; these are emulated phone-sized browsers, **not physical phones**.
 - Other existing code paths are not automatically approved merely because specific wallet tests pass.
 
 ## Blockers before public TEST merge
