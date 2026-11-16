@@ -64,6 +64,24 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     assert.equal(await page.$eval('#daily-word',e=>e.textContent),word,'Real letter selection failed');
     await page.$eval('#daily-submit',x=>x.click());
    }
+   async function swipeWord(word){
+    const buttons=await page.$eval('.daily-wheel-letter',xs=>xs.map(x=>{const r=x.getBoundingClientRect();return {i:Number(x.dataset.letterIndex),letter:x.textContent,x:r.left+r.width/2,y:r.top+r.height/2}}));
+    const used=new Set(),path=[];
+    for(const ch of word){
+     const b=buttons.find(x=>x.letter===ch&&!used.has(x.i));
+     assert(b,'Missing swipe wheel letter '+ch+' in '+word);
+     used.add(b.i);path.push(b);
+    }
+    const client=await page.createCDPSession();
+    await client.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:path[0].x,y:path[0].y,id:1}]});
+    for(const b of path.slice(1)){
+     await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:b.x,y:b.y,id:1}]});
+    }
+    assert.equal(await page.$eval('#daily-word',e=>e.textContent),word,'Touch-swipe did not trace intended word');
+    await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
+    await client.detach();
+    await page.waitForFunction(word=>window.BUWT_DAILY_QA.record().solved.includes(word),{timeout:12000},word);
+   }
    const one=await openDate(first);
    assert(one.words.length>=3&&one.words.length<=12);
    assert.equal(await page.$eval('#stamp-count',x=>x.textContent),'0');
@@ -80,7 +98,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
    // Wrong word must never solve a crossword word or earn a stamp.
    await page.$eval('#daily-submit',x=>x.click());
    assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.record().solved.length),0);
-   for(const [i,word] of one.words.entries())await playWord(word,i===0);
+   for(const [i,word] of one.words.entries()){if(i===0)await swipeWord(word);else await playWord(word,i===1);}
    await page.waitForSelector('#daily-finish[open]');
    const outcome=await page.evaluate(()=>({
     day:window.BUWT_DAILY_QA.day(),stamp:window.BUWT_DAILY_QA.stampCount(),
