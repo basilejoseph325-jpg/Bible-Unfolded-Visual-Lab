@@ -104,7 +104,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
    // Wrong word must never solve a crossword word or earn a stamp.
    await page.$eval('#daily-submit',x=>x.click());
    assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.record().solved.length),0);
-   for(const [i,word] of one.words.entries()){if(i===0)await swipeWord(word);else await playWord(word,i===1);}
+   for(const [i,word] of one.words.entries()){if(i===0)await swipeWord(word);else await playWord(word,false);}
    await page.waitForSelector('#daily-finish[open]');
    const outcome=await page.evaluate(()=>({
     day:window.BUWT_DAILY_QA.day(),stamp:window.BUWT_DAILY_QA.stampCount(),
@@ -134,7 +134,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
    assert.notEqual(two.index,one.index,'Consecutive days must have different curated crosswords');
    assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.record().solved.length),0);
    assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.stampCount()),1);
-   await playWord(two.words[0],false);
+   await playWord(two.words[0],true); // real touch taps in a clean new-day page
    await page.reload({waitUntil:'load',timeout:120000});
    await page.waitForFunction(()=>window.BUWT_DAILY_QA?.boardCount()===39);
    assert.equal(await page.evaluate(()=>window.BUWT_DAILY_QA.record().solved.length),1,'Daily progress failed reload');
