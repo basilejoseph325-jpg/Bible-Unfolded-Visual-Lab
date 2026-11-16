@@ -857,7 +857,14 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)music?.paus
 window.addEventListener('pagehide',()=>music?.pause());
 if(SHARED_PREVIEW){
  const badge=document.querySelector('.top-actions .points');
- if(badge)badge.title='Shared TEST Insight Tokens (main game and Word Trails)';
+ if(badge){
+  badge.title='Shared TEST Insight Tokens (main game and Word Trails)';
+  badge.setAttribute('aria-label','Shared Insight Tokens');
+  // Native game uses a star for Points, not spendable Insight Tokens.
+  // Use the same ◈ token symbol already used by its Rewards purchases.
+  const tokenSymbol=badge.querySelector('span');
+  if(tokenSymbol)tokenSymbol.textContent='◈';
+ }
  const paragraph=document.querySelector('#map .map-panel > p');
  if(paragraph)paragraph.textContent='Earn Insight Tokens from first-time Bible discoveries, level wins and Journey Seals. Spend 15 tokens for paid letter hints after your free hint. Daily Discovery Stamps remain separate.';
  window.addEventListener('focus',()=>{syncShared();ui()});
