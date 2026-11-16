@@ -65,3 +65,11 @@ for k in range(1,6):
  p=Path(f'bible_unfolded_core_part{k}.js')
  c=p.read_text(encoding='utf8')
  print(str(p),len(c),c[:100],c[-80:])
+
+print('\\nSTAGE ENCODING / DECODE')
+part5=Path('bible_unfolded_core_part5.js').read_text(encoding='utf8')
+print('PART5 HEAD',part5[:400])
+print('PART5 TAIL',part5[-2700:])
+for p in Path('scripts').rglob('*'):
+ if p.is_file() and p.suffix in ('.py','.js','.mjs','.cjs') and any(q in p.name.lower() for q in ('stage','extract','core','native','inspect','bundle')):
+  print('SCRIPT',p)
