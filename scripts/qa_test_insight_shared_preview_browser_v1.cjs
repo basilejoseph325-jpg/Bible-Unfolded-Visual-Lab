@@ -67,10 +67,16 @@ async function run(engine,browser){
    const start=await page.evaluate(()=>{
     const c=document.getElementById('bu-wt-native-game').contentWindow;
     return {main:economy.coins,child:+c.document.getElementById('points').textContent,
-      url:c.location.href,overflow:c.document.documentElement.scrollWidth>c.innerWidth+2};
+      url:c.location.href,overflow:c.document.documentElement.scrollWidth>c.innerWidth+2,
+      childSandbox:c.BUPreviewStorageFence?.active,
+      owned:c.BUPlatformRewards?.owned?.(),
+      originalFromChild:c.BUPreviewStorageFence?.originalKeyValue('bible-unfolded-rewards-v17')};
    });
    assert.equal(start.child,start.main,'Word Trails must show real native TEST tokens');
    assert(start.url.includes('bu_shared_wallet_preview=1'),'frame must stay in protected preview mode');
+   assert.equal(start.childSandbox,true,'child Rewards/Wheel API must run inside TEST storage fence');
+   assert.equal(start.originalFromChild,ORIGINAL[LIVE],'child frame must not modify real LIVE wallet');
+   assert(!start.owned?.includes('goldwheel'),'child may NOT import ownership from real LIVE');
    assert.equal(start.overflow,false,'Word Trails preview overflow');
    // Actual free hint then a real 15-token paid hint, through native click handlers.
    await page.evaluate(()=>{
@@ -110,6 +116,11 @@ async function run(engine,browser){
    await page.waitForFunction(before=>economy.coins>=before+1,beforeSpark,{timeout:15000});
    const afterSpark=await page.evaluate(()=>economy.coins);
    assert.equal(afterSpark-beforeSpark,1,'Bible discovery must earn exactly one shared token');
+   // Daily remains its original independent Discovery Stamps overlay.
+   await page.evaluate(()=>window.BUWTNativeShell.openDaily());
+   await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentWindow?.document?.getElementById('daily-app'),null,{timeout:25000});
+   assert.equal(await page.evaluate(()=>economy.coins),afterSpark,'Daily entry must not mint shared coins');
+   await page.evaluate(()=>window.BUWTNativeShell.closeDaily());
    await page.evaluate(()=>window.BUWTNativeShell.close());
    assert.equal(await page.evaluate(()=>economy.coins),afterSpark,'native balance must survive mode exit');
    await page.reload({waitUntil:'domcontentloaded',timeout:140000});
