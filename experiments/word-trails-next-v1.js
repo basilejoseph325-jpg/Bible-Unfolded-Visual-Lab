@@ -263,7 +263,7 @@ BIBLE_SPARKS.forEach((list,i)=>{
 const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],claimedSparks:[],boardBible:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
 function load(){
  try{const raw=localStorage.getItem(STORAGE)||
-  (SHARED_PREVIEW?localStorage.getItem(LEGACY_STORAGE):null);
+  (SHARED_PREVIEW?window.parent.BUPreviewStorageFence?.originalKeyValue(LEGACY_STORAGE):null);
   const o=JSON.parse(raw);if(!o||typeof o!=='object')return DEFAULT();
   const x={...DEFAULT(),...o};
   if(!Number.isInteger(x.level)||x.level<0||x.level>=LEVELS.length)x.level=0;
