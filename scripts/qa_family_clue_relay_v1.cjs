@@ -6,7 +6,8 @@ const rules=require('../experiments/family-clue-relay-rules-v1.js'),context={win
 vm.runInNewContext(fs.readFileSync('experiments/family-clue-relay-questions-v1.js','utf8'),context);
 const bank=JSON.parse(JSON.stringify(context.window.BUClueRelayQuestions));
 function seeded(seed){return()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);}
-const sourceItems=JSON.parse(fs.readFileSync('scripts/fixtures/family-clue-relay-sources-v1.json','utf8')).evidence;
+const sourceFixture=JSON.parse(fs.readFileSync('scripts/fixtures/family-clue-relay-sources-v1.json','utf8')),sourceItems=sourceFixture.evidence;
+assert.equal(sourceFixture.qualityReview.items.length,18);assert.equal(sourceFixture.qualityReview.items.flatMap(q=>q.clues).length,54);
 assert.equal(bank.length,18);assert.equal(new Set(bank.map(q=>q.id)).size,18);
 for(const difficulty of ['easy','medium','challenging'])assert.equal(bank.filter(q=>q.difficulty===difficulty).length,6);
 for(const category of ['Character','Place','Event'])assert.equal(bank.filter(q=>q.category===category).length,6);
@@ -23,6 +24,7 @@ assert.equal(sourceItems.length,54);
 let games=0;
 for(let count=2;count<=6;count++)for(const rounds of [2,3])for(let seed=1;seed<=20;seed++){
  const game=rules.create(bank,Array.from({length:count},(_,i)=>'Player '+(i+1)),rounds,seeded(seed));
+ for(let seat=0;seat<count;seat++)assert.equal(new Set(game.questions.filter((q,n)=>n%count===seat).map(q=>q.difficulty)).size,rounds,'Uneven difficulty allocation');
  assert.equal(game.questions.length,count*rounds);assert.equal(new Set(game.questions.map(q=>q.id)).size,count*rounds);
  const turns=Array(count).fill(0),scores=Array(count).fill(0);
  for(let round=0;round<game.questions.length;round++){
@@ -40,16 +42,27 @@ for(let count=2;count<=6;count++)for(const rounds of [2,3])for(let seed=1;seed<=
  }
  assert.equal(game.phase,'complete');assert.deepEqual(turns,Array(count).fill(rounds));assert.equal(rules.next(game),false);
  const best=Math.max(...scores);assert.deepEqual(rules.winners(game).map(p=>p.name),game.players.filter(p=>p.score===best).map(p=>p.name));
- const replay=rules.create(bank,game.players.map(p=>p.name),rounds,seeded(seed),game.questions.map(q=>q.id));assert.notEqual(replay.questions[0].id,game.questions[0].id);assert(replay.players.every(p=>p.score===0));games++;
+ const replay=rules.create(bank,game.players.map(p=>p.name),rounds,seeded(seed),game.questions.map(q=>q.id));assert.notEqual(replay.questions[0].id,game.questions[0].id);assert(replay.players.every(p=>p.score===0));for(let seat=0;seat<count;seat++)assert.equal(new Set(replay.questions.filter((q,n)=>n%count===seat).map(q=>q.difficulty)).size,rounds);games++;
 }
 for(const q of bank)for(const alias of [q.answer,...q.aliases]){
  const game=rules.create(bank,['One','Two'],2,seeded(9));game.questions[0]=q;rules.begin(game);const response=rules.guess(game,' '+alias.toUpperCase()+'! ');assert.equal(response.points,3,'Alias rejected '+alias);
+}
+// Related occasions and other people are not valid substitutes for the target.
+for(const [id,wrong] of [['cr-writing',"Belshazzar's feast"],['cr-hannah','Anna'],['cr-transfiguration','Baptism of Jesus'],['cr-joppa','Lydda']]){
+ const g=rules.create(bank,['One','Two'],2,seeded(1));g.questions[0]=bank.find(q=>q.id===id);rules.begin(g);assert.equal(rules.guess(g,wrong).nextClue,2,'False-positive answer '+wrong);assert.equal(g.players[0].score,0);
+}
+for(const [id,spelling] of [['cr-bezalel','Bezʹal·el'],['cr-bethlehem','Bethʹle·hem'],['cr-joppa','Jopʹpa'],['cr-troas','Troʹas']]){
+ const g=rules.create(bank,['One','Two'],2,seeded(4));g.questions[0]=bank.find(q=>q.id===id);rules.begin(g);assert.equal(rules.guess(g,spelling).points,3,'NWT spelling rejected');
 }
 const red=bank.find(q=>q.id==='cr-red-sea'),article=rules.create(bank,['One','Two'],2,seeded(2));article.questions[0]=red;rules.begin(article);assert.equal(rules.guess(article,'The Red Sea').points,3);
 const domSource=fs.readFileSync('experiments/family-clue-relay-v1.js','utf8');const declarations=[...domSource.matchAll(/function ([a-zA-Z]+)\(/g)].map(m=>m[1]);assert.equal(new Set(declarations).size,declarations.length,'Duplicate UI function');
 for(const names of [['One'],Array(7).fill('One'),['One',' one '],['a'.repeat(25),'Two']])assert.throws(()=>rules.create(bank,names));
 const tie=rules.create(bank,['One','Two'],2,seeded(4));while(tie.phase!=='complete'){rules.begin(tie);for(let i=0;i<3;i++)rules.guess(tie,'no match');rules.next(tie);}assert.equal(rules.winners(tie).length,2);
 const changed=cp.execFileSync('git',['diff','--name-status','72650b278b034f7eafe1dcce468e9dca5882e526'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);assert(changed.every(line=>line.startsWith('A\t')),'Existing file changed');
+const allowed=new Set(['experiments/family-clue-relay-questions-v1.js','experiments/family-clue-relay-rules-v1.js','experiments/family-clue-relay-v1.html','experiments/family-clue-relay-v1.css','experiments/family-clue-relay-v1.js','scripts/fixtures/family-clue-relay-sources-v1.json','scripts/qa_family_clue_relay_v1.cjs','scripts/qa_family_clue_relay_browser_v1.cjs','scripts/qa_family_clue_relay_review_v1.cjs']);
+for(const line of changed)assert(allowed.has(line.slice(2)),'Unrelated PR change: '+line);
+for(const file of cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean))assert(allowed.has(file),'Unrelated untracked file: '+file);
+
 for(const file of ['experiments/family-clue-relay-questions-v1.js','experiments/family-clue-relay-rules-v1.js','experiments/family-clue-relay-v1.js']){const text=fs.readFileSync(file,'utf8');assert(!/\b(?:localStorage|sessionStorage|AudioContext|new Audio|BUPlatform|BURewards|indexedDB)\b/.test(text),'Shared state/audio dependency: '+file);new vm.Script(text);}
 for(const file of ['daily-discovery-explanation-scroll-v3.webp','daily-explanation-wax-next-v2.svg','daily-complete-laurel-v1.svg'])assert(fs.existsSync('assets/ui/'+file));
 console.log('PASS_CLUE_RELAY_RULES',games,'complete randomized games; 2–6 players; 3/2/1/0 scoring; turns; blanks; double-submit; replay; ties; aliases; content and isolation');

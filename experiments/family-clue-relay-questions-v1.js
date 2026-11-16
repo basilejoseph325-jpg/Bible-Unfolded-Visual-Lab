@@ -7,9 +7,9 @@ window.BUClueRelayQuestions=Object.freeze([
     "difficulty": "easy",
     "aliases": [],
     "clues": [
-      "I lived in a world that Jehovah described as corrupt.",
+      "I was described as a righteous man who walked with the true God.",
       "Jehovah told me to build an ark before bringing a flood.",
-      "Shem, Ham, and Japheth were my sons. My name starts with N."
+      "I'm the man remembered for building the ark. My name starts with N."
     ],
     "explanation": "Noah listened to Jehovah and followed the instructions for the ark. Genesis says he did just as God commanded. His obedience mattered to his whole household.",
     "sources": [
@@ -17,10 +17,12 @@ window.BUClueRelayQuestions=Object.freeze([
         "reference": "Genesis 6:9-22",
         "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
         "verses": [
+          9,
           10,
           11,
           14,
           17,
+          18,
           22
         ]
       }
@@ -28,7 +30,7 @@ window.BUClueRelayQuestions=Object.freeze([
     "clueEvidence": [
       [
         0,
-        11
+        9
       ],
       [
         0,
@@ -36,7 +38,7 @@ window.BUClueRelayQuestions=Object.freeze([
       ],
       [
         0,
-        10
+        14
       ]
     ]
   },
@@ -128,7 +130,7 @@ window.BUClueRelayQuestions=Object.freeze([
     "difficulty": "medium",
     "aliases": [],
     "clues": [
-      "My work involved selling purple.",
+      "I sold purple goods and came from Thyatira.",
       "Paul met me among women gathered by a river near Philippi.",
       "After baptism, I urged Paul and his companions to stay in my home. My name starts with L."
     ],
@@ -173,7 +175,7 @@ window.BUClueRelayQuestions=Object.freeze([
       "Jehovah gave me wisdom and skill for work in gold, silver, and copper.",
       "I was a skilled craftsman chosen for the tabernacle work. My name begins with Bez."
     ],
-    "explanation": "Jehovah equipped Bezalel with wisdom, understanding, and practical skills. Beautiful work for the tabernacle involved designing, metalworking, stonework, and woodwork. Those abilities had a purpose.",
+    "explanation": "Jehovah equipped Bezalel with wisdom, understanding, and practical skills. Beautiful work for the tabernacle involved designing, metalworking, stonework, and woodwork.",
     "sources": [
       {
         "reference": "Exodus 31:1-11",
@@ -211,14 +213,15 @@ window.BUClueRelayQuestions=Object.freeze([
     "clues": [
       "I hurried to prepare food after hearing that my household was in danger.",
       "I urged David not to take revenge and become guilty of bloodshed.",
-      "I was Nabal's wife, and David thanked Jehovah for sending me."
+      "I was Nabal's wife, and David thanked Jehovah for sending me. My name begins with Abi."
     ],
-    "explanation": "Abigail acted quickly and spoke respectfully. David listened and thanked Jehovah for sending her. Her words helped him turn away from a course that would have brought bloodguilt.",
+    "explanation": "Abigail acted quickly and spoke respectfully. David listened and thanked Jehovah for sending her. By listening, he avoided taking revenge and becoming guilty of bloodshed.",
     "sources": [
       {
         "reference": "1 Samuel 25:14-35",
         "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
         "verses": [
+          14,
           17,
           18,
           23,
@@ -392,7 +395,7 @@ window.BUClueRelayQuestions=Object.freeze([
     "clues": [
       "A large gathering here involved the prophets of Baal.",
       "Elijah asked the people how long they would keep limping between two opinions.",
-      "Fire from Jehovah answered Elijah's prayer here. What mountain was it?"
+      "Fire from Jehovah answered Elijah's prayer here. I'm Mount Car___."
     ],
     "explanation": "Elijah asked the people to choose whom they would follow. When Jehovah answered by fire, they acknowledged him as the true God. The setting was Mount Carmel.",
     "sources": [
@@ -430,9 +433,9 @@ window.BUClueRelayQuestions=Object.freeze([
     "difficulty": "challenging",
     "aliases": [],
     "clues": [
-      "A woman known for good deeds and gifts of mercy lived here.",
+      "A woman known for doing good and helping people in need lived here.",
       "Peter came here after the death of Tabitha, also called Dorcas.",
-      "Peter stayed with Simon the tanner in this coastal town. My name starts with J."
+      "Peter stayed with Simon the tanner in this coastal town. My name starts with Jop."
     ],
     "explanation": "Tabitha was known for helping others. After Peter came and she was restored to life, many people in Joppa became believers. Peter then stayed with Simon the tanner.",
     "sources": [
@@ -441,6 +444,7 @@ window.BUClueRelayQuestions=Object.freeze([
         "url": "https://www.jw.org/en/library/bible/nwt/books/acts/9/",
         "verses": [
           36,
+          37,
           38,
           40,
           41,
@@ -522,7 +526,10 @@ window.BUClueRelayQuestions=Object.freeze([
       "creation account",
       "creation of the world",
       "creating the world",
-      "creation of the heavens and earth"
+      "creation of the heavens and earth",
+      "creation of the heavens and the earth",
+      "creation of heaven and earth",
+      "creation of the earth"
     ],
     "clues": [
       "Light and darkness were given names during this account.",
@@ -569,7 +576,8 @@ window.BUClueRelayQuestions=Object.freeze([
     "aliases": [
       "day of Pentecost",
       "festival of Pentecost",
-      "Pentecost 33 CE"
+      "Pentecost 33 CE",
+      "Pentecost 33 C.E."
     ],
     "clues": [
       "People from many lands were gathered in Jerusalem when this took place.",
@@ -617,7 +625,8 @@ window.BUClueRelayQuestions=Object.freeze([
       "crossing of the Red Sea",
       "crossing Red Sea",
       "parting of the Red Sea",
-      "parting the Red Sea"
+      "parting the Red Sea",
+      "Red Sea parting"
     ],
     "clues": [
       "A strong east wind kept blowing through the night.",
@@ -662,7 +671,10 @@ window.BUClueRelayQuestions=Object.freeze([
       "fiery furnace rescue",
       "three Hebrews in the furnace",
       "three Hebrews",
-      "Shadrach Meshach and Abednego"
+      "Shadrach Meshach and Abednego",
+      "Shadrach Meshach Abednego",
+      "rescue from the furnace",
+      "three men in the fiery furnace"
     ],
     "clues": [
       "The king ordered the heat to be made seven times greater than usual.",
@@ -707,14 +719,16 @@ window.BUClueRelayQuestions=Object.freeze([
       "transfiguration",
       "transfiguration of Jesus",
       "Jesus' transfiguration",
-      "transfiguration vision"
+      "transfiguration vision",
+      "transfiguration of Christ",
+      "Christ's transfiguration"
     ],
     "clues": [
       "Peter, James, and John were taken up a high mountain.",
       "Jesus' face shone like the sun, and Moses and Elijah appeared in a vision.",
-      "A voice identified Jesus as God's Son and told the disciples to listen to him. What vision was this?"
+      "A voice called Jesus God's Son. This vision's name begins with trans and ends with figuration."
     ],
-    "explanation": "The disciples saw Jesus in glory and heard the instruction to listen to him. Jesus later called what they had seen a vision. The experience gave them a striking glimpse of his magnificence.",
+    "explanation": "Jesus' face shone, and his clothing became brilliant. The disciples heard God's instruction to listen to his Son. Jesus later called what they had seen a vision.",
     "sources": [
       {
         "reference": "Matthew 17:1-9",
@@ -753,8 +767,7 @@ window.BUClueRelayQuestions=Object.freeze([
       "handwriting on the wall",
       "the handwriting on the wall",
       "writing",
-      "handwriting",
-      "Belshazzar's feast"
+      "handwriting"
     ],
     "clues": [
       "At a royal feast, vessels taken from God's temple were used.",

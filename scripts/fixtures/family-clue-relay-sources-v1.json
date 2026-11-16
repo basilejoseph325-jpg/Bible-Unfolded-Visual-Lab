@@ -5,8 +5,8 @@
     {
       "id": "cr-noah-clue1",
       "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
-      "verse": 11,
-      "excerpt": "But the earth had become ruined in the sight of"
+      "verse": 9,
+      "excerpt": "This is the history of Noah. Noah was a righteous"
     },
     {
       "id": "cr-noah-clue2",
@@ -17,8 +17,8 @@
     {
       "id": "cr-noah-clue3",
       "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
-      "verse": 10,
-      "excerpt": "In time Noah became father to three sons, Shem, Ham,"
+      "verse": 14,
+      "excerpt": "Make for yourself an ark from resinous wood. You will"
     },
     {
       "id": "cr-david-clue1",
@@ -326,5 +326,582 @@
       "verse": 25,
       "excerpt": "And this is the writing that was inscribed: MEʹNE, MEʹNE,"
     }
-  ]
+  ],
+  "qualityReview": {
+    "date": "2026-11-16",
+    "reviewedHead": "54cc3dbfc959d4011167c5426e7e35c03c491a2c",
+    "reviewer": "Codex separate quality pass; not independent human or physical-device acceptance",
+    "items": [
+      {
+        "id": "cr-noah",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 6:9-22",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 6:9-22",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 6:9-22",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Narrowed clue 1 to the explicit righteous/walked-with-God description; clue 3 now helps with the familiar ark instead of harder genealogy.",
+        "explanationAndAliases": "Ark instructions and obedience checked; household covenant at Genesis 6:18.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-david",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 17:33-50",
+            "verse": 34,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 17:33-50",
+            "verse": 33,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 17:33-50",
+            "verse": 50,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: shepherd experience, young challenger, then Goliath plus name initial.",
+        "explanationAndAliases": "No sword, sling and stone, and trust in Jehovah verified in 17:45-50.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-hannah",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 1:12-20",
+            "verse": 13,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 1:12-20",
+            "verse": 17,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 1:12-20",
+            "verse": 20,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: silent prayer, Eli, then Samuel provides progressively recognizable anchors.",
+        "explanationAndAliases": "Distress, Eli’s response and naming Samuel checked.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-lydia",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 16:12-15",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Acts 16:12-15",
+            "verse": 13,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 16:12-15",
+            "verse": 15,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Clarified purple as goods; then river/Philippi, hospitality and name initial.",
+        "explanationAndAliases": "No unsupported claim about manufacturing or dye processing.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-bezalel",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Exodus 31:1-11",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Exodus 31:1-11",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Exodus 31:1-11",
+            "verse": 7,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: lineage, crafts, then tabernacle and Bez name cue.",
+        "explanationAndAliases": "Skills and equipment checked; removed empty closing sentence.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-abigail",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 25:14-35",
+            "verse": 18,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 25:14-35",
+            "verse": 26,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 25:14-35",
+            "verse": 32,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Added Abi name cue after Nabal identification so the final clue helps recall/spelling.",
+        "explanationAndAliases": "Nabal’s wife is explicit in verse 14; replaced unexplained bloodguilt in explanation with plain language.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-bethlehem",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Luke 2:4-7",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Luke 2:4-7",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Luke 2:4-7",
+            "verse": 7,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: registration, David’s family, then Jesus’ birth/city of David.",
+        "explanationAndAliases": "Luke 2:4 explicitly names the town; no invented lodging details.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-eden",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 2:8, 9, 15",
+            "verse": 15,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 2:8, 9, 15",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 3:20-24",
+            "verse": 23,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: cultivating, distinctive trees, then Adam and Eve’s garden.",
+        "explanationAndAliases": "Garden within Eden and expulsion context checked; accepted garden/Eden variants retained.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-jericho",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 10,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 20,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: closed gates, marching/silence, then wall falling.",
+        "explanationAndAliases": "Priests/horns and Rahab’s safe removal checked; no claim that every part of the wall fell.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-carmel",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 19,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 21,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 38,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Added Car word-completion cue to the final fire/Elijah clue.",
+        "explanationAndAliases": "Fire consumes offering; no graphic material from verse 40 used.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-joppa",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 9:36-43",
+            "verse": 36,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Acts 9:36-43",
+            "verse": 38,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 10:5, 6",
+            "verse": 6,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Simplified gifts-of-mercy wording and strengthened final name cue from J to Jop.",
+        "explanationAndAliases": "Tabitha’s death is verse 37; Simon’s house by the sea is Acts 10:6.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-troas",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 20:6-12",
+            "verse": 6,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Acts 20:6-12",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 20:6-12",
+            "verse": 12,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: journey/stay, window incident, then Eutychus and Tro name cue.",
+        "explanationAndAliases": "Seven-day stay, late talk and restored life verified; no invented age or injury details.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-creation",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 1:1-31",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 1:1-31",
+            "verse": 26,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 1:1-31",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: names for day/night, living things, then opening account.",
+        "explanationAndAliases": "Very good follows sixth day; no claim about 24-hour days; expanded reasonable title variants.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-pentecost",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 2:1-11",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Acts 2:1-11",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 2:1-11",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: international gathering, languages, then festival/Pente cue.",
+        "explanationAndAliases": "Holy spirit and each language verified; date only an accepted conventional variant, not an unsourced clue fact.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-red-sea",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Exodus 14:21-29",
+            "verse": 21,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Exodus 14:21-29",
+            "verse": 22,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Exodus 14:21-29",
+            "verse": 29,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: east wind, walls of water, then explicit Red Sea crossing.",
+        "explanationAndAliases": "Dry ground and east wind checked; added reversed common phrase variant.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-furnace",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Daniel 3:18-27",
+            "verse": 19,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Daniel 3:18-27",
+            "verse": 25,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Daniel 3:18-27",
+            "verse": 27,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: increased heat, named Hebrews, then explicitly named furnace rescue.",
+        "explanationAndAliases": "No unsupported identity assigned to fourth figure; accepts the account’s familiar short labels and ampersand/name variants.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-transfiguration",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Matthew 17:1-9",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Matthew 17:1-9",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Matthew 17:1-9",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Final clue now includes a word-building cue; it no longer requires recalling a harder label from the voice alone.",
+        "explanationAndAliases": "Vision explicitly in 17:9; simplified explanation to 17:2,5,9; accepted Christ/Jesus title variants.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-writing",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 8,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 25,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: temple vessels, unexplained message, then Daniel and the words on the wall.",
+        "explanationAndAliases": "Removed Belshazzar’s feast alias: it names the surrounding occasion rather than the requested writing. Judgment is about king/kingdom, not an invented motive.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      }
+    ],
+    "corrections": {
+      "revisedClues": 8,
+      "retainedClues": 46,
+      "revisedExplanations": 3,
+      "gameplay": [
+        "Newest clue scrolled into view and announced",
+        "Balanced difficulty by player without changing scoring",
+        "NWT stress and syllable marks accepted"
+      ],
+      "visual": [
+        "Start remains visible outside setup scroll",
+        "Reveal text bounded between rollers and above wax control",
+        "Light native controls in WebKit",
+        "Singular point labels"
+      ]
+    },
+    "aliasSupport": [
+      {
+        "answer": "Bethlehem Ephrathah",
+        "reference": "Micah 5:2",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/micah/5/",
+        "checked": "Verse explicitly names Bethlehem Ephrathah."
+      },
+      {
+        "answer": "Pentecost 33 C.E.",
+        "reference": "Acts 2 study media: Pentecost 33 C.E. and the Spreading of the Good News",
+        "url": "https://www.jw.org/en/library/bible/study-bible/books/acts/2/",
+        "checked": "Official study media explicitly uses the date; no date was added to a clue."
+      }
+    ]
+  }
 }
