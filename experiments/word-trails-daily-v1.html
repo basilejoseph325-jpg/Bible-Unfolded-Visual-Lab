@@ -17,15 +17,17 @@ if(wasReload&&!qaDaily)window.top.location.replace(new URL('../index.html',locat
 // only Daily; it never loads the native homepage or discards crossword state.
 document.addEventListener('click',event=>{
  const back=event.target?.closest?.('.daily-back');
- if(!back||window.parent===window)return;
+ if(!back)return;
+ event.preventDefault();event.stopImmediatePropagation();
  try{
-  const host=window.parent.BUWTNativeShell;
-  if(host?.active?.()&&typeof host.closeDaily==='function'){
-   // Cancel anchor navigation BEFORE the parent removes this iframe.
-   event.preventDefault();event.stopImmediatePropagation();
-   host.closeDaily();
+  if(window.parent!==window){
+   // Never allow the embedded Back button to load or flash Home.
+   window.parent.BUWTNativeShell?.closeDaily?.();
+   return;
   }
  }catch(_){}
+ // A directly opened local QA Daily page still has a way back.
+ location.replace('../index.html?wt_launch=native');
 },true);
 </script>
 <script defer src="word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27"></script>
@@ -38,7 +40,7 @@ document.addEventListener('click',event=>{
 <body>
 <div id="daily-app">
  <header class="daily-topbar">
-  <a class="daily-back" href="../index.html?wt_launch=native" aria-label="Back to Word Trails">‹</a>
+  <button type="button" class="daily-back" aria-label="Back to Word Trails">‹</button>
   <div class="daily-brand"><span class="eyebrow">BIBLE UNFOLDED · TEST</span><h1>Daily Word Trail</h1></div>
   <button type="button" class="daily-collection-button" id="collection" aria-label="View Discovery Stamps"><span aria-hidden="true">✦</span><span id="stamp-count">0</span></button>
  </header>
