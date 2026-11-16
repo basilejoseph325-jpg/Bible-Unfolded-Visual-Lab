@@ -129,7 +129,13 @@ function launch(){
  root.id='bu-wt-native-shell';root.setAttribute('aria-label','Word Trails game');
  const iframe=document.createElement('iframe');
  iframe.id='bu-wt-native-game';iframe.title='Bible Unfolded Word Trails';
- iframe.allow='autoplay';iframe.src=FRAME_URL;
+ iframe.allow='autoplay';
+ const preview=window.BUPreviewStorageFence?.active===true;
+ if(preview){
+  const response=window.BUTestInsightBridge?.nativeBalance?.();
+  if(!response?.ok){opening=false;alert('Shared TEST tokens could not be prepared. No game data changed.');return false;}
+ }
+ iframe.src=preview?FRAME_URL+'&bu_shared_wallet_preview=1':FRAME_URL;
  root.appendChild(iframe);
  document.body.appendChild(root);shell=root;frame=iframe;
  document.documentElement.classList.add('bu-wt-native-active');
