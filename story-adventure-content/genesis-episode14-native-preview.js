@@ -68,7 +68,7 @@
     const chapter=BU3857_DATA[CHAPTER_ID],available=unlocked(),complete=!!completedChapters[CHAPTER_ID];
     const button=document.createElement('button');button.type='button';
     button.className='episode-card'+(available?' available':'');button.dataset.episode='13';button.dataset.genesis14='';
-    const status=!available?'◇ LOCKED · COMPLETE EPISODE 12':complete?'✓ COMPLETE · REPLAY ANY TIME':'✦ PLAYABLE CHAPTER';
+    const status=!available?'◇ LOCKED · COMPLETE EPISODE 13':complete?'✓ COMPLETE · REPLAY ANY TIME':'✦ PLAYABLE CHAPTER';
     button.setAttribute('aria-label',chapter.title+': '+status);
     const thumb=document.createElement('div');thumb.className='episode-thumb';
     if(artwork['g14-d01']){const img=document.createElement('img');img.src=artwork['g14-d01'].src;img.alt=artwork['g14-d01'].alt;thumb.append(img);}
