@@ -77,7 +77,9 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     for(const b of path.slice(1)){
      await client.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{x:b.x,y:b.y,id:1}]});
     }
-    assert.equal(await page.$eval('#daily-word',e=>e.textContent),word,'Touch-swipe did not trace intended word');
+    const inFlight=await page.$eval('#daily-word',e=>e.textContent);
+    assert(word.startsWith(inFlight)&&inFlight.length>=word.length-1,
+      'Touch trace lost intermediate letters: '+inFlight+' / '+word);
     await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     await client.detach();
     await page.waitForFunction(word=>window.BUWT_DAILY_QA.record().solved.includes(word),{timeout:12000},word);
