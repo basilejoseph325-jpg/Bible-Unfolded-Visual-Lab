@@ -75,8 +75,8 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
     const problem=await page.evaluate(()=>{
      const root=document.getElementById('bu3857-content'),d=bu3857Current();
      const image=root.querySelector('figure img');
-     const pending=bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available;
-     if(pending){if(image||!root.querySelector('[data-bu-genesis13-scene]')?.textContent.includes('illustration pending'))throw Error('Unlabelled or substituted pending art '+d.id);}
+     const pending=(bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available)||(bu3857State.book==='genesis_ep14'&&!window.BUStoryGenesis14Test.artwork[d.id].available);
+     if(pending){if(image||!root.querySelector('[data-bu-genesis13-scene],[data-bu-genesis14-scene]')?.textContent.includes('illustration pending'))throw Error('Unlabelled or substituted pending art '+d.id);}
      else if(!image)throw Error('No scene art '+d.id);
      const viewport={w:innerWidth,h:innerHeight};
      const out=[...root.querySelectorAll('button')].filter(e=>{const r=e.getBoundingClientRect();return r.width>0&&r.height>0&&(r.right>viewport.w+2||r.bottom>viewport.h+2||r.left< -2)}).map(e=>e.id||e.dataset.id||e.textContent);
@@ -130,7 +130,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    }
    assert.equal(await page.evaluate(()=>mode),'done');row.finales++;
   }
-  assert.equal(row.modern,105);assert.equal(row.legacy,84);assert.equal(row.finales,19);
+  assert.equal(row.modern,117);assert.equal(row.legacy,84);assert.equal(row.finales,20);
   assert.deepEqual(row.overflow,[],'Active controls clipped');
   evidence.viewports.push(row);console.log('PASS_STORY_ALL_PLAYABLE',JSON.stringify(row));await context.close();
  }
