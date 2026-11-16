@@ -198,7 +198,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.t<b.b&&a.b>b.t;
     const blockedLetters=[...document.querySelectorAll('.wheel-letter')].filter(el=>{
       const r=rect(el),hit=document.elementFromPoint(r.cx,r.cy);
-      return hit!==el&&!el.contains(hit);
+      return hit===daily||daily.contains(hit); // Only newly introduced Daily-bubble obstruction
     }).map(el=>el.textContent);
     const clickable=document.elementFromPoint(orb.cx,orb.cy);
     return {orb,hint,shuffle,board,blockedLetters,overlapHint:overlap(orb,hint),overlapShuffle:overlap(orb,shuffle),overlapBoard:overlap(orb,board),centerClickable:clickable===daily||daily.contains(clickable),position:getComputedStyle(daily).position,display:getComputedStyle(daily).display};
