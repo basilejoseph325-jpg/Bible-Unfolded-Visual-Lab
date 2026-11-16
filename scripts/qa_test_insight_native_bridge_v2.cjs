@@ -122,6 +122,17 @@ function scenario(preview=true,lockMode='owned'){
  x.storage.block=false;
  assert.equal(api.snapshot(x.child).balance,57,'failed save cannot deduct');
  assert.equal(api.transact(x.child,{type:'level',level:3}).balance,61,'retry must succeed');
+ // Preview exports must contain both native coins and Word Trails progress,
+ // but must NEVER masquerade as a restorable normal TEST v2 file.
+ const backup=x.window.BUPreviewStorageFence.makePreviewBackup();
+ assert.equal(backup.format,'BibleUnfoldedSharedCoinPreview');
+ assert.equal(backup.restoreAllowed,false);
+ assert.equal(backup.scope,'Isolated TEST preview only');
+ assert(backup.keys['bible-unfolded-rewards-v17']);
+ assert(backup.keys['bu-visual-lab-wordtrails-shared-preview-v1']);
+ assert.equal(backup.keys['bible-unfolded-rewards-v17'],undefined);
+ assert.equal(backup.keys['bu-visual-lab-wordtrails-next-v1'],undefined);
+ assert.equal(backup.keys['other-app-unrelated-key'],undefined);
  x.closed.active=false;
  assert.equal(api.snapshot(x.child).ok,false,'closed iframe must never transact');
  assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live,'LIVE primary stays byte-identical');
