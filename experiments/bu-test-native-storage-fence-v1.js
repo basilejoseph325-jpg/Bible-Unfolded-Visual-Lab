@@ -145,7 +145,7 @@ if(isTop){
  // Capture BEFORE the native TEST v2 listener. A v2 export would omit the
  // isolated Word Trails preview save and have an incompatible restore format.
  document.addEventListener('click',event=>{
-  if(!event.target?.closest?.('#save-export'))return;
+  if(!event.target?.closest?.('#save-export, #bu-wt-recovery-current-backup'))return;
   event.preventDefault();
   event.stopImmediatePropagation();
   event.stopPropagation();
