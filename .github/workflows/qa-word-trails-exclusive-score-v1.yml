@@ -1,0 +1,41 @@
+name: Word Trails exclusive music ownership (TEST only)
+on:
+  pull_request:
+    paths:
+      - word-trails-native-shell-v1.js
+      - scripts/qa_word_trails_exclusive_parent_score_v1.cjs
+      - .github/workflows/qa-word-trails-exclusive-score-v1.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  no-double-music:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify syntax and native source scope
+        run: |
+          node --check word-trails-native-shell-v1.js
+          node --check scripts/qa_word_trails_exclusive_parent_score_v1.cjs
+          grep -F 'rootMusicMuteLease' word-trails-native-shell-v1.js
+          grep -F 'function resumeHome()' word-trails-native-shell-v1.js
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start disposable TEST browser server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8899 --bind 127.0.0.1 > work/http-word-trails-music.log 2>&1 &
+          for attempt in $(seq 1 25); do
+            if curl --silent --fail http://127.0.0.1:8899/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Reproduce menu music bleed and prove exclusive track ownership on 3 phones
+        env:
+          NODE_PATH: ${{ github.workspace }}/work/node_modules
+          WT_TEST_URL: http://127.0.0.1:8899/index.html
+        run: node scripts/qa_word_trails_exclusive_parent_score_v1.cjs
