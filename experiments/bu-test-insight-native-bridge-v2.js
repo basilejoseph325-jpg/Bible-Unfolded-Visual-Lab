@@ -30,7 +30,12 @@ function read(k){
  }catch(_){return null;}
 }
 function trails(){
- return read(testSaveKey)||read(legacySaveKey)||{};
+ const existing=read(testSaveKey);
+ if(existing)return existing;
+ try{const raw=window.BUPreviewStorageFence?.originalKeyValue(legacySaveKey);
+  const old=raw?JSON.parse(raw):null;
+  return old&&typeof old==='object'&&!Array.isArray(old)?old:{};
+ }catch(_){return {};}
 }
 function allowedReceipts(w){
  if(w.wtReceipts===undefined)return {};
