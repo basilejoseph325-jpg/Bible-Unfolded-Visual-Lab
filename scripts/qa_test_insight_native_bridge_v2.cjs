@@ -95,6 +95,16 @@ function scenario(preview=true){
  assert.equal(api.transact(x.child,{type:'hint',level:2,cell:'0:0'}).duplicate,true);
  assert.equal(api.snapshot(x.child).balance,51);
  assert.equal(api.transact(x.child,{type:'hint',level:2,cell:'0:0'}).balance,51);
+ // Simulate a second tab's newer write arriving while this tab is stale.
+ // The preview must REFUSE to overwrite that newer wallet record.
+ const foreign=JSON.parse(x.storage.getItem('bible-unfolded-rewards-v17'));
+ foreign.coins+=6;
+ x.storage.setItem('bible-unfolded-rewards-v17',JSON.stringify(foreign));
+ x.storage.setItem('bible-unfolded-rewards-v17-recovery-v3811',JSON.stringify(foreign));
+ const staleSave=vm.runInContext('economy.coins+=7;saveEconomy()',x.ctx);
+ assert.equal(staleSave,false,'stale tab may not overwrite newer saved coins');
+ assert.equal(JSON.parse(x.storage.getItem('bible-unfolded-rewards-v17')).coins,57);
+ assert.equal(api.snapshot(x.child).balance,57,'refresh must take newer balance from disk');
  assert.equal(api.transact(x.child,{type:'seal',level:2}).reason,'invalid-earning-or-hint');
  assert.equal(api.transact(x.foreign,{type:'level',level:3}).reason,'inactive-word-trails-frame');
  gameplay={...gameplay,level:2,completed:[0,1,2],progress:{level:2,hinted:[]}};
@@ -103,8 +113,8 @@ function scenario(preview=true){
  const broken=api.transact(x.child,{type:'level',level:3});
  assert.equal(broken.ok,false);
  x.storage.block=false;
- assert.equal(api.snapshot(x.child).balance,51,'failed save cannot deduct');
- assert.equal(api.transact(x.child,{type:'level',level:3}).balance,55,'retry must succeed');
+ assert.equal(api.snapshot(x.child).balance,57,'failed save cannot deduct');
+ assert.equal(api.transact(x.child,{type:'level',level:3}).balance,61,'retry must succeed');
  x.closed.active=false;
  assert.equal(api.snapshot(x.child).ok,false,'closed iframe must never transact');
  assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live,'LIVE primary stays byte-identical');
