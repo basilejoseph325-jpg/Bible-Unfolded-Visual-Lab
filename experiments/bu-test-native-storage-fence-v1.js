@@ -117,8 +117,57 @@ proto.key=function(n){
  }
  return keys[n]??null;
 };
+// Keep preview exports separate from ordinary TEST v2 backups. A normal
+// TEST/LIVE restore must reject this intentionally different file format.
+function makePreviewBackup(){
+ if(!writerStatus().writable)throw Error('Cannot export while another tab owns this preview');
+ const entries={};
+ for(let i=0;i<storage.length;i++){
+  const key=storage.key(i);
+  if(typeof key!=='string'||!key)continue;
+  const value=storage.getItem(key);
+  if(typeof value==='string')entries[key]=value;
+ }
+ if(!Object.hasOwn(entries,'bible-unfolded-rewards-v17'))
+  throw Error('The shared native wallet has not finished saving');
+ const data={
+  format:'BibleUnfoldedSharedCoinPreview',
+  version:1,scope:'Isolated TEST preview only',
+  exportedAt:new Date().toISOString(),storagePrefix:PREFIX,
+  restoreAllowed:false,
+  keys:entries
+ };
+ const body=JSON.stringify(data,null,2);
+ if(body.length>3000000)throw Error('Preview backup exceeds safe size limit');
+ return data;
+}
+if(isTop){
+ // Capture BEFORE the native TEST v2 listener. A v2 export would omit the
+ // isolated Word Trails preview save and have an incompatible restore format.
+ document.addEventListener('click',event=>{
+  if(!event.target?.closest?.('#save-export'))return;
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  event.stopPropagation();
+  try{
+   const data=makePreviewBackup();
+   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+   const url=URL.createObjectURL(blob);
+   const link=document.createElement('a');
+   link.href=url;
+   link.download='Bible_Unfolded_SHARED_COINS_TEST_PREVIEW.json';
+   link.style.display='none';
+   document.body.appendChild(link);
+   link.click();
+   link.remove();
+   setTimeout(()=>URL.revokeObjectURL(url),1200);
+  }catch(error){
+   alert('Shared coin preview backup could not be saved: '+error.message);
+  }
+ },true);
+}
 window.BUPreviewStorageFence=Object.freeze({
- active:true,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,
+ active:true,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,makePreviewBackup,
  protectedKey,originalKeyValue:(key)=>original.getItem.call(storage,String(key)),
  // Read-only status for QA and player diagnostics.
  status:()=>({active:true,previewWalletPresent:
