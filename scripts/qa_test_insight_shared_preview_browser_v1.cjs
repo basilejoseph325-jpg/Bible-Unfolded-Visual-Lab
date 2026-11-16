@@ -124,15 +124,50 @@ async function run(engine,browser){
     return c?.document.getElementById('hint-cost')?.textContent==='15';
    },null,{timeout:12000});
    const beforePaid=await page.evaluate(()=>economy.coins);
+   // Crash-window rehearsal: native wallet payment succeeds but the child
+   // progress write fails. The same hint cell must be redeemable after
+   // reload without a second charge.
+   await page.evaluate(()=>{
+    const c=document.getElementById('bu-wt-native-game').contentWindow;
+    const base=c.Storage.prototype.setItem;
+    c.Storage.prototype.setItem=function(key,value){
+     if(key==='bu-visual-lab-wordtrails-shared-preview-v1')
+      throw Error('QA forced Word Trails progress failure');
+     return base.call(this,key,value);
+    };
+    c.document.getElementById('hint').click();
+    c.Storage.prototype.setItem=base;
+   });
+   await page.waitForFunction(before=>economy.coins===before-15,beforePaid,{timeout:16000});
+   const failedProgress=await page.evaluate(()=>{
+    const s=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-shared-preview-v1'));
+    return {hinted:s.progress?.hinted?.length,spent:economy.coins};
+   });
+   assert.equal(failedProgress.hinted,1,'failed child write must leave only its free hint saved');
+   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable &&
+    window.BUWTNativeShell?.nativeReady?.()&&window.BUTestInsightBridge?.nativeBalance?.().ok,
+    null,{timeout:130000});
+   assert.equal(await page.evaluate(()=>economy.coins),failedProgress.spent,
+    'paid hint must survive reload despite unsaved letter');
+   await page.evaluate(()=>window.BUWTNativeShell.launch());
+   await page.waitForFunction(()=>{
+    const c=document.getElementById('bu-wt-native-game')?.contentWindow;
+    return window.BUWTNativeShell?.active?.()&&c?.document?.getElementById('hint-cost')?.textContent==='15'&&
+     c.document.querySelectorAll('.wheel-letter').length>=5;
+   },null,{timeout:90000});
    await page.evaluate(()=>{
     const c=document.getElementById('bu-wt-native-game').contentWindow;
     c.document.getElementById('hint').click();
    });
-   await page.waitForFunction((before)=>{
-    const c=document.getElementById('bu-wt-native-game')?.contentWindow;
-    return economy.coins===before-15&&
-     +c?.document.getElementById('points')?.textContent===before-15;
-   },beforePaid,{timeout:16000});
+   const recovered=await page.evaluate(()=>{
+    const s=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-shared-preview-v1'));
+    return {hinted:s.progress?.hinted?.length,coins:economy.coins,
+     childPoints:document.getElementById('bu-wt-native-game').contentWindow.document.getElementById('points').textContent};
+   });
+   assert.equal(recovered.hinted,2,'the previously purchased hint must be restored');
+   assert.equal(recovered.coins,beforePaid-15,'redeeming a paid hint after crash must NOT double charge');
+   assert.equal(+recovered.childPoints,recovered.coins,'Word Trails must sync recovered wallet balance');
    // A Word Trails Bible discovery must reward once, and appear in parent.
    const beforeSpark=await page.evaluate(()=>economy.coins);
    const word=await page.evaluate(()=>{
@@ -230,7 +265,7 @@ async function run(engine,browser){
      'successor tab must inherit protected shared balance after owner closes');
    }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'native + Word Trails earn/spend, blocked second tab, lock handoff, reload, LIVE isolation');
+    'native + Word Trails earn/spend, paid hint crash recovery, blocked second tab, lock handoff, LIVE isolation');
   }finally{await context.close();}
  }
 }
