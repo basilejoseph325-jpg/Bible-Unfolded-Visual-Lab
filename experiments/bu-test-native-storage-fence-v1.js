@@ -157,7 +157,7 @@ if(isTop){
   let dest;
   try{dest=new URL(anchor.href,location.href)}catch(_){return;}
   if(dest.origin!==location.origin)return; // JW.org and other external sites stay unchanged.
-  const inside=/^\\/Bible-Unfolded-Visual-Lab(?:\\/|$)/.test(dest.pathname)||
+  const inside=/^\/Bible-Unfolded-Visual-Lab(?:\/|$)/.test(dest.pathname)||
    ['localhost','127.0.0.1'].includes(location.hostname);
   if(!inside){
    event.preventDefault();event.stopImmediatePropagation();
