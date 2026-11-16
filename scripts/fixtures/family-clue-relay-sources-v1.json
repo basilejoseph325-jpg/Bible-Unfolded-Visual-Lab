@@ -1,0 +1,330 @@
+{
+  "reviewedOn": "2026-11-16",
+  "review": "Author source/context and read-aloud review; independent human approval pending.",
+  "evidence": [
+    {
+      "id": "cr-noah-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 11,
+      "excerpt": "But the earth had become ruined in the sight of"
+    },
+    {
+      "id": "cr-noah-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 14,
+      "excerpt": "Make for yourself an ark from resinous wood. You will"
+    },
+    {
+      "id": "cr-noah-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 10,
+      "excerpt": "In time Noah became father to three sons, Shem, Ham,"
+    },
+    {
+      "id": "cr-david-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 34,
+      "excerpt": "David then said to Saul: “Your servant became a shepherd"
+    },
+    {
+      "id": "cr-david-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 33,
+      "excerpt": "But Saul said to David: “You are not able to"
+    },
+    {
+      "id": "cr-david-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 50,
+      "excerpt": "So David prevailed over the Phi·lisʹtine with a sling and"
+    },
+    {
+      "id": "cr-hannah-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 13,
+      "excerpt": "Hanʹnah was speaking in her heart, only her lips were"
+    },
+    {
+      "id": "cr-hannah-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 17,
+      "excerpt": "Then Eʹli answered: “Go in peace, and may the God"
+    },
+    {
+      "id": "cr-hannah-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 20,
+      "excerpt": "Within a year Hanʹnah became pregnant and gave birth to"
+    },
+    {
+      "id": "cr-lydia-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 14,
+      "excerpt": "And a woman named Lydʹi·a, a seller of purple from"
+    },
+    {
+      "id": "cr-lydia-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 13,
+      "excerpt": "On the Sabbath day we went outside the gate beside"
+    },
+    {
+      "id": "cr-lydia-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 15,
+      "excerpt": "Now when she and her household got baptized, she urged"
+    },
+    {
+      "id": "cr-bezalel-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 2,
+      "excerpt": "“See, I have chosen Bezʹal·el the son of Uʹri the"
+    },
+    {
+      "id": "cr-bezalel-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 4,
+      "excerpt": "for making artistic designs, for working with gold, silver, and"
+    },
+    {
+      "id": "cr-bezalel-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 7,
+      "excerpt": "the tent of meeting, the ark of the Testimony and"
+    },
+    {
+      "id": "cr-abigail-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 18,
+      "excerpt": "So Abʹi·gail quickly took 200 loaves of bread, two large"
+    },
+    {
+      "id": "cr-abigail-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 26,
+      "excerpt": "And now, my lord, as surely as Jehovah is living"
+    },
+    {
+      "id": "cr-abigail-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 32,
+      "excerpt": "At this David said to Abʹi·gail: “Praise Jehovah the God"
+    },
+    {
+      "id": "cr-bethlehem-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 5,
+      "excerpt": "He went to get registered with Mary, who had been"
+    },
+    {
+      "id": "cr-bethlehem-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 4,
+      "excerpt": "Of course, Joseph also went up from Galʹi·lee, from the"
+    },
+    {
+      "id": "cr-bethlehem-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 7,
+      "excerpt": "And she gave birth to her son, the firstborn, and"
+    },
+    {
+      "id": "cr-eden-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/2/",
+      "verse": 15,
+      "excerpt": "Jehovah God took the man and settled him in the"
+    },
+    {
+      "id": "cr-eden-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/2/",
+      "verse": 9,
+      "excerpt": "Thus Jehovah God made to grow out of the ground"
+    },
+    {
+      "id": "cr-eden-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/3/",
+      "verse": 23,
+      "excerpt": "With that Jehovah God expelled him from the garden of"
+    },
+    {
+      "id": "cr-jericho-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 1,
+      "excerpt": "Now Jerʹi·cho was tightly shut up because of the Israelites;"
+    },
+    {
+      "id": "cr-jericho-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 10,
+      "excerpt": "Now Joshua had commanded the people: “Do not shout nor"
+    },
+    {
+      "id": "cr-jericho-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 20,
+      "excerpt": "Then the people shouted when the horns were blown. As"
+    },
+    {
+      "id": "cr-carmel-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 19,
+      "excerpt": "And now summon all Israel to me at Mount Carʹmel,"
+    },
+    {
+      "id": "cr-carmel-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 21,
+      "excerpt": "Then E·liʹjah approached all the people and said: “How long"
+    },
+    {
+      "id": "cr-carmel-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 38,
+      "excerpt": "At that the fire of Jehovah fell from above and"
+    },
+    {
+      "id": "cr-joppa-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/9/",
+      "verse": 36,
+      "excerpt": "Now there was in Jopʹpa a disciple named Tabʹi·tha, which"
+    },
+    {
+      "id": "cr-joppa-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/9/",
+      "verse": 38,
+      "excerpt": "Since Lydʹda was near Jopʹpa, when the disciples heard that"
+    },
+    {
+      "id": "cr-joppa-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/10/",
+      "verse": 6,
+      "excerpt": "This man is staying as a guest with Simon, a"
+    },
+    {
+      "id": "cr-troas-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 6,
+      "excerpt": "but we put out to sea from Phi·lipʹpi after the"
+    },
+    {
+      "id": "cr-troas-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 9,
+      "excerpt": "Seated at the window, a young man named Euʹty·chus sank"
+    },
+    {
+      "id": "cr-troas-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 12,
+      "excerpt": "So they took the boy away alive and were comforted"
+    },
+    {
+      "id": "cr-creation-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 5,
+      "excerpt": "God called the light Day, but the darkness he called"
+    },
+    {
+      "id": "cr-creation-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 26,
+      "excerpt": "Then God said: “Let us make man in our image,"
+    },
+    {
+      "id": "cr-creation-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 1,
+      "excerpt": "In the beginning God created the heavens and the earth."
+    },
+    {
+      "id": "cr-pentecost-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 5,
+      "excerpt": "At that time devout Jews from every nation under heaven"
+    },
+    {
+      "id": "cr-pentecost-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 4,
+      "excerpt": "and they all became filled with holy spirit and started"
+    },
+    {
+      "id": "cr-pentecost-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 1,
+      "excerpt": "Now while the day of the Festival of Pentecost was"
+    },
+    {
+      "id": "cr-red-sea-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 21,
+      "excerpt": "Moses now stretched out his hand over the sea; and"
+    },
+    {
+      "id": "cr-red-sea-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 22,
+      "excerpt": "So the Israelites went through the midst of the sea"
+    },
+    {
+      "id": "cr-red-sea-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 29,
+      "excerpt": "But the Israelites walked on dry ground in the midst"
+    },
+    {
+      "id": "cr-furnace-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 19,
+      "excerpt": "Then Neb·u·chad·nezʹzar became so furious with Shaʹdrach, Meʹshach, and A·bedʹne·go"
+    },
+    {
+      "id": "cr-furnace-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 25,
+      "excerpt": "He said: “Look! I see four men walking about free"
+    },
+    {
+      "id": "cr-furnace-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 27,
+      "excerpt": "And the satraps, prefects, governors, and the high officials of"
+    },
+    {
+      "id": "cr-transfiguration-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 1,
+      "excerpt": "Six days later Jesus took Peter and James and his"
+    },
+    {
+      "id": "cr-transfiguration-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 2,
+      "excerpt": "And he was transfigured before them; his face shone as"
+    },
+    {
+      "id": "cr-transfiguration-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 5,
+      "excerpt": "While he was still speaking, look! a bright cloud overshadowed"
+    },
+    {
+      "id": "cr-writing-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 2,
+      "excerpt": "While under the influence of the wine, Bel·shazʹzar gave an"
+    },
+    {
+      "id": "cr-writing-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 8,
+      "excerpt": "Then all the wise men of the king came in,"
+    },
+    {
+      "id": "cr-writing-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 25,
+      "excerpt": "And this is the writing that was inscribed: MEʹNE, MEʹNE,"
+    }
+  ]
+}
