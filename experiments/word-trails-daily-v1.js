@@ -148,8 +148,21 @@ function renderSelection(){
   const a=buttons[chosen[j-1]],b=buttons[chosen[j]],line=document.createElementNS('http://www.w3.org/2000/svg','line');
   line.setAttribute('x1',a.dataset.x);line.setAttribute('y1',a.dataset.y);line.setAttribute('x2',b.dataset.x);line.setAttribute('y2',b.dataset.y);lines.append(line);
  }
+ // Keep a live line connected to the actual finger while dragging.
+ if(drag?.tracing&&chosen.length){
+  const a=buttons[chosen[chosen.length-1]],rect=wheel.getBoundingClientRect();
+  const x=(drag.lastX-rect.left)*200/rect.width,y=(drag.lastY-rect.top)*200/rect.height;
+  const tail=document.createElementNS('http://www.w3.org/2000/svg','line');
+  tail.setAttribute('class','daily-trail-tail');tail.setAttribute('x1',a.dataset.x);tail.setAttribute('y1',a.dataset.y);
+  tail.setAttribute('x2',x);tail.setAttribute('y2',y);lines.append(tail);
+ }
 }
 function clearWord(){chosen=[];renderSelection();}
+// A swipe may revisit its current tile many times: NEVER toggle it off.
+function appendTrace(i){
+ if(!Number.isInteger(i)||i<0||i>=letters.length||chosen.includes(i))return;
+ chosen.push(i);renderSelection();
+}
 function selectLetter(i){
  if(!sameDay()||record.completed&&record.solved.length===level.words.length)return;
  if(!Number.isInteger(i)||i<0||i>=letters.length)return;
@@ -160,7 +173,9 @@ function flash(msg){$('daily-feedback').textContent=msg;}
 function updateLabels(){
  const n=level.words.length;
  $('daily-date').textContent=new Date(today+'T12:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric',weekday:'short'}).toUpperCase();
- $('daily-title').textContent=level.title;
+ const bibleWords=new Set(level.bibleBoard.map(x=>x.word).filter(w=>level.words.some(x=>x[0]===w)));
+ $('daily-title').textContent=level.bibleBoard[0].word+' · Word Mix';
+ $('daily-kind').textContent=level.title+' · '+bibleWords.size+' Bible '+(bibleWords.size===1?'word':'words');
  $('daily-progress').textContent=record.solved.length+' / '+n+' WORDS';
  $('stamp-count').textContent=String(stampCount());
  const remains=Math.max(0,2-record.hints.length);
@@ -184,7 +199,7 @@ function submit(){
   record.completed=true;saveRecord();updateLabels();
   flash(firstTime?'✦ Discovery Stamp earned!':'✦ Today’s trail complete again!');
   showFinish(firstTime);
- }else flash('Nice find! '+record.solved.length+' of '+level.words.length+' words.');
+ }else flash((level.bibleBoard.some(x=>x.word===word)?'Bible word found! ':'Nice find! ')+record.solved.length+' of '+level.words.length+' words.');
 }
 function hint(){
  if(!sameDay())return;
@@ -247,39 +262,63 @@ wheel.addEventListener('click',event=>{
  if(b&&performance.now()>=suppressClickUntil)selectLetter(Number(b.dataset.letterIndex));
 });
 wheel.addEventListener('pointerdown',event=>{
+ if(event.button!==undefined&&event.button!==0)return;
  const b=event.target.closest('.daily-wheel-letter');
  if(!b||!sameDay())return;
  drag={id:event.pointerId,x:event.clientX,y:event.clientY,lastX:event.clientX,lastY:event.clientY,start:Number(b.dataset.letterIndex),tracing:false};
 });
+function letterAt(x,y){
+ const b=document.elementFromPoint(x,y)?.closest('.daily-wheel-letter');
+ return b&&wheel.contains(b)?Number(b.dataset.letterIndex):null;
+}
+function traceTo(x,y){
+ if(!drag)return;
+ const fromX=drag.lastX,fromY=drag.lastY;
+ if(!drag.tracing&&Math.hypot(x-drag.x,y-drag.y)>10){
+  drag.tracing=true;chosen=[];appendTrace(drag.start);
+  // Capture only after a genuine swipe; tap/click behavior stays unchanged.
+  try{wheel.setPointerCapture(drag.id);}catch(_){}
+ }
+ if(drag.tracing){
+  // Sample the full motion segment: fast swipes cannot skip crossed tiles.
+  const steps=Math.max(1,Math.ceil(Math.hypot(x-fromX,y-fromY)/10));
+  for(let i=1;i<=steps;i++){
+   const hit=letterAt(fromX+(x-fromX)*i/steps,fromY+(y-fromY)*i/steps);
+   if(hit!==null)appendTrace(hit);
+  }
+ }
+ drag.lastX=x;drag.lastY=y;
+ if(drag.tracing)renderSelection();
+}
 document.addEventListener('pointermove',event=>{
- if(!drag||event.pointerId!==drag.id)return;
- const moved=Math.hypot(event.clientX-drag.x,event.clientY-drag.y);
- drag.lastX=event.clientX;drag.lastY=event.clientY;
- if(!drag.tracing&&moved>10){drag.tracing=true;chosen=[];selectLetter(drag.start);}
- if(!drag.tracing)return;
- const b=document.elementFromPoint(event.clientX,event.clientY)?.closest('.daily-wheel-letter');
- if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
+ if(drag&&event.pointerId===drag.id)traceTo(event.clientX,event.clientY);
 });
+// Mobile Safari/Chrome fallback for touch events and native scrolling.
+document.addEventListener('touchmove',event=>{
+ if(!drag||event.touches.length!==1)return;
+ if(event.cancelable)event.preventDefault();
+ const t=event.touches[0];traceTo(t.clientX,t.clientY);
+},{passive:false});
+function leaveTrace(){
+ const ghost=lines.cloneNode(true);ghost.removeAttribute('id');ghost.classList.add('daily-trace-ghost');
+ wheel.append(ghost);setTimeout(()=>ghost.remove(),260);
+}
 function finishTrace(x,y){
  if(!drag)return;
  if(drag.tracing){
-  // Prefer the actual finger-lift coordinates (touchend.changedTouches) over
-  // browsers' sometimes stale/coalesced last pointermove position.
-  const b=document.elementFromPoint(x,y)?.closest('.daily-wheel-letter');
-  lastTrace={liftX:x,liftY:y,hit:b?.textContent||null,before:chosen.map(i=>letters[i]).join('')};
-  if(b&&wheel.contains(b)){
-   const id=Number(b.dataset.letterIndex);
-   if(!chosen.includes(id))selectLetter(id); // finger lift must not toggle off the last traced tile
-  }
+  traceTo(x,y);
+  const hit=letterAt(x,y);
+  if(hit!==null)appendTrace(hit); // Never toggle the final touched tile off.
+  lastTrace={liftX:x,liftY:y,hit:hit===null?null:letters[hit],before:chosen.map(i=>letters[i]).join('')};
+  renderSelection();leaveTrace();
   suppressClickUntil=performance.now()+350;
-  submit();
+  drag=null;submit();return;
  }
  drag=null;
 }
 document.addEventListener('pointerup',event=>{
  if(!drag||event.pointerId!==drag.id)return;
- // On mobile, touchend carries the authoritative last finger position.
- // Finishing here can lose the final letter on Chrome/Safari touch input.
+ // touchend.changedTouches has the authoritative final touch coordinates.
  if(event.pointerType==='touch')return;
  finishTrace(event.clientX,event.clientY);
 });
@@ -288,7 +327,10 @@ document.addEventListener('touchend',event=>{
  const t=event.changedTouches?.[0];
  finishTrace(t?.clientX??drag.lastX,t?.clientY??drag.lastY);
 });
-document.addEventListener('pointercancel',()=>{drag=null;clearWord();});
+document.addEventListener('pointercancel',event=>{
+ if(!drag||event.pointerId!==drag.id)return;
+ drag=null;clearWord();
+});
 $('daily-submit').addEventListener('click',submit);
 $('daily-hint').addEventListener('click',hint);
 $('daily-shuffle').addEventListener('click',shuffle);
