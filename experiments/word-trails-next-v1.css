@@ -495,3 +495,7 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  #daily-trail-entry .daily-float-label{font-size:10px}
 }
 @media(prefers-reduced-motion:reduce){#daily-trail-entry.daily-float{animation:none}}
+
+/* Keep the regular Word Trails level counter centered when DAILY moves to its bubble. */
+.bottom{position:relative;justify-content:flex-start}
+.bottom #level-map{position:absolute;left:50%;bottom:2px;transform:translateX(-50%)}
