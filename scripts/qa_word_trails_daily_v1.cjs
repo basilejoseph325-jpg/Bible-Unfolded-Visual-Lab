@@ -82,7 +82,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
       'Touch trace lost intermediate letters: '+inFlight+' / '+word);
     await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     await client.detach();
-    const traceResult=await page.evaluate(()=>({selection:document.getElementById('daily-word').textContent,feedback:document.getElementById('daily-feedback').textContent,solved:BUWT_DAILY_QA.record().solved}));
+    const traceResult=await page.evaluate(()=>({selection:document.getElementById('daily-word').textContent,feedback:document.getElementById('daily-feedback').textContent,solved:BUWT_DAILY_QA.record().solved,submitted:BUWT_DAILY_QA.lastSubmission(),trace:BUWT_DAILY_QA.lastTrace()}));
     console.log('DAILY_REAL_TOUCH_SWIPE_TRACE',JSON.stringify({word,traceResult}));
     assert(traceResult.solved.includes(word),'Touch swipe did not solve '+word+'; '+JSON.stringify(traceResult));
    }
