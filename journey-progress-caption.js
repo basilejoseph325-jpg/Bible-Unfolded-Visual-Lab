@@ -304,3 +304,27 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  if(window.BUStoryGenesis12Test)start();
  else document.getElementById('bu-story-genesis12-native-loader')?.addEventListener('load',start,{once:true});
 })();
+
+
+/* Visual Lab TEST only — regular Genesis Episode 14 menu integration.
+ * The isolated Episode 14 preview still owns URLs bearing bu_story_dev=genesis14.
+ * Wait until Episode 13 finishes native registration; never touch LIVE. */
+(()=>{'use strict';
+ if(new URLSearchParams(location.search).get('bu_story_dev')==='genesis14')return;
+ const id='bu-story-genesis14-native-loader',deadline=Date.now()+60000;
+ function start(){
+  if(document.getElementById(id))return;
+  if(window.BUStoryGenesis13Test?.status==='failed'){console.warn('[Genesis14] Episode 13 prerequisite failed');return;}
+  if(window.BUStoryGenesis13Test?.status!=='ready'){
+   if(Date.now()<deadline)setTimeout(start,80);
+   else console.warn('[Genesis14] Timed out waiting for Episode 13');
+   return;
+  }
+  const s=document.createElement('script');s.id=id;s.async=false;
+  s.src='story-adventure-episode14-integration-test.js?v=20261115-g14-public-test-v1';
+  s.onerror=()=>console.warn('[Genesis14] TEST chapter integration did not load');
+  document.head.appendChild(s);
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
+ else start();
+})();
