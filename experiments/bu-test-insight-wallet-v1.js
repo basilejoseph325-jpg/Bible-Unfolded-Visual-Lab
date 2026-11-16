@@ -5,13 +5,17 @@
  */
 (()=>{'use strict';
 if(window.BUTestInsightWallet)return;
+// Explicit path fence: no LIVE site may load the TEST wallet accidentally.
+const path=window.location?.pathname||'';
+if(!(/^\/Bible-Unfolded-Visual-Lab(?:\/|$)/).test(path) &&
+   !['localhost','127.0.0.1'].includes(window.location?.hostname))return;
 const DB='bu-visual-lab-insight-tokens-idb-v1', STORE='wallet', MAIN='main', BACKUP='recovery';
 const INITIAL=60, MAX=1_000_000_000;
 let opening=null;
 function valid(w){
  return !!w&&w.schema===1&&Number.isSafeInteger(w.balance)&&w.balance>=0&&w.balance<=MAX&&
   Number.isSafeInteger(w.revision)&&w.revision>=0&&w.receipts&&
-  Object.getPrototypeOf(w.receipts)===Object.prototype&&!Array.isArray(w.receipts);
+  Object.prototype.toString.call(w.receipts)==='[object Object]'&&!Array.isArray(w.receipts);
 }
 function fresh(){return {schema:1,balance:INITIAL,revision:0,receipts:{},starter:'TEST-only 60, not imported'};}
 function choose(main,recovery){
