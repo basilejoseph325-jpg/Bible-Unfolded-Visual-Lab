@@ -39,3 +39,8 @@ jobs:
           NODE_PATH: ${{ github.workspace }}/work/node_modules
           WT_TEST_URL: http://127.0.0.1:8899/index.html
         run: node scripts/qa_word_trails_exclusive_parent_score_v1.cjs
+      - name: Confirm native Settings, audio preferences, announcers and Ocean Glow still work
+        env:
+          NODE_PATH: ${{ github.workspace }}/work/node_modules
+          BU_WT_NATIVE_PARITY_URL: http://127.0.0.1:8899/index.html
+        run: node scripts/qa_word_trails_native_audio_wheel_owner_v23.cjs
