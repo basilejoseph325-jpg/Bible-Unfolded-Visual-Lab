@@ -1,0 +1,928 @@
+{
+  "schemaVersion": "1.0.0",
+  "chapterId": "genesis_ep14",
+  "chapterNumber": 14,
+  "title": "Joseph: Dreams and Betrayal",
+  "coverage": "Genesis 37",
+  "translation": "New World Translation (2013 revision), jw.org",
+  "contentStatus": "native_isolated_review_candidate_approved_art_installed_phone_acceptance_pending",
+  "saveKey": "bible-unfolded-genesis-adventure-v3860",
+  "rules": "Existing native Story wheel, sizing, rewards and three contextual hints (free / 15 / 25 Insight Tokens). Native full reveal costs 25 Points. Development entry only; unlock after Episode 13. No unrelated modes or public loader changes.",
+  "completionMessage": "Jacob is grieving for a son who's still alive. Joseph has been taken into Egypt and sold to Potiphar, Pharaoh's chief of the guard (Genesis 37:36). His dreams haven't been fulfilled, and his story isn't over. For now, you've reached the end of this episode.",
+  "discoveries": [
+    {
+      "id": "g14-d01",
+      "sequence": 1,
+      "title": "A Gift That Sets Joseph Apart",
+      "narration": "Joseph is 17 and tends his father's flocks. He's brought a bad report about some of his brothers, and there's already trouble in the family. Jacob loves Joseph especially and has a distinctive garment made for him. His brothers can see the favor, and they can't speak peaceably to him.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:2–4",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What special garment made Jacob's favor toward Joseph visible to his brothers?",
+        "answer": "ROBE"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Think of something Joseph wore, not a piece of shepherding equipment."
+        },
+        {
+          "level": 2,
+          "text": "Jacob had this item made especially for him."
+        },
+        {
+          "level": 3,
+          "text": "The NWT also describes it as a beautiful long garment. Build the word for this outer clothing."
+        }
+      ],
+      "explanation": "Jacob had a special robe made for Joseph because he loved him especially as a son of his old age. Genesis doesn't describe it as a coat of many colors. The brothers' hatred had grown so deep that they couldn't speak peaceably to Joseph. A gift had become part of a painful family division.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d02",
+      "sequence": 2,
+      "title": "Telling the First Dream",
+      "narration": "Now Joseph tells his brothers about an unusual dream. They're out in a field, gathering cut grain into bundles. His bundle stands upright, while theirs gather around and bow down. Can you see why his brothers connect this picture with someone ruling over them?",
+      "scripture": [
+        {
+          "reference": "Genesis 37:5–8",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What are the tied bundles of harvested grain in Joseph's first dream called?",
+        "answer": "SHEAVES"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "These are gathered stalks from a harvest, not living trees."
+        },
+        {
+          "level": 2,
+          "text": "The word names bundles of cut grain tied together."
+        },
+        {
+          "level": 3,
+          "text": "Use the plural: one bundle stands upright while the others bow around it."
+        }
+      ],
+      "explanation": "Sheaves are bundles of harvested grain. In Joseph's dream, his brothers' sheaves bowed to his, and they understood the picture as him ruling over them. They weren't watching this happen in a real field—it was a dream Joseph related to them. Their response was still more hatred.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d03",
+      "sequence": 3,
+      "title": "A Second Picture in the Sky",
+      "narration": "The next dream takes us from a field to the sky: the sun, the moon, and 11 smaller lights bow down to Joseph. Jacob rebukes him when he hears it. Yet there's another detail worth noticing—his father keeps the saying in mind.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:9–11",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which heavenly objects numbered 11 in Joseph's second dream?",
+        "answer": "STARS"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Leave out the two larger lights; the question asks about the group of 11."
+        },
+        {
+          "level": 2,
+          "text": "These lights often appear together in the night sky."
+        },
+        {
+          "level": 3,
+          "text": "The dream names the sun, the moon, and 11 of these."
+        }
+      ],
+      "explanation": "There were 11 stars, along with the sun and moon. Jacob connected the dream with members of the family bowing to Joseph. He rebuked Joseph but also kept the saying in mind. Notice the difference: the brothers grew jealous, while Jacob didn't simply dismiss what he'd heard.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d04",
+      "sequence": 4,
+      "title": "Finding His Brothers",
+      "narration": "Jacob sends Joseph from the valley of Hebron to check on his brothers and the flock near Shechem. But they aren't there. A man finds Joseph looking for them in a field and tells him where they've gone. Joseph follows that lead instead of turning for home.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:12–17",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Where did Joseph finally find his brothers after looking near Shechem?",
+        "answer": "DOTHAN"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This is the second place in his search, not where his father first sent him."
+        },
+        {
+          "level": 2,
+          "text": "A man in a field had heard the brothers name this destination."
+        },
+        {
+          "level": 3,
+          "text": "Joseph went after them there; it wasn't Hebron, where his journey began."
+        }
+      ],
+      "explanation": "Joseph found them at Dothan. He'd first gone toward Shechem, then continued after a man told him where they'd moved. Jacob's request was to learn whether his sons and the flock were well. Joseph followed through on that errand even when the first stop didn't bring him to them.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d05",
+      "sequence": 5,
+      "title": "Before Joseph Arrives",
+      "narration": "Joseph is still some distance away when his brothers spot him. Before he even reaches them, they begin planning to kill him and make it look as though a wild animal attacked him. This isn't a sudden quarrel after he arrives. They're preparing to harm their own brother.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:18–20",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What word means the secret, harmful plan the brothers made before Joseph reached them?",
+        "answer": "SCHEME"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Think of a plan made against someone, rather than an argument that happens by surprise."
+        },
+        {
+          "level": 2,
+          "text": "They planned both the harm and a false explanation for their father."
+        },
+        {
+          "level": 3,
+          "text": "Use the noun for a dishonest plan or plot. Here, the brothers intend to hide what they've done."
+        }
+      ],
+      "explanation": "A scheme is a dishonest or harmful plan. The brothers plotted against Joseph before he reached them, even planning to blame a wild animal. Their hostility had moved beyond words into preparations to take his life. The Bible tells us what they planned; it doesn't approve of it.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d06",
+      "sequence": 6,
+      "title": "A Plan to Bring Him Home",
+      "narration": "Before Joseph reaches them, his brothers are already plotting to kill him. One brother speaks against taking his life. He suggests putting Joseph into a waterpit without harming him. Genesis lets us know what he's really trying to do: get Joseph safely back to their father.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:21–22, 26–27",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which brother proposed the waterpit because he intended to rescue Joseph and return him to Jacob?",
+        "answer": "REUBEN"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This brother opposed the plan to take Joseph's life."
+        },
+        {
+          "level": 2,
+          "text": "His aim was to bring Joseph back to their father, not hand him over to traders."
+        },
+        {
+          "level": 3,
+          "text": "He proposed using a pit without shedding blood because he intended to rescue Joseph later."
+        }
+      ],
+      "explanation": "Reuben was trying to rescue Joseph. His suggestion about the pit wasn't the whole plan—Genesis explicitly says he intended to return Joseph to their father. Judah's later proposal was different: sell Joseph. Keeping those two proposals separate helps us follow what each brother actually did.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d07",
+      "sequence": 7,
+      "title": "An Empty Pit",
+      "narration": "When Joseph arrives, the brothers strip off his special robe and throw him into a pit. There's a small but important detail in the account: it's empty, with no water in it. Joseph is still alive, but his brothers have put him where he can't simply continue his errand.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:23–24",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:21–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What kind of storage place, empty and dry at the time, did the brothers throw Joseph into?",
+        "answer": "WATERPIT"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This was a place meant to hold a liquid, not an animal pen."
+        },
+        {
+          "level": 2,
+          "text": "It was dug down into the ground, and there was no water inside."
+        },
+        {
+          "level": 3,
+          "text": "Combine what it normally held with the word for a deep hole. The NWT uses this compound word."
+        }
+      ],
+      "explanation": "It was a waterpit—a place for holding water—but this one was dry. That detail matters: the brothers had put Joseph into confinement, not into water. They'd also taken his special robe. Reuben's rescue plan hadn't yet succeeded, and Joseph was still in danger.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d08",
+      "sequence": 8,
+      "title": "Traders on the Road",
+      "narration": "The brothers sit down to eat while Joseph is in the pit. Then they look up and see travelers coming from Gilead, with loaded camels on their way to Egypt. The goods they carry have familiar uses in trade, but their arrival is about to change Joseph's life.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:25",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What word describes the traveling group of merchants and loaded camels the brothers saw?",
+        "answer": "CARAVAN"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "Think of people and pack animals making a trading journey together."
+        },
+        {
+          "level": 2,
+          "text": "This group came from Gilead and was traveling toward Egypt."
+        },
+        {
+          "level": 3,
+          "text": "It's a traveling company of traders, not the name of a single merchant or his cargo."
+        }
+      ],
+      "explanation": "A caravan is a group traveling together, often with goods to trade. This one carried labdanum gum, balsam, and resinous bark toward Egypt. The brothers noticed it while they were eating. That trading journey was about to become Joseph's route away from his family.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d09",
+      "sequence": 9,
+      "title": "Another Brother's Proposal",
+      "narration": "One brother now speaks about the approaching traders. He asks what profit there would be in killing Joseph and hiding what they've done. Instead, he urges them to sell him. He even reminds them that Joseph is their own brother. The others listen to him.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:26–27",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:21–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which brother proposed selling Joseph instead of killing him?",
+        "answer": "JUDAH"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This wasn't the brother who intended to rescue Joseph and return him to Jacob."
+        },
+        {
+          "level": 2,
+          "text": "He asked what profit there would be in killing Joseph and covering over his blood."
+        },
+        {
+          "level": 3,
+          "text": "He urged them to sell Joseph to the Ishmaelites, reminding them that Joseph was their own flesh."
+        }
+      ],
+      "explanation": "Judah proposed the sale. He argued against killing Joseph, but selling their brother into slavery was still a terrible wrong. His proposal was different from Reuben's rescue plan: Reuben wanted Joseph home with their father. Judah persuaded the others to hand Joseph over to traders.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d10",
+      "sequence": 10,
+      "title": "A Brother Sold",
+      "narration": "Joseph is lifted out of the pit, but this isn't the rescue Reuben planned. His brothers sell him for 20 pieces of a precious metal. The traders take Joseph toward Egypt. He's alive, yet the journey ahead is one he hasn't chosen.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:28",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:21–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "Which metal was used for the 20 pieces paid when Joseph was sold?",
+        "answer": "SILVER"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The price wasn't paid in livestock or grain."
+        },
+        {
+          "level": 2,
+          "text": "It's a precious metal, but the passage doesn't say gold."
+        },
+        {
+          "level": 3,
+          "text": "The NWT calls the payment 20 pieces of this metal; it doesn't describe minted coins."
+        }
+      ],
+      "explanation": "Joseph was sold for 20 pieces of silver, and the traders took him toward Egypt. Being brought up out of the pit hadn't meant freedom. His own brothers had sold him into slavery. Genesis calls the payment pieces of silver; it doesn't describe minted coins.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d11",
+      "sequence": 11,
+      "title": "Too Late to Rescue Him",
+      "narration": "When Reuben returns to the waterpit, Joseph is gone. Reuben tears his garments and goes back to the brothers, distressed about what he'll do now. His plan had been to bring Joseph home. Finding the pit like this tells him that the rescue he intended hasn't happened.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:29–30",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:23–24, 28",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What word describes the pit when Reuben returned and found Joseph gone?",
+        "answer": "EMPTY"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "The question is about whether Joseph was there, not whether the pit held water."
+        },
+        {
+          "level": 2,
+          "text": "The traders had already taken Joseph away."
+        },
+        {
+          "level": 3,
+          "text": "The person he hoped to rescue wasn't there. Use the opposite of occupied."
+        }
+      ],
+      "explanation": "The pit was empty when Reuben came back. Earlier it had held no water; now Joseph himself was missing. Reuben tore his garments and expressed his distress to the brothers. Genesis doesn't explain where he'd been while Joseph was sold, so we shouldn't invent a reason for his absence.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    },
+    {
+      "id": "g14-d12",
+      "sequence": 12,
+      "title": "A Father's Sorrow",
+      "narration": "The brothers dip Joseph's special robe in a male goat's blood and send it to Jacob to identify. He recognizes it and concludes that a wild animal has killed his son. Jacob mourns for many days. We know Joseph is alive; his father doesn't.",
+      "scripture": [
+        {
+          "reference": "Genesis 37:31–35",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        }
+      ],
+      "interaction": {
+        "type": "word_connect",
+        "prompt": "What word describes Jacob's deep sorrow as he mourned the son he believed was dead?",
+        "answer": "GRIEF"
+      },
+      "progressiveHints": [
+        {
+          "level": 1,
+          "text": "This is an emotional response to losing someone, not a name for anger at an enemy."
+        },
+        {
+          "level": 2,
+          "text": "It explains why words of comfort didn't simply end his mourning."
+        },
+        {
+          "level": 3,
+          "text": "Think of the deep sorrow people experience when someone they love has died."
+        }
+      ],
+      "explanation": "Jacob's grief was real, even though Joseph hadn't died. The robe was genuine, but the impression the brothers created was false. Jacob tore his garments, wore sackcloth, and continued weeping despite his family's attempts to comfort him. Their deception had left him mourning a son who was still alive.",
+      "tone": "conversational_story",
+      "graphicViolence": false
+    }
+  ],
+  "words": {
+    "g14-d01": {
+      "answer": "ROBE",
+      "clue": "What special garment made Jacob's favor toward Joseph visible to his brothers?",
+      "explanation": "Jacob had a special robe made for Joseph because he loved him especially as a son of his old age. Genesis doesn't describe it as a coat of many colors. The brothers' hatred had grown so deep that they couldn't speak peaceably to Joseph. A gift had become part of a painful family division.",
+      "hint1": "Think of something Joseph wore, not a piece of shepherding equipment.",
+      "hint2": "Jacob had this item made especially for him.",
+      "hint3": "The NWT also describes it as a beautiful long garment. Build the word for this outer clothing.",
+      "basis": "scripture",
+      "reference": "Genesis 37:2–4"
+    },
+    "g14-d02": {
+      "answer": "SHEAVES",
+      "clue": "What are the tied bundles of harvested grain in Joseph's first dream called?",
+      "explanation": "Sheaves are bundles of harvested grain. In Joseph's dream, his brothers' sheaves bowed to his, and they understood the picture as him ruling over them. They weren't watching this happen in a real field—it was a dream Joseph related to them. Their response was still more hatred.",
+      "hint1": "These are gathered stalks from a harvest, not living trees.",
+      "hint2": "The word names bundles of cut grain tied together.",
+      "hint3": "Use the plural: one bundle stands upright while the others bow around it.",
+      "basis": "scripture",
+      "reference": "Genesis 37:5–8"
+    },
+    "g14-d03": {
+      "answer": "STARS",
+      "clue": "Which heavenly objects numbered 11 in Joseph's second dream?",
+      "explanation": "There were 11 stars, along with the sun and moon. Jacob connected the dream with members of the family bowing to Joseph. He rebuked Joseph but also kept the saying in mind. Notice the difference: the brothers grew jealous, while Jacob didn't simply dismiss what he'd heard.",
+      "hint1": "Leave out the two larger lights; the question asks about the group of 11.",
+      "hint2": "These lights often appear together in the night sky.",
+      "hint3": "The dream names the sun, the moon, and 11 of these.",
+      "basis": "scripture",
+      "reference": "Genesis 37:9–11"
+    },
+    "g14-d04": {
+      "answer": "DOTHAN",
+      "clue": "Where did Joseph finally find his brothers after looking near Shechem?",
+      "explanation": "Joseph found them at Dothan. He'd first gone toward Shechem, then continued after a man told him where they'd moved. Jacob's request was to learn whether his sons and the flock were well. Joseph followed through on that errand even when the first stop didn't bring him to them.",
+      "hint1": "This is the second place in his search, not where his father first sent him.",
+      "hint2": "A man in a field had heard the brothers name this destination.",
+      "hint3": "Joseph went after them there; it wasn't Hebron, where his journey began.",
+      "basis": "scripture",
+      "reference": "Genesis 37:12–17"
+    },
+    "g14-d05": {
+      "answer": "SCHEME",
+      "clue": "What word means the secret, harmful plan the brothers made before Joseph reached them?",
+      "explanation": "A scheme is a dishonest or harmful plan. The brothers plotted against Joseph before he reached them, even planning to blame a wild animal. Their hostility had moved beyond words into preparations to take his life. The Bible tells us what they planned; it doesn't approve of it.",
+      "hint1": "Think of a plan made against someone, rather than an argument that happens by surprise.",
+      "hint2": "They planned both the harm and a false explanation for their father.",
+      "hint3": "Use the noun for a dishonest plan or plot. Here, the brothers intend to hide what they've done.",
+      "basis": "scripture",
+      "reference": "Genesis 37:18–20"
+    },
+    "g14-d06": {
+      "answer": "REUBEN",
+      "clue": "Which brother proposed the waterpit because he intended to rescue Joseph and return him to Jacob?",
+      "explanation": "Reuben was trying to rescue Joseph. His suggestion about the pit wasn't the whole plan—Genesis explicitly says he intended to return Joseph to their father. Judah's later proposal was different: sell Joseph. Keeping those two proposals separate helps us follow what each brother actually did.",
+      "hint1": "This brother opposed the plan to take Joseph's life.",
+      "hint2": "His aim was to bring Joseph back to their father, not hand him over to traders.",
+      "hint3": "He proposed using a pit without shedding blood because he intended to rescue Joseph later.",
+      "basis": "scripture",
+      "reference": "Genesis 37:21–22, 26–27"
+    },
+    "g14-d07": {
+      "answer": "WATERPIT",
+      "clue": "What kind of storage place, empty and dry at the time, did the brothers throw Joseph into?",
+      "explanation": "It was a waterpit—a place for holding water—but this one was dry. That detail matters: the brothers had put Joseph into confinement, not into water. They'd also taken his special robe. Reuben's rescue plan hadn't yet succeeded, and Joseph was still in danger.",
+      "hint1": "This was a place meant to hold a liquid, not an animal pen.",
+      "hint2": "It was dug down into the ground, and there was no water inside.",
+      "hint3": "Combine what it normally held with the word for a deep hole. The NWT uses this compound word.",
+      "basis": "scripture",
+      "reference": "Genesis 37:23–24"
+    },
+    "g14-d08": {
+      "answer": "CARAVAN",
+      "clue": "What word describes the traveling group of merchants and loaded camels the brothers saw?",
+      "explanation": "A caravan is a group traveling together, often with goods to trade. This one carried labdanum gum, balsam, and resinous bark toward Egypt. The brothers noticed it while they were eating. That trading journey was about to become Joseph's route away from his family.",
+      "hint1": "Think of people and pack animals making a trading journey together.",
+      "hint2": "This group came from Gilead and was traveling toward Egypt.",
+      "hint3": "It's a traveling company of traders, not the name of a single merchant or his cargo.",
+      "basis": "scripture",
+      "reference": "Genesis 37:25"
+    },
+    "g14-d09": {
+      "answer": "JUDAH",
+      "clue": "Which brother proposed selling Joseph instead of killing him?",
+      "explanation": "Judah proposed the sale. He argued against killing Joseph, but selling their brother into slavery was still a terrible wrong. His proposal was different from Reuben's rescue plan: Reuben wanted Joseph home with their father. Judah persuaded the others to hand Joseph over to traders.",
+      "hint1": "This wasn't the brother who intended to rescue Joseph and return him to Jacob.",
+      "hint2": "He asked what profit there would be in killing Joseph and covering over his blood.",
+      "hint3": "He urged them to sell Joseph to the Ishmaelites, reminding them that Joseph was their own flesh.",
+      "basis": "scripture",
+      "reference": "Genesis 37:26–27"
+    },
+    "g14-d10": {
+      "answer": "SILVER",
+      "clue": "Which metal was used for the 20 pieces paid when Joseph was sold?",
+      "explanation": "Joseph was sold for 20 pieces of silver, and the traders took him toward Egypt. Being brought up out of the pit hadn't meant freedom. His own brothers had sold him into slavery. Genesis calls the payment pieces of silver; it doesn't describe minted coins.",
+      "hint1": "The price wasn't paid in livestock or grain.",
+      "hint2": "It's a precious metal, but the passage doesn't say gold.",
+      "hint3": "The NWT calls the payment 20 pieces of this metal; it doesn't describe minted coins.",
+      "basis": "scripture",
+      "reference": "Genesis 37:28"
+    },
+    "g14-d11": {
+      "answer": "EMPTY",
+      "clue": "What word describes the pit when Reuben returned and found Joseph gone?",
+      "explanation": "The pit was empty when Reuben came back. Earlier it had held no water; now Joseph himself was missing. Reuben tore his garments and expressed his distress to the brothers. Genesis doesn't explain where he'd been while Joseph was sold, so we shouldn't invent a reason for his absence.",
+      "hint1": "The question is about whether Joseph was there, not whether the pit held water.",
+      "hint2": "The traders had already taken Joseph away.",
+      "hint3": "The person he hoped to rescue wasn't there. Use the opposite of occupied.",
+      "basis": "scripture",
+      "reference": "Genesis 37:29–30"
+    },
+    "g14-d12": {
+      "answer": "GRIEF",
+      "clue": "What word describes Jacob's deep sorrow as he mourned the son he believed was dead?",
+      "explanation": "Jacob's grief was real, even though Joseph hadn't died. The robe was genuine, but the impression the brothers created was false. Jacob tore his garments, wore sackcloth, and continued weeping despite his family's attempts to comfort him. Their deception had left him mourning a son who was still alive.",
+      "hint1": "This is an emotional response to losing someone, not a name for anger at an enemy.",
+      "hint2": "It explains why words of comfort didn't simply end his mourning.",
+      "hint3": "Think of the deep sorrow people experience when someone they love has died.",
+      "basis": "scripture",
+      "reference": "Genesis 37:31–35"
+    }
+  },
+  "artPlan": {
+    "g14-d01": {
+      "filename": "g14-d01.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Jacob presents Joseph the long robe",
+      "brief": "Jacob presents Joseph the long robe. Primary pictured event: Genesis 37:3–4. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. The approved scene is the robe presentation, not Joseph reporting. Genesis 37:2 supplies the brief background; 3–4 and the verse-3 footnote support the garment and family division. Do not assert the illustration's exact pattern as biblical fact.",
+      "sha256": "cda795192cde8f6ad5e595e91024637ca25f723f8c756e6a59f176ef6bc4dcb9"
+    },
+    "g14-d02": {
+      "filename": "g14-d02.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Joseph tells brothers about the first dream (not visualized sheaves)",
+      "brief": "Joseph tells brothers about the first dream (not visualized sheaves). Primary pictured event: Genesis 37:5–8. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Genesis 37:5–8 explicitly records Joseph telling his brothers the sheaves dream. The approved image shows the telling; no grain bundles are pictured. SHEAVES means tied harvested grain; do not invent a number of bundles. The brothers connect bowing with rule over them.",
+      "sha256": "d3abb70208428321b289771e51df0459e0a4f688d8aee73d7cfbc94ccbb546fd"
+    },
+    "g14-d03": {
+      "filename": "g14-d03.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Joseph second dream: sun, moon and exactly eleven stars",
+      "brief": "Joseph second dream: sun, moon and exactly eleven stars. Primary pictured event: Genesis 37:9–11. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Eleven stars, rebuke, jealousy and Jacob keeping the saying are explicit. Do not identify the moon as the deceased Rachel or claim full interpretation/fulfillment in this chapter.",
+      "sha256": "5e6c33be8c167ff51cdd5585b487e1b62f3b926cbbc878cde035227018a2c799"
+    },
+    "g14-d04": {
+      "filename": "g14-d04.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Joseph reaches brothers at the flocks near Dothan",
+      "brief": "Joseph reaches brothers at the flocks near Dothan. Primary pictured event: Genesis 37:12–17. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Genesis 37:12–17 records the route Hebron, Shechem, Dothan. The picture shows Joseph arriving near the flocks; the unnamed man and directions are background narration, not the pictured encounter. No invented distance, travel time or angel identity.",
+      "sha256": "6de86b60cd5443c69f89345ac3cfd01ed7ee61a1c7f9401dc9ed7e151bc20733"
+    },
+    "g14-d05": {
+      "filename": "g14-d05.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Brothers conspire before Joseph approaches",
+      "brief": "Brothers conspire before Joseph approaches. Primary pictured event: Genesis 37:18–20. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Verses 18–20 explicitly describe advance plotting to kill Joseph and blame a wild animal. SCHEME is an ordinary-English synonym for the recorded plot, not an invented biblical quotation. Do not invent additional dialogue, gestures or individual motives.",
+      "sha256": "372ae10265b33a22cd792c5d08ce7e74bd88935c80a4219c8c65f9a7cffb3960"
+    },
+    "g14-d06": {
+      "filename": "g14-d06.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Reuben intervenes on behalf of Joseph",
+      "brief": "Reuben intervenes on behalf of Joseph. Primary pictured event: Genesis 37:21–22. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. The visual is Reuben's intervention (21–22), distinct from Judah's later proposal. His purpose to rescue Joseph and return him to Jacob is explicit. Verses 26–27 support the explanation's comparison with Judah; the rescue had not succeeded.",
+      "sha256": "8fa0b4259361aef3a028eff90f75b70f70188aaeb989d4f956c79f4a38ec3e3c"
+    },
+    "g14-d07": {
+      "filename": "g14-d07.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Brothers take garment and lower Joseph into dry waterpit",
+      "brief": "Brothers take garment and lower Joseph into dry waterpit. Primary pictured event: Genesis 37:23–24. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. The approved picture depicts the brothers putting Joseph into the dry pit and taking the robe. NWT says they threw him in; don't change that to a gentle rescue or infer safety from the image. WATERPIT is the NWT compound word. No invented injuries, nudity, depth or chains.",
+      "sha256": "8eb796c461dfb706168eaaef4c6faf4d20e15b050875bbe3c8918b0929310681"
+    },
+    "g14-d08": {
+      "filename": "g14-d08.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Brothers eat as caravan approaches",
+      "brief": "Brothers eat as caravan approaches. Primary pictured event: Genesis 37:25. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Verse 25 records the meal, caravan from Gilead to Egypt and aromatic cargo. The approved image is the approach, before Judah's proposal and the sale. No claim that the brothers had already sold Joseph at this point.",
+      "sha256": "0243d0098eccd02c77915cded82f73208bee225a9f2eaece56094327a4caf36e"
+    },
+    "g14-d09": {
+      "filename": "g14-d09.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Judah proposes selling Joseph to merchants",
+      "brief": "Judah proposes selling Joseph to merchants. Primary pictured event: Genesis 37:26–27. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Verses 26–27 name Judah and record profit, sale and their brother/own flesh. Reuben's distinct purpose is established in 21–22, included as supporting context. Do not present the proposal as compassionate rescue or imply Reuben approved it.",
+      "sha256": "db2be531c3619e0d846f2008fb2745247c604c292fa3debb89373745794b99e2"
+    },
+    "g14-d10": {
+      "filename": "g14-d10.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Joseph sold for twenty pieces of silver and departing with caravan",
+      "brief": "Joseph sold for twenty pieces of silver and departing with caravan. Primary pictured event: Genesis 37:28. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. The approved image is the transaction and departure, not Judah's earlier proposal or Potiphar's later purchase. Verse 28 supplies twenty pieces of silver and Egypt. Don't call the silver-looking pieces minted coins or invent an extra transaction.",
+      "sha256": "75a7d5d5af748cf45ae694c5acac9c4eaf78393ed3610642af2c6575b50d2ff4"
+    },
+    "g14-d11": {
+      "filename": "g14-d11.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Reuben discovers Joseph missing from empty pit",
+      "brief": "Reuben discovers Joseph missing from empty pit. Primary pictured event: Genesis 37:29–30. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Verses 29–30 explicitly record Joseph missing and Reuben's torn garments/distress. EMPTY here describes Joseph's absence, distinct from no water in 23–24. Do not imply Joseph was still inside, invent where Reuben went, or imply Reuben consented to the sale.",
+      "sha256": "b5d7cc427e90ea525456a4497d1386f06eec4ac57d2508fe448b499bc98e5d9e"
+    },
+    "g14-d12": {
+      "filename": "g14-d12.webp",
+      "width": 640,
+      "height": 360,
+      "status": "owner_approved_image_installed",
+      "alt": "Jacob sees Joseph bloodstained robe and grieves",
+      "brief": "Jacob sees Joseph bloodstained robe and grieves. Primary pictured event: Genesis 37:31–35. Use the exact owner-approved supplied WebP, not the earlier draft brief or a regenerated substitute. Historical appearances, clothing patterns, architecture, poses and framing are artistic reconstruction, not additional Scripture facts. Verses 31–35 support the robe deception, Jacob's conclusion, mourning, sackcloth and refusal of comfort. GRIEF is ordinary-language commentary. The approved picture shows Jacob with the robe, not an Egyptian courtyard or a literal funeral. Do not blame Jacob for his grief.",
+      "sha256": "3ece20ee3c41c7575ecea58a067a02bcf2dd19187235a74dc6ea718b7f3f4eeb"
+    }
+  },
+  "sourceReview": {
+    "primarySources": [
+      "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+    ],
+    "supportingPublication": {
+      "title": "Insight on the Scriptures — Joseph",
+      "url": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+      "readContext": "Hated by His Half Brothers; Sold Into Slavery. NWT 2013 governs wording where older quotations differ."
+    },
+    "status": "assistant_source_and_separate_readability_review_of_approved_sequence_complete_independent_human_pending",
+    "reviewDate": "2026-11-15",
+    "items": {
+      "g14-d01": {
+        "reference": "Genesis 37:2–4",
+        "reviewNote": "The approved scene is the robe presentation, not Joseph reporting. Genesis 37:2 supplies the brief background; 3–4 and the verse-3 footnote support the garment and family division. Do not assert the illustration's exact pattern as biblical fact.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "ROBE answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Young Shepherd Speaks Up",
+          "answer": "REPORT"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d02": {
+        "reference": "Genesis 37:5–8",
+        "reviewNote": "Genesis 37:5–8 explicitly records Joseph telling his brothers the sheaves dream. The approved image shows the telling; no grain bundles are pictured. SHEAVES means tied harvested grain; do not invent a number of bundles. The brothers connect bowing with rule over them.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "SHEAVES answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Family Pulling Apart",
+          "answer": "HATRED"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d03": {
+        "reference": "Genesis 37:9–11",
+        "reviewNote": "Eleven stars, rebuke, jealousy and Jacob keeping the saying are explicit. Do not identify the moon as the deceased Rachel or claim full interpretation/fulfillment in this chapter.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "STARS answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "Bundles in a Dream",
+          "answer": "SHEAVES"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d04": {
+        "reference": "Genesis 37:12–17",
+        "reviewNote": "Genesis 37:12–17 records the route Hebron, Shechem, Dothan. The picture shows Joseph arriving near the flocks; the unnamed man and directions are background narration, not the pictured encounter. No invented distance, travel time or angel identity.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "DOTHAN answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Second Picture in the Sky",
+          "answer": "STARS"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d05": {
+        "reference": "Genesis 37:18–20",
+        "reviewNote": "Verses 18–20 explicitly describe advance plotting to kill Joseph and blame a wild animal. SCHEME is an ordinary-English synonym for the recorded plot, not an invented biblical quotation. Do not invent additional dialogue, gestures or individual motives.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "SCHEME answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "The Search Goes Farther",
+          "answer": "DOTHAN"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d06": {
+        "reference": "Genesis 37:21–22, 26–27",
+        "reviewNote": "The visual is Reuben's intervention (21–22), distinct from Judah's later proposal. His purpose to rescue Joseph and return him to Jacob is explicit. Verses 26–27 support the explanation's comparison with Judah; the rescue had not succeeded.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "REUBEN answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Plan to Bring Him Home",
+          "answer": "REUBEN"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d07": {
+        "reference": "Genesis 37:23–24",
+        "reviewNote": "The approved picture depicts the brothers putting Joseph into the dry pit and taking the robe. NWT says they threw him in; don't change that to a gentle rescue or infer safety from the image. WATERPIT is the NWT compound word. No invented injuries, nudity, depth or chains.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "WATERPIT answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "An Empty Pit",
+          "answer": "WATERPIT"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending",
+        "supportingContext": "Genesis 37:21–22"
+      },
+      "g14-d08": {
+        "reference": "Genesis 37:25",
+        "reviewNote": "Verse 25 records the meal, caravan from Gilead to Egypt and aromatic cargo. The approved image is the approach, before Judah's proposal and the sale. No claim that the brothers had already sold Joseph at this point.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "CARAVAN answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "Traders on the Road",
+          "answer": "CARAVAN"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d09": {
+        "reference": "Genesis 37:26–27",
+        "reviewNote": "Verses 26–27 name Judah and record profit, sale and their brother/own flesh. Reuben's distinct purpose is established in 21–22, included as supporting context. Do not present the proposal as compassionate rescue or imply Reuben approved it.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "JUDAH answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Brother Sold",
+          "answer": "SILVER"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d10": {
+        "reference": "Genesis 37:28",
+        "reviewNote": "The approved image is the transaction and departure, not Judah's earlier proposal or Potiphar's later purchase. Verse 28 supplies twenty pieces of silver and Egypt. Don't call the silver-looking pieces minted coins or invent an extra transaction.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "SILVER answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "Evidence That Misleads",
+          "answer": "ROBE"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      },
+      "g14-d11": {
+        "reference": "Genesis 37:29–30",
+        "reviewNote": "Verses 29–30 explicitly record Joseph missing and Reuben's torn garments/distress. EMPTY here describes Joseph's absence, distinct from no water in 23–24. Do not imply Joseph was still inside, invent where Reuben went, or imply Reuben consented to the sale.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "EMPTY answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A Father's Sorrow",
+          "answer": "GRIEF"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending",
+        "supportingContext": "Genesis 37:23–24, 28"
+      },
+      "g14-d12": {
+        "reference": "Genesis 37:31–35",
+        "reviewNote": "Verses 31–35 support the robe deception, Jacob's conclusion, mourning, sackcloth and refusal of comfort. GRIEF is ordinary-language commentary. The approved picture shows Jacob with the robe, not an Egyptian courtyard or a literal funeral. Do not blame Jacob for his grief.",
+        "claimType": "Explicit Scripture; definitions, comparisons and observations are original commentary, not invented dialogue or quotations.",
+        "answerLogic": "GRIEF answers the specific clue and matches the owner-approved scene sequence; native wheel contains the full repeated-letter multiset.",
+        "hintReview": "Three individually checked contextual hints; source-supported, progressively specific and without the complete answer or purchased letters.",
+        "readability": "Revised/retained individually in context after source review; separate deliberate first-read pass by same assistant, not independent human acceptance.",
+        "previousDraft": {
+          "title": "A New Household in Egypt",
+          "answer": "POTIPHAR"
+        },
+        "reason": "Owner-approved twelve-scene handoff supersedes original scene selection; preserve stable IDs and native mechanics.",
+        "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
+        "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
+        "status": "reviewed_by_assistant_independent_human_pending"
+      }
+    },
+    "retrievalEvidence": [
+      {
+        "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/",
+        "htmlSha256": "5fd754799a8c7f893e9f3796fd3cf2891f30786b9cf321d5faed2494bf899099",
+        "retrievedDate": "2026-11-15",
+        "fullSourceCommitted": false
+      },
+      {
+        "url": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
+        "htmlSha256": "aa86e095607cbdcbe3d2994bd844a8253d0a358c69425f40843b145825519b10",
+        "retrievedDate": "2026-11-15",
+        "fullSourceCommitted": false
+      }
+    ]
+  },
+  "releaseGates": [
+    "Independent biblical/editorial acceptance of the revised sequence",
+    "Physical Android/iPhone acceptance",
+    "Owner review before TEST integration; no merge or deployment authorized"
+  ],
+  "endingArtPlan": {
+    "reuseDiscovery": "g14-d12",
+    "caption": "Jacob grieves for Joseph",
+    "status": "owner_approved_image_installed",
+    "instruction": "Use exactly g14-d12 for both hero and atmosphere. Potiphar is a textual transition only; no Egyptian household image is supplied."
+  },
+  "completionScripture": [
+    {
+      "reference": "Genesis 37:36",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+    }
+  ],
+  "approvedArt": {
+    "archive": "Genesis14_Codex_Art_FRESH_v2.zip",
+    "archiveSha256": "dee8ed38c4c6f27289996e52b8a9175970de09300d23d5b177a524c475936acb",
+    "handoffSha256": "c4cdeaa4235f13ed17801cbd484dbec92a80ef0def703c288fc8c6b6bfd4145d",
+    "checksumsFile": "docs/GENESIS14_APPROVED_ART_CHECKSUMS.json",
+    "approval": "User explicitly approved all twelve images in the artwork-integration request; illustration details remain artistic reconstruction."
+  }
+}
