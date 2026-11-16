@@ -223,6 +223,10 @@
         {
           "reference": "Genesis 37:23–24",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:21–22",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
         }
       ],
       "interaction": {
@@ -366,6 +370,10 @@
       "scripture": [
         {
           "reference": "Genesis 37:29–30",
+          "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
+        },
+        {
+          "reference": "Genesis 37:23–24, 28",
           "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/37/"
         }
       ],
@@ -788,7 +796,8 @@
         "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
         "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
         "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
-        "status": "reviewed_by_assistant_independent_human_pending"
+        "status": "reviewed_by_assistant_independent_human_pending",
+        "supportingContext": "Genesis 37:21–22"
       },
       "g14-d08": {
         "reference": "Genesis 37:25",
@@ -856,7 +865,8 @@
         "supportingPublication": "https://www.jw.org/en/library/books/Insight-on-the-Scriptures/Joseph/",
         "duplicateCheck": "Distinct scene and answer within the twelve; does not recreate prior Episodes 1–13.",
         "difficultyJustification": "Accessible native word-connect, source context plus fair letters; no Expert label.",
-        "status": "reviewed_by_assistant_independent_human_pending"
+        "status": "reviewed_by_assistant_independent_human_pending",
+        "supportingContext": "Genesis 37:23–24, 28"
       },
       "g14-d12": {
         "reference": "Genesis 37:31–35",

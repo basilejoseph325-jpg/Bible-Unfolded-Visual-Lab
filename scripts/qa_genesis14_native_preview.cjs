@@ -67,7 +67,7 @@ for(const [width,height] of [[320,568],[430,932]]){
   const wrongBefore=await wallet();
   await game.evaluate(()=>{const answer=BU_HQ_WORDS[bu3857Current().id].answer,used=new Set(),tiles=[...document.querySelectorAll('#buhq-wheel [data-buhq]')];for(const c of [...answer].reverse()){const b=tiles.find(b=>b.textContent===c&&!used.has(b));used.add(b);b.click();}});
   assert.equal(await game.evaluate(()=>!!bu3857State.solved[bu3857Current().id]),false);assert.deepEqual(await wallet(),wrongBefore);await delay(850);
-  const start=await wallet();await solve(i===0);const after=await wallet();assert.equal(after.points-start.points,45);assert.equal(after.coins-start.coins,10);
+  const start=await wallet();await solve(true);const after=await wallet();assert.equal(after.points-start.points,45);assert.equal(after.coins-start.coins,10);
   assert((await game.$eval('#bu3863-dialog-layer',e=>e.textContent)).includes(content.discoveries[i].explanation));
   if(i===0&&process.env.STORY_SHOTS)await page.screenshot({path:`work/genesis14-explanation-${width}.png`});
   if(i===11)assert((await game.$eval('#bu3863-dialog-layer .bu3863-dialog-done',e=>e.textContent)).startsWith('Complete Chapter'));
@@ -110,7 +110,7 @@ for(const [width,height] of [[320,568],[430,932]]){
  // Reveal is a separate -25 Point action, once per discovery; it cannot earn fresh rewards.
  const revealBefore=await wallet();await game.$eval('#bu3857-reveal',b=>b.click());await game.waitForFunction(()=>!!bu3857State.revealed['g14-d01']);assert.equal((await wallet()).points,revealBefore.points-25);await close();await game.evaluate(()=>bu3857Open('genesis_ep14',true));await game.$eval('#bu3857-reveal',b=>b.click());assert.equal((await wallet()).points,revealBefore.points-25);await close();
  assert.deepEqual(await game.evaluate(()=>BU_GENESIS_IDS),ids);assert.deepEqual(errors,[]);
- evidence.viewports.push({width,height,discoveriesCompleted:12,replayed:12,allHintLadders:12,prices:[0,15,25],letterReveals:0,correctAndWrongAll12:true,chapterBonus:[250,60],actualTouchRetry:true,actualTouchSwipe:true,noGameplayOverflow:true,rewardOnce:true,revealOnce:true,saveFailureRollback:true,purchaseRecovery:true,refreshHome:true,resume:true,menuContinueRestart:true,finaleAndAllActions:true,isolatedUnlockAndRegistrationPreserved:true,approvedImages:12,endingHeroAndBackground:"g14-d12"});
+ evidence.viewports.push({width,height,discoveriesCompleted:12,replayed:12,allHintLadders:12,prices:[0,15,25],letterReveals:0,correctAndWrongAll12:true,chapterBonus:[250,60],actualTouchAll12:true,actualTouchRetry:true,actualTouchSwipe:true,noGameplayOverflow:true,rewardOnce:true,revealOnce:true,saveFailureRollback:true,purchaseRecovery:true,refreshHome:true,resume:true,menuContinueRestart:true,finaleAndAllActions:true,isolatedUnlockAndRegistrationPreserved:true,approvedImages:12,endingHeroAndBackground:"g14-d12"});
  await context.close();
 }
 console.log('PASS_GENESIS14_APPROVED_ART_NATIVE_CANDIDATE',JSON.stringify(evidence));if(process.env.STORY_EVIDENCE)fs.writeFileSync(process.env.STORY_EVIDENCE,JSON.stringify(evidence,null,2)+'\n');

@@ -2,7 +2,12 @@
 'use strict';
 // Candidate stays additive: every pre-existing tracked file must match the exact TEST baseline.
 const assert=require('node:assert/strict'),cp=require('node:child_process'),fs=require('node:fs'),p=require('puppeteer-core');
-const BASE='6274e36',base=process.env.STORY_URL||'http://127.0.0.1:8899/index.html';
+// GitHub checks a synthetic PR merge; its first parent is the current TEST base.
+// This keeps parallel approved main changes out of this candidate's diff.
+const event=process.env.GITHUB_EVENT_PATH?JSON.parse(fs.readFileSync(process.env.GITHUB_EVENT_PATH)):{};
+const parents=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{encoding:'utf8'}).trim().split(' ');
+const BASE=event.pull_request&&parents.length>=3?parents[1]:'6274e36';
+const base=process.env.STORY_URL||'http://127.0.0.1:8899/index.html';
 for(const file of cp.execFileSync('git',['ls-tree','-r','--name-only',BASE],{encoding:'utf8'}).trim().split('\n')){
  const expected=cp.execFileSync('git',['show',BASE+':'+file],{maxBuffer:40000000});
  assert(fs.existsSync(file),'Removed baseline file '+file);assert(fs.readFileSync(file).equals(expected),'Changed protected baseline file '+file);
