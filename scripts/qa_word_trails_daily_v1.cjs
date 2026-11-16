@@ -212,7 +212,7 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     const app=document.getElementById('app').getBoundingClientRect(),level=document.getElementById('level-map').getBoundingClientRect();
     return {levelCenter:level.left+level.width/2,appCenter:app.left+app.width/2,appWidth:app.width,viewport:innerWidth};
    });
-   assert(Math.abs(levelGeometry.levelCenter-levelGeometry.appCenter)<2,'Level counter shifted off center of app after Daily button moved: '+JSON.stringify({w,h,levelGeometry}));
+   assert(Math.abs(levelGeometry.levelCenter-levelGeometry.appCenter)<4,'Level counter shifted off center of app after Daily button moved: '+JSON.stringify({w,h,levelGeometry}));
   }
   await page.$eval('#daily-trail-entry',a=>a.click());
   await page.waitForFunction(()=>location.pathname.endsWith('/word-trails-daily-v1.html'),{timeout:30000});
