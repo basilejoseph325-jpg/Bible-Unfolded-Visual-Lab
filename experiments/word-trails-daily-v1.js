@@ -68,6 +68,7 @@ function readState(){
   return result;
  }catch(_){return emptyState();}
 }
+let lastSubmission='',lastTrace={};
 let state=readState(),today='',index=0,level=null,cells=new Map(),record=null,chosen=[],letters=[],drag=null,suppressClickUntil=0;
 function makeBoard(lev){
  const b=new Map();
@@ -171,7 +172,7 @@ function updateLabels(){
 function renderAll(){renderBoard();renderWheel();updateLabels();flash(record.solved.length===level.words.length?'✦ Today’s Discovery Stamp is yours!':'Find the words hidden in the crossword.');}
 function submit(){
  if(!sameDay())return;
- const word=chosen.map(i=>letters[i]).join('');
+ const word=chosen.map(i=>letters[i]).join('');lastSubmission=word;
  clearWord();
  if(!word)return flash('Tap or swipe letters to make a word.');
  const valid=level.words.some(x=>x[0]===word);
@@ -265,6 +266,7 @@ function finishTrace(x,y){
   // Prefer the actual finger-lift coordinates (touchend.changedTouches) over
   // browsers' sometimes stale/coalesced last pointermove position.
   const b=document.elementFromPoint(x,y)?.closest('.daily-wheel-letter');
+  lastTrace={liftX:x,liftY:y,hit:b?.textContent||null,before:chosen.map(i=>letters[i]).join('')};
   if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
   suppressClickUntil=performance.now()+350;
   submit();
@@ -313,7 +315,7 @@ try{
   words:()=>level.words.map(w=>w[0]),
   rack:()=>level.rack,
   stampCount,record:()=>({...record}),
-  selectDayDate:()=>localDay()
+  selectDayDate:()=>localDay(),lastSubmission:()=>lastSubmission,lastTrace:()=>({...lastTrace})
  });
 }catch(error){
  console.error('[Daily Word Trail] ',error);
