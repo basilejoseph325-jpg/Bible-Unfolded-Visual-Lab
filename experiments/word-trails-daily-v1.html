@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a2c35">
+<meta name="description" content="Bible Unfolded Visual Lab — a calm daily Bible word-wheel crossword challenge.">
+<title>Daily Word Trail · Bible Unfolded TEST</title>
+<link rel="stylesheet" href="word-trails-daily-v1.css?v=daily1">
+<script defer src="word-trails-levels-12-30-v1.js?v=word-trails-marah-itinerary-20261113-v27"></script>
+<script defer src="word-trails-levels-31-35-v1.js?v=wordtrails-levels35-nov15-v1"></script>
+<script defer src="word-trails-levels-36-40-v1.js?v=wordtrails-levels40-nov15-v1"></script>
+<script defer src="word-trails-levels-41-45-v1.js?v=wordtrails-levels45-nov15-v1"></script>
+<script defer src="word-trails-levels-46-50-v1.js?v=wordtrails-levels50-nov15-v1"></script>
+<script defer src="word-trails-daily-v1.js?v=daily1"></script>
+</head>
+<body>
+<div id="daily-app">
+ <header class="daily-topbar">
+  <a class="daily-back" href="../index.html?wt_launch=native" aria-label="Back to Word Trails">‹</a>
+  <div class="daily-brand"><span class="eyebrow">BIBLE UNFOLDED · TEST</span><h1>Daily Word Trail</h1></div>
+  <button type="button" class="daily-collection-button" id="collection" aria-label="View Discovery Stamps"><span aria-hidden="true">✦</span><span id="stamp-count">0</span></button>
+ </header>
+ <section class="daily-heading" aria-label="Today's challenge">
+  <div><strong id="daily-date">TODAY</strong><span id="daily-title">Today's Bible trail</span></div>
+  <div class="daily-progress" id="daily-progress" aria-live="polite">0 / 4</div>
+ </section>
+ <main class="daily-stage" aria-label="Daily crossword board">
+  <div id="daily-board" class="daily-board" aria-label="Crossword puzzle"></div>
+ </main>
+ <section class="daily-play" aria-label="Word-wheel puzzle controls">
+  <div class="daily-wheel" id="daily-wheel" aria-label="Tap or swipe letters to spell a word">
+   <svg id="daily-lines" aria-hidden="true" viewBox="0 0 200 200" preserveAspectRatio="none"></svg>
+   <button type="button" id="daily-submit" class="daily-submit" aria-label="Submit selected word"><span>✓</span><small>ENTER</small></button>
+  </div>
+  <div class="daily-play-actions">
+   <output id="daily-word" class="daily-word" aria-live="polite"></output>
+   <div class="daily-play-buttons">
+    <button type="button" id="daily-shuffle" class="daily-action" aria-label="Shuffle wheel letters">↝ <span>Shuffle</span></button>
+    <button type="button" id="daily-hint" class="daily-action" aria-label="Reveal a free hint">✧ <span id="daily-hints">2 hints</span></button>
+   </div>
+   <output class="daily-feedback" id="daily-feedback" role="status" aria-live="polite"></output>
+  </div>
+ </section>
+ <footer class="daily-footer"><span>ONE NEW SELECTION EACH DAY</span><button type="button" id="daily-help">How it works</button></footer>
+</div>
+<dialog id="daily-finish" class="daily-dialog" aria-labelledby="finish-title">
+ <div class="daily-dialog-inner">
+  <span class="dialog-kicker">TODAY'S TRAIL COMPLETE</span>
+  <div class="daily-reward" aria-hidden="true">✦</div>
+  <h2 id="finish-title">Discovery Stamp earned!</h2>
+  <p id="finish-caption">Every word led to a new discovery.</p>
+  <div class="thought">
+   <strong id="thought-heading">A Bible thought to take with you</strong>
+   <p id="daily-thought"></p>
+   <a id="daily-source" href="https://www.jw.org/" target="_blank" rel="noopener noreferrer">Read the account on JW.org</a>
+  </div>
+  <p class="dialog-note">Tomorrow brings a different trail. Missed days are never penalized.</p>
+  <button type="button" class="daily-primary" id="daily-finish-close">Back to today</button>
+  <button type="button" class="daily-secondary" id="daily-replay">Replay today's trail</button>
+ </div>
+</dialog>
+<dialog id="daily-collection" class="daily-dialog" aria-labelledby="collection-title">
+ <div class="daily-dialog-inner">
+  <span class="dialog-kicker">YOUR DAILY DISCOVERIES</span>
+  <h2 id="collection-title">Discovery Stamps</h2>
+  <p class="dialog-note">Each completed day earns one stamp. There are no streaks to lose.</p>
+  <div id="daily-stamps" class="daily-stamps"></div>
+  <button type="button" class="daily-primary" id="daily-collection-close">Back to puzzle</button>
+ </div>
+</dialog>
+<dialog id="daily-instructions" class="daily-dialog" aria-labelledby="instructions-title">
+ <div class="daily-dialog-inner">
+  <span class="dialog-kicker">ONE SMALL DISCOVERY A DAY</span>
+  <h2 id="instructions-title">How to play</h2>
+  <p>Tap or swipe the letter wheel to make words that fit the crossword. Tap ENTER to submit. Each day has two free letter hints.</p>
+  <p>Finish the board to collect one Discovery Stamp and a Bible thought. You can replay anytime—no extra prizes and no penalty for missing a day.</p>
+  <p class="dialog-note">The first edition rotates 39 curated Bible crosswords. Its stamps and progress stay separate from regular Word Trails, points and Insight Tokens.</p>
+  <button type="button" class="daily-primary" id="daily-help-close">Let's play!</button>
+ </div>
+</dialog>
+</body>
+</html>

@@ -1,0 +1,43 @@
+name: Daily Word Trail TEST candidate (no deployment)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'experiments/word-trails-daily-v1.html'
+      - 'experiments/word-trails-daily-v1.js'
+      - 'experiments/word-trails-daily-v1.css'
+      - 'experiments/word-trails-next-v1.html'
+      - 'scripts/qa_word_trails_daily_v1.cjs'
+      - '.github/workflows/qa-word-trails-daily-v1.yml'
+permissions:
+  contents: read
+jobs:
+  daily-test:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      NODE_PATH: '${{ github.workspace }}/work/node_modules'
+      STORY_URL: http://127.0.0.1:8893/index.html
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start local TEST-only site
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8893 --bind 127.0.0.1 > work/http-daily-trail.log 2>&1 &
+          for attempt in $(seq 1 25); do
+            if curl --silent --fail http://127.0.0.1:8893/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: JS syntax, curated Bible boards and source validity
+        run: |
+          node --check experiments/word-trails-daily-v1.js
+          node --check scripts/qa_word_trails_daily_v1.cjs
+          node scripts/word_trails_quality_gate.mjs
+      - name: Real Daily Trail touch/date/replay/rewards/mobile isolation
+        run: node scripts/qa_word_trails_daily_v1.cjs
