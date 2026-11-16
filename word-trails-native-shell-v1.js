@@ -5,13 +5,30 @@
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
 const FRAME_URL='experiments/word-trails-next-v1.html?v=shared-audio-20261113-v23';
-let shell=null,frame=null,opening=false;
+let shell=null,frame=null,opening=false,musicSyncGuard=null;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
 function nativeReady(){return !!($('game-menu')&&$('settings-dialog')&&$('home-menu')&&
   typeof window.openMenu==='function'&&typeof window.openDialog==='function')}
 function pauseHome(){try{if(typeof window.pauseAudio==='function')window.pauseAudio()}catch(_){}}
 function resumeHome(){try{if(typeof window.syncMusic==='function')window.syncMusic()}catch(_){}}
+// Native music must not reacquire the audio bus while the Word Trails frame
+// is playing. Parent menu/Settings handlers can call syncMusic after pauseAudio.
+function claimNativeMusic(){
+ if(musicSyncGuard||typeof window.syncMusic!=='function')return;
+ const original=window.syncMusic;
+ const guarded=function(...args){
+  if(active()){pauseHome();return false}
+  return original.apply(this,args);
+ };
+ window.syncMusic=guarded;musicSyncGuard={original,guarded};
+}
+function releaseNativeMusic(){
+ if(!musicSyncGuard)return;
+ if(window.syncMusic===musicSyncGuard.guarded)
+  window.syncMusic=musicSyncGuard.original;
+ musicSyncGuard=null;
+}
 function audioPrefs(){
  const music=$('setting-music'),sfx=$('setting-sfx'),mv=$('setting-volume'),
   sv=$('setting-sfx-volume'),motion=$('setting-motion');
@@ -54,6 +71,7 @@ function close({restoreHistory=true}={}){
  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
  shell.remove();shell=null;frame=null;opening=false;
  document.documentElement.classList.remove('bu-wt-native-active');
+ releaseNativeMusic();
  if(restoreHistory&&location.hash==='#word-trails')
   history.replaceState({},'',location.pathname+location.search);
  resumeHome();return true;
@@ -70,23 +88,28 @@ function launch(){
  root.appendChild(iframe);
  document.body.appendChild(root);shell=root;frame=iframe;
  document.documentElement.classList.add('bu-wt-native-active');
+ claimNativeMusic();
  if(location.hash!=='#word-trails')history.pushState({buWt:true},'','#word-trails');
  iframe.addEventListener('load',()=>{opening=false;applyAudio();pauseHome()});
  pauseHome();return true;
 }
 function openMenu(){
  if(!active())return false;
- pauseHome();window.openMenu();return true;
+ pauseHome();window.openMenu();pauseHome();return true;
 }
 function openSettings(){
  if(!active())return false;
- window.openDialog('settings');return true;
+ pauseHome();window.openDialog('settings');pauseHome();return true;
 }
 function wordTrailsHelp(){
  try{window.closeMenu();frame?.contentWindow?.BUWTUnifiedMenu?.showLocal?.('help')}catch(_){}
 }
 document.addEventListener('click',event=>{
  if(!active())return;
+ // Catch parent click handlers that may schedule music after our capture phase.
+ // The child frame's Word Trails soundtrack remains untouched.
+ if(event.target.closest?.('#game-menu,#settings-dialog,#menu-mask,#dialog-mask'))
+  queueMicrotask(()=>{if(active())pauseHome()});
  const menuAction=event.target.closest?.('#game-menu [data-nav]');
  if(menuAction){
   const action=menuAction.dataset.nav;
