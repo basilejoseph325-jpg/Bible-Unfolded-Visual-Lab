@@ -24,7 +24,7 @@ for(const [width,height] of [[320,568],[390,844]]){
   await game.waitForSelector('#bu3863-dialog-layer .bu3863-dialog-done');
  };
  await load();
- const ids=await game.evaluate(()=>BU_GENESIS_IDS.slice());assert.equal(ids.length,7);assert(ids.includes('genesis_ep13'));assert(ids.includes('genesis_ep12'));
+ const ids=await game.evaluate(()=>BU_GENESIS_IDS.slice());assert.equal(ids.length,8);assert(ids.includes('genesis_ep14'));assert(ids.includes('genesis_ep13'));assert(ids.includes('genesis_ep12'));
  await game.evaluate(()=>openEpisodes('genesis'));assert(await game.$('[data-genesis13]'));assert(!(await game.$eval('[data-genesis13]',b=>b.classList.contains('available'))));
  await game.$eval('[data-genesis13]',b=>b.click());assert.notEqual(await game.evaluate(()=>bu3857State?.book),'genesis_ep13');
  assert.equal(await game.evaluate(()=>bu3857Open('genesis_ep13')),false,'Direct open bypassed predecessor lock');
