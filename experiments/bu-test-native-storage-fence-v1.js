@@ -45,6 +45,7 @@ window.BUPreviewStorageFence=Object.freeze({
   original.getItem.call(storage,PREFIX+'bible-unfolded-rewards-v17')!==null})
 });
 function showBanner(){
+ if(window.parent!==window)return; // Parent owns the only visible preview warning.
  if(document.getElementById('bu-preview-wallet-banner'))return;
  const banner=document.createElement('div');
  banner.id='bu-preview-wallet-banner';
