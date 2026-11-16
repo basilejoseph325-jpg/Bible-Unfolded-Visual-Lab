@@ -133,13 +133,12 @@ async function test(browserName,browser,width,height){
   await page.evaluate(()=>window.BUWTNativeShell.close());
   const noLeak=await page.evaluate(()=>{
    const fence=window.BUPreviewStorageFence;
-   return Object.fromEntries(Object.keys(fence).filter(()=>false).map(()=>[]).concat(
-    Object.keys(fence.status()).length>=0?Object.keys({
-     'bible-unfolded-rewards-v17':1,
-     'bible-unfolded-rewards-v17-recovery-v3811':1,
-     'bu-visual-lab-wordtrails-next-v1':1,
-     'buGuideLast:0':1
-    }).map(k=>[k,fence.originalKeyValue(k)]):[]));
+   return Object.fromEntries([
+     'bible-unfolded-rewards-v17',
+     'bible-unfolded-rewards-v17-recovery-v3811',
+     'bu-visual-lab-wordtrails-next-v1',
+     'buGuideLast:0'
+    ].map(k=>[k,fence.originalKeyValue(k)]));
   });
   for(const [key,value] of Object.entries(ORIGINAL))assert.equal(noLeak[key],value,'Native modes leaked into original game data: '+key);
   const significant=errors.filter(e=>/shared-wallet|insight-native-bridge|StorageFence|BUTestInsightBridge/i.test(e));
