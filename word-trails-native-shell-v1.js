@@ -4,8 +4,8 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=combo-daily-clear-20261115-v24';
-let shell=null,frame=null,opening=false;
+const FRAME_URL='experiments/word-trails-next-v1.html?v=combo-left-daily-overlay-20261115-v25';
+let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
 function nativeReady(){return !!($('game-menu')&&$('settings-dialog')&&$('home-menu')&&
@@ -74,12 +74,48 @@ function playVoice(phrase,opts){
  try{return typeof window.bu381Play==='function'&&window.bu381Play(phrase,opts)!==false}
  catch(_){return false}
 }
+function closeDaily({restoreHistory=true}={}){
+ if(!dailyFrame?.isConnected)return false;
+ dailyFrame.remove();dailyFrame=null;
+ try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-leave'))}catch(_){}
+ pauseHome();
+ if(restoreHistory&&location.hash==='#daily-word-trail'){
+  dailyBackPending=true;
+  history.back();
+ }
+ return true;
+}
+function openDaily(){
+ if(!active())return false;
+ if(dailyFrame?.isConnected)return true;
+ try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
+ try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-enter'))}catch(_){}
+ const daily=document.createElement('iframe');
+ daily.id='bu-wt-daily-frame';daily.title='Daily Word Trail';
+ daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails';
+ daily.allow='autoplay';
+ shell.appendChild(daily);dailyFrame=daily;
+ history.pushState({buWtDaily:true},'','#daily-word-trail');
+ pauseHome();
+ return true;
+}
+function bindDailyLinks(){
+ const doc=frame?.contentDocument;
+ if(!doc||doc.__buDailyBound)return;
+ doc.__buDailyBound=true;
+ doc.addEventListener('click',event=>{
+  const link=event.target?.closest?.('a[href^="word-trails-daily-v1.html"]');
+  if(link&&openDaily()){event.preventDefault();event.stopImmediatePropagation()}
+ },true);
+}
 function close({restoreHistory=true}={}){
  if(!active())return false;
+ if(dailyFrame){dailyFrame.remove();dailyFrame=null}
+ dailyBackPending=false;
  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
  shell.remove();shell=null;frame=null;opening=false;
  document.documentElement.classList.remove('bu-wt-native-active');
- if(restoreHistory&&location.hash==='#word-trails')
+ if(restoreHistory&&['#word-trails','#daily-word-trail'].includes(location.hash))
   history.replaceState({},'',location.pathname+location.search);
  resumeHome();return true;
 }
@@ -96,7 +132,7 @@ function launch(){
  document.body.appendChild(root);shell=root;frame=iframe;
  document.documentElement.classList.add('bu-wt-native-active');
  if(location.hash!=='#word-trails')history.pushState({buWt:true},'','#word-trails');
- iframe.addEventListener('load',()=>{opening=false;applyAudio();pauseHome()});
+ iframe.addEventListener('load',()=>{opening=false;applyAudio();bindDailyLinks();pauseHome()});
  pauseHome();return true;
 }
 function openMenu(){
@@ -136,11 +172,16 @@ document.addEventListener('change',event=>{
  if(!active())return;
  if(event.target.closest?.('#settings-dialog'))queueMicrotask(applyAudio);
 },true);
-window.addEventListener('popstate',()=>{if(active())close({restoreHistory:false})});
+window.addEventListener('popstate',()=>{
+ if(dailyBackPending){dailyBackPending=false;return}
+ if(dailyFrame?.isConnected){closeDaily({restoreHistory:false});return}
+ if(active())close({restoreHistory:false});
+});
 window.addEventListener('pageshow',()=>{if(active())applyAudio()});
 const css=document.createElement('style');css.id='bu-wt-native-shell-style';
 css.textContent='#bu-wt-native-shell{position:fixed!important;inset:0!important;z-index:2000!important;background:#092b34!important;overflow:hidden!important}'+
  '#bu-wt-native-game{display:block;width:100%;height:100%;border:0;background:#092b34}'+
+ '#bu-wt-daily-frame{position:absolute!important;inset:0!important;z-index:4!important;display:block!important;width:100%!important;height:100%!important;border:0!important;background:#0a2c35!important}'+
  'html.bu-wt-native-active #menu-mask{z-index:5001!important}'+
  'html.bu-wt-native-active #game-menu{z-index:5002!important}'+
  'html.bu-wt-native-active #dialog-mask{z-index:5101!important}'+
@@ -148,6 +189,6 @@ css.textContent='#bu-wt-native-shell{position:fixed!important;inset:0!important;
 document.head.appendChild(css);
 window.BUWTNativeShell=Object.freeze({
  version:'1.0.0-test',launch,close,active,nativeReady,openMenu,openSettings,
- audioPrefs,applyAudio,voicePrefs,changeVoice,playVoice
+ audioPrefs,applyAudio,voicePrefs,changeVoice,playVoice,openDaily,closeDaily
 });
 })();
