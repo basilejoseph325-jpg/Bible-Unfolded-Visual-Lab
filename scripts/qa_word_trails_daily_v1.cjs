@@ -208,6 +208,8 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
    assert.equal(geometry.centerClickable,true,'Floating Daily bubble must receive taps');
    assert.equal(geometry.overlapHint||geometry.overlapShuffle||geometry.overlapBoard,false,'Daily bubble must not block primary gameplay: '+JSON.stringify({w,h,geometry}));
    assert.deepEqual(geometry.blockedLetters,[],'Daily bubble must not hide wheel-letter centers: '+JSON.stringify({w,h,geometry}));
+   const levelCenter=await page.$eval('#level-map',el=>{const r=el.getBoundingClientRect();return r.left+r.width/2;});
+   assert(Math.abs(levelCenter-w/2)<2,'Level counter shifted off center after Daily button moved: '+JSON.stringify({w,h,levelCenter}));
   }
   await page.$eval('#daily-trail-entry',a=>a.click());
   await page.waitForFunction(()=>location.pathname.endsWith('/word-trails-daily-v1.html'),{timeout:30000});
