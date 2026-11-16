@@ -65,7 +65,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     await page.$eval('#daily-submit',x=>x.click());
    }
    async function swipeWord(word){
-    const buttons=await page.$eval('.daily-wheel-letter',xs=>xs.map(x=>{const r=x.getBoundingClientRect();return {i:Number(x.dataset.letterIndex),letter:x.textContent,x:r.left+r.width/2,y:r.top+r.height/2}}));
+    const buttons=await page.$$eval('.daily-wheel-letter',xs=>xs.map(x=>{const r=x.getBoundingClientRect();return {i:Number(x.dataset.letterIndex),letter:x.textContent,x:r.left+r.width/2,y:r.top+r.height/2}}));
     const used=new Set(),path=[];
     for(const ch of word){
      const b=buttons.find(x=>x.letter===ch&&!used.has(x.i));
