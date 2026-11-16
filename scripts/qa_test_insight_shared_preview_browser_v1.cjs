@@ -36,7 +36,8 @@ async function run(engine,browser){
    await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:140000});
    await page.waitForFunction(()=>window.BUPreviewStorageFence?.active===true&&
     window.BUTestInsightBridge?.version==='2.0.0-native-sandbox'&&
-    window.BUWTNativeShell?.nativeReady?.(),null,{timeout:130000});
+    window.BUWTNativeShell?.nativeReady?.()&&
+    window.BUPreviewStorageFence?.writerStatus?.().writable===true,null,{timeout:130000});
    const initial=await page.evaluate(()=>{
     const guard=window.BUPreviewStorageFence;
     return {
@@ -62,6 +63,30 @@ async function run(engine,browser){
    for(const [key,value] of Object.entries(initial.other))assert.equal(value,ORIGINAL[key],'Existing TEST save was touched: '+key);
    assert(initial.originalMarker?.includes('ISOLATED COIN TEST'),'preview must be visibly labeled');
    assert.equal(initial.overflow,false,'root preview overflow '+width);
+   // Two real tabs must NEVER be able to write the same shared-wallet data.
+   // Native saveEconomy is synchronous: the Web Lock makes a second preview
+   // strictly read-only rather than risking a last-writer-wins coin loss.
+   const baseline=await page.evaluate(()=>localStorage.getItem('bible-unfolded-rewards-v17'));
+   const rival=await context.newPage();
+   try{
+    await rival.goto(BASE,{waitUntil:'domcontentloaded',timeout:140000});
+    await rival.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().status==='conflict',
+      null,{timeout:50000});
+    const refused=await rival.evaluate(()=>{
+     const fence=window.BUPreviewStorageFence;
+     let writesDenied=false;
+     try{localStorage.setItem('bible-unfolded-rewards-v17','{"coins":999999}');}
+     catch(e){writesDenied=String(e.message).includes('read-only');}
+     return {writesDenied,blocked:fence.writerStatus(),
+      warning:document.getElementById('bu-preview-wallet-lock-shield')?.textContent};
+    });
+    assert(refused.writesDenied,'second preview must block all shared currency writes');
+    assert.equal(refused.blocked.writable,false);
+    assert(refused.warning?.includes('already open in another tab'),
+     'duplicate preview needs an understandable blocking explanation');
+    assert.equal(await page.evaluate(()=>localStorage.getItem('bible-unfolded-rewards-v17')),
+     baseline,'blocked rival cannot alter first tab wallet');
+   }finally{await rival.close();}
    const rootEarn=await page.evaluate(()=>{
     const before=economy.coins;
     const success=awardOnce('qa-isolated-native-'+innerWidth,5,25,true);
@@ -192,8 +217,20 @@ async function run(engine,browser){
    for(const [key,value] of Object.entries(final.other))assert.equal(value,ORIGINAL[key],'Existing TEST save changed: '+key);
    const relevant=errors.filter(e=>/BUPreviewStorageFence|BUTestInsightBridge|shared-wallet/i.test(e));
    assert.deepEqual(relevant,[],'shared wallet browser errors');
+   // Releasing the owning tab must let a different tab obtain the lock and
+   // continue the same saved TEST wallet without resetting its balance.
+   await page.close();
+   const successor=await context.newPage();
+   try{
+    await successor.goto(BASE,{waitUntil:'domcontentloaded',timeout:140000});
+    await successor.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable===true &&
+      window.BUTestInsightBridge?.nativeBalance?.().ok===true,
+      null,{timeout:130000});
+    assert.equal(await successor.evaluate(()=>economy.coins),spent.after,
+     'successor tab must inherit protected shared balance after owner closes');
+   }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'native award +25, paid hint -15, Bible discovery +1, level +4, native spend -5, reload, LIVE isolation');
+    'native + Word Trails earn/spend, blocked second tab, lock handoff, reload, LIVE isolation');
   }finally{await context.close();}
  }
 }
