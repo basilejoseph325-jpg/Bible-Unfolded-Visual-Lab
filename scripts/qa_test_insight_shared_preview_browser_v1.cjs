@@ -264,6 +264,66 @@ async function run(engine,browser){
    assert(exported.keys['bu-visual-lab-wordtrails-shared-preview-v1'],'must include Word Trails save');
    assert.equal(exported.keys['bible-unfolded-word-trails-next-v1'],undefined,
     'never include original LIVE crossword');
+   // Resume after last crossword answer was saved but before the 780ms
+   // completion animation could run. It must auto-complete on reopen.
+   await page.evaluate(()=>{
+    const k='bu-visual-lab-wordtrails-shared-preview-v1';
+    const previous=JSON.parse(localStorage.getItem(k));
+    previous.level=1;
+    previous.unlocked=Math.max(1,previous.unlocked);
+    previous.completed=previous.completed.filter(n=>n!==1);
+    previous.progress={level:1,found:['DINER','RIDE','DINE','DIRE'],bonuses:[],hinted:[],combo:4};
+    localStorage.setItem(k,JSON.stringify(previous));
+   });
+   const beforeInterruptedFinish=await page.evaluate(()=>economy.coins);
+   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable&&
+     window.BUWTNativeShell?.nativeReady?.()&&window.BUTestInsightBridge?.nativeBalance?.().ok,
+     null,{timeout:130000});
+   await page.evaluate(()=>window.BUWTNativeShell.launch());
+   await page.waitForFunction(before=>{
+    const c=document.getElementById('bu-wt-native-game')?.contentWindow;
+    return economy.coins===before+4&&c?.document?.getElementById('finish')?.open===true;
+   },beforeInterruptedFinish,{timeout:30000});
+   const afterInterruptedFinish=await page.evaluate(()=>{
+    const s=JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-shared-preview-v1'));
+    const wallet=JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17'));
+    return {balance:economy.coins,completed:s.completed,
+      receipt:wallet.wtReceipts?.['trails:l2:complete']};
+   });
+   assert(afterInterruptedFinish.completed.includes(1));
+   assert.equal(afterInterruptedFinish.receipt?.delta,4);
+   // A second reopen must not award the same level again.
+   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable&&
+    window.BUWTNativeShell?.nativeReady?.(),null,{timeout:130000});
+   await page.evaluate(()=>window.BUWTNativeShell.launch());
+   await page.waitForTimeout(500);
+   assert.equal(await page.evaluate(()=>economy.coins),afterInterruptedFinish.balance,
+    'reopening an already awarded level may not duplicate its four tokens');
+   // Reconcile a saved completion when its wallet credit was interrupted:
+   // the game proof exists, but no corresponding native wallet receipt.
+   await page.evaluate(()=>{
+    const k='bu-visual-lab-wordtrails-shared-preview-v1';
+    const progress=JSON.parse(localStorage.getItem(k));
+    progress.completed.push(2);
+    progress.unlocked=Math.max(progress.unlocked,2);
+    localStorage.setItem(k,JSON.stringify(progress));
+   });
+   const priorReconcile=await page.evaluate(()=>economy.coins);
+   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable&&
+    window.BUWTNativeShell?.nativeReady?.(),null,{timeout:130000});
+   await page.evaluate(()=>window.BUWTNativeShell.launch());
+   await page.waitForFunction(before=>economy.coins===before+4,priorReconcile,{timeout:30000});
+   const afterReconcile=await page.evaluate(()=>economy.coins);
+   await page.reload({waitUntil:'domcontentloaded',timeout:140000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable&&
+    window.BUWTNativeShell?.nativeReady?.(),null,{timeout:130000});
+   await page.evaluate(()=>window.BUWTNativeShell.launch());
+   await page.waitForTimeout(450);
+   assert.equal(await page.evaluate(()=>economy.coins),afterReconcile,
+    'reconciled saved achievements must not pay twice on the next reload');
    const relevant=errors.filter(e=>/BUPreviewStorageFence|BUTestInsightBridge|shared-wallet/i.test(e));
    assert.deepEqual(relevant,[],'shared wallet browser errors');
    // Releasing the owning tab must let a different tab obtain the lock and
@@ -275,11 +335,11 @@ async function run(engine,browser){
     await successor.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable===true &&
       window.BUTestInsightBridge?.nativeBalance?.().ok===true,
       null,{timeout:130000});
-    assert.equal(await successor.evaluate(()=>economy.coins),spent.after,
+    assert.equal(await successor.evaluate(()=>economy.coins),afterReconcile,
      'successor tab must inherit protected shared balance after owner closes');
    }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'earn/spend, hint crash recovery, two-tab lock, isolated backup download, LIVE isolation');
+    'earn/spend, hint+win crash recovery, missed-award reconciliation, two-tab lock, backup, LIVE isolation');
   }finally{await context.close();}
  }
 }
