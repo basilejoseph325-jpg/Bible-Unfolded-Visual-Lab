@@ -78,7 +78,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
     const problem=await game.evaluate(()=>{
      const root=document.getElementById('bu3857-content'),d=bu3857Current();
      const image=root.querySelector('figure img');
-     const pending=bu3857State.book==='genesis_ep14'||(bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available);
+     const pending=(bu3857State.book==='genesis_ep14'&&!window.BUStoryGenesis14Test.artwork[d.id].available)||(bu3857State.book==='genesis_ep13'&&!window.BUStoryGenesis13Test.artwork[d.id].available);
      if(pending){if(image||!root.querySelector('[data-bu-genesis13-scene],[data-bu-genesis14-scene]')?.textContent.includes('illustration pending'))throw Error('Unlabelled or substituted pending art '+d.id);}
      else if(!image)throw Error('No scene art '+d.id);
      const viewport={w:innerWidth,h:innerHeight};
@@ -107,7 +107,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
    }
    await game.waitForSelector('.bu-story-finale-actions');
    assert.equal(await game.$$eval('.bu-story-finale-actions button',a=>a.length),2);
-   if(id==='genesis_ep14'){assert(await game.$('[data-bu-genesis14-art-pending]'));assert(!(await game.$('.bu-story-finale-cinematic-photo')),'No unrelated Episode 14 finale art');}
+   if(id==='genesis_ep14'){await game.waitForFunction(()=>document.querySelector('.bu-story-finale-cinematic-photo')?.getAttribute('src')==='story-adventure-art/genesis14/g14-d12.webp');assert((await game.$eval('.bu-story-finale-atmosphere-art',e=>e.style.backgroundImage)).includes('g14-d12.webp'));assert.equal(await game.$('[data-bu-genesis14-art-pending]'),null);}
    else if(id==='genesis_ep13'&&!await game.evaluate(()=>window.BUStoryGenesis13Test.artwork['g13-d09'].available)){
     assert(await game.$('[data-bu-genesis13-art-pending]'),'Pending Bethel illustration must be labelled');
     assert(!(await game.$('.bu-story-finale-cinematic-photo')),'Do not substitute unrelated art');
@@ -136,7 +136,7 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   }
   assert.equal(row.modern,117);assert.equal(row.legacy,84);assert.equal(row.finales,20);
   assert.deepEqual(row.overflow,[],'Active controls clipped');
-  assert.deepEqual(row.pendingArt,Array.from({length:12},(_,i)=>'g14-d'+String(i+1).padStart(2,'0')),'Only Episode 14 awaits artwork');
+  assert.deepEqual(row.pendingArt,[],'All supplied artwork should load');
   evidence.viewports.push(row);console.log('PASS_STORY_ALL_PLAYABLE',JSON.stringify(row));await context.close();
  }
  assert.deepEqual(evidence.errors,[]);if(process.env.STORY_EVIDENCE)fs.writeFileSync(process.env.STORY_EVIDENCE,JSON.stringify(evidence,null,2));

@@ -59,8 +59,8 @@ for(const [width,height] of [[320,568],[430,932]]){
  for(let i=0;i<12;i++){
   assert.equal(await game.evaluate(()=>bu3857Current().id),'g14-d'+String(i+1).padStart(2,'0'));
   await game.waitForFunction(()=>{const r=document.getElementById('buhq-wheel')?.getBoundingClientRect();return r&&r.bottom<=innerHeight+1&&r.right<=innerWidth+1},{timeout:10000});
-  const layout=await game.evaluate(()=>{const d=bu3857Current(),wheel=document.getElementById('buhq-wheel'),w=wheel.getBoundingClientRect(),controls=['bu3863-scripture','bu3857-hint','bu3857-reveal','bu3863-story'];return {id:d.id,placeholder:document.querySelector('[data-bu-genesis14-scene]')?.dataset.buGenesis14Scene,sceneImages:document.querySelectorAll('#bu3857-content figure img').length,art:window.BUStoryGenesis14Test.artwork[d.id],imageSrc:document.querySelector('#bu3857-content figure img')?.getAttribute('src'),overflow:document.documentElement.scrollWidth>innerWidth+1,wheel:{top:w.top,bottom:w.bottom,left:w.left,right:w.right},outside:controls.filter(id=>{const r=document.getElementById(id).getBoundingClientRect();return r.top<0||r.bottom>innerHeight+1||r.left<0||r.right>innerWidth+1})}});
-  assert.equal(layout.placeholder,layout.id);assert.equal(layout.sceneImages,layout.art.available?1:0);if(layout.art.available)assert.equal(layout.imageSrc,layout.art.path);assert.equal(layout.overflow,false);assert.deepEqual(layout.outside,[]);assert(layout.wheel.top>=0&&layout.wheel.bottom<=height+1&&layout.wheel.left>=-1&&layout.wheel.right<=width+1,JSON.stringify(layout));
+  const layout=await game.evaluate(()=>{const d=bu3857Current(),wheel=document.getElementById('buhq-wheel'),w=wheel.getBoundingClientRect(),controls=['bu3863-scripture','bu3857-hint','bu3857-reveal','bu3863-story'];return {id:d.id,placeholder:document.querySelector('[data-bu-genesis14-scene]')?.dataset.buGenesis14Scene,sceneImages:document.querySelectorAll('#bu3857-content figure img').length,dimensions:[document.querySelector('#bu3857-content figure img')?.naturalWidth,document.querySelector('#bu3857-content figure img')?.naturalHeight],art:window.BUStoryGenesis14Test.artwork[d.id],imageSrc:document.querySelector('#bu3857-content figure img')?.getAttribute('src'),overflow:document.documentElement.scrollWidth>innerWidth+1,wheel:{top:w.top,bottom:w.bottom,left:w.left,right:w.right},outside:controls.filter(id=>{const r=document.getElementById(id).getBoundingClientRect();return r.top<0||r.bottom>innerHeight+1||r.left<0||r.right>innerWidth+1})}});
+  assert.equal(layout.placeholder,layout.id);assert.equal(layout.sceneImages,layout.art.available?1:0);assert.equal(layout.art.approved,true);assert.equal(layout.art.available,true);assert.deepEqual(layout.dimensions,[640,360]);if(layout.art.available)assert.equal(layout.imageSrc,layout.art.path);assert.equal(layout.overflow,false);assert.deepEqual(layout.outside,[]);assert(layout.wheel.top>=0&&layout.wheel.bottom<=height+1&&layout.wheel.left>=-1&&layout.wheel.right<=width+1,JSON.stringify(layout));
   if(i===0&&process.env.STORY_SHOTS)await page.screenshot({path:`work/genesis14-gameplay-${width}.png`});
   await game.$eval('#bu3863-story',b=>b.click());assert((await game.$eval('#bu3863-dialog-layer',e=>e.textContent)).includes(content.discoveries[i].narration));await close();
   console.log('GENESIS14_PLAY',width,i+1);
@@ -80,6 +80,12 @@ for(const [width,height] of [[320,568],[430,932]]){
  }
  await game.waitForSelector('.bu-story-finale-actions');assert(await game.evaluate(()=>bu3857State.complete));assert((await game.$eval('.bu3863-finale',e=>e.textContent)).includes(content.completionMessage));
  assert.equal(await game.$eval('#bu3857-progress',e=>e.textContent),'12/12');
+ await game.waitForFunction(()=>document.querySelector('.bu-story-finale-cinematic-photo')?.getAttribute('src')==='story-adventure-art/genesis14/g14-d12.webp');
+ assert.equal(await game.$eval('.bu-story-finale-scene-label',e=>e.textContent),'Jacob grieves for Joseph');
+ assert((await game.$eval('.bu-story-finale-atmosphere-art',e=>e.style.backgroundImage)).includes('g14-d12.webp'));
+ assert.equal(await game.$('[data-bu-genesis14-art-pending]'),null);
+ assert.equal(await game.$$eval('.bu-story-finale-cinematic-photo',imgs=>imgs.length),1);
+
  for(const selector of ['#bu3857-next-episode','#bu3857-replay','#bu-story-finale-chapters']){
   const r=await game.$eval(selector,e=>{e.scrollIntoView({block:'center'});const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom}});assert(r.left>=-1&&r.right<=width+1&&r.top>=-1&&r.bottom<=height+1,selector+JSON.stringify(r));
  }
@@ -104,8 +110,8 @@ for(const [width,height] of [[320,568],[430,932]]){
  // Reveal is a separate -25 Point action, once per discovery; it cannot earn fresh rewards.
  const revealBefore=await wallet();await game.$eval('#bu3857-reveal',b=>b.click());await game.waitForFunction(()=>!!bu3857State.revealed['g14-d01']);assert.equal((await wallet()).points,revealBefore.points-25);await close();await game.evaluate(()=>bu3857Open('genesis_ep14',true));await game.$eval('#bu3857-reveal',b=>b.click());assert.equal((await wallet()).points,revealBefore.points-25);await close();
  assert.deepEqual(await game.evaluate(()=>BU_GENESIS_IDS),ids);assert.deepEqual(errors,[]);
- evidence.viewports.push({width,height,discoveriesCompleted:12,replayed:12,allHintLadders:12,prices:[0,15,25],letterReveals:0,correctAndWrongAll12:true,chapterBonus:[250,60],actualTouchRetry:true,actualTouchSwipe:true,noGameplayOverflow:true,rewardOnce:true,revealOnce:true,saveFailureRollback:true,purchaseRecovery:true,refreshHome:true,resume:true,menuContinueRestart:true,finaleAndAllActions:true,publicUnlockAndRegistrationPreserved:true});
+ evidence.viewports.push({width,height,discoveriesCompleted:12,replayed:12,allHintLadders:12,prices:[0,15,25],letterReveals:0,correctAndWrongAll12:true,chapterBonus:[250,60],actualTouchRetry:true,actualTouchSwipe:true,noGameplayOverflow:true,rewardOnce:true,revealOnce:true,saveFailureRollback:true,purchaseRecovery:true,refreshHome:true,resume:true,menuContinueRestart:true,finaleAndAllActions:true,isolatedUnlockAndRegistrationPreserved:true,approvedImages:12,endingHeroAndBackground:"g14-d12"});
  await context.close();
 }
-console.log('PASS_GENESIS14_PUBLIC_TEST_INTEGRATION',JSON.stringify(evidence));if(process.env.STORY_EVIDENCE)fs.writeFileSync(process.env.STORY_EVIDENCE,JSON.stringify(evidence,null,2)+'\n');
+console.log('PASS_GENESIS14_APPROVED_ART_NATIVE_CANDIDATE',JSON.stringify(evidence));if(process.env.STORY_EVIDENCE)fs.writeFileSync(process.env.STORY_EVIDENCE,JSON.stringify(evidence,null,2)+'\n');
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack||e);process.exitCode=1});

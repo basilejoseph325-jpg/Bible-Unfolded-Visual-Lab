@@ -8,6 +8,20 @@ for(const file of cp.execFileSync('git',['ls-tree','-r','--name-only',BASE],{enc
  assert(fs.existsSync(file),'Removed baseline file '+file);assert(fs.readFileSync(file).equals(expected),'Changed protected baseline file '+file);
 }
 console.log('PASS_ALL_BASELINE_FILES_BYTE_IDENTICAL',BASE);
+// Exact candidate-file allowlist: no wildcard allowance for images or unrelated systems.
+const allowed=new Set([
+ 'genesis-episode14-preview.html','story-adventure-content/genesis-episode14-joseph-v1.json',
+ 'story-adventure-content/genesis-episode14-native-preview.js','story-adventure-art/genesis14/manifest.json',
+ 'docs/GENESIS14_CANDIDATE.md','docs/GENESIS14_APPROVED_ART_CHECKSUMS.json',
+ '.github/workflows/qa-genesis14-candidate.yml',
+ ...['boundaries','content_candidate','native_preview','story_regression'].map(n=>'scripts/qa_genesis14_'+n+'.cjs'),
+ ...Array.from({length:12},(_,i)=>'story-adventure-art/genesis14/g14-d'+String(i+1).padStart(2,'0')+'.webp')
+]);
+const changed=cp.execFileSync('git',['diff','--name-only',BASE],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+const untracked=cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+for(const file of new Set([...changed,...untracked]))assert(allowed.has(file),'Unapproved candidate file '+file);
+console.log('PASS_EXACT_EPISODE14_FILE_ALLOWLIST');
+
 const pause=ms=>new Promise(r=>setTimeout(r,ms));
 (async()=>{const browser=await p.launch({executablePath:process.env.CHROME_BIN||'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage'],protocolTimeout:120000});try{
  const snapshots=[];
@@ -62,4 +76,27 @@ const pause=ms=>new Promise(r=>setTimeout(r,ms));
   snapshots.push({modes,audio});assert.deepEqual(errors,[]);await context.close();
  }
  assert.deepEqual(snapshots[1],snapshots[0]);console.log('PASS_CANDIDATE_BASELINE_MODE_AUDIO_AND_LEGACY_SAVE_PARITY',JSON.stringify(snapshots[1]));
+ // Synthetic routing fixtures are separate from the installed-art gameplay run.
+ for(const fixture of ['unapproved-ending','missing-ending','missing-cover']){
+  const context=await browser.createBrowserContext(),page=await context.newPage();await page.setViewport({width:320,height:568,isMobile:true,hasTouch:true});
+  await page.setRequestInterception(true);page.on('request',r=>{
+   const path=new URL(r.url()).pathname;
+   if(fixture==='unapproved-ending'&&path.endsWith('/genesis14/manifest.json')){
+    const m=JSON.parse(fs.readFileSync('story-adventure-art/genesis14/manifest.json'));m.scenes['g14-d12'].approved=false;r.respond({status:200,contentType:'application/json',body:JSON.stringify(m)});
+   }else if((fixture==='missing-ending'&&path.endsWith('/genesis14/g14-d12.webp'))||(fixture==='missing-cover'&&path.endsWith('/genesis14/g14-d01.webp')))r.respond({status:404,body:'Synthetic missing-art fixture'});
+   else r.continue();
+  });
+  await page.goto(new URL('genesis-episode14-preview.html',base).href,{waitUntil:'load',timeout:120000});const game=page.frames().find(f=>f.url().includes('index.html'));
+  await game.waitForFunction(()=>window.BUStoryGenesis14Test?.status==='ready',{timeout:60000});
+  await game.evaluate(()=>{document.getElementById('daily-close')?.click();completedChapters.genesis_ep13=true;bu3857Saved.genesis_ep14={step:11,complete:true,solved:{},revealed:{},hints:{},work:{}};bu3857Open('genesis_ep14')});
+  await game.waitForSelector('.bu-story-finale-actions');await pause(100);
+  if(fixture==='missing-cover'){
+   assert.equal(await game.$eval('.bu-story-finale-cinematic-photo',img=>img.getAttribute('src')),'story-adventure-art/genesis14/g14-d12.webp');
+   assert((await game.$eval('.bu-story-finale-atmosphere-art',e=>e.style.backgroundImage)).includes('g14-d12.webp'));
+  }else{
+   assert(await game.$('[data-bu-genesis14-art-pending]'));assert.equal(await game.$('.bu-story-finale-cinematic-photo'),null);assert.equal(await game.$('.bu-story-finale-atmosphere-art'),null);
+  }
+  await context.close();console.log('PASS_G14_ART_ROUTING_FIXTURE',fixture);
+ }
+
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack||e);process.exitCode=1});

@@ -1,0 +1,98 @@
+{
+  "story-adventure-art/genesis14/g14-d01.webp": {
+    "sha256": "cda795192cde8f6ad5e595e91024637ca25f723f8c756e6a59f176ef6bc4dcb9",
+    "bytes": 75592,
+    "dimensions": "640x360",
+    "approved_scene_description": "Jacob presents Joseph the long robe",
+    "scripture": "Genesis 37:3\u20134",
+    "suggested_puzzle_answer": "ROBE"
+  },
+  "story-adventure-art/genesis14/g14-d02.webp": {
+    "sha256": "d3abb70208428321b289771e51df0459e0a4f688d8aee73d7cfbc94ccbb546fd",
+    "bytes": 77724,
+    "dimensions": "640x360",
+    "approved_scene_description": "Joseph tells brothers about the first dream (not visualized sheaves)",
+    "scripture": "Genesis 37:5\u20138",
+    "suggested_puzzle_answer": "SHEAVES"
+  },
+  "story-adventure-art/genesis14/g14-d03.webp": {
+    "sha256": "5e6c33be8c167ff51cdd5585b487e1b62f3b926cbbc878cde035227018a2c799",
+    "bytes": 56096,
+    "dimensions": "640x360",
+    "approved_scene_description": "Joseph second dream: sun, moon and exactly eleven stars",
+    "scripture": "Genesis 37:9\u201311",
+    "suggested_puzzle_answer": "STARS"
+  },
+  "story-adventure-art/genesis14/g14-d04.webp": {
+    "sha256": "6de86b60cd5443c69f89345ac3cfd01ed7ee61a1c7f9401dc9ed7e151bc20733",
+    "bytes": 92924,
+    "dimensions": "640x360",
+    "approved_scene_description": "Joseph reaches brothers at the flocks near Dothan",
+    "scripture": "Genesis 37:12\u201317",
+    "suggested_puzzle_answer": "DOTHAN"
+  },
+  "story-adventure-art/genesis14/g14-d05.webp": {
+    "sha256": "372ae10265b33a22cd792c5d08ce7e74bd88935c80a4219c8c65f9a7cffb3960",
+    "bytes": 78896,
+    "dimensions": "640x360",
+    "approved_scene_description": "Brothers conspire before Joseph approaches",
+    "scripture": "Genesis 37:18\u201320",
+    "suggested_puzzle_answer": "SCHEME"
+  },
+  "story-adventure-art/genesis14/g14-d06.webp": {
+    "sha256": "8fa0b4259361aef3a028eff90f75b70f70188aaeb989d4f956c79f4a38ec3e3c",
+    "bytes": 79474,
+    "dimensions": "640x360",
+    "approved_scene_description": "Reuben intervenes on behalf of Joseph",
+    "scripture": "Genesis 37:21\u201322",
+    "suggested_puzzle_answer": "REUBEN"
+  },
+  "story-adventure-art/genesis14/g14-d07.webp": {
+    "sha256": "8eb796c461dfb706168eaaef4c6faf4d20e15b050875bbe3c8918b0929310681",
+    "bytes": 85068,
+    "dimensions": "640x360",
+    "approved_scene_description": "Brothers take garment and lower Joseph into dry waterpit",
+    "scripture": "Genesis 37:23\u201324",
+    "suggested_puzzle_answer": "WATERPIT"
+  },
+  "story-adventure-art/genesis14/g14-d08.webp": {
+    "sha256": "0243d0098eccd02c77915cded82f73208bee225a9f2eaece56094327a4caf36e",
+    "bytes": 89240,
+    "dimensions": "640x360",
+    "approved_scene_description": "Brothers eat as caravan approaches",
+    "scripture": "Genesis 37:25",
+    "suggested_puzzle_answer": "CARAVAN"
+  },
+  "story-adventure-art/genesis14/g14-d09.webp": {
+    "sha256": "db2be531c3619e0d846f2008fb2745247c604c292fa3debb89373745794b99e2",
+    "bytes": 89340,
+    "dimensions": "640x360",
+    "approved_scene_description": "Judah proposes selling Joseph to merchants",
+    "scripture": "Genesis 37:26\u201327",
+    "suggested_puzzle_answer": "JUDAH"
+  },
+  "story-adventure-art/genesis14/g14-d10.webp": {
+    "sha256": "75a7d5d5af748cf45ae694c5acac9c4eaf78393ed3610642af2c6575b50d2ff4",
+    "bytes": 93072,
+    "dimensions": "640x360",
+    "approved_scene_description": "Joseph sold for twenty pieces of silver and departing with caravan",
+    "scripture": "Genesis 37:28",
+    "suggested_puzzle_answer": "SILVER"
+  },
+  "story-adventure-art/genesis14/g14-d11.webp": {
+    "sha256": "b5d7cc427e90ea525456a4497d1386f06eec4ac57d2508fe448b499bc98e5d9e",
+    "bytes": 87654,
+    "dimensions": "640x360",
+    "approved_scene_description": "Reuben discovers Joseph missing from empty pit",
+    "scripture": "Genesis 37:29\u201330",
+    "suggested_puzzle_answer": "EMPTY"
+  },
+  "story-adventure-art/genesis14/g14-d12.webp": {
+    "sha256": "3ece20ee3c41c7575ecea58a067a02bcf2dd19187235a74dc6ea718b7f3f4eeb",
+    "bytes": 88380,
+    "dimensions": "640x360",
+    "approved_scene_description": "Jacob sees Joseph bloodstained robe and grieves",
+    "scripture": "Genesis 37:31\u201335",
+    "suggested_puzzle_answer": "GRIEF"
+  }
+}

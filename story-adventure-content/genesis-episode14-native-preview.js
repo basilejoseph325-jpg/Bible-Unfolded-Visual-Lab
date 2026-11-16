@@ -18,7 +18,7 @@
   const unlocked=()=>!!completedChapters.genesis_ep13;
   preview.scenePaths=scenePaths;
   preview.currentArtwork=()=>bu3857State?.book===CHAPTER_ID&&artwork['g14-d12']?
-    {...artwork['g14-d12'],caption:'Joseph arrives at an Egyptian household'}:null;
+    {...artwork['g14-d12'],caption:'Jacob grieves for Joseph'}:null;
   async function prepareArtwork(chapter){
     const response=await fetch('story-adventure-art/genesis14/manifest.json',{cache:'no-store'});
     if(!response.ok)throw Error('Episode 14 art manifest HTTP '+response.status);
@@ -188,9 +188,38 @@
     };
   }
 
-  // No Episode 14 artwork is approved yet.
-  // Show a plainly labelled visual placeholder in the DEVELOPMENT preview;
-  // never borrow a misleading image of an unrelated Bible event.
+  // Reuse the existing completion template, then assign only this chapter's
+  // reviewed ending scene. The native decorator initially uses the card cover;
+  // that is discovery 1, whereas this approved ending must show discovery 12.
+  function syncFinaleArtwork(){
+    if(bu3857State?.book!==CHAPTER_ID||!bu3857State.complete)return;
+    const card=document.querySelector('#bu3857-content .bu3863-finale');
+    if(!card)return;
+    const art=artwork['g14-d12'];
+    if(!art){
+      for(const el of card.querySelectorAll('.bu-story-finale-cinematic-hero,.bu-story-finale-scene-label,.bu-story-finale-atmosphere'))el.remove();
+      return; // The render path already supplied an honest pending-art note.
+    }
+    let hero=card.querySelector('.bu-story-finale-cinematic-hero');
+    if(!hero){
+      hero=document.createElement('figure');hero.className='bu-story-finale-cinematic-hero';hero.setAttribute('aria-hidden','true');
+      const image=document.createElement('img');image.className='bu-story-finale-cinematic-photo';image.alt='';image.draggable=false;image.decoding='async';hero.append(image);
+      card.insertBefore(hero,card.querySelector('.bu-story-finale-stage'));
+    }
+    hero.querySelector('img').src=art.src;
+    let label=card.querySelector('.bu-story-finale-scene-label');
+    if(!label){label=document.createElement('div');label.className='bu-story-finale-scene-label';hero.after(label);}
+    label.textContent='Jacob grieves for Joseph';
+    let background=card.querySelector('.bu-story-finale-atmosphere-art');
+    if(!background){
+      const layer=document.createElement('div');layer.className='bu-story-finale-atmosphere';layer.setAttribute('aria-hidden','true');
+      background=document.createElement('div');background.className='bu-story-finale-atmosphere-art';layer.append(background);card.prepend(layer);
+    }
+    background.style.backgroundImage='url("'+art.src+'")';
+    card.querySelector('[data-bu-genesis14-art-pending]')?.remove();
+  }
+
+  // Approved, loadable scene only. Missing assets keep a clearly labelled fallback.
   function installScenePlaceholder() {
     const oldRender=bu3857Render;
     bu3857Render=function genesis14Render(...args){
@@ -204,6 +233,8 @@
       const wrap=document.getElementById('bu3857-content');
       if(!wrap)return value;
       if(bu3857State.complete){
+        // The existing shared MutationObserver decorates the native ending first.
+        queueMicrotask(syncFinaleArtwork);
         const message=wrap.querySelector('.bu3863-finale p');
         if(message)message.textContent=BU3857_DATA[CHAPTER_ID].completionMessage;
         // The original finale keeps its existing Replay and Chapters handlers.
@@ -213,7 +244,7 @@
         const card=wrap.querySelector('.bu3863-finale');
         if(card&&!artwork['g14-d12']&&!card.querySelector('[data-bu-genesis14-art-pending]')){
           const note=document.createElement('p');note.dataset.buGenesis14ArtPending='';
-          note.textContent='Egyptian household illustration pending';
+          note.textContent='Jacob’s grief illustration pending';
           note.style.fontSize='12px';card.appendChild(note);
         }
         return value;
@@ -297,9 +328,9 @@
     if (!response.ok) throw Error('Episode 14 content HTTP ' + response.status);
     const chapter = await response.json();
     validate(chapter);
-    chapter.contentStatus = 'isolated_development_candidate_artwork_pending';
+    chapter.contentStatus = 'isolated_development_candidate_approved_art_installed';
     chapter.rules='Existing native Story wheel, rewards and contextual hint prices; Episode 13 completion unlocks Episode 14.';
-    chapter.releaseGates=['Approve and supply all twelve scene pictures and review the Egyptian household scene for the ending','Physical-device and independent content acceptance','Owner review before any TEST merge or deployment'];
+    chapter.releaseGates=['Physical-device and independent content acceptance of the revised sequence','Owner review before any TEST merge or deployment'];
     await prepareArtwork(chapter);
     if(!chapter.completionMessage)throw Error('Episode 14 ending text missing');
     BU3857_DATA[CHAPTER_ID] = chapter;

@@ -35,12 +35,12 @@ jobs:
             sleep 1
           done
           exit 1
-      - name: Native syntax, content and unapproved art checks
+      - name: Native syntax, approved scene sequence and artwork checksums
         run: |
           node --check story-adventure-content/genesis-episode14-native-preview.js
           node scripts/check_story_sources.cjs
           node scripts/qa_genesis14_content_candidate.cjs
-      - name: Protect baseline files, prior saves, mode gameplay and audio controls
+      - name: Protect baseline files, prior saves, modes, audio and art routing
         run: node scripts/qa_genesis14_boundaries.cjs
       - name: Twelve discoveries, all hints, wrong answers, rewards, touch, resume and finale
         env:
