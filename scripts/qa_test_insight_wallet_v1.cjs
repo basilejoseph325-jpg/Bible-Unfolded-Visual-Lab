@@ -92,5 +92,21 @@ async function make({pathname='/Bible-Unfolded-Visual-Lab/index.html',idb=new ID
  const live=await make({pathname:'/Story-Trails/index.html'});
  assert.equal(live.api,undefined);
  assert.deepEqual(live.liveAccess,[]);
+ // 50-level budget: proposal caps farming without changing Points or paid-hint price.
+ const economySource=fs.readFileSync('experiments/bu-test-word-trails-economy-v1.js','utf8');
+ const root={};
+ vm.runInNewContext(economySource,{window:root},{timeout:2000});
+ const economy=root.BUTestWordTrailsEconomy;
+ assert.equal(economy.fullJourneyBudget(50,2).earned,380);
+ assert.equal(economy.fullJourneyBudget(50,2).totalPossible,440);
+ assert.equal(economy.fullJourneyBudget(50,2).paidHintsAtFullCollection,29);
+ assert.equal(economy.transaction({type:'level',level:50}).delta,4);
+ assert.equal(economy.transaction({type:'seal',level:50}).delta,3);
+ assert.equal(economy.transaction({type:'seal',level:49}),null);
+ assert.equal(economy.transaction({type:'hint',level:5,cell:'2:4'}).delta,-15);
+ assert.equal(economy.transaction({type:'discovery',level:1,word:'CAIN'}).id,'trails:l1:discovery:cain');
+ assert.equal(economy.transaction({type:'hint',level:5,cell:'bad'}),null);
+ assert.equal(economy.transaction({type:'level',level:51}),null);
+ console.log('PASS economy: maximum 380 newly earned tokens across 50 levels, 29 paid hints possible with starter balance');
  console.log('PASS TEST ledger: init, atomic spend/credit, 12 parallel receipts, dedupe, zero balance, backup recovery, corruption lock, storage failure, production isolation');
 })().catch(err=>{console.error(err);process.exitCode=1});
