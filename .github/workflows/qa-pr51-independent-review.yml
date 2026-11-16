@@ -1,0 +1,47 @@
+name: Independent PR51 relay review (read-only candidate, no deployment)
+on:
+  push:
+    branches:
+      - 'review/clue-relay-independent-qa-20261116'
+permissions: {contents: read}
+jobs:
+  relay-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 23
+    steps:
+      - name: Checkout exact untouched Codex PR51 candidate
+        uses: actions/checkout@v4
+        with:
+          ref: 3f3a612f5d135e8bd4fe2f55f8cce4678181ac8f
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run 200 randomized game tests and state-isolation checks
+        run: |
+          set -euo pipefail
+          node --check experiments/family-clue-relay-v1.js
+          node --check experiments/family-clue-relay-rules-v1.js
+          node --check experiments/family-clue-relay-questions-v1.js
+          node scripts/qa_family_clue_relay_v1.cjs
+      - name: Install Chromium + WebKit browser automation
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-relay-qa playwright@latest --no-fund --no-audit --silent
+          /tmp/bu-relay-qa/node_modules/.bin/playwright install --with-deps webkit
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+      - name: Independent real UI test at 320px/430px, 2-6 players
+        env:
+          NODE_PATH: /tmp/bu-relay-qa/node_modules
+          RELAY_EVIDENCE: work/relay-quality-review/evidence.json
+        run: |
+          set -euo pipefail
+          node scripts/qa_family_clue_relay_review_v1.cjs
+      - name: Upload independent screenshot gallery and coverage
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-pr51-independent-gallery
+          path: work/relay-quality-review/
+          if-no-files-found: ignore
+          retention-days: 7
