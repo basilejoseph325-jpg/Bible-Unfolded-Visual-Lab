@@ -7,6 +7,20 @@ const node=(tag,text,className)=>{const el=document.createElement(tag);if(text!=
 function button(text,id,action,className='gold'){const el=node('button',text,className);el.type='button';el.id=id;el.addEventListener('click',action);return el;}
 function announce(text){document.getElementById('announcement').textContent=text;}
 function focusScreen(){screen.focus({preventScroll:true});}
+// Scroll only inside the clue column. WebKit may complete text wrapping
+// one frame after the form rerenders, especially on 320px screens.
+function showNewestClue(area){
+ const latest=area.lastElementChild;
+ const align=()=>{
+  if(!area.isConnected||area.lastElementChild!==latest)return;
+  area.scrollTop=area.scrollHeight;
+  const item=latest.getBoundingClientRect(),container=area.getBoundingClientRect();
+  if(item.bottom>container.bottom-2)
+   area.scrollTop+=Math.ceil(item.bottom-container.bottom+4);
+ };
+ align();
+ requestAnimationFrame(()=>{align();requestAnimationFrame(align);});
+}
 function clear(){screen.replaceChildren();}
 function setup(){
  clear();document.getElementById('relay').dataset.phase='setup';subtitle.textContent='Three clues. One discovery. Everyone gets a turn!';
@@ -43,7 +57,7 @@ function render(){
   const form=node('form',undefined,'guess-form'),label=node('label',player.name+', your guess'),input=node('input');input.id='guess';input.maxLength=80;input.autocomplete='off';input.autocapitalize='words';input.spellcheck=false;label.htmlFor='guess';
   const controls=node('div',undefined,'guess-row'),submit=node('button','Guess','gold');submit.id='submit-guess';submit.type='submit';controls.append(input,submit);const error=node('p','','error');error.id='guess-error';error.setAttribute('role','alert');form.append(label,controls,error);
   form.addEventListener('submit',event=>{event.preventDefault();const result=rules.guess(game,input.value);if(result.error){error.textContent=result.error;input.focus();return;}render();if(result.nextClue){document.getElementById('guess-error').textContent='Not that one. Try the next clue.';announce("Not that one. Clue "+result.nextClue+". "+q.clues[game.clue]);document.getElementById('guess').focus({preventScroll:true});}});
-  screen.append(form);area.scrollTop=area.scrollHeight;announce('Clue '+(game.clue+1)+'. '+q.clues[game.clue]);focusScreen();return;
+  screen.append(form);showNewestClue(area);announce('Clue '+(game.clue+1)+'. '+q.clues[game.clue]);focusScreen();return;
  }
  const result=game.result,wrap=node('div',undefined,'result-wrap'),scroll=node('div',undefined,'result-scroll'),copy=node('div',undefined,'result-copy');copy.id='round-result';
  copy.append(node('h2',result.correct?'You found it!':"Here's the discovery"),node('p',q.answer,'answer'),node('p',result.correct?player.name+' earns '+result.points+' relay '+(result.points===1?'point.':'points.'):"No points this round. Let's see what we can learn."),node('p',q.explanation));
