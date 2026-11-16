@@ -55,3 +55,13 @@ for needle in needles:
  print('SOURCE TERM',needle,':',matches[:15])
 print('\\nFOCUSED NATIVE SAVE HELP')
 for i in range(5920,6000):print(f'{i+1:05d}: {lines[i][:370]}')
+
+print('\\nBUNDLE LOADER')
+for i,line in enumerate(lines):
+ if '__BU_STAGE41_CORE_PARTS__' in line or 'DecompressionStream' in line or 'base64' in line and i<700:
+  for j in range(max(0,i-2),min(len(lines),i+5)):print(f'{j+1:05d}: {lines[j][:400]}')
+print('\\nPART HEADS')
+for k in range(1,6):
+ p=Path(f'bible_unfolded_core_part{k}.js')
+ c=p.read_text(encoding='utf8')
+ print(str(p),len(c),c[:100],c[-80:])
