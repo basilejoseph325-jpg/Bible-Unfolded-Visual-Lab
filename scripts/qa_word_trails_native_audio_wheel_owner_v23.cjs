@@ -17,6 +17,19 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   await page.setViewport({...vp,isMobile:true,hasTouch:true,deviceScaleFactor:2});
   await page.goto(process.env.BU_WT_NATIVE_PARITY_URL||'http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:90000});
+  // Instrument the real native music entry point before Word Trails claims it.
+  const hasNativeSync=await page.evaluate(()=>{
+   if(typeof window.syncMusic!=='function')return false;
+   const original=window.syncMusic;
+   window.__wtQaNativeSyncPasses=0;
+   window.__wtQaNativeSyncProbe=function(...args){
+    window.__wtQaNativeSyncPasses++;
+    return original.apply(this,args);
+   };
+   window.syncMusic=window.__wtQaNativeSyncProbe;
+   return true;
+  });
+  assert(hasNativeSync,'Native root must expose the soundtrack sync entry point');
   await page.evaluate(()=>document.getElementById('home-cross').click());
   await page.waitForFunction(()=>{
    const c=document.getElementById('bu-wt-native-game')?.contentWindow;
@@ -38,6 +51,15 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(initial.childAudio.musicVolume,initial.nativeAudio.musicVolume);
   assert.equal(initial.childAudio.sfxVolume,initial.nativeAudio.sfxVolume);
   assert.equal(initial.hasRootVoice,'function','Native announcer is available');
+  const gameAudio=await page.evaluate(()=>{
+   const before=window.__wtQaNativeSyncPasses;
+   window.syncMusic(); // menu/settings would normally restart the home track
+   return {guardInstalled:window.syncMusic!==window.__wtQaNativeSyncProbe,
+    nativeStarts:window.__wtQaNativeSyncPasses-before,
+    stillPlaying:window.BUWTNativeShell.active()};
+  });
+  assert(gameAudio.guardInstalled&&gameAudio.stillPlaying,'Word Trails must own the music while open');
+  assert.equal(gameAudio.nativeStarts,0,'Native soundtrack must not restart during Word Trails');
 
   // A direct call that would once open the second Sound & Feel dialog must
   // delegate to the real parent Settings and never expose duplicate controls.
@@ -159,12 +181,29 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(menus.parentMenuHidden,false);
   assert.equal(menus.childMenuOpen,false);
   assert.equal(menus.childOverflow,false);
+  const menuAudio=await page.evaluate(()=>{
+   const before=window.__wtQaNativeSyncPasses;
+   window.syncMusic(); // simulate delayed native menu or Settings music sync
+   return {nativeStarts:window.__wtQaNativeSyncPasses-before,
+    active:window.BUWTNativeShell.active()};
+  });
+  assert(menuAudio.active,'Returning to native menu must retain Word Trails ownership');
+  assert.equal(menuAudio.nativeStarts,0,'Menu/settings must never layer the home soundtrack over Word Trails');
+  const released=await page.evaluate(()=>{
+   const before=window.__wtQaNativeSyncPasses;
+   window.BUWTNativeShell.close();
+   return {restored:window.syncMusic===window.__wtQaNativeSyncProbe,
+    resumed:window.__wtQaNativeSyncPasses>before,
+    active:window.BUWTNativeShell.active()};
+  });
+  assert(released.restored&&released.resumed&&!released.active,
+   'Leaving Word Trails must restore native music and normal home playback');
   assert.deepEqual(errors,[],'No JavaScript errors');
   console.log('PASS_WORD_TRAILS_NATIVE_AUDIO_WHEEL_OWNER_V23',JSON.stringify({
    viewport:vp.width+'x'+vp.height,
    nativeSettingsOnly:true,nativeAudioPropagation:true,shadowStorageUnchanged:true,
    originalAnnouncerDelegated:true,curvedOceanGlow:true,glowHalo:true,swipeMist:true,microGlitter:true,
-   noEntitlementsChanged:true,noHorizontalOverflow:true,pageErrors:errors.length}));
+   noEntitlementsChanged:true,noHorizontalOverflow:true,exclusiveMusicOwner:true,restoresHomeMusic:true,pageErrors:errors.length}));
   await page.close();
  }
  }finally{await browser.close()}
