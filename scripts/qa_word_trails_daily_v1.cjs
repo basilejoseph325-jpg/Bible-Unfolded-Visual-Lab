@@ -185,7 +185,30 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
   await page.setViewport({width:390,height:844,isMobile:true,hasTouch:true});
   await page.goto(normal.href,{waitUntil:'domcontentloaded',timeout:120000});
   await page.waitForSelector('#daily-trail-entry');
+  await page.waitForSelector('.wheel-letter');
   assert.equal(await page.$eval('#daily-trail-entry',a=>a.getAttribute('target')),'_top');
+  assert.equal(await page.$eval('#daily-trail-entry',a=>a.closest('.play-region')!==null),true,'Daily entry belongs alongside the hint and wheel');
+  assert.equal(await page.$eval('#daily-trail-entry',a=>a.innerText.includes('DAILY')),true,'Floating bubble label is readable');
+  for(const [w,h] of [[320,568],[390,844],[430,932]]){
+   await page.setViewport({width:w,height:h,isMobile:true,hasTouch:true});
+   const geometry=await page.evaluate(()=>{
+    const daily=document.getElementById('daily-trail-entry');
+    const rect=el=>{const r=el.getBoundingClientRect();return {l:r.left,t:r.top,r:r.right,b:r.bottom,w:r.width,h:r.height,cx:r.left+r.width/2,cy:r.top+r.height/2}};
+    const orb=rect(daily),hint=rect(document.getElementById('hint')),shuffle=rect(document.getElementById('shuffle')),board=rect(document.getElementById('board'));
+    const overlap=(a,b)=>a.l<b.r&&a.r>b.l&&a.t<b.b&&a.b>b.t;
+    const blockedLetters=[...document.querySelectorAll('.wheel-letter')].filter(el=>{
+      const r=rect(el),hit=document.elementFromPoint(r.cx,r.cy);
+      return hit===daily||daily.contains(hit); // Only newly introduced Daily-bubble obstruction
+    }).map(el=>el.textContent);
+    const clickable=document.elementFromPoint(orb.cx,orb.cy);
+    return {orb,hint,shuffle,board,blockedLetters,overlapHint:overlap(orb,hint),overlapShuffle:overlap(orb,shuffle),overlapBoard:overlap(orb,board),centerClickable:clickable===daily||daily.contains(clickable),position:getComputedStyle(daily).position,display:getComputedStyle(daily).display};
+   });
+   assert(geometry.orb.w>=60&&geometry.orb.h>=60&&geometry.orb.l>=0&&geometry.orb.t>=0&&geometry.orb.r<=w&&geometry.orb.b<=h,'Floating Daily bubble must be fully visible and finger-sized: '+JSON.stringify({w,h,geometry}));
+   assert.equal(geometry.position,'absolute','Daily bubble must float above the wheel');
+   assert.equal(geometry.centerClickable,true,'Floating Daily bubble must receive taps');
+   assert.equal(geometry.overlapHint||geometry.overlapShuffle||geometry.overlapBoard,false,'Daily bubble must not block primary gameplay: '+JSON.stringify({w,h,geometry}));
+   assert.deepEqual(geometry.blockedLetters,[],'Daily bubble must not hide wheel-letter centers: '+JSON.stringify({w,h,geometry}));
+  }
   await page.$eval('#daily-trail-entry',a=>a.click());
   await page.waitForFunction(()=>location.pathname.endsWith('/word-trails-daily-v1.html'),{timeout:30000});
   await page.waitForSelector('#daily-wheel .daily-wheel-letter',{timeout:30000});

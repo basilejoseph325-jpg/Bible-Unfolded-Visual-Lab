@@ -461,3 +461,37 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  .wt-seal-progress{padding:8px 10px;margin-bottom:10px}
  .finish-next-seal{font-size:10px;line-height:1.25;margin-bottom:8px}
 }
+
+/* Daily Trail entry: visible floating companion to the hint and shuffle orbs.
+   Outside the crossword and wheel-letter touch targets, independent of LIVE. */
+#daily-trail-entry.daily-float{
+ position:absolute;z-index:6;top:6px;right:clamp(5px,2vw,16px);
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+ width:clamp(64px,18vw,76px);height:clamp(64px,18vw,76px);
+ border-radius:50%;border:2px solid #ffebad;
+ color:#ffe8aa;text-decoration:none;text-align:center;
+ background:radial-gradient(circle at 35% 20%,#2a6d73 0%,#15505a 42%,#0b2b38 90%);
+ box-shadow:inset 0 1px #fff2ce7a,inset 0 -4px 12px #021a25a8,0 4px 12px #0009,0 0 0 3px #e6c37c2e;
+ -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+ animation:daily-float-glow 5.5s ease-in-out infinite;
+}
+#daily-trail-entry .daily-float-sun{
+ font:900 clamp(28px,8vw,37px)/1 Georgia,serif;
+ color:#ffdb79;text-shadow:0 0 9px #ffc75c83,0 2px 2px #031721;
+}
+#daily-trail-entry .daily-float-label{
+ font:900 clamp(10px,2.9vw,12px)/1.1 system-ui,sans-serif;
+ letter-spacing:.06em;color:#fff1c4;text-shadow:0 1px 2px #001720;
+}
+#daily-trail-entry:active{transform:scale(.95);filter:brightness(1.2)}
+#daily-trail-entry:focus-visible{outline:3px solid #fff9bd;outline-offset:4px}
+@keyframes daily-float-glow{
+ 0%,78%,100%{box-shadow:inset 0 1px #fff2ce7a,inset 0 -4px 12px #021a25a8,0 4px 12px #0009,0 0 0 3px #e6c37c2e}
+ 86%{box-shadow:inset 0 1px #fff2ce7a,inset 0 -4px 12px #021a25a8,0 4px 12px #0009,0 0 0 6px #e6c37c50}
+}
+@media(max-width:350px), (max-height:680px){
+ #daily-trail-entry.daily-float{top:4px;width:62px;height:62px}
+ #daily-trail-entry .daily-float-sun{font-size:28px}
+ #daily-trail-entry .daily-float-label{font-size:10px}
+}
+@media(prefers-reduced-motion:reduce){#daily-trail-entry.daily-float{animation:none}}
