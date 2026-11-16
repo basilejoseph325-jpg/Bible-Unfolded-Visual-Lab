@@ -1,0 +1,42 @@
+name: QA isolated TEST Insight Token ledger foundation
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-*'
+    paths:
+      - 'experiments/bu-test-insight-wallet-v1.js'
+      - 'experiments/bu-test-insight-wallet-qa.html'
+      - 'scripts/qa_test_insight_wallet_v1.cjs'
+      - '.github/workflows/qa-test-insight-wallet-v1.yml'
+  pull_request:
+    paths:
+      - 'experiments/bu-test-insight-wallet-v1.js'
+      - 'experiments/bu-test-insight-wallet-qa.html'
+      - 'scripts/qa_test_insight_wallet_v1.cjs'
+      - '.github/workflows/qa-test-insight-wallet-v1.yml'
+permissions: {contents: read}
+jobs:
+  wallet:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check source syntax and strictly isolated touched files
+        run: |
+          node --check experiments/bu-test-insight-wallet-v1.js
+          node --check scripts/qa_test_insight_wallet_v1.cjs
+          python3 - <<'PY'
+          from pathlib import Path
+          w=Path('experiments/bu-test-insight-wallet-v1.js').read_text()
+          assert "bu-visual-lab-insight-tokens-idb-v1" in w
+          assert "indexedDB" in w
+          assert "Bible-Unfolded-Visual-Lab" in w
+          assert "bible-unfolded-rewards-v17" not in w
+          assert "bu-visual-lab-wordtrails-next-v1" not in w
+          assert "localStorage" not in w
+          print('PASS: TEST ledger contains no production or legacy key access')
+          PY
+      - name: Simulate independent IndexedDB sessions with backup and storage failures
+        run: |
+          npm install --prefix /tmp/bu-test-wallet-deps fake-indexeddb@6 --no-audit --no-fund --silent
+          NODE_PATH=/tmp/bu-test-wallet-deps/node_modules node scripts/qa_test_insight_wallet_v1.cjs
