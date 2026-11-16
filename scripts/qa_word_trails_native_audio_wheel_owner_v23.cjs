@@ -38,6 +38,29 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(initial.childAudio.musicVolume,initial.nativeAudio.musicVolume);
   assert.equal(initial.childAudio.sfxVolume,initial.nativeAudio.sfxVolume);
   assert.equal(initial.hasRootVoice,'function','Native announcer is available');
+  // Samsung regression: the 2× COMBO counter was concealed behind DAILY.
+  // Show a sample earned streak in the isolated test DOM; do not alter game saves.
+  const comboLayout=await page.evaluate(()=>{
+   const child=document.getElementById('bu-wt-native-game').contentWindow;
+   const label=child.document.getElementById('combo');
+   const daily=child.document.getElementById('daily-trail-entry');
+   const previous=label.textContent;label.textContent='2× COMBO';
+   const comboRect=label.getBoundingClientRect(),dailyRect=daily.getBoundingClientRect();
+   const pointerEvents=child.getComputedStyle(label).pointerEvents;
+   label.textContent=previous;
+   return {comboRight:comboRect.right,dailyLeft:dailyRect.left,
+    comboLeft:comboRect.left,comboTop:comboRect.top,
+    windowWidth:child.innerWidth,windowHeight:child.innerHeight,
+    dailyHref:daily.getAttribute('href'),pointerEvents};
+  });
+  assert(comboLayout.comboRight+6<=comboLayout.dailyLeft,
+   'COMBO number may not hide under the floating DAILY button');
+  assert(comboLayout.comboLeft>=0&&comboLayout.comboTop>=0&&
+   comboLayout.comboRight<=comboLayout.windowWidth,
+   'COMBO indicator should remain fully readable at phone widths');
+  assert.equal(comboLayout.pointerEvents,'none','Combo must not block wheel or DAILY taps');
+  assert.equal(comboLayout.dailyHref,'word-trails-daily-v1.html',
+   'Daily button route must remain unchanged');
 
   // A direct call that would once open the second Sound & Feel dialog must
   // delegate to the real parent Settings and never expose duplicate controls.
@@ -164,7 +187,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    viewport:vp.width+'x'+vp.height,
    nativeSettingsOnly:true,nativeAudioPropagation:true,shadowStorageUnchanged:true,
    originalAnnouncerDelegated:true,curvedOceanGlow:true,glowHalo:true,swipeMist:true,microGlitter:true,
-   noEntitlementsChanged:true,noHorizontalOverflow:true,pageErrors:errors.length}));
+   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,pageErrors:errors.length}));
   await page.close();
  }
  }finally{await browser.close()}
