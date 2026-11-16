@@ -14,7 +14,8 @@
  if(window.top===window &&
     (location.hostname.endsWith('.github.io')||
      (args.get('native')==='1'&&args.get('standalone')!=='qa'))){
-  location.replace('../index.html?wt_launch=native');
+  location.replace('../index.html?wt_launch=native'+
+   (args.get('bu_shared_wallet_preview')==='1'?'&bu_shared_wallet_preview=1':''));
  }
  }catch(_){}})();
 </script>
@@ -41,6 +42,9 @@ document.addEventListener('click',event=>{
 <link rel="stylesheet" href="word-trails-unified-menu-v1.css?v=standard-menu-v1">
 <link rel="stylesheet" href="word-trails-native-wheel-v1.css?v=faithful-ocean-solid-20261109">
 <link rel="stylesheet" href="word-trails-main-settings-v1.css?v=shared-native-settings-20261109">
+<!-- Preview only: sandbox the child frame's own shared Rewards/Wheel API too.
+     The ordinary Word Trails and Daily scripts remain unchanged outside this flag. -->
+<script src="bu-test-native-storage-fence-v1.js"></script>
 <script src="word-trails-shared-core-boundary-v1.js?v=read-only-audit-20261109" defer></script>
 <script src="../bu-platform-rewards-v1.js?v=shared-wheel-core-20261109" defer></script>
 <script src="word-trails-feel-v2.js?v=native-settings-owner-20261113-v23" defer></script>
