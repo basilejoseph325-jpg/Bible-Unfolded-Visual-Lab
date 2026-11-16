@@ -182,12 +182,48 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   assert.equal(menus.parentMenuHidden,false);
   assert.equal(menus.childMenuOpen,false);
   assert.equal(menus.childOverflow,false);
+  // Real DAILY tap and back button must not navigate through /index.html.
+  // The original Word Trails frame (and unsaved on-screen letters) survives.
+  const beforeDaily=await page.evaluate(()=>{
+   window.__wtQaFrame=document.getElementById('bu-wt-native-game');
+   window.__wtQaRoot=document.getElementById('bu-wt-native-shell');
+   const child=window.__wtQaFrame.contentWindow;
+   const state={active:window.BUWTNativeShell.active(),
+    frameSrc:window.__wtQaFrame.getAttribute('src'),puzzle:child.document.getElementById('board').textContent};
+   child.document.getElementById('daily-trail-entry').click();
+   return state;
+  });
+  assert(beforeDaily.active,'Word Trails must be open before DAILY');
+  await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentDocument?.querySelector('.daily-back'),
+   {timeout:90000});
+  const dailyOpen=await page.evaluate(()=>{
+   const overlay=document.getElementById('bu-wt-daily-frame');
+   return {url:location.pathname,hash:location.hash,stillSameFrame:
+     document.getElementById('bu-wt-native-game')===window.__wtQaFrame,
+     dailyEmbedded:overlay.contentDocument.querySelector('#daily-app')!==null,
+     rootAlive:document.getElementById('bu-wt-native-shell')===window.__wtQaRoot};
+  });
+  assert(dailyOpen.stillSameFrame&&dailyOpen.dailyEmbedded&&dailyOpen.rootAlive,'DAILY must overlay the existing puzzle');
+  assert.equal(dailyOpen.hash,'#daily-word-trail');
+  await page.evaluate(()=>document.getElementById('bu-wt-daily-frame').contentDocument.querySelector('.daily-back').click());
+  await page.waitForFunction(()=>location.hash==='#word-trails'&&!document.getElementById('bu-wt-daily-frame'),
+   {timeout:15000});
+  const afterDaily=await page.evaluate(()=>({
+   stillSameFrame:document.getElementById('bu-wt-native-game')===window.__wtQaFrame,
+   stillSameRoot:document.getElementById('bu-wt-native-shell')===window.__wtQaRoot,
+   puzzle:document.getElementById('bu-wt-native-game').contentDocument.getElementById('board').textContent,
+   rootActive:window.BUWTNativeShell.active(),
+   page:location.pathname}));
+  assert(afterDaily.stillSameFrame&&afterDaily.stillSameRoot&&afterDaily.rootActive,
+   'Back from Daily must return to existing Word Trails without homepage reload');
+  assert.equal(afterDaily.puzzle,beforeDaily.puzzle,'Daily round-trip must preserve the board');
+  assert.equal(afterDaily.page,dailyOpen.url,'No intermediate homepage navigation is allowed');
   assert.deepEqual(errors,[],'No JavaScript errors');
   console.log('PASS_WORD_TRAILS_NATIVE_AUDIO_WHEEL_OWNER_V23',JSON.stringify({
    viewport:vp.width+'x'+vp.height,
    nativeSettingsOnly:true,nativeAudioPropagation:true,shadowStorageUnchanged:true,
    originalAnnouncerDelegated:true,curvedOceanGlow:true,glowHalo:true,swipeMist:true,microGlitter:true,
-   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,pageErrors:errors.length}));
+   noEntitlementsChanged:true,noHorizontalOverflow:true,comboReadable:true,dailyClickable:true,dailyOverlayRoundTrip:true,puzzlePreserved:true,pageErrors:errors.length}));
   await page.close();
  }
  }finally{await browser.close()}

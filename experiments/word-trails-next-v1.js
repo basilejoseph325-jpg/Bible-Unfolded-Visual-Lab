@@ -300,7 +300,7 @@ function renderNextSealProgress(){
 let found=new Set(),bonuses=new Set(),hinted=new Set(),chosen=[],letters=[],combo=0;
 let dragging=false,dragActive=false,start=null,pointer=null,suppressClickUntil=0;
 let timer=null,locked=false,completionShown=false;
-let music=null,ctx=null,unlockedSound=false;
+let music=null,ctx=null,unlockedSound=false,dailyOverlayActive=false;
 const wheel=$('wheel'),board=$('board'),preview=$('preview');
 const reducedMotion=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 function store(){
@@ -360,7 +360,15 @@ function cue(kind){
 }
 function haptic(ms){if(window.BUWTPolish){window.BUWTPolish.haptic(ms);return;}
  try{if(!reducedMotion&&navigator.vibrate)navigator.vibrate(ms)}catch(_){}}
-function startMusicFromGesture(){if(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound)soundReady()}
+function startMusicFromGesture(){
+ if(!dailyOverlayActive&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))soundReady()
+}
+window.addEventListener('bu-wt-daily-enter',()=>{dailyOverlayActive=true;music?.pause()});
+window.addEventListener('bu-wt-daily-leave',()=>{
+ dailyOverlayActive=false;
+ if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))
+  music?.play().catch(()=>{});
+});
 window.addEventListener('pointerdown',startMusicFromGesture,{capture:true});
 window.addEventListener('keydown',startMusicFromGesture,{capture:true});
 function shuffleArray(a){
@@ -775,12 +783,13 @@ window.addEventListener('keydown',e=>{
 });
 window.addEventListener('resize',()=>{drawWheel()});
 window.addEventListener('bu-wt-audio-change',()=>{
+ if(dailyOverlayActive){music?.pause();return}
  if(!window.BUWTPolish)return;
  if(!window.BUWTPolish.musicEnabled()){music?.pause();return}
  if(music)music.volume=.15*window.BUWTPolish.musicVolume()/100;
  unlockedSound=false;soundReady();
 });
-document.addEventListener('visibilitychange',()=>{if(document.hidden)music?.pause();else if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))music?.play().catch(()=>{})});
+document.addEventListener('visibilitychange',()=>{if(document.hidden||dailyOverlayActive)music?.pause();else if(unlockedSound&&(window.BUWTPolish?window.BUWTPolish.musicEnabled():save.sound))music?.play().catch(()=>{})});
 window.addEventListener('pagehide',()=>music?.pause());
 showLevel(index,true);
 })();
