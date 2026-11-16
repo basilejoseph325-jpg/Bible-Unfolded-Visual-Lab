@@ -38,6 +38,12 @@ jobs:
         run: |
           set -euo pipefail
           node scripts/qa_family_clue_relay_review_v1.cjs
+      - name: Verify every clue excerpt against 20 official NWT pages
+        env:
+          NODE_USE_ENV_PROXY: '1'
+        run: |
+          set -euo pipefail
+          node scripts/qa_family_clue_relay_v1.cjs --verify-sources
       - name: Upload independent screenshot gallery and coverage
         if: always()
         uses: actions/upload-artifact@v4
