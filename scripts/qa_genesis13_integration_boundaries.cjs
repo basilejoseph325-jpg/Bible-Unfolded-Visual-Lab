@@ -8,14 +8,14 @@ const baseline=event.pull_request?.base?.sha||'14bdc2b',head=event.pull_request?
 // Compare protected assets against that parent, not an obsolete PR-base SHA.
 const parents=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{encoding:'utf8'}).trim().split(' ');
 const protectedBase=event.pull_request&&parents.length>=3?parents[1]:baseline;
-const allowed=new Set(['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode13-integration-test.js','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-art/genesis13/manifest.json','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_public_integration.cjs','scripts/qa_genesis13_integration_boundaries.cjs','scripts/qa_genesis12_native.cjs','scripts/qa_genesis11_complete_native_playpath_v1.cjs','scripts/qa_story_adventure_release.cjs','.github/workflows/qa-genesis13-test-integration.yml','.github/workflows/qa-story-adventure-candidate.yml','docs/GENESIS13_TEST_INTEGRATION.md']);
+const allowed=new Set(['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode13-integration-test.js','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-art/genesis13/manifest.json','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_public_integration.cjs','scripts/qa_genesis13_integration_boundaries.cjs','scripts/qa_genesis12_native.cjs','scripts/qa_genesis11_complete_native_playpath_v1.cjs','scripts/qa_story_adventure_release.cjs','.github/workflows/qa-genesis13-test-integration.yml','.github/workflows/qa-story-adventure-candidate.yml','docs/GENESIS13_TEST_INTEGRATION.md','story-adventure-episode14-integration-test.js','scripts/qa_story_ep14_public.cjs','.github/workflows/qa-genesis14-public-test.yml']);
 const approvedArtPath=/^story-adventure-art\/genesis13\/g13-d(?:0[1-9]|1[0-2])\.webp$/;
 for(const f of cp.execFileSync('git',['diff','--name-only',baseline+'...'+head],{encoding:'utf8'}).trim().split('\n').filter(Boolean))assert(allowed.has(f)||approvedArtPath.test(f),'Unrelated file changed: '+f);
 const original=f=>cp.execFileSync('git',['show',baseline+':'+f],{encoding:'utf8',maxBuffer:40000000});
 const tree=cp.execFileSync('git',['ls-tree','-r','--name-only',protectedBase],{encoding:'utf8'}).trim().split('\n');
 const protectedFiles=tree.filter(f=>/word[-_]trails/i.test(f)||/\.(mp3|wav|ogg|m4a)$/i.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||['premium-sfx.js','bu-platform-rewards-v1.js','bu-platform-saves-v2.js','story-adventure-episode12-integration-test.js','story-adventure-content/genesis-episode12-return-to-esau-v1.json'].includes(f));
 for(const f of protectedFiles)assert.equal(cp.execFileSync('git',['hash-object',f],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',protectedBase+':'+f],{encoding:'utf8'}).trim(),'Protected file changed: '+f);
-const oldHtml=original('index.html'),html=fs.readFileSync('index.html','utf8');assert.equal(html.replace('journey-progress-caption.js?v=20261115-genesis13-integration-v1','journey-progress-caption.js?v=20261114-books-chrome-route-v4'),oldHtml,'HTML changed beyond loader cache token');
+const oldHtml=original('index.html'),html=fs.readFileSync('index.html','utf8');assert.equal(html,oldHtml,'Existing TEST HTML must remain byte-identical');
 assert(fs.readFileSync('journey-progress-caption.js','utf8').startsWith(original('journey-progress-caption.js')),'Existing loader content changed');
 const manifest=JSON.parse(fs.readFileSync('story-adventure-art/genesis13/manifest.json'));
 // Integrity-locked artwork selected and visually reviewed; fail if the wrong
@@ -67,10 +67,10 @@ for(const artMode of ['pending','approved-fixture','missing-approved-fixture']){
    r.continue();
   });
  }
- await page.goto(base,{waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready',{timeout:60000});await page.evaluate(()=>document.getElementById('daily-close')?.click());
- const card=await page.evaluate(()=>{openEpisodes('genesis');return {cards:document.querySelectorAll('[data-episode]').length,available:document.querySelector('[data-genesis13]').classList.contains('available'),ids:BU_GENESIS_IDS.slice()}});assert.equal(card.cards,13);assert.equal(card.available,false);assert.equal(card.ids.length,7);
+ await page.goto(base,{waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis14Test?.status==='ready',{timeout:60000});await page.evaluate(()=>document.getElementById('daily-close')?.click());
+ const card=await page.evaluate(()=>{openEpisodes('genesis');return {cards:document.querySelectorAll('[data-episode]').length,available:document.querySelector('[data-genesis13]').classList.contains('available'),ids:BU_GENESIS_IDS.slice()}});assert.equal(card.cards,14);assert.equal(card.available,false);assert.equal(card.ids.length,8);
  await page.evaluate(()=>openEpisodes('exodus'));assert(!(await page.$('[data-genesis13]')));
- await page.evaluate(()=>{openJourney();});await page.waitForFunction(()=>document.getElementById('journey-progress-label').textContent.includes('of 13'));
+ await page.evaluate(()=>{openJourney();});await page.waitForFunction(()=>document.getElementById('journey-progress-label').textContent.includes('of 14'));
  assert(await page.$eval('#journey-stops [data-stop="1"]',e=>!e.classList.contains('open')),'First-six lock altered');assert(await page.$eval('#journey-stops [data-stop="2"]',e=>!e.classList.contains('open')),'Exodus Journey lock altered');
  await page.evaluate(()=>{completedChapters.genesis_ep12=true;persistUnified();openEpisodes('genesis');document.querySelector('[data-genesis13]').click()});assert.equal(await page.evaluate(()=>bu3857State.book),'genesis_ep13');
  await page.$eval('#bu3857-back',b=>b.click());assert.equal(await page.evaluate(()=>bu3854EpisodeBook),'genesis');
@@ -100,9 +100,9 @@ for(const view of ['episode12-ending','journey']){
  await page.goto(base,{waitUntil:'load',timeout:120000});await page.waitForFunction(()=>window.BUStoryGenesis12Test?.discoveryCount===13);
  await page.evaluate(view=>{document.getElementById('daily-close')?.click();if(view==='journey')openJourney();else{completedChapters.genesis_ep12=true;openEpisodes('genesis');bu3857Open('genesis_ep12');bu3857State.complete=true;bu3857Render()}},view);
  if(view==='episode12-ending')assert.equal(await page.$eval('#bu3857-next-episode',e=>e.textContent),'Return to Genesis →');
- release();await page.waitForFunction(()=>window.BUStoryGenesis13Test?.status==='ready');
+ release();await page.waitForFunction(()=>window.BUStoryGenesis14Test?.status==='ready');
  if(view==='episode12-ending'){assert.equal(await page.$eval('#bu3857-next-episode',e=>e.textContent),'Next Genesis Episode →');await page.$eval('#bu3857-next-episode',e=>e.click());assert.equal(await page.evaluate(()=>bu3857State.book),'genesis_ep13');}
- else assert((await page.$eval('#journey-progress-label',e=>e.textContent)).includes('of 13'));
+ else assert((await page.$eval('#journey-progress-label',e=>e.textContent)).includes('of 14'));
  await context.close();console.log('PASS_G13_DELAYED_REGISTRATION',view);
 }
 console.log('PASS_GENESIS13_INTEGRATION_BOUNDARIES',JSON.stringify({baseline,protectedFilesUnchanged:protectedFiles.length,wordTrailsLevelsAudioCoinsAndTestsUnchanged:true,validatedContentUnchanged:true,preparedImagePaths:12,approvedImages:Object.values(manifest.scenes).filter(x=>x.approved).length,bethelEndingRouting:'g13-d09 for hero and background; actual approved art or a clearly labelled in-memory QA fixture',missingApprovedAssetFallsBack:true,additionalLayouts:['320x640','430x932'],oldJourneyLocksPreserved:true,delayedRegistrationRefreshesVisibleViews:true,physicalDevices:false}));
