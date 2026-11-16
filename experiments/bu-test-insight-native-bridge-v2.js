@@ -140,11 +140,36 @@ function transact(caller,request){
  updateWallet();notify();
  return {ok:true,duplicate:false,balance:economy.coins,revision:Object.keys(receipts).length};
 }
+// Best-effort stale-tab protection. Native saveEconomy is synchronous, so
+// this detects foreign writes observed since our last legitimate refresh.
+// It cannot provide a cross-process atomic compare-and-swap. Keep the preview
+// in DRAFT until true multi-tab serialization is solved.
+let lastSeenRaw=null;
+try{lastSeenRaw=localStorage.getItem(nativeKey);}catch(_){}
+const originalRefresh=typeof bu3824RefreshWallet==='function'?bu3824RefreshWallet:null;
+if(originalRefresh){
+ bu3824RefreshWallet=function(...args){
+  const result=originalRefresh.apply(this,args);
+  try{lastSeenRaw=localStorage.getItem(nativeKey);}catch(_){}
+  return result;
+ };
+}
 const originalSave=typeof saveEconomy==='function'?saveEconomy:null;
 if(originalSave){
  saveEconomy=function(...args){
+  let actual;
+  try{actual=localStorage.getItem(nativeKey);}
+  catch(_){return false;}
+  if(actual!==lastSeenRaw){
+   // Never overwrite a newer balance from another page with stale data.
+   try{bu3824RefreshWallet();updateWallet();}catch(_){}
+   return false;
+  }
   const result=originalSave.apply(this,args);
-  if(result===true)notify();
+  if(result===true){
+   try{lastSeenRaw=localStorage.getItem(nativeKey);}catch(_){}
+   notify();
+  }
   return result;
  };
 }
