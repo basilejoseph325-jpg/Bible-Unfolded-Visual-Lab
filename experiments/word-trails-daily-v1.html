@@ -19,8 +19,11 @@ document.addEventListener('click',event=>{
  const back=event.target?.closest?.('.daily-back');
  if(!back||window.parent===window)return;
  try{
-  if(window.parent.BUWTNativeShell?.closeDaily?.()){
+  const host=window.parent.BUWTNativeShell;
+  if(host?.active?.()&&typeof host.closeDaily==='function'){
+   // Cancel anchor navigation BEFORE the parent removes this iframe.
    event.preventDefault();event.stopImmediatePropagation();
+   host.closeDaily();
   }
  }catch(_){}
 },true);
