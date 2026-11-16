@@ -259,17 +259,29 @@ document.addEventListener('pointermove',event=>{
  const b=document.elementFromPoint(event.clientX,event.clientY)?.closest('.daily-wheel-letter');
  if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
 });
-document.addEventListener('pointerup',event=>{
- if(!drag||event.pointerId!==drag.id)return;
+function finishTrace(x,y){
+ if(!drag)return;
  if(drag.tracing){
-  // Some touch browsers report an inconsistent pointerup coordinate. The
-  // last real move is the reliable finger-lift location for a wheel gesture.
-  const b=document.elementFromPoint(drag.lastX,drag.lastY)?.closest('.daily-wheel-letter');
+  // Prefer the actual finger-lift coordinates (touchend.changedTouches) over
+  // browsers' sometimes stale/coalesced last pointermove position.
+  const b=document.elementFromPoint(x,y)?.closest('.daily-wheel-letter');
   if(b&&wheel.contains(b))selectLetter(Number(b.dataset.letterIndex));
   suppressClickUntil=performance.now()+350;
   submit();
  }
  drag=null;
+}
+document.addEventListener('pointerup',event=>{
+ if(!drag||event.pointerId!==drag.id)return;
+ // On mobile, touchend carries the authoritative last finger position.
+ // Finishing here can lose the final letter on Chrome/Safari touch input.
+ if(event.pointerType==='touch')return;
+ finishTrace(event.clientX,event.clientY);
+});
+document.addEventListener('touchend',event=>{
+ if(!drag)return;
+ const t=event.changedTouches?.[0];
+ finishTrace(t?.clientX??drag.lastX,t?.clientY??drag.lastY);
 });
 document.addEventListener('pointercancel',()=>{drag=null;clearWord();});
 $('daily-submit').addEventListener('click',submit);
