@@ -144,7 +144,10 @@ function makePreviewBackup(){
 if(isTop){
  // Keep in-preview navigation on the guarded Visual Lab pages. In particular,
  // the Books home button uses JavaScript rather than a normal hyperlink.
- document.addEventListener('click',event=>{
+ // A legacy router also listens on WINDOW in capture phase. Listen here
+ // rather than at document level so the preview can intercept navigation
+ // before that old router discards our isolation flag.
+ window.addEventListener('click',event=>{
   const homeBooks=event.target?.closest?.('#home-books');
   if(homeBooks&&window.BUJamesReturnLoopV1?.inspect?.()?.owned?.includes('books')){
    event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
