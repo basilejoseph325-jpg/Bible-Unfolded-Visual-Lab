@@ -7,6 +7,7 @@ on:
       - 'experiments/bu-test-insight-wallet-v1.js'
       - 'experiments/bu-test-insight-wallet-qa.html'
       - 'experiments/bu-test-word-trails-economy-v1.js'
+      - 'experiments/bu-test-insight-word-trails-bridge-v1.js'
       - 'scripts/qa_test_insight_wallet_v1.cjs'
       - '.github/workflows/qa-test-insight-wallet-v1.yml'
   pull_request:
@@ -14,6 +15,7 @@ on:
       - 'experiments/bu-test-insight-wallet-v1.js'
       - 'experiments/bu-test-insight-wallet-qa.html'
       - 'experiments/bu-test-word-trails-economy-v1.js'
+      - 'experiments/bu-test-insight-word-trails-bridge-v1.js'
       - 'scripts/qa_test_insight_wallet_v1.cjs'
       - '.github/workflows/qa-test-insight-wallet-v1.yml'
 permissions: {contents: read}
@@ -27,6 +29,7 @@ jobs:
         run: |
           node --check experiments/bu-test-insight-wallet-v1.js
           node --check experiments/bu-test-word-trails-economy-v1.js
+          node --check experiments/bu-test-insight-word-trails-bridge-v1.js
           node --check scripts/qa_test_insight_wallet_v1.cjs
           python3 - <<'PY'
           from pathlib import Path
