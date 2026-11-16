@@ -8,6 +8,12 @@ on:
       - 'experiments/bu-test-insight-wallet-qa.html'
       - 'experiments/bu-test-word-trails-economy-v1.js'
       - 'experiments/bu-test-insight-word-trails-bridge-v1.js'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'experiments/bu-test-insight-native-bridge-v2.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'index.html'
+      - 'scripts/qa_test_insight_native_bridge_v2.cjs'
       - 'scripts/qa_test_insight_wallet_v1.cjs'
       - '.github/workflows/qa-test-insight-wallet-v1.yml'
   pull_request:
@@ -30,6 +36,19 @@ jobs:
           node --check experiments/bu-test-insight-wallet-v1.js
           node --check experiments/bu-test-word-trails-economy-v1.js
           node --check experiments/bu-test-insight-word-trails-bridge-v1.js
+          node --check experiments/bu-test-native-storage-fence-v1.js
+          node --check experiments/bu-test-insight-native-bridge-v2.js
+          node --check experiments/word-trails-next-v1.js
+          node --check word-trails-native-shell-v1.js
+          node --check scripts/qa_test_insight_native_bridge_v2.cjs
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf8')
+          assert '<head><script src="experiments/bu-test-native-storage-fence-v1.js"></script>' in s[:1000]
+          assert s.index('bu-test-native-storage-fence-v1.js')<s.index('bible_unfolded_core_part1.js')
+          assert s.index('bu-test-insight-native-bridge-v2.js')<s.index('bible_unfolded_core_part1.js')
+          print('PASS preview-only storage fence loaded before native transport')
+          PY
           node --check scripts/qa_test_insight_wallet_v1.cjs
           python3 - <<'PY'
           from pathlib import Path
@@ -46,3 +65,4 @@ jobs:
         run: |
           npm install --prefix /tmp/bu-test-wallet-deps fake-indexeddb@6 --no-audit --no-fund --silent
           NODE_PATH=/tmp/bu-test-wallet-deps/node_modules node scripts/qa_test_insight_wallet_v1.cjs
+          node scripts/qa_test_insight_native_bridge_v2.cjs
