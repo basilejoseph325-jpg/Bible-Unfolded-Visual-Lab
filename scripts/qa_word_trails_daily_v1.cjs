@@ -86,6 +86,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     const traceResult=await page.evaluate(()=>({selection:document.getElementById('daily-word').textContent,feedback:document.getElementById('daily-feedback').textContent,solved:BUWT_DAILY_QA.record().solved,submitted:BUWT_DAILY_QA.lastSubmission(),trace:BUWT_DAILY_QA.lastTrace()}));
     console.log('DAILY_REAL_TOUCH_SWIPE_TRACE',JSON.stringify({word,traceResult}));
     assert(traceResult.solved.includes(word),'Touch swipe did not solve '+word+'; '+JSON.stringify(traceResult));
+    await new Promise(resolve=>setTimeout(resolve,410)); // next word starts after native ghost-click suppression
    }
    const one=await openDate(first);
    assert(one.words.length>=3&&one.words.length<=12);
