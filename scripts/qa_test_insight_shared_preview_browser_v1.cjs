@@ -116,13 +116,49 @@ async function run(engine,browser){
    await page.waitForFunction(before=>economy.coins>=before+1,beforeSpark,{timeout:15000});
    const afterSpark=await page.evaluate(()=>economy.coins);
    assert.equal(afterSpark-beforeSpark,1,'Bible discovery must earn exactly one shared token');
+   // Solve the entire real first crossword with actual wheel button clicks.
+   for(const answer of ['ANTIC','TACO','TONIC','COIN']){
+    const selection=await page.evaluate(word=>{
+     const c=document.getElementById('bu-wt-native-game').contentWindow;
+     const buttons=[...c.document.querySelectorAll('.wheel-letter')];
+     const used=new Set(),chosen=[];
+     for(const char of word){
+      const i=buttons.findIndex((b,j)=>!used.has(j)&&b.textContent.trim()===char);
+      if(i<0)return {ok:false,word,letters:buttons.map(b=>b.textContent.trim())};
+      used.add(i);chosen.push(buttons[i]);
+     }
+     chosen.forEach(button=>button.click());
+     c.document.getElementById('submit').click();
+     return {ok:true};
+    },answer);
+    assert(selection.ok,'Cannot form '+answer+' using real wheel');
+    await page.waitForTimeout(80);
+   }
+   await page.waitForFunction(before=>{
+    const child=document.getElementById('bu-wt-native-game')?.contentWindow;
+    return economy.coins===before+4&&child?.document?.getElementById('finish')?.open;
+   },afterSpark,{timeout:16000});
+   const afterLevel=await page.evaluate(()=>economy.coins);
+   assert.equal(afterLevel-afterSpark,4,'First crossword win should credit exactly four native tokens');
+   // Spending from main game while Word Trails remains open must update its HUD.
+   const spent=await page.evaluate(()=>{
+    const before=economy.coins;
+    const result=canSpend(5,true);
+    return {result,before,after:economy.coins};
+   });
+   assert.equal(spent.result,true,'Actual main game token spend must succeed');
+   assert.equal(spent.after,spent.before-5);
+   await page.waitForFunction(expected=>{
+    const c=document.getElementById('bu-wt-native-game')?.contentWindow;
+    return +c?.document?.getElementById('points')?.textContent===expected;
+   },spent.after,{timeout:16000});
    // Daily remains its original independent Discovery Stamps overlay.
    await page.evaluate(()=>window.BUWTNativeShell.openDaily());
    await page.waitForFunction(()=>!!document.getElementById('bu-wt-daily-frame')?.contentWindow?.document?.getElementById('daily-app'),null,{timeout:25000});
-   assert.equal(await page.evaluate(()=>economy.coins),afterSpark,'Daily entry must not mint shared coins');
+   assert.equal(await page.evaluate(()=>economy.coins),spent.after,'Daily entry must not mint shared coins');
    await page.evaluate(()=>window.BUWTNativeShell.closeDaily());
    await page.evaluate(()=>window.BUWTNativeShell.close());
-   assert.equal(await page.evaluate(()=>economy.coins),afterSpark,'native balance must survive mode exit');
+   assert.equal(await page.evaluate(()=>economy.coins),spent.after,'native balance must survive mode exit');
    await page.reload({waitUntil:'domcontentloaded',timeout:140000});
    await page.waitForFunction(()=>window.BUTestInsightBridge?.nativeBalance?.().ok&&
     window.BUWTNativeShell?.nativeReady?.(),null,{timeout:120000});
@@ -133,7 +169,7 @@ async function run(engine,browser){
      ownership:g.originalKeyValue('bible-unfolded-wheel-ownership-v3825'),
      crossword:g.originalKeyValue('bible-unfolded-word-trails-next-v1')};
    });
-   assert.equal(final.coins,afterSpark,'shared native balance must survive full page reload');
+   assert.equal(final.coins,spent.after,'shared native balance must survive full page reload');
    assert.equal(final.primary,ORIGINAL[LIVE]);
    assert.equal(final.recovery,ORIGINAL[RECOVERY]);
    assert.equal(final.ownership,ORIGINAL[OWN]);
@@ -141,7 +177,7 @@ async function run(engine,browser){
    const relevant=errors.filter(e=>/BUPreviewStorageFence|BUTestInsightBridge|shared-wallet/i.test(e));
    assert.deepEqual(relevant,[],'shared wallet browser errors');
    console.log('PASS',engine,width+'x'+height,
-    'native award +25, paid hint -15, Bible discovery +1, reload, LIVE isolation');
+    'native award +25, paid hint -15, Bible discovery +1, level +4, native spend -5, reload, LIVE isolation');
   }finally{await context.close();}
  }
 }
