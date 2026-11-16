@@ -199,11 +199,10 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
 .hint span{right:-8px;bottom:-7px;padding:3px 6px;font-size:9px;min-width:32px;text-align:center}
 .hint:disabled{opacity:.65}
 .preview{top:-25px;box-shadow:0 4px 12px #0009!important}
-/* Keep the earned COMBO counter readable, just left of the floating DAILY button.
-   A scoped offset protects the wheel and daily tap targets on narrow phones. */
-.combo{position:absolute;top:5px;
- right:calc(clamp(5px,2vw,16px) + clamp(64px,18vw,76px) + 12px);
- border-radius:9px;padding:4px 7px;white-space:nowrap;z-index:7;
+/* The combo reward lives on the LEFT edge, never under right-hand DAILY.
+   The fixed left anchor is safer than a responsive right offset on Android. */
+.combo{position:absolute;top:5px;left:10px;right:auto;
+ border-radius:9px;padding:4px 7px;white-space:nowrap;z-index:8;
  color:#ffe2a4;background:#092e3ddc;border:1px solid #ebca865e;
  box-shadow:0 2px 7px #00182066;text-shadow:0 1px 4px #001b22;
  font-weight:900;font-size:11px;letter-spacing:.06em;pointer-events:none}
@@ -495,7 +494,6 @@ dialog::backdrop{background:#02151ed9;backdrop-filter:blur(6px)}
  86%{box-shadow:inset 0 1px #fff2ce7a,inset 0 -4px 12px #021a25a8,0 4px 12px #0009,0 0 0 6px #e6c37c50}
 }
 @media(max-width:350px), (max-height:680px){
- .combo{right:calc(clamp(5px,2vw,16px) + 62px + 12px)}
  #daily-trail-entry.daily-float{top:4px;width:62px;height:62px}
  #daily-trail-entry .daily-float-sun{font-size:28px}
  #daily-trail-entry .daily-float-label{font-size:10px}
