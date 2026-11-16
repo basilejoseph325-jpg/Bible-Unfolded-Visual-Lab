@@ -88,8 +88,8 @@ assert(dailyCSS.includes('touch-action:none;user-select:none'),'Daily wheel must
     const inFlight=await page.$eval('#daily-word',e=>e.textContent);
     assert(word.startsWith(inFlight)&&inFlight.length>=word.length-1,
       'Touch trace lost intermediate letters or toggled on repeated movement: '+inFlight+' / '+word);
-    const lineCount=await page.$eval('#daily-lines line',xs=>xs.length);
-    assert(lineCount>=inFlight.length,'Swipe must draw connected letters plus a live finger-tail segment');
+    const lineData=await page.evaluate(()=>({total:document.querySelectorAll('#daily-lines line').length,tail:document.querySelectorAll('#daily-lines .daily-trail-tail').length,chosen:document.querySelectorAll('.daily-wheel-letter.selected').length,word:document.getElementById('daily-word').textContent}));
+    assert(lineData.total>=inFlight.length,'Swipe must draw connected letters plus a live finger-tail segment: '+JSON.stringify({inFlight,lineData}));
     await client.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});
     await client.detach();
     const traceResult=await page.evaluate(()=>({selection:document.getElementById('daily-word').textContent,feedback:document.getElementById('daily-feedback').textContent,solved:BUWT_DAILY_QA.record().solved,submitted:BUWT_DAILY_QA.lastSubmission(),trace:BUWT_DAILY_QA.lastTrace()}));
