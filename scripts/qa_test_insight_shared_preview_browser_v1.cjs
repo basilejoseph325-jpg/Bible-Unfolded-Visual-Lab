@@ -4,7 +4,7 @@
  * no live branch, and no end-user browser storage is touched.
  */
 'use strict';
-const assert=require('node:assert/strict'),{chromium,webkit}=require('playwright');
+const assert=require('node:assert/strict'),fs=require('node:fs'),{chromium,webkit}=require('playwright');
 const {execSync}=require('node:child_process');
 const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 const BASE='http://127.0.0.1:8894/index.html?bu_shared_wallet_preview=1';
@@ -24,7 +24,7 @@ const ORIGINAL={
 };
 async function run(engine,browser){
  for(const [width,height] of [[320,568],[430,932]]){
-  const context=await browser.newContext({viewport:{width,height},isMobile:true,
+  const context=await browser.newContext({acceptDownloads:true,viewport:{width,height},isMobile:true,
    hasTouch:true,deviceScaleFactor:2});
   try{
    await context.addInitScript(records=>{
@@ -250,6 +250,20 @@ async function run(engine,browser){
    assert.equal(final.ownership,ORIGINAL[OWN]);
    assert.equal(final.crossword,ORIGINAL[CROSS]);
    for(const [key,value] of Object.entries(final.other))assert.equal(value,ORIGINAL[key],'Existing TEST save changed: '+key);
+   // Real Settings export must include BOTH progress streams and use its
+   // distinctive non-importable preview format, never a misleading TEST v2.
+   await page.evaluate(()=>window.openDialog('settings'));
+   const downloadPromise=page.waitForEvent('download',{timeout:20000});
+   await page.locator('#save-export').click();
+   const download=await downloadPromise;
+   assert.equal(download.suggestedFilename(),'Bible_Unfolded_SHARED_COINS_TEST_PREVIEW.json');
+   const exported=JSON.parse(fs.readFileSync(await download.path(),'utf8'));
+   assert.equal(exported.format,'BibleUnfoldedSharedCoinPreview');
+   assert.equal(exported.restoreAllowed,false);
+   assert(exported.keys['bible-unfolded-rewards-v17'],'must include native game wallet');
+   assert(exported.keys['bu-visual-lab-wordtrails-shared-preview-v1'],'must include Word Trails save');
+   assert.equal(exported.keys['bible-unfolded-word-trails-next-v1'],undefined,
+    'never include original LIVE crossword');
    const relevant=errors.filter(e=>/BUPreviewStorageFence|BUTestInsightBridge|shared-wallet/i.test(e));
    assert.deepEqual(relevant,[],'shared wallet browser errors');
    // Releasing the owning tab must let a different tab obtain the lock and
@@ -265,7 +279,7 @@ async function run(engine,browser){
      'successor tab must inherit protected shared balance after owner closes');
    }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'native + Word Trails earn/spend, paid hint crash recovery, blocked second tab, lock handoff, LIVE isolation');
+    'earn/spend, hint crash recovery, two-tab lock, isolated backup download, LIVE isolation');
   }finally{await context.close();}
  }
 }
