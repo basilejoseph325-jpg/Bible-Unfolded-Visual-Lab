@@ -21,7 +21,9 @@ const ORIGINAL={
  'bu-visual-lab-daily-word-trail-v1':'{"version":1,"days":{"2026-11-16":{"board":0,"solved":[],"hints":[],"completed":true}}}',
  'bu-visual-lab-wordtrails-next-v1':JSON.stringify({level:0,unlocked:0,
   coins:600,points:12,completed:[],sparks:[],claimedSparks:[],paidBonuses:[]}),
- 'other-app-unrelated-key':'do-not-touch'
+ 'other-app-unrelated-key':'do-not-touch',
+ 'buGuideLast:0':'7',
+ 'buGuideFinished:0':'1'
 };
 async function run(engine,browser){
  for(const [width,height] of [[320,568],[430,932]]){
@@ -376,9 +378,65 @@ async function run(engine,browser){
       null,{timeout:130000});
     assert.equal(await successor.evaluate(()=>economy.coins),afterReconcile,
      'successor tab must inherit protected shared balance after owner closes');
+    assert.equal(await successor.evaluate(()=>window.BUJamesReturnLoopV1?.inspect?.().owned.includes('books')),true,
+     'Book entitlement must persist in same native TEST wallet after reload');
+    await successor.evaluate(()=>document.getElementById('home-books').click());
+    await successor.waitForURL(u=>u.pathname.endsWith('/bible-book-guides/index.html')&&u.searchParams.get('bu_shared_wallet_preview')==='1',
+     {timeout:25000});
+    await successor.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable===true,
+     null,{timeout:25000});
+    const shelf=await successor.evaluate(()=>({
+     protected:window.BUPreviewStorageFence?.active,
+     oldLast:window.BUPreviewStorageFence?.originalKeyValue('buGuideLast:0'),
+     oldFinish:window.BUPreviewStorageFence?.originalKeyValue('buGuideFinished:0'),
+     previewLast:localStorage.getItem('buGuideLast:0'),
+     firstLink:document.querySelector('a.book-card[href*="genesis"]')?.href
+    }));
+    assert.equal(shelf.protected,true,'Bible Books shelf must keep preview storage fence');
+    assert.equal(shelf.oldLast,ORIGINAL['buGuideLast:0'],'Books shelf must preserve original reading progress');
+    assert.equal(shelf.oldFinish,ORIGINAL['buGuideFinished:0']);
+    assert.equal(shelf.previewLast,null,'preview must not import regular Books reading position');
+    assert(shelf.firstLink,'Genesis book link must exist');
+    await successor.locator('a.book-card[href*="genesis"]').first().click();
+    await successor.waitForURL(u=>u.pathname.endsWith('/bible-book-guides/read.html')&&
+      u.searchParams.get('bu_shared_wallet_preview')==='1'&&u.searchParams.get('book')==='genesis',
+      {timeout:30000});
+    await successor.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable===true &&
+      document.getElementById('next-part')?.hidden===false,null,{timeout:40000});
+    const initialBooks=await successor.evaluate(()=>({
+     sandbox:window.BUPreviewStorageFence?.active,
+     readProgress:localStorage.getItem('buGuideLast:0'),
+     oldProgress:window.BUPreviewStorageFence?.originalKeyValue('buGuideLast:0'),
+     oldFinish:window.BUPreviewStorageFence?.originalKeyValue('buGuideFinished:0')
+    }));
+    assert.equal(initialBooks.sandbox,true,'Books reader must remain in TEST preview');
+    assert(initialBooks.readProgress===null||initialBooks.readProgress==='0','Books preview must start without importing existing chapter position');
+    assert.equal(initialBooks.oldProgress,'7');
+    assert.equal(initialBooks.oldFinish,'1');
+    await successor.locator('#next-part').click();
+    await successor.waitForFunction(()=>localStorage.getItem('buGuideLast:0')==='1',
+     null,{timeout:12000});
+    const newBooks=await successor.evaluate(()=>({
+     scoped:localStorage.getItem('buGuideLast:0'),
+     original:window.BUPreviewStorageFence?.originalKeyValue('buGuideLast:0')
+    }));
+    assert.equal(newBooks.scoped,'1');
+    assert.equal(newBooks.original,'7','preview reading progress must not overwrite original Books state');
+    await successor.locator('a.back-link').click();
+    await successor.waitForURL(u=>u.pathname.endsWith('/bible-book-guides/index.html')&&
+      u.searchParams.get('bu_shared_wallet_preview')==='1',{timeout:30000});
+    await successor.locator('a.back-link').click();
+    await successor.waitForURL(u=>u.pathname.endsWith('/index.html')&&
+      u.searchParams.get('bu_shared_wallet_preview')==='1',{timeout:30000});
+    await successor.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus?.().writable===true&&
+      window.BUTestInsightBridge?.nativeBalance?.().ok===true,null,{timeout:35000});
+    assert.equal(await successor.evaluate(()=>economy.coins),afterReconcile,
+     'Books round trip must preserve same shared coin wallet');
+    assert.equal(await successor.evaluate(()=>window.BUPreviewStorageFence.originalKeyValue('buGuideLast:0')),'7',
+     'original Bible Books reading progress must survive full round trip');
    }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'earn/spend, James shop + Word Trails, hint/win crash recovery, lock, isolated backup, LIVE isolation');
+    'earn/spend, James+Word Trails, hint/win recovery, two-tab lock, isolated backup, Books guarded round trip, LIVE isolation');
   }finally{await context.close();}
  }
 }
