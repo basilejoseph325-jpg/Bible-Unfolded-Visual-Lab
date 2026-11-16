@@ -40,7 +40,7 @@ assert(dailyScript.includes('if(isLocal)window.BUWT_DAILY_QA'),'TEST-only instru
     assert.equal(await page.$eval('#daily-board',x=>x.children.length)>0,true);
     const layout=await page.evaluate(()=>{
      const a=['daily-wheel','daily-shuffle','daily-hint','daily-submit','daily-back','collection'].map(id=>{
-      const r=document.getElementById(id).getBoundingClientRect();
+      const element=document.getElementById(id)||document.querySelector('.'+id);if(!element)throw Error('Missing UI control '+id);const r=element.getBoundingClientRect();
       return {id,w:r.width,h:r.height,l:r.left,r:r.right,t:r.top,b:r.bottom};
      });
      return {width:innerWidth,height:innerHeight,overflow:document.documentElement.scrollWidth>innerWidth+2,
