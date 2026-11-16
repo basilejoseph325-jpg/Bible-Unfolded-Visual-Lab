@@ -32,3 +32,26 @@ for term in ['bible-unfolded-rewards-v17','function bu3824RefreshWallet','bu3824
   print('CONTEXT',term,'at',i+1)
   for j in range(max(0,i-5),min(len(lines),i+17)):
    print(f'{j+1:05d}: {lines[j][:320]}')
+
+print('\\nHEAD 75 LINES')
+for i,line in enumerate(lines[:75]):print(f'{i+1:05d}: {line[:330]}')
+print('\\nSCRIPT SOURCES')
+sources = re.findall(r'<script[^>]+src=[\\"\\\']([^\\"\\\']+)', s, flags=re.I)
+for source in sources[:200]:print('SRC',source)
+print('\\nSCAN SOURCE FILES (wallet internals)')
+needles=['BUJamesReturnLoopV1','bible-unfolded-rewards-v17','bu3824RefreshWallet','function canSpend','function spendCoins','function earnCoins','function creditCoins']
+files=[p for p in Path('.').rglob('*.js') if '.git' not in p.parts and 'node_modules' not in p.parts]
+for needle in needles:
+ matches=[]
+ for p in files:
+  try:
+   if p.stat().st_size>15_000_000:continue
+   c=p.read_text(encoding='utf8')
+  except Exception:continue
+  if needle in c:
+   lns=c.splitlines()
+   indices=[i for i,ln in enumerate(lns) if needle in ln]
+   matches.append((str(p),len(indices),[(i+1,lns[i][:280]) for i in indices[:5]]))
+ print('SOURCE TERM',needle,':',matches[:15])
+print('\\nFOCUSED NATIVE SAVE HELP')
+for i in range(5920,6000):print(f'{i+1:05d}: {lines[i][:370]}')
