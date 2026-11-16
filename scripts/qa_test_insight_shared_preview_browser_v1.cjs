@@ -93,6 +93,34 @@ async function run(engine,browser){
     return {before,after:economy.coins,success};
    });
    assert(rootEarn.success);assert.equal(rootEarn.after-rootEarn.before,25);
+   const james=await page.evaluate(()=>{
+    if(!window.BUJamesReturnLoopV1?.testActions?.buy)throw Error('James Return Loop not loaded');
+    const before=economy.coins;
+    const shopBefore=window.BUJamesReturnLoopV1.inspect();
+    const starter=awardOnce('qa-james-bible-books-'+innerWidth,5,200,true);
+    const funds=economy.coins;
+    const purchased=window.BUJamesReturnLoopV1.testActions.buy('books');
+    const after=economy.coins;
+    const denied=window.BUJamesReturnLoopV1.testActions.buy('mastery');
+    const deniedBalance=economy.coins;
+    window.BUJamesReturnLoopV1.testActions.correct();
+    const pot=window.BUJamesReturnLoopV1.inspect().pot;
+    const banked=window.BUJamesReturnLoopV1.testActions.bank();
+    const final=economy.coins;
+    return {before,shopBefore,starter,funds,purchased,after,denied,
+      deniedBalance,pot,banked,final,shop:window.BUJamesReturnLoopV1.inspect(),
+      legacy:window.BUPreviewStorageFence.originalKeyValue('bu-james-return-loop-v1-test-only')};
+   });
+   assert.equal(james.shopBefore.balance,james.before,'James shop must show real native balance');
+   assert(james.starter&&james.purchased,'native wallet must fund a James Bible Books purchase');
+   assert.equal(james.after,james.funds-180,'Books purchase must debit exactly 180 shared tokens');
+   assert.equal(james.denied,false,'unaffordable purchase must be refused');
+   assert.equal(james.deniedBalance,james.after);
+   assert.equal(james.final,james.after+james.pot,'banking earned tokens must credit native ledger');
+   assert.equal(james.shop.balance,james.final,'James store and main balance must agree');
+   assert(james.shop.owned.includes('books'));
+   assert.equal(james.legacy,ORIGINAL['bu-james-return-loop-v1-test-only'],
+    'do not import or overwrite original separate James TEST ledger');
    await page.evaluate(()=>window.BUWTNativeShell.launch());
    await page.waitForFunction(()=>{
     const f=document.getElementById('bu-wt-native-game')?.contentWindow;
@@ -339,7 +367,7 @@ async function run(engine,browser){
      'successor tab must inherit protected shared balance after owner closes');
    }finally{await successor.close();}
    console.log('PASS',engine,width+'x'+height,
-    'earn/spend, hint+win crash recovery, missed-award reconciliation, two-tab lock, backup, LIVE isolation');
+    'earn/spend, James shop + Word Trails, hint/win crash recovery, lock, isolated backup, LIVE isolation');
   }finally{await context.close();}
  }
 }
