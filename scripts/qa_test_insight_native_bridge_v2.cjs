@@ -130,7 +130,7 @@ function scenario(preview=true,lockMode='owned'){
  assert.equal(backup.scope,'Isolated TEST preview only');
  assert(backup.keys['bible-unfolded-rewards-v17']);
  assert(backup.keys['bu-visual-lab-wordtrails-shared-preview-v1']);
- assert.equal(backup.keys['bible-unfolded-rewards-v17'],undefined);
+ assert.notEqual(backup.keys['bible-unfolded-rewards-v17'],x.live,'must export TEST wallet data, never raw LIVE wallet bytes');
  assert.equal(backup.keys['bu-visual-lab-wordtrails-next-v1'],undefined);
  assert.equal(backup.keys['other-app-unrelated-key'],undefined);
  x.closed.active=false;
