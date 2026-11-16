@@ -17,21 +17,20 @@ const original={
 };
 const protectedKey=s=>/^(?:bible-unfolded|story-trails)-[a-z0-9_.:-]+$/i.test(s);
 const scoped=k=>{const name=String(k);return protectedKey(name)?PREFIX+name:name;};
-function ensureThis(target){return target===storage;}
-proto.getItem=function(k){return original.getItem.call(this,ensureThis(this)?scoped(k):k);};
-proto.setItem=function(k,v){return original.setItem.call(this,ensureThis(this)?scoped(k):k,v);};
-proto.removeItem=function(k){return original.removeItem.call(this,ensureThis(this)?scoped(k):k);};
+// Wrap all Storage instances on this *preview page*. This is safer than
+// relying on localStorage object identity across browser realms/proxies.
+proto.getItem=function(k){return original.getItem.call(this,scoped(k));};
+proto.setItem=function(k,v){return original.setItem.call(this,scoped(k),v);};
+proto.removeItem=function(k){return original.removeItem.call(this,scoped(k));};
 proto.clear=function(){
- if(ensureThis(this))throw Error('Shared-wallet preview forbids clearing all browser saves');
- return original.clear.call(this);
+ throw Error('Shared-wallet preview forbids clearing all browser saves');
 };
 // Never enumerate real LIVE game keys through Storage.key while preview is active.
 // Unrelated app keys and PREVIEW-prefixed copies remain visible.
 proto.key=function(n){
- if(!ensureThis(this))return original.key.call(this,n);
  const keys=[];
- for(let i=0;i<storage.length;i++){
-  const item=original.key.call(storage,i);
+ for(let i=0;i<this.length;i++){
+  const item=original.key.call(this,i);
   if(item===null)continue;
   if(item.startsWith(PREFIX))keys.push(item.slice(PREFIX.length));
   else if(!protectedKey(item))keys.push(item);
