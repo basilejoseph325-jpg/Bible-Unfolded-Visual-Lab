@@ -69,11 +69,6 @@ function scenario(preview=true){
  assert.equal(api.nativeBalance().balance,60);
  const migrated=JSON.parse(x.storage.getItem('bu-visual-lab-shared-preview-20261116:bible-unfolded-rewards-v17'));
  assert.equal(migrated.wtPreviewMigration,1);
- console.log('DEBUG LEGACY', JSON.stringify({
-  original:x.window.BUPreviewStorageFence.originalKeyValue('bu-visual-lab-wordtrails-next-v1'),
-  test:x.storage.getItem('bu-visual-lab-wordtrails-shared-preview-v1'),
-  receipts:migrated.wtReceipts
- }));
  assert.equal(api.snapshot(x.foreign).reason,'inactive-word-trails-frame');
  assert.equal(api.transact(x.child,{type:'level',level:1}).legacy,true);
  assert.equal(api.transact(x.child,{type:'discovery',level:1,word:'CAIN'}).legacy,true);
