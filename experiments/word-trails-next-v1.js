@@ -864,4 +864,39 @@ if(SHARED_PREVIEW){
  try{window.parent.addEventListener('bu-test-insight-change',()=>{syncShared();ui()});}catch(_){}
 }
 showLevel(index,true);
+// A complete set of letters can be saved immediately before the end-of-level
+// animation starts. If the player refreshes during that delay, finish the
+// existing level instead of trapping them on a solved, non-advancing board.
+if(SHARED_PREVIEW&&found.size===level.words.length&&!save.completed.includes(index)){
+ const pendingIndex=index;
+ setTimeout(()=>{
+  if(index===pendingIndex&&found.size===level.words.length&&
+   !save.completed.includes(index)&&!$('finish').open)completeLevel();
+ },120);
+}
+// Reconcile persisted achievements whose token credit was interrupted.
+// The parent grants at most once and marks old legacy achievements as zero-pay.
+if(SHARED_PREVIEW){
+ const applied=[];
+ for(const n of (Array.isArray(save.completed)?save.completed:[])){
+  if(!Number.isInteger(n)||n<0||n>=LEVELS.length)continue;
+  applied.push({type:'level',level:n+1});
+  if((n+1)%5===0)applied.push({type:'seal',level:n+1});
+ }
+ for(const raw of (Array.isArray(save.claimedSparks)?save.claimedSparks:[])){
+  const found=/^(\\d{1,2}):([A-Z]{3,12})$/.exec(String(raw));
+  if(!found)continue;
+  const n=Number(found[1]),word=found[2];
+  if(!BIBLE_SPARKS[n]?.some(item=>item.word===word))continue;
+  applied.push({type:'discovery',level:n+1,word});
+ }
+ for(const raw of (Array.isArray(save.paidBonuses)?save.paidBonuses:[])){
+  const found=/^satchel:(\\d{1,2})$/.exec(String(raw));
+  if(!found)continue;
+  const n=Number(found[1]);
+  if(n>=0&&n<LEVELS.length)applied.push({type:'satchel',level:n+1});
+ }
+ for(const request of applied){sharedPay(request);}
+ if(applied.length)ui();
+}
 })();
