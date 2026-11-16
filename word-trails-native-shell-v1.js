@@ -10,8 +10,33 @@ const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
 function nativeReady(){return !!($('game-menu')&&$('settings-dialog')&&$('home-menu')&&
   typeof window.openMenu==='function'&&typeof window.openDialog==='function')}
-function pauseHome(){try{if(typeof window.pauseAudio==='function')window.pauseAudio()}catch(_){}}
-function resumeHome(){try{if(typeof window.syncMusic==='function')window.syncMusic()}catch(_){}}
+/* The original pauseAudio() fades v1 WebAudio only. Current home-screen
+ * music lives in seven HTMLAudioElements (bu25Audio) and can restart from a
+ * menu/Settings pointerdown. Keep their *original* muted flags in a scoped
+ * lease while the native Word Trails iframe owns the soundtrack. The parent
+ * soundtrack's 90-ms fade timer changes volume but never unmutes; this holds
+ * even when navigating Settings or returning to play. */
+const ROOT_MUSIC_IDS=['music-navigation','music-story','music-trails','music','music-daily','music-builder','music-name'];
+const rootMusicMuteLease=new Map();
+function pauseHome(){
+ if(!active())return;
+ try{if(typeof window.pauseAudio==='function')window.pauseAudio()}catch(_){}
+ for(const id of ROOT_MUSIC_IDS){
+  const player=$(id);
+  if(!(player instanceof HTMLMediaElement))continue;
+  if(!rootMusicMuteLease.has(player))rootMusicMuteLease.set(player,player.muted);
+  player.muted=true;
+  if(!player.paused)try{player.pause()}catch(_){}
+ }
+}
+function resumeHome(){
+ // Restore the user's original mute choices, NOT a hardcoded unmute.
+ for(const [player,previouslyMuted] of rootMusicMuteLease){
+  try{player.muted=previouslyMuted}catch(_){}
+ }
+ rootMusicMuteLease.clear();
+ try{if(typeof window.syncMusic==='function')window.syncMusic()}catch(_){}
+}
 function audioPrefs(){
  const music=$('setting-music'),sfx=$('setting-sfx'),mv=$('setting-volume'),
   sv=$('setting-sfx-volume'),motion=$('setting-motion');
