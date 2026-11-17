@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Frozen legacy backup component fixture on localhost only. The normal shared
+// wallet/restore path is mandatory in qa_shared_test_backup_v2_browser.cjs.
 'use strict';
 /* v33: exercise EXACT pinned LIVE migration on two ACTUAL same-origin browser
  * documents, plus first-visit and post-migration cold TEST startup reviews.
@@ -28,7 +30,7 @@ const testState=JSON.stringify({level:1,unlocked:2,coins:35,points:11,completed:
    await a.bringToFront();
    a.on('pageerror',e=>errors.push(e.message));
    await a.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-   await a.goto(ROOT+'/index.html?qa-cold-legacy-v33='+width,
+   await a.goto(ROOT+'/index.html?qa-cold-legacy-v33='+width+(['127.0.0.1','localhost'].includes(new URL(ROOT).hostname)?'&standalone=qa':''),
     {waitUntil:'domcontentloaded',timeout:120000});
    await a.waitForFunction(()=>window.BUPlatformSaves?.bound?.()&&
      typeof window.BUPlatformSaves?.legacyTransitionStatus==='function',

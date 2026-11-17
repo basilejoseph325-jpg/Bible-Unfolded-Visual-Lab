@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Frozen legacy backup component fixture on localhost only. The normal shared
+// wallet/restore path is mandatory in qa_shared_test_backup_v2_browser.cjs.
 'use strict';
 /* TEST-only REAL Chromium 2-document storage event contract on localhost.
  * Two fresh synthetic profiles, no actual user account state, no LIVE site.
@@ -25,7 +27,7 @@ const migrated=JSON.stringify({level:1,coins:60,points:0,
    await a.bringToFront();
    a.on('pageerror',e=>errors.push(e.message));
    await a.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-   await a.goto(root+'/index.html?qa-external-v32='+width,
+   await a.goto(root+'/index.html?qa-external-v32='+width+(['127.0.0.1','localhost'].includes(new URL(root).hostname)?'&standalone=qa':''),
      {waitUntil:'domcontentloaded',timeout:120000});
    await a.waitForFunction(()=>window.BUPlatformSaves?.bound?.()&&
     typeof window.BUPlatformSaves?.externalChangeStatus==='function',
