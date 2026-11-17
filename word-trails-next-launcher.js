@@ -1,5 +1,7 @@
-/* Visual Lab only: Word Trails NEXT is the default playtest entry.
-   Old Word Trails remains behind a comparison toggle; live game unchanged. */
+/* Visual Lab only: Bible Crosswords 33-pack collection and Word Trails
+   50-level wheel are distinct home games. Remove the obsolete 'previous
+   Word Trails' A/B toggle, but preserve both games and all saved data.
+   LIVE is unchanged. */
 (()=>{'use strict';
 const PATH='experiments/word-trails-next-v1.html';
 const css=[
@@ -11,9 +13,8 @@ const css=[
  '#cross-pick #wt-next-entry .wt-next-copy{font:650 13px/1.35 system-ui,sans-serif!important;color:#fff7e2!important;text-shadow:0 2px 5px #00161c!important}',
  '#cross-pick #wt-next-entry .wt-next-go{font:900 13px system-ui,sans-serif!important;align-self:flex-start;margin-top:5px;padding:9px 13px;border:1px solid #ffedbc;border-radius:10px;background:linear-gradient(#ffe6a2,#be8c41);color:#17353b;box-shadow:inset 0 1px #fff6d5,0 3px 7px #0007}',
  '#cross-pick #wt-next-entry>button{display:block!important;width:100%!important;border:none!important;border-top:1px solid #d2b27260!important;border-radius:0!important;padding:11px!important;background:#113945!important;color:#ead8b1!important;font:750 11px system-ui,sans-serif!important;box-sizing:border-box!important}',
- '#cross-pick:not(.wt-next-compare) .cross-pack-list{display:none!important}',
- '#cross-pick:not(.wt-next-compare) .mode-source{display:none!important}',
- '#cross-pick.wt-next-compare .cross-pack-list{display:flex!important}',
+ '#cross-pick:not(.wt-crossword-collection) .cross-pack-list{display:none!important}',
+ '#cross-pick:not(.wt-crossword-collection) .mode-source{display:none!important}',
  // Only the home card poster changes: keep title, icon, teal panel, button and gold frame.
  '#home #home-cross .cinematic-poster.art-cross{position:relative!important;overflow:visible!important;background-image:linear-gradient(180deg,rgba(2,21,30,.05),rgba(3,22,29,.20)),url("bible-book-art/01_genesis.webp")!important;background-position:center center!important;background-size:cover!important}',
  '#home #home-cross .cin-cross-letters{display:none!important}',
@@ -30,20 +31,14 @@ function install(){
  const style=document.createElement('style');style.id='wt-next-launch-style';style.textContent=css;
  document.head.appendChild(style);
  const section=document.createElement('section');section.id='wt-next-entry';
- section.innerHTML='<a href="'+PATH+'" aria-label="Play the new 30-level Word Trails test">'+
- '<span class="wt-next-kicker">VISUAL LAB · NEW GAMEPLAY TEST</span>'+
- '<strong class="wt-next-title">Word Trails NEXT</strong>'+
- '<span class="wt-next-copy">30 crossword levels · bigger Bible puzzles · Scripture words · rewards · original sounds</span>'+
- '<span class="wt-next-go">PLAY THE NEW VERSION →</span></a>'+
- '<button type="button" id="wt-next-compare" aria-expanded="false">Show previous Word Trails for comparison</button>';
+ section.innerHTML='<a href="'+PATH+'" aria-label="Play the 50-level Bible Word Trails game">'+
+ '<span class="wt-next-kicker">VISUAL LAB · BIBLE WORD GAME</span>'+
+ '<strong class="wt-next-title">Word Trails</strong>'+
+ '<span class="wt-next-copy">50 crossword levels · Bible discoveries · rewards · original sounds</span>'+
+ '<span class="wt-next-go">PLAY WORD TRAILS →</span></a>';
  scroll.prepend(section);
  section.querySelector('a[href="'+PATH+'"]').addEventListener('click',event=>{
   if(window.BUWTNativeShell?.launch?.()){event.preventDefault()}
- });
- section.querySelector('#wt-next-compare').addEventListener('click',()=>{
-  const open=page.classList.toggle('wt-next-compare'),b=section.querySelector('#wt-next-compare');
-  b.textContent=open?'Hide previous Word Trails':'Show previous Word Trails for comparison';
-  b.setAttribute('aria-expanded',String(open));
  });
  return true;
 }
@@ -95,7 +90,7 @@ function installCrosswordsHomeCard(){
   try{window.startAudio?.();window.BUPremiumSFX?.play?.('navigate')}catch(_){}
   openCrossPick();
   const pick=document.getElementById('cross-pick');
-  if(pick)pick.classList.add('wt-next-compare','wt-crossword-collection');
+  if(pick)pick.classList.add('wt-crossword-collection');
  });
  original.insertAdjacentElement('afterend',button);
  return true;
