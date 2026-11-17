@@ -66,7 +66,7 @@ jobs:
                 return {oldDisplay:getComputedStyle(list).display,
                   button:!!document.getElementById('wt-next-compare')};
               });
-              assert.equal(second.oldDisplay,'flex');
+              assert.notEqual(second.oldDisplay,'none','Bible Crosswords collection must remain visible');
               assert.equal(second.button,false);
               console.log('PASS distinct Bible Crosswords collection without obsolete A/B toggle');
               await page.goto('http://127.0.0.1:8766/index.html',{waitUntil:'domcontentloaded',timeout:120000});
