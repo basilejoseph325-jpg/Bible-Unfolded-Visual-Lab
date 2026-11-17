@@ -860,6 +860,8 @@ if(SHARED_PREVIEW){
  if(badge){
   badge.title='Shared TEST Insight Tokens (main game and Word Trails)';
   badge.setAttribute('aria-label','Shared Insight Tokens');
+  const label=badge.querySelector('#coin-label');
+  if(label)label.textContent='TOKENS';
   // Native game uses a star for Points, not spendable Insight Tokens.
   // Use the same ◈ token symbol already used by its Rewards purchases.
   const tokenSymbol=badge.querySelector('span');
