@@ -351,7 +351,7 @@ function showBanner(){
  banner.style.cssText='position:fixed;left:5px;right:5px;top:env(safe-area-inset-top,0px);z-index:9998;pointer-events:none;text-align:center;background:#073541e8;color:#ffe7a7;border:1px solid #c89c48;border-radius:8px;padding:5px 8px;font:700 10px system-ui;letter-spacing:.04em';
  document.body.appendChild(banner);
 }
-if(standardMode){window.addEventListener('bu-test-wallet-writable',showBanner);document.addEventListener('DOMContentLoaded',()=>{const transfer=document.querySelector('.save-transfer');if(transfer)new MutationObserver(showBanner).observe(transfer,{subtree:true,childList:true,attributes:true,attributeFilter:['title','aria-label']});},{once:true});}
+if(standardMode){window.addEventListener('bu-test-wallet-writable',showBanner);window.addEventListener('click',()=>setTimeout(showBanner,0),true);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showBanner,{once:true});
 else showBanner();
 })();
