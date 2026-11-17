@@ -1,0 +1,31 @@
+name: QA copy existing regular TEST wallet to unified protected preview
+on:
+  push:
+    branches:
+      - 'feature/regular-test-533-to-unified-wallet-copy-20261116'
+    paths:
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'scripts/qa_regular_test_wallet_copy_v1.cjs'
+      - '.github/workflows/qa-regular-test-wallet-copy-v1.yml'
+permissions: {contents: read}
+jobs:
+  regular-test-copy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate scripts
+        run: |
+          node --check experiments/bu-test-native-storage-fence-v1.js
+          node --check scripts/qa_regular_test_wallet_copy_v1.cjs
+      - name: Install Playwright Chromium and WebKit
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-regular-copy-qa playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-regular-copy-qa/node_modules/.bin/playwright install --with-deps webkit
+      - name: Test cloned 533 balance, Word Trails Level 6, 111 legacy, 15-token hint and reload
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-regular-copy-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-regular-copy-qa/node_modules node scripts/qa_regular_test_wallet_copy_v1.cjs
