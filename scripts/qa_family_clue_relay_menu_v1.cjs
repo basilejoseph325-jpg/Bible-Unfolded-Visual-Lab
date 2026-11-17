@@ -114,7 +114,14 @@ const music=['music-navigation','music-story','music-trails','music',
     trail:localStorage.getItem('bu-visual-lab-wordtrails-next-v1'),
     family:localStorage.getItem('bible-unfolded-family-v35')
    }));
-   assert.deepEqual(after,before,'Family, Trail and wallet saves untouched');
+   assert.equal(after.rewards,before.rewards,'Relay must not change wallet');
+   assert.equal(after.trail,before.trail,'Relay must not change Word Trails');
+   // Reopening the native Family Worship hub can create its normal default
+   // setup record when none existed; this is not relay game progress.
+   if(before.family!==null)assert.equal(after.family,before.family,
+    'Existing Family Worship saves remain intact');
+   else if(after.family!==null)assert.equal(JSON.parse(after.family).game,null,
+    'Native Family Worship initialization must not invent a played game');
 
    // Family Worship setup is a different screen; Relay must NOT duplicate there.
    await page.$eval('#bu35-new',el=>el.click());
