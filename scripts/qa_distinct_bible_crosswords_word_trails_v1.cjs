@@ -36,6 +36,7 @@ async function audit(engine,browser,width,height){
   assert.equal(initial.aria,'Bible Crosswords');
   assert.equal(initial.back,'‹ Crosswords');
   assert.equal(initial.packCount,33,'Existing 33 question-led Bible Crosswords packs must remain');
+  assert.equal(initial.legacyComparison,false,'Retired previous-Word-Trails comparison button must not return');
   // REAL home tile -> native 33-pack question-led crossword.
   await page.evaluate(()=>{
    document.querySelector('#daily-continue')?.click();
