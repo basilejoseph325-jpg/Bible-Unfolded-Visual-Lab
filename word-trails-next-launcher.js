@@ -28,10 +28,10 @@ function install(){
  const style=document.createElement('style');style.id='wt-next-launch-style';style.textContent=css;
  document.head.appendChild(style);
  const section=document.createElement('section');section.id='wt-next-entry';
- section.innerHTML='<a href="'+PATH+'" aria-label="Play the new 30-level Word Trails test">'+
- '<span class="wt-next-kicker">VISUAL LAB · NEW GAMEPLAY TEST</span>'+
- '<strong class="wt-next-title">Word Trails NEXT</strong>'+
- '<span class="wt-next-copy">30 crossword levels · bigger Bible puzzles · Scripture words · rewards · original sounds</span>'+
+ section.innerHTML='<a href="'+PATH+'" aria-label="Play the 50-level Bible Word Trails game">'+
+ '<span class="wt-next-kicker">VISUAL LAB · BIBLE WORD GAME</span>'+
+ '<strong class="wt-next-title">Word Trails</strong>'+
+ '<span class="wt-next-copy">50 crossword levels · Bible discoveries · rewards · original sounds</span>'+
  '<span class="wt-next-go">PLAY WORD TRAILS →</span></a>';
  scroll.prepend(section);
  section.querySelector('a[href="'+PATH+'"]').addEventListener('click',event=>{
