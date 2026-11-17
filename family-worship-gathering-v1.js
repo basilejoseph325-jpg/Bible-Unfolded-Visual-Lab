@@ -239,11 +239,14 @@ else start();
  function mount(){
   const root=document.getElementById(ROOT);
   const body=document.getElementById(BODY);
-  const start=body?.querySelector('#'+START);
-  const card=start?.closest('.bu35-card');
-  const kicker=body?.querySelector('.bu35-hero .bu35-kicker');
-  if(!root||!card||kicker?.textContent?.trim()!=='FAMILY WORSHIP')return;
-  if(card.querySelector('#'+ENTRY))return;
+  // The modern Family Worship home is a Quick Play landing page; its
+  // "Start Family Worship" CTA opens the older setup with #bu35-start.
+  // Show the relay at whichever entry surface is currently visible.
+  const start=body?.querySelector('#'+START)||
+   [...(body?.querySelectorAll('button,a,[role="button"]')||[])].find(el=>
+    /start family worship/i.test(el.textContent||''));
+  if(!root||!body||!start)return;
+  if(body.querySelector('#'+ENTRY))return;
   const entry=document.createElement('div');entry.id=ENTRY;
   const caption=document.createElement('span');
   caption.textContent='OR TRY A DIFFERENT FAMILY GAME';
