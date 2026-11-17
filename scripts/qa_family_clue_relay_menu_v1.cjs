@@ -93,9 +93,22 @@ const music=['music-navigation','music-story','music-trails','music',
    await page.$eval('#bu-fw-clue-relay-launch',el=>el.click());
    await page.waitForFunction(()=>window.BUFamilyClueRelayMenuV1.active());
    await page.evaluate(()=>history.back());
-   await page.waitForFunction(()=>!window.BUFamilyClueRelayMenuV1.active()&&
-    !document.getElementById('bu35-family').hidden&&
-    !!document.getElementById('bu-fw-clue-relay-card')?.getClientRects().length);
+   try{
+    await page.waitForFunction(()=>!window.BUFamilyClueRelayMenuV1.active()&&
+     !document.getElementById('bu35-family').hidden&&
+     !!document.getElementById('bu-fw-clue-relay-card')?.getClientRects().length,
+     {timeout:7000});
+   }catch(error){
+    console.error('HARDWARE_BACK_DIAGNOSTIC',JSON.stringify(await page.evaluate(()=>({
+     hash:location.hash,href:location.href,relayActive:window.BUFamilyClueRelayMenuV1?.active(),
+     shell:!!document.getElementById('bu-fw-clue-relay-shell'),
+     familyHidden:document.getElementById('bu35-family')?.hidden,
+     card:!!document.getElementById('bu-fw-clue-relay-card'),
+     cardRects:document.getElementById('bu-fw-clue-relay-card')?.getClientRects().length,
+     bodyHasHero:!!document.querySelector('#bu35-body > .bu35-hero #bu35-new')
+    }))));
+    throw error;
+   }
    const after=await page.evaluate(()=>({
     rewards:localStorage.getItem('bible-unfolded-rewards-v17'),
     trail:localStorage.getItem('bu-visual-lab-wordtrails-next-v1'),
