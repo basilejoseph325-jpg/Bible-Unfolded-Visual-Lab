@@ -1,0 +1,67 @@
+name: Independent review Word Trails 51-55 pinned PR50 content
+on:
+  push:
+    branches:
+      - review/word-trails-51-55-independent-final-20261116
+permissions:
+  contents: read
+jobs:
+  scripture-and-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Independent QA over exact Codex PR50 commit, untouched 930 files
+        run: |
+          set -euo pipefail
+          node --check experiments/word-trails-levels-51-55-v1.js
+          node --check scripts/qa_word_trails_levels_51_55.cjs
+          node --check scripts/qa_word_trails_levels_51_55_browser.cjs
+          git diff --check 72650b278b034f7eafe1dcce468e9dca5882e526 cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7
+          node scripts/qa_word_trails_levels_51_55.cjs
+          node scripts/word_trails_quality_gate.mjs
+      - name: Independently fetch all 37 official JW.org chapter references
+        env:
+          NODE_USE_ENV_PROXY: '1'
+        run: node scripts/qa_word_trails_levels_51_55.cjs --verify-sources
+  actual-phone-sized-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install pinned Playwright 1.58.2 and Linux WebKit
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-wt51-review playwright@1.58.2 --no-audit --no-fund --silent
+          /tmp/bu-wt51-review/node_modules/.bin/playwright install --with-deps webkit
+      - name: Reproduce all 20 actual-play combinations and Level 55 replays
+        env:
+          NODE_PATH: /tmp/bu-wt51-review/node_modules
+          WT_ENGINES: chromium,webkit
+          WT_SHOTS: '1'
+        run: |
+          set -euo pipefail
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          CHROME_BIN="$(command -v google-chrome || command -v chromium)" node scripts/qa_word_trails_levels_51_55_browser.cjs
+      - name: Archive independent screenshots and browser test output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr50-independent-levels-51-55-visual-evidence
+          path: |
+            work/word-trails-51-55-quality/
+            work/word-trails-51-55-browser.json
+          retention-days: 7
+          if-no-files-found: ignore
