@@ -110,7 +110,8 @@ function writerStatus(){
 function refreshLockNotice(){
  if(!isTop||document.readyState==='loading')return;
  let shield=document.getElementById('bu-preview-wallet-lock-shield');
- const blocked=writerState==='conflict'||writerState==='unsupported'||writerState==='error';
+ const preparing=standardMode&&['pending','seeding','paused'].includes(writerState);
+ const blocked=preparing||writerState==='conflict'||writerState==='unsupported'||writerState==='error';
  if(!blocked){shield?.remove();return;}
  if(!shield){shield=document.createElement('div');shield.id='bu-preview-wallet-lock-shield';
   shield.setAttribute('role','alert');
@@ -118,7 +119,8 @@ function refreshLockNotice(){
   document.body.appendChild(shield);
  }
  const conflict=writerState==='conflict';
- shield.textContent=conflict?
+ shield.setAttribute('role',preparing?'status':'alert');
+ shield.textContent=preparing?'Getting your saved TEST game ready…':conflict?
   'Bible Unfolded TEST is already open in another tab. Close that tab, then reload this page. Nothing has been charged here.':
   copyError?'Your saved TEST game could not be prepared: '+copyError+'. Your original saves are unchanged.':
   'This browser cannot safely protect shared Insight Tokens. Please use a current browser over HTTPS. Your saved game is protected.';
@@ -150,6 +152,10 @@ function acquireWriter(){
     return;
    }
    writerState='owned';refreshLockNotice();
+   // Native startup can reach its daily timer before an asynchronous Web
+   // Lock arrives (observed in WebKit). Let the existing guarded startup
+   // finish when writes are actually permitted, never before.
+   if(standardMode)try{window.dispatchEvent(new CustomEvent('bu-test-wallet-writable'));}catch(_){}
    await new Promise(resolve=>{releaseWriter=resolve;});
    releaseWriter=null;
    if(attempt===generation){writerState='paused';refreshLockNotice();}
