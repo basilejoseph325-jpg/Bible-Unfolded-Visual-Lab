@@ -35,6 +35,26 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
     throw error;
    }
    assert(await page.$eval('#bu-fw-clue-relay-launch',b=>b.getClientRects().length>0),'Visible Family Worship entry');
+   // Regression for Samsung report: the relay CTA must be BELOW the
+   // Family Worship artwork/title hero, not inside or layered over it.
+   const placement=await page.evaluate(()=>{
+    const body=document.getElementById('bu35-body');
+    const start=body.querySelector('#bu35-start')||
+     [...body.querySelectorAll('button,a,[role="button"]')].find(el=>
+      /start family worship/i.test(el.textContent||''));
+    const entry=document.getElementById('bu-fw-clue-relay-entry');
+    let hero=start;
+    while(hero?.parentElement&&hero.parentElement!==body)hero=hero.parentElement;
+    const heroRect=hero.getBoundingClientRect();
+    const entryRect=entry.getBoundingClientRect();
+    return {sibling:entry.parentElement===body,insideHero:hero.contains(entry),
+      heroBottom:heroRect.bottom,entryTop:entryRect.top,
+      visible:entryRect.height>0&&entryRect.width>0};
+   });
+   assert(placement.sibling&&!placement.insideHero&&placement.visible,
+    'Relay CTA must be a standalone card outside original Family Worship hero: '+JSON.stringify(placement));
+   assert(placement.entryTop>=placement.heroBottom-1,
+    'Relay entry must sit below the hero/title, not overlap it: '+JSON.stringify(placement));
    const saved=await page.evaluate(()=>({
     coins:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')||'{}').coins,
     points:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')||'{}').points,
