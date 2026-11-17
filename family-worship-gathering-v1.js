@@ -171,16 +171,15 @@ else start();
 })();
 
 
-/* Visual Lab TEST — add the already-merged, standalone Bible Clue Relay to
- * the existing Family Worship setup without replacing native activities.
- * Relay points are session-only; no shared wallet, saves or award APIs used.
- * The old Family Worship game and its handlers remain unchanged. */
+/* Visual Lab TEST — Bible Clue Relay is its OWN HOME GAME, not a Family
+ * Worship setup/quick-play button. The native Family Worship hub, setup,
+ * playlists, saved sessions, wallet, sound settings and other games are
+ * untouched. Relay scores are isolated and exist only for the current game. */
 (()=>{'use strict';
  if(location.pathname.includes('/experiments/')||window.BUFamilyClueRelayMenuV1)return;
- const ROOT='bu35-family',BODY='bu35-body',START='bu35-start';
- const ENTRY='bu-fw-clue-relay-entry',SHELL='bu-fw-clue-relay-shell';
+ const CARD='home-clue-relay',SHELL='bu-fw-clue-relay-shell';
  const MUSIC=['music-navigation','music-story','music-trails','music',
-  'music-daily','music-builder','music-name'];
+   'music-daily','music-builder','music-name'];
  const lease=new Map();
  let shell=null,launchButton=null,muteTimer=null,scheduled=false;
  function silence(){
@@ -202,25 +201,24 @@ else start();
   lease.clear();
   try{window.syncMusic?.()}catch(_){}
  }
+ function showHome(){
+  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
+  try{window.focusHome?.()}catch(_){}
+ }
  function close(fromHistory=false){
   if(!shell?.isConnected)return;
   const old=shell;shell=null;old.remove();
   document.documentElement.classList.remove('bu-fw-clue-relay-active');
   restoreAudio();
-  // Native Family Worship has its own browser history handler. An explicit
-  // "Family Worship" button must not fire that handler and send us home.
+  // Explicit Back must not fire unrelated parent popstate handlers.
   if(!fromHistory&&location.hash==='#family-clue-relay')
    history.replaceState(history.state,'',location.pathname+location.search);
-  if(fromHistory)requestAnimationFrame(()=>{
-   const family=document.getElementById(ROOT);
-   if(!family||family.hidden||getComputedStyle(family).display==='none')
-    document.getElementById('home-family')?.click();
-  });
+  requestAnimationFrame(showHome);
   if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
  }
  function launch(){
-  if(shell?.isConnected)return;
-  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
+  if(shell?.isConnected)return true;
+  showHome();
   shell=document.createElement('section');
   shell.id=SHELL;shell.setAttribute('role','dialog');
   shell.setAttribute('aria-modal','true');
@@ -228,73 +226,56 @@ else start();
   const top=document.createElement('header');
   const back=document.createElement('button');
   back.id='bu-fw-clue-relay-back';back.type='button';
-  back.textContent='‹ Family Worship';
-  back.setAttribute('aria-label','Return to Family Worship');
+  back.textContent='‹ All Games';
+  back.setAttribute('aria-label','Return to Bible Unfolded games');
   back.addEventListener('click',()=>close());
   const title=document.createElement('span');
   title.textContent='BIBLE CLUE RELAY · TEST';
   const frame=document.createElement('iframe');
   frame.id='bu-fw-clue-relay-frame';
-  frame.title='Bible Clue Relay, pass-the-phone Bible game';
-  frame.src='experiments/family-clue-relay-v1.html?v=family-menu-test-v1';
+  frame.title='Bible Clue Relay — pass-the-phone Bible discovery game';
+  frame.src='experiments/family-clue-relay-v1.html?v=standalone-home-card-test-v1';
   top.append(back,title);shell.append(top,frame);
   document.body.appendChild(shell);
   document.documentElement.classList.add('bu-fw-clue-relay-active');
-  history.pushState({buFamilyClueRelay:true},'','#family-clue-relay');
+  history.pushState({buClueRelay:true},'','#family-clue-relay');
   silence();muteTimer=setInterval(silence,450);
   back.focus({preventScroll:true});
+  return true;
  }
  function mount(){
-  const root=document.getElementById(ROOT);
-  const body=document.getElementById(BODY);
-  // The modern Family Worship home is a Quick Play landing page; its
-  // "Start Family Worship" CTA opens the older setup with #bu35-start.
-  // Show the relay at whichever entry surface is currently visible.
-  const start=body?.querySelector('#'+START)||
-   [...(body?.querySelectorAll('button,a,[role="button"]')||[])].find(el=>
-    /start family worship/i.test(el.textContent||''));
-  if(!root||!body||!start)return;
-  if(body.querySelector('#'+ENTRY))return;
-  const entry=document.createElement('div');entry.id=ENTRY;
-  const caption=document.createElement('span');
-  caption.textContent='OR TRY A DIFFERENT FAMILY GAME';
-  const button=document.createElement('button');
-  button.id='bu-fw-clue-relay-launch';button.type='button';
-  button.textContent='✦ Bible Clue Relay  ·  NEW';
-  button.setAttribute('aria-label','Play Bible Clue Relay with two to six players');
-  button.addEventListener('click',e=>{
-   e.preventDefault();e.stopPropagation();launchButton=button;launch();
+  const cards=document.querySelector('.cinematic-cards');
+  if(!cards||document.getElementById(CARD))return;
+  // Same home-card component and hierarchy as the other standalone games.
+  const card=document.createElement('button');
+  card.type='button';card.id=CARD;card.className='cinematic-card';
+  card.setAttribute('aria-label','Play Bible Clue Relay, a separate multiplayer Bible discovery game');
+  card.innerHTML=
+   '<span class="cinematic-poster" aria-hidden="true"></span>'+
+   '<span class="cinematic-card-body">'+
+    '<span class="cinematic-card-title">Bible Clue Relay</span>'+
+    '<span class="v37-card-desc">Three clues, one Bible discovery. Pass the phone and play!</span>'+
+    '<span class="cinematic-card-cta v37-card-cta">PLAY CLUE RELAY <span aria-hidden="true">›</span></span>'+
+   '</span>';
+  card.addEventListener('click',e=>{
+   e.preventDefault();e.stopPropagation();launchButton=card;launch();
   });
-  entry.append(caption,button);
-  // The modern Family Worship hero uses an artwork/title overlay and a
-  // floating Play control. Adding an ordinary button inside that hero
-  // overlaps its heading. Mount as a separate sibling AFTER the hero card.
-  let topCard=start;
-  while(topCard.parentElement&&topCard.parentElement!==body)
-   topCard=topCard.parentElement;
-  if(topCard.parentElement===body)topCard.insertAdjacentElement('afterend',entry);
-  else body.append(entry);
+  const family=document.getElementById('home-family');
+  if(family?.parentElement===cards)family.insertAdjacentElement('afterend',card);
+  else cards.append(card);
  }
  function requestMount(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{scheduled=false;mount()});
  }
  function boot(){
-  const body=document.getElementById(BODY);
-  if(!body)return;
+  if(document.getElementById('bu-clue-relay-home-card-style'))return;
   const style=document.createElement('style');
-  style.id='bu-fw-clue-relay-menu-style';
+  style.id='bu-clue-relay-home-card-style';
   style.textContent=
-   '#'+ENTRY+'{box-sizing:border-box!important;position:relative!important;z-index:1!important;'+
-   'margin:12px 10px 15px!important;padding:10px 12px!important;text-align:center;'+
-   'display:grid!important;gap:7px!important;border:1px solid #bc9c60;'+
-   'border-radius:13px;background:linear-gradient(145deg,#113a49,#092936);'+
-   'box-shadow:0 3px 12px #0006}'+
-   '#'+ENTRY+'>span{font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.1em;color:#ddc58b}'+
-   '#'+ENTRY+'>button{box-sizing:border-box;width:100%;min-height:42px;border-radius:11px;'+
-    'border:1.3px solid #cfba83;background:linear-gradient(140deg,#245561,#113845);'+
-    'color:#ffe4aa;font:800 15px/1.2 Georgia,serif;box-shadow:0 2px 8px #0007}'+
-   '#'+ENTRY+'>button:focus-visible,#bu-fw-clue-relay-back:focus-visible{outline:2px solid #ffe4a3;outline-offset:2px}'+
+   '#'+CARD+' .cinematic-poster{background:linear-gradient(180deg,#061f292b 0%,#072f3e10 48%,#051c26cf 100%),'+
+    'url("family-worship-menu-art/v1/topic-02-bible-people-events.jpg") center 47%/cover no-repeat!important}'+
+   '#'+CARD+':focus-visible,#bu-fw-clue-relay-back:focus-visible{outline:2px solid #ffe4a3;outline-offset:2px}'+
    '#'+SHELL+'{position:fixed!important;inset:0!important;z-index:25000!important;'+
     'display:flex!important;flex-direction:column!important;min-height:0!important;'+
     'padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);'+
@@ -309,14 +290,15 @@ else start();
    '#bu-fw-clue-relay-frame{display:block;flex:1;min-height:0;width:100%;'+
     'border:0;background:#092c35}';
   document.head.append(style);
-  new MutationObserver(requestMount).observe(body,{childList:true,subtree:true});
+  new MutationObserver(requestMount).observe(document.body,{childList:true,subtree:true});
   requestMount();
  }
- window.addEventListener('popstate',()=>{
-  if(shell?.isConnected)close(true);
- });
+ window.addEventListener('popstate',()=>{if(shell?.isConnected)close(true);});
  if(document.readyState==='loading')
   document.addEventListener('DOMContentLoaded',boot,{once:true});
  else boot();
- window.BUFamilyClueRelayMenuV1=Object.freeze({active:()=>!!shell?.isConnected,close});
+ // Keep the existing public name for compatibility; it now owns a HOME card.
+ window.BUFamilyClueRelayMenuV1=Object.freeze({
+  active:()=>!!shell?.isConnected,close,launch
+ });
 })();
