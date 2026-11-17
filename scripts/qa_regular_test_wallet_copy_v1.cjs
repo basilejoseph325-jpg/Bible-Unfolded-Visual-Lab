@@ -26,11 +26,29 @@ async function test(engine,browser,width,height){
   await context.addInitScript(data=>{for(const [key,value] of Object.entries(data))localStorage.setItem(key,value)},original);
   const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(String(e.message||e)));
   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:130000});
-  await page.waitForFunction(()=>window.BUPreviewStorageFence?.importMode===true&&
-   window.BUPreviewStorageFence?.status?.().imported===true&&
-   window.BUPreviewStorageFence?.writerStatus?.().writable===true&&
-   window.BUTestInsightBridge?.nativeBalance?.().balance===533&&
-   window.BUWTNativeShell?.nativeReady?.(),null,{timeout:125000});
+  try{
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.importMode===true&&
+    window.BUPreviewStorageFence?.status?.().imported===true&&
+    window.BUPreviewStorageFence?.writerStatus?.().writable===true&&
+    window.BUTestInsightBridge?.nativeBalance?.().balance===533&&
+    window.BUWTNativeShell?.nativeReady?.(),null,{timeout:30000});
+  }catch(error){
+   const debug=await page.evaluate(()=>{
+    const fence=window.BUPreviewStorageFence;
+    return {url:location.href,importMode:fence?.importMode,
+     status:fence?.status?.(),writer:fence?.writerStatus?.(),
+     hasNativeBridge:!!window.BUTestInsightBridge,
+     bridgeBalance:window.BUTestInsightBridge?.nativeBalance?.(),
+     economy:typeof economy==='undefined'?null:{coins:economy.coins,points:economy.points},
+     original:fence?.originalKeyValue?.('bible-unfolded-rewards-v17')?.slice(0,150),
+     copiedWallet:localStorage.getItem('bible-unfolded-rewards-v17')?.slice(0,150),
+     loaded:document.readyState,
+     body:document.body?.textContent?.slice(0,400)};
+   }).catch(e=>({inspectError:String(e)}));
+   console.error('COPY_IMPORT_STARTUP_DIAGNOSTIC',engine,width,JSON.stringify(debug),
+    'PAGE_ERRORS',JSON.stringify(errors.slice(-8)));
+   throw error;
+  }
   const seed=await page.evaluate(()=>{
    const fence=window.BUPreviewStorageFence;
    return {native:economy.coins,points:economy.points,
