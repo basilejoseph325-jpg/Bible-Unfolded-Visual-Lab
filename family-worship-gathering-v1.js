@@ -169,3 +169,142 @@ function start(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',start,{once:true});
 else start();
 })();
+
+
+/* Visual Lab TEST — add the already-merged, standalone Bible Clue Relay to
+ * the existing Family Worship setup without replacing native activities.
+ * Relay points are session-only; no shared wallet, saves or award APIs used.
+ * The old Family Worship game and its handlers remain unchanged. */
+(()=>{'use strict';
+ if(location.pathname.includes('/experiments/')||window.BUFamilyClueRelayMenuV1)return;
+ const ROOT='bu35-family',BODY='bu35-body',START='bu35-start';
+ const ENTRY='bu-fw-clue-relay-entry',SHELL='bu-fw-clue-relay-shell';
+ const MUSIC=['music-navigation','music-story','music-trails','music',
+  'music-daily','music-builder','music-name'];
+ const lease=new Map();
+ let shell=null,launchButton=null,muteTimer=null,scheduled=false;
+ function silence(){
+  if(!shell?.isConnected)return;
+  try{window.pauseAudio?.()}catch(_){}
+  for(const id of MUSIC){
+   const player=document.getElementById(id);
+   if(!(player instanceof HTMLMediaElement))continue;
+   if(!lease.has(player))lease.set(player,player.muted);
+   player.muted=true;
+   if(!player.paused)try{player.pause()}catch(_){}
+  }
+ }
+ function restoreAudio(){
+  if(muteTimer!==null){clearInterval(muteTimer);muteTimer=null;}
+  for(const [player,wasMuted] of lease){
+   try{player.muted=wasMuted}catch(_){}
+  }
+  lease.clear();
+  try{window.syncMusic?.()}catch(_){}
+ }
+ function close(fromHistory=false){
+  if(!shell?.isConnected)return;
+  const old=shell;shell=null;old.remove();
+  document.documentElement.classList.remove('bu-fw-clue-relay-active');
+  restoreAudio();
+  // Native Family Worship has its own browser history handler. An explicit
+  // "Family Worship" button must not fire that handler and send us home.
+  if(!fromHistory&&location.hash==='#family-clue-relay')
+   history.replaceState(history.state,'',location.pathname+location.search);
+  if(fromHistory)requestAnimationFrame(()=>{
+   const family=document.getElementById(ROOT);
+   if(!family||family.hidden||getComputedStyle(family).display==='none')
+    document.getElementById('home-family')?.click();
+  });
+  if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
+ }
+ function launch(){
+  if(shell?.isConnected)return;
+  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
+  shell=document.createElement('section');
+  shell.id=SHELL;shell.setAttribute('role','dialog');
+  shell.setAttribute('aria-modal','true');
+  shell.setAttribute('aria-label','Bible Clue Relay game');
+  const top=document.createElement('header');
+  const back=document.createElement('button');
+  back.id='bu-fw-clue-relay-back';back.type='button';
+  back.textContent='‹ Family Worship';
+  back.setAttribute('aria-label','Return to Family Worship');
+  back.addEventListener('click',()=>close());
+  const title=document.createElement('span');
+  title.textContent='BIBLE CLUE RELAY · TEST';
+  const frame=document.createElement('iframe');
+  frame.id='bu-fw-clue-relay-frame';
+  frame.title='Bible Clue Relay, pass-the-phone Bible game';
+  frame.src='experiments/family-clue-relay-v1.html?v=family-menu-test-v1';
+  top.append(back,title);shell.append(top,frame);
+  document.body.appendChild(shell);
+  document.documentElement.classList.add('bu-fw-clue-relay-active');
+  history.pushState({buFamilyClueRelay:true},'','#family-clue-relay');
+  silence();muteTimer=setInterval(silence,450);
+  back.focus({preventScroll:true});
+ }
+ function mount(){
+  const root=document.getElementById(ROOT);
+  const body=document.getElementById(BODY);
+  // The modern Family Worship home is a Quick Play landing page; its
+  // "Start Family Worship" CTA opens the older setup with #bu35-start.
+  // Show the relay at whichever entry surface is currently visible.
+  const start=body?.querySelector('#'+START)||
+   [...(body?.querySelectorAll('button,a,[role="button"]')||[])].find(el=>
+    /start family worship/i.test(el.textContent||''));
+  if(!root||!body||!start)return;
+  if(body.querySelector('#'+ENTRY))return;
+  const entry=document.createElement('div');entry.id=ENTRY;
+  const caption=document.createElement('span');
+  caption.textContent='OR TRY A DIFFERENT FAMILY GAME';
+  const button=document.createElement('button');
+  button.id='bu-fw-clue-relay-launch';button.type='button';
+  button.textContent='✦ Bible Clue Relay  ·  NEW';
+  button.setAttribute('aria-label','Play Bible Clue Relay with two to six players');
+  button.addEventListener('click',e=>{
+   e.preventDefault();e.stopPropagation();launchButton=button;launch();
+  });
+  entry.append(caption,button);start.insertAdjacentElement('afterend',entry);
+ }
+ function requestMount(){
+  if(scheduled)return;scheduled=true;
+  requestAnimationFrame(()=>{scheduled=false;mount()});
+ }
+ function boot(){
+  const body=document.getElementById(BODY);
+  if(!body)return;
+  const style=document.createElement('style');
+  style.id='bu-fw-clue-relay-menu-style';
+  style.textContent=
+   '#'+ENTRY+'{margin:7px 0 0;text-align:center;display:grid;gap:4px}'+
+   '#'+ENTRY+'>span{font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.1em;color:#ddc58b}'+
+   '#'+ENTRY+'>button{box-sizing:border-box;width:100%;min-height:42px;border-radius:11px;'+
+    'border:1.3px solid #cfba83;background:linear-gradient(140deg,#245561,#113845);'+
+    'color:#ffe4aa;font:800 15px/1.2 Georgia,serif;box-shadow:0 2px 8px #0007}'+
+   '#'+ENTRY+'>button:focus-visible,#bu-fw-clue-relay-back:focus-visible{outline:2px solid #ffe4a3;outline-offset:2px}'+
+   '#'+SHELL+'{position:fixed!important;inset:0!important;z-index:25000!important;'+
+    'display:flex!important;flex-direction:column!important;min-height:0!important;'+
+    'padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);'+
+    'background:#092c35!important;color:#ffe4a9!important}'+
+   '#'+SHELL+'>header{flex:none;min-height:45px;display:flex;align-items:center;'+
+    'gap:9px;padding:4px 10px;background:#082d39;border-bottom:1px solid #caa66e;'+
+    'font:800 10px/1.2 system-ui,sans-serif;letter-spacing:.07em}'+
+   '#'+SHELL+'>header>span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}'+
+   '#bu-fw-clue-relay-back{min-height:36px;flex:none;padding:6px 11px;'+
+    'border-radius:9px;border:1px solid #d9b675;background:#214a53;'+
+    'color:#ffdf9e;font:700 13px system-ui,sans-serif}'+
+   '#bu-fw-clue-relay-frame{display:block;flex:1;min-height:0;width:100%;'+
+    'border:0;background:#092c35}';
+  document.head.append(style);
+  new MutationObserver(requestMount).observe(body,{childList:true,subtree:true});
+  requestMount();
+ }
+ window.addEventListener('popstate',()=>{
+  if(shell?.isConnected)close(true);
+ });
+ if(document.readyState==='loading')
+  document.addEventListener('DOMContentLoaded',boot,{once:true});
+ else boot();
+ window.BUFamilyClueRelayMenuV1=Object.freeze({active:()=>!!shell?.isConnected,close});
+})();
