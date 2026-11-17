@@ -106,7 +106,67 @@ Serve the checkout on localhost:8894. The two older regressions accept STORY_URL
 and BU_WT_NATIVE_PARITY_URL respectively. WT_ENGINES selects the new matrix;
 WT_SHOTS=1 captures screenshots; WT_EVIDENCE selects its JSON evidence path.
 
-Final matrix: PENDING.
+Final local results:
+
+| Check | Actual result |
+| --- | --- |
+| Normal URL, fresh + existing profiles, Chromium/WebKit, 320/430 | 8/8 pass |
+| Full browser-process close/restart from temporary disk profiles | 4/4 pass |
+| Protected shared preview, both engines, 320/430 | 4/4 pass |
+| Separate 533/111 copy-preview, both engines, 320/430 | 4/4 pass |
+| Standard fence, native bridge, atomic boosters, shared Rewards API | Pass |
+| Existing Word Trails 50-level structural quality gate | Pass, unchanged legacy editorial warnings |
+| Existing Daily: 320/390/430, touch swipe, stamps, replay, journal, refresh | Pass |
+| Existing audio/wheel owner: 320/390, announcers, Ocean Glow, touch Daily round trip | Pass |
+| Index inline JavaScript syntax | All 238 parse |
+
+The normal-URL cases genuinely play a Story word, Trivia and People & Names
+answers, a Bible Crosswords answer, a Word Trails level/hidden words/satchel,
+and real Rewards/booster purchases. They check free/paid hints, the 14/15 price
+boundary, duplicate payments, native/child balances, daily rewards, snapshots,
+reload/tab reopen, Books/Daily navigation and original-record preservation.
+They enumerate 33 Crosswords packs; they do NOT solve all 33 packs. The 50-level
+gate validates every board structurally; it is not 50 full mobile playthroughs.
+Screenshots of actual mobile gameplay and Rewards were inspected.
+
+Ignored local evidence: `work/standard-wallet/accepted-{chromium,webkit}.json`,
+`work/accepted-{chromium,webkit}.log`, `work/accepted-preview-regression.log`,
+`work/final-copy-preview-regression.log`, `work/accepted-daily-regression.log`,
+`work/accepted-audio-wheel.log`, `work/accepted-quality-50.log`, and screenshots
+under `work/standard-wallet/`. Test code and this record are committed; ephemeral
+player/browser profiles are not. Early runs exposed and then verified the fixed
+WebKit startup race; the deliberately delayed fixtures retain expected refused
+pre-lock write warnings, followed by a correct persisted once-only welcome.
+
+### CI distinctions
+
+Do not report the entire PR as green. The initial new matrix run
+[44006166857](https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/actions/runs/44006166857)
+failed BEFORE gameplay because `ubuntu-latest` became Ubuntu 26.04, unsupported
+by Playwright 1.58.2 WebKit. This candidate pins its own runner to Ubuntu 24.04.
+The existing audio workflow's fixed old cache-tag assertion was made
+version-independent without weakening its actual ownership checks. The native
+booster regression now funds ONLY its isolated shared-wallet fixture and verifies
+shared spending, instead of assuming the retired 225-token trial grant or
+byte-identical inventory-less wallet JSON.
+
+Other repository checks still need alignment/triage before integration:
+
+- Genesis-only scope gates reject this wallet PR's non-Genesis files (confirmed
+  in run 44006166742); they are not Genesis gameplay failures.
+- The older launcher test dereferences the retired raw Trail-save key and fails
+  on null, after successfully opening the real 50-level game (44005825573).
+- The seal test reads the old save key when checking post-Level-30 unlock
+  (44006166612); the current engine's actual level data/unlock code is unchanged.
+- The all-mode smoke test expects Books navigation without handling the approved
+  purchase gate; run 44005825747 stops at that gate. Our separate owned-Books
+  migration/round-trip and protected purchase tests pass.
+- Several published-site backup checks run against the deployed TEST site, not
+  this unmerged candidate. No deployment was performed to satisfy them. Full
+  legacy CI adaptation and published-site release verification remain open.
+
+CI results are separate from these local passes. Review the latest head's actual
+checks and artifacts; no CI success is implied by adding a workflow.
 
 ## Before release
 

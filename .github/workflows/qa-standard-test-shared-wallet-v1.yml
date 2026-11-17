@@ -19,7 +19,7 @@ permissions:
   contents: read
 jobs:
   regular-test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -45,6 +45,10 @@ jobs:
           NODE_PATH: /tmp/bu-standard-wallet-qa/node_modules
         run: |
           python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-standard-wallet-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8894/index.html -o /dev/null; then break; fi
+            sleep 1
+          done
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
           node scripts/qa_standard_test_shared_wallet_browser_v1.cjs
       - uses: actions/upload-artifact@v4
