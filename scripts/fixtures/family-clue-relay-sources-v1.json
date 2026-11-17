@@ -1,0 +1,907 @@
+{
+  "reviewedOn": "2026-11-16",
+  "review": "Author source/context and read-aloud review; independent human approval pending.",
+  "evidence": [
+    {
+      "id": "cr-noah-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 9,
+      "excerpt": "This is the history of Noah. Noah was a righteous"
+    },
+    {
+      "id": "cr-noah-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 14,
+      "excerpt": "Make for yourself an ark from resinous wood. You will"
+    },
+    {
+      "id": "cr-noah-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/6/",
+      "verse": 14,
+      "excerpt": "Make for yourself an ark from resinous wood. You will"
+    },
+    {
+      "id": "cr-david-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 34,
+      "excerpt": "David then said to Saul: “Your servant became a shepherd"
+    },
+    {
+      "id": "cr-david-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 33,
+      "excerpt": "But Saul said to David: “You are not able to"
+    },
+    {
+      "id": "cr-david-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 50,
+      "excerpt": "So David prevailed over the Phi·lisʹtine with a sling and"
+    },
+    {
+      "id": "cr-hannah-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 13,
+      "excerpt": "Hanʹnah was speaking in her heart, only her lips were"
+    },
+    {
+      "id": "cr-hannah-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 17,
+      "excerpt": "Then Eʹli answered: “Go in peace, and may the God"
+    },
+    {
+      "id": "cr-hannah-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/1/",
+      "verse": 20,
+      "excerpt": "Within a year Hanʹnah became pregnant and gave birth to"
+    },
+    {
+      "id": "cr-lydia-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 14,
+      "excerpt": "And a woman named Lydʹi·a, a seller of purple from"
+    },
+    {
+      "id": "cr-lydia-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 13,
+      "excerpt": "On the Sabbath day we went outside the gate beside"
+    },
+    {
+      "id": "cr-lydia-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/16/",
+      "verse": 15,
+      "excerpt": "Now when she and her household got baptized, she urged"
+    },
+    {
+      "id": "cr-bezalel-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 2,
+      "excerpt": "“See, I have chosen Bezʹal·el the son of Uʹri the"
+    },
+    {
+      "id": "cr-bezalel-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 4,
+      "excerpt": "for making artistic designs, for working with gold, silver, and"
+    },
+    {
+      "id": "cr-bezalel-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/31/",
+      "verse": 7,
+      "excerpt": "the tent of meeting, the ark of the Testimony and"
+    },
+    {
+      "id": "cr-abigail-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 18,
+      "excerpt": "So Abʹi·gail quickly took 200 loaves of bread, two large"
+    },
+    {
+      "id": "cr-abigail-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 26,
+      "excerpt": "And now, my lord, as surely as Jehovah is living"
+    },
+    {
+      "id": "cr-abigail-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/25/",
+      "verse": 32,
+      "excerpt": "At this David said to Abʹi·gail: “Praise Jehovah the God"
+    },
+    {
+      "id": "cr-bethlehem-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 5,
+      "excerpt": "He went to get registered with Mary, who had been"
+    },
+    {
+      "id": "cr-bethlehem-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 4,
+      "excerpt": "Of course, Joseph also went up from Galʹi·lee, from the"
+    },
+    {
+      "id": "cr-bethlehem-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/2/",
+      "verse": 7,
+      "excerpt": "And she gave birth to her son, the firstborn, and"
+    },
+    {
+      "id": "cr-eden-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/2/",
+      "verse": 15,
+      "excerpt": "Jehovah God took the man and settled him in the"
+    },
+    {
+      "id": "cr-eden-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/2/",
+      "verse": 9,
+      "excerpt": "Thus Jehovah God made to grow out of the ground"
+    },
+    {
+      "id": "cr-eden-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/3/",
+      "verse": 23,
+      "excerpt": "With that Jehovah God expelled him from the garden of"
+    },
+    {
+      "id": "cr-jericho-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 1,
+      "excerpt": "Now Jerʹi·cho was tightly shut up because of the Israelites;"
+    },
+    {
+      "id": "cr-jericho-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 10,
+      "excerpt": "Now Joshua had commanded the people: “Do not shout nor"
+    },
+    {
+      "id": "cr-jericho-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/joshua/6/",
+      "verse": 20,
+      "excerpt": "Then the people shouted when the horns were blown. As"
+    },
+    {
+      "id": "cr-carmel-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 19,
+      "excerpt": "And now summon all Israel to me at Mount Carʹmel,"
+    },
+    {
+      "id": "cr-carmel-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 21,
+      "excerpt": "Then E·liʹjah approached all the people and said: “How long"
+    },
+    {
+      "id": "cr-carmel-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/18/",
+      "verse": 38,
+      "excerpt": "At that the fire of Jehovah fell from above and"
+    },
+    {
+      "id": "cr-joppa-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/9/",
+      "verse": 36,
+      "excerpt": "Now there was in Jopʹpa a disciple named Tabʹi·tha, which"
+    },
+    {
+      "id": "cr-joppa-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/9/",
+      "verse": 38,
+      "excerpt": "Since Lydʹda was near Jopʹpa, when the disciples heard that"
+    },
+    {
+      "id": "cr-joppa-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/10/",
+      "verse": 6,
+      "excerpt": "This man is staying as a guest with Simon, a"
+    },
+    {
+      "id": "cr-troas-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 6,
+      "excerpt": "but we put out to sea from Phi·lipʹpi after the"
+    },
+    {
+      "id": "cr-troas-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 9,
+      "excerpt": "Seated at the window, a young man named Euʹty·chus sank"
+    },
+    {
+      "id": "cr-troas-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/20/",
+      "verse": 12,
+      "excerpt": "So they took the boy away alive and were comforted"
+    },
+    {
+      "id": "cr-creation-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 5,
+      "excerpt": "God called the light Day, but the darkness he called"
+    },
+    {
+      "id": "cr-creation-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 26,
+      "excerpt": "Then God said: “Let us make man in our image,"
+    },
+    {
+      "id": "cr-creation-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 1,
+      "excerpt": "In the beginning God created the heavens and the earth."
+    },
+    {
+      "id": "cr-pentecost-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 5,
+      "excerpt": "At that time devout Jews from every nation under heaven"
+    },
+    {
+      "id": "cr-pentecost-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 4,
+      "excerpt": "and they all became filled with holy spirit and started"
+    },
+    {
+      "id": "cr-pentecost-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/2/",
+      "verse": 1,
+      "excerpt": "Now while the day of the Festival of Pentecost was"
+    },
+    {
+      "id": "cr-red-sea-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 21,
+      "excerpt": "Moses now stretched out his hand over the sea; and"
+    },
+    {
+      "id": "cr-red-sea-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 22,
+      "excerpt": "So the Israelites went through the midst of the sea"
+    },
+    {
+      "id": "cr-red-sea-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/14/",
+      "verse": 29,
+      "excerpt": "But the Israelites walked on dry ground in the midst"
+    },
+    {
+      "id": "cr-furnace-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 19,
+      "excerpt": "Then Neb·u·chad·nezʹzar became so furious with Shaʹdrach, Meʹshach, and A·bedʹne·go"
+    },
+    {
+      "id": "cr-furnace-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 25,
+      "excerpt": "He said: “Look! I see four men walking about free"
+    },
+    {
+      "id": "cr-furnace-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/3/",
+      "verse": 27,
+      "excerpt": "And the satraps, prefects, governors, and the high officials of"
+    },
+    {
+      "id": "cr-transfiguration-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 1,
+      "excerpt": "Six days later Jesus took Peter and James and his"
+    },
+    {
+      "id": "cr-transfiguration-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 2,
+      "excerpt": "And he was transfigured before them; his face shone as"
+    },
+    {
+      "id": "cr-transfiguration-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/17/",
+      "verse": 5,
+      "excerpt": "While he was still speaking, look! a bright cloud overshadowed"
+    },
+    {
+      "id": "cr-writing-clue1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 2,
+      "excerpt": "While under the influence of the wine, Bel·shazʹzar gave an"
+    },
+    {
+      "id": "cr-writing-clue2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 8,
+      "excerpt": "Then all the wise men of the king came in,"
+    },
+    {
+      "id": "cr-writing-clue3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/5/",
+      "verse": 25,
+      "excerpt": "And this is the writing that was inscribed: MEʹNE, MEʹNE,"
+    }
+  ],
+  "qualityReview": {
+    "date": "2026-11-16",
+    "reviewedHead": "54cc3dbfc959d4011167c5426e7e35c03c491a2c",
+    "reviewer": "Codex separate quality pass; not independent human or physical-device acceptance",
+    "items": [
+      {
+        "id": "cr-noah",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 6:9-22",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 6:9-22",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 6:9-22",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Narrowed clue 1 to the explicit righteous/walked-with-God description; clue 3 now helps with the familiar ark instead of harder genealogy.",
+        "explanationAndAliases": "Ark instructions and obedience checked; household covenant at Genesis 6:18.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-david",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 17:33-50",
+            "verse": 34,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 17:33-50",
+            "verse": 33,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 17:33-50",
+            "verse": 50,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: shepherd experience, young challenger, then Goliath plus name initial.",
+        "explanationAndAliases": "No sword, sling and stone, and trust in Jehovah verified in 17:45-50.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-hannah",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 1:12-20",
+            "verse": 13,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 1:12-20",
+            "verse": 17,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 1:12-20",
+            "verse": 20,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: silent prayer, Eli, then Samuel provides progressively recognizable anchors.",
+        "explanationAndAliases": "Distress, Eli’s response and naming Samuel checked.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-lydia",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 16:12-15",
+            "verse": 14,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Acts 16:12-15",
+            "verse": 13,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 16:12-15",
+            "verse": 15,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Clarified purple as goods; then river/Philippi, hospitality and name initial.",
+        "explanationAndAliases": "No unsupported claim about manufacturing or dye processing.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-bezalel",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Exodus 31:1-11",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Exodus 31:1-11",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Exodus 31:1-11",
+            "verse": 7,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: lineage, crafts, then tabernacle and Bez name cue.",
+        "explanationAndAliases": "Skills and equipment checked; removed empty closing sentence.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-abigail",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Samuel 25:14-35",
+            "verse": 18,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Samuel 25:14-35",
+            "verse": 26,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Samuel 25:14-35",
+            "verse": 32,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Added Abi name cue after Nabal identification so the final clue helps recall/spelling.",
+        "explanationAndAliases": "Nabal’s wife is explicit in verse 14; replaced unexplained bloodguilt in explanation with plain language.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-bethlehem",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Luke 2:4-7",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Luke 2:4-7",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Luke 2:4-7",
+            "verse": 7,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: registration, David’s family, then Jesus’ birth/city of David.",
+        "explanationAndAliases": "Luke 2:4 explicitly names the town; no invented lodging details.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-eden",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 2:8, 9, 15",
+            "verse": 15,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 2:8, 9, 15",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 3:20-24",
+            "verse": 23,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: cultivating, distinctive trees, then Adam and Eve’s garden.",
+        "explanationAndAliases": "Garden within Eden and expulsion context checked; accepted garden/Eden variants retained.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-jericho",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 10,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Joshua 6:1-5, 10, 20-23",
+            "verse": 20,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: closed gates, marching/silence, then wall falling.",
+        "explanationAndAliases": "Priests/horns and Rahab’s safe removal checked; no claim that every part of the wall fell.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-carmel",
+        "clues": [
+          {
+            "number": 1,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 19,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 21,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "1 Kings 18:19-21, 36-39",
+            "verse": 38,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Added Car word-completion cue to the final fire/Elijah clue.",
+        "explanationAndAliases": "Fire consumes offering; no graphic material from verse 40 used.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-joppa",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 9:36-43",
+            "verse": 36,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          },
+          {
+            "number": 2,
+            "source": "Acts 9:36-43",
+            "verse": 38,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 10:5, 6",
+            "verse": 6,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Simplified gifts-of-mercy wording and strengthened final name cue from J to Jop.",
+        "explanationAndAliases": "Tabitha’s death is verse 37; Simon’s house by the sea is Acts 10:6.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-troas",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 20:6-12",
+            "verse": 6,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Acts 20:6-12",
+            "verse": 9,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 20:6-12",
+            "verse": 12,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: journey/stay, window incident, then Eutychus and Tro name cue.",
+        "explanationAndAliases": "Seven-day stay, late talk and restored life verified; no invented age or injury details.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "retained"
+      },
+      {
+        "id": "cr-creation",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Genesis 1:1-31",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Genesis 1:1-31",
+            "verse": 26,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Genesis 1:1-31",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: names for day/night, living things, then opening account.",
+        "explanationAndAliases": "Very good follows sixth day; no claim about 24-hour days; expanded reasonable title variants.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-pentecost",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Acts 2:1-11",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Acts 2:1-11",
+            "verse": 4,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Acts 2:1-11",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: international gathering, languages, then festival/Pente cue.",
+        "explanationAndAliases": "Holy spirit and each language verified; date only an accepted conventional variant, not an unsourced clue fact.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-red-sea",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Exodus 14:21-29",
+            "verse": 21,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Exodus 14:21-29",
+            "verse": 22,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Exodus 14:21-29",
+            "verse": 29,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: east wind, walls of water, then explicit Red Sea crossing.",
+        "explanationAndAliases": "Dry ground and east wind checked; added reversed common phrase variant.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-furnace",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Daniel 3:18-27",
+            "verse": 19,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Daniel 3:18-27",
+            "verse": 25,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Daniel 3:18-27",
+            "verse": 27,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: increased heat, named Hebrews, then explicitly named furnace rescue.",
+        "explanationAndAliases": "No unsupported identity assigned to fourth figure; accepts the account’s familiar short labels and ampersand/name variants.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-transfiguration",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Matthew 17:1-9",
+            "verse": 1,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Matthew 17:1-9",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Matthew 17:1-9",
+            "verse": 5,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "revised"
+          }
+        ],
+        "progressionReview": "Final clue now includes a word-building cue; it no longer requires recalling a harder label from the voice alone.",
+        "explanationAndAliases": "Vision explicitly in 17:9; simplified explanation to 17:2,5,9; accepted Christ/Jesus title variants.",
+        "explanationVerdict": "revised",
+        "aliasesVerdict": "adjusted"
+      },
+      {
+        "id": "cr-writing",
+        "clues": [
+          {
+            "number": 1,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 2,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 2,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 8,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          },
+          {
+            "number": 3,
+            "source": "Daniel 5:2-8, 25-28",
+            "verse": 25,
+            "factVerdict": "checked against fresh official NWT page",
+            "readabilityVerdict": "retained"
+          }
+        ],
+        "progressionReview": "Retained: temple vessels, unexplained message, then Daniel and the words on the wall.",
+        "explanationAndAliases": "Removed Belshazzar’s feast alias: it names the surrounding occasion rather than the requested writing. Judgment is about king/kingdom, not an invented motive.",
+        "explanationVerdict": "retained",
+        "aliasesVerdict": "adjusted"
+      }
+    ],
+    "corrections": {
+      "revisedClues": 8,
+      "retainedClues": 46,
+      "revisedExplanations": 3,
+      "gameplay": [
+        "Newest clue scrolled into view and announced",
+        "Balanced difficulty by player without changing scoring",
+        "NWT stress and syllable marks accepted"
+      ],
+      "visual": [
+        "Start remains visible outside setup scroll",
+        "Reveal text bounded between rollers and above wax control",
+        "Light native controls in WebKit",
+        "Singular point labels"
+      ]
+    },
+    "aliasSupport": [
+      {
+        "answer": "Bethlehem Ephrathah",
+        "reference": "Micah 5:2",
+        "url": "https://www.jw.org/en/library/bible/nwt/books/micah/5/",
+        "checked": "Verse explicitly names Bethlehem Ephrathah."
+      },
+      {
+        "answer": "Pentecost 33 C.E.",
+        "reference": "Acts 2 study media: Pentecost 33 C.E. and the Spreading of the Good News",
+        "url": "https://www.jw.org/en/library/bible/study-bible/books/acts/2/",
+        "checked": "Official study media explicitly uses the date; no date was added to a clue."
+      }
+    ]
+  }
+}
