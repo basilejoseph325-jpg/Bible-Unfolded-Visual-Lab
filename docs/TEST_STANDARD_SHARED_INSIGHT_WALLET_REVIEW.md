@@ -4,6 +4,97 @@ Branch: `feature/test-standard-shared-insight-wallet`.
 Base: `6a189eb` on Visual Lab main, after merged PRs #49 and #52.
 No merge, publishing, TEST deployment or Story-Trails change is included.
 
+## Current-main integration follow-up
+
+Recovery checkpoint (pushed to GitHub before integration):
+`checkpoint/pr55-before-main-integration-14d7d2d` →
+`14d7d2d235195b01a86130a3eb5fd256755639fa`.
+Approved main integrated: `f153f0ced8d3c747a6626426cb227d1116907a09`,
+including all 34 intervening commits and corrective PR #61. Merge commit:
+`1c05002d2f9539ed2ff3cdb96d970caf03e34d20`.
+
+- [x] Read ChatGPT's follow-up review of `14d7d2d` before integration.
+- [x] Preserve main's Family Worship/Clue Relay runtime and content byte-for-byte.
+  One card remains under Play Together immediately after Word Builder; no outer
+  home card and no duplicate in Family Worship setup.
+- [x] Verify loader order: backup coordinator precedes the storage fence in the
+  native head, then the existing deferred economy/native bridge. The home loader
+  keeps `shared-restore-v2`; Family Worship keeps PR #61's
+  `20261117-clue-relay-play-together-card-v1` cache version.
+- [x] Complete v2 backup and wallet runtime remain unchanged by this integration.
+  The approved limit stays 50 levels; freshly checksummed level-51 progress and
+  receipt files are explicitly rejected without writes (16 invalid-file cases).
+- [x] Real unfinished native Family session + existing Level 45/unlocked-50 save:
+  4/4 combined Chromium/WebKit cases at 320/430 pass. Touch through relay scoring,
+  three wrong clues, winner/replay, native Back and history Back, audio exclusion,
+  original/private canaries, unchanged native tokens/Points/stock/receipts, reload,
+  and complete backup recovery of that unfinished Family session are verified.
+- [x] Standalone relay quality runner: 4/4 cases, 2–6 players, 46 rounds per case,
+  all 54 clues visible, wins/ties/replay. Rules: 200 randomized games pass.
+- [x] Return Challenge/Books and Power-Up Shop checkout, native Trivia/Story
+  effects, insurance, lives, mastery and persistence pass at 390/832.
+- [x] Local native audio owner/settings/announcer/Ocean Glow/Daily touch regression
+  passes at 320/390, keeping all ownership assertions.
+- [x] Final combined test commit `9a648274a546b1fc3e362f271b144fb061af9639`: all
+  11 triggered workflows passed. Both shared-wallet browser jobs passed, including
+  8 fresh/existing cases, 4 full process restarts, 4 complete restore scenarios,
+  and 4 Family/Clue Relay + unfinished-session restore scenarios.
+- [ ] Independent combined-candidate review; keep DRAFT, no merge/deployment.
+- [ ] Physical Samsung Chrome and iPhone Safari acceptance.
+
+Final combined CI evidence (all PASS at `9a64827`):
+
+| Check | GitHub Actions run |
+| --- | --- |
+| Full fourteen-group/core regression suite | 44024664571 |
+| Shared wallet, complete restore, Family integration; Chromium/WebKit | 44024670603 |
+| Approved Family Worship / Play Together placement and Back | 44024670579 |
+| Full Story Adventure candidate | 44024670580 |
+| Genesis 12 / 13 / 14 | 44024670582 / 44024670593 / 44024670572 |
+| Protected shared preview | 44024670586 |
+| Journey Seal progression | 44024670592 |
+| Native exclusive audio ownership | 44024670596 |
+| Daily Word Trail | 44024670583 |
+
+Additional local evidence: `work/pr55-combined-family-restore-final.log`,
+`work/pr55-combined-relay-quality-final.log`, `work/pr55-combined-return.log`,
+`work/pr55-combined-boost.log`, `work/pr55-combined-audio-final.log`, and
+`work/pr55-combined-restore-webkit-final.log`. Actual 320px Chromium / 430px
+WebKit native Family screenshots were inspected; real-device testing was not.
+
+Integration-only fixture corrections: the compact Family workflow required a
+retired November 6 script tag; it now requires the approved PR #61 tag. The relay
+rules runner retains its standalone PR boundary but adds an explicit integration
+mode that hash-locks approved relay code/content to main. Native audio tests now
+wait for THIS document's owner write (the real bridge installs after load +
+800ms), retaining the exact ownership checks. The paid-hint crash fixture closes
+its live Trail frame before removing saved delivery progress, removing a possible
+frame-save race from the deliberately constructed fixture. Restore UI failures are
+reported immediately, rather than timing out behind a protected overlay.
+
+Read-only inspection of deployed TEST confirmed the current PR #61 Family loader,
+`visual-lab-test-banner.js?v=menu-score-exclusive-20261115-v1`, the v35 save module,
+and `installRestoreReview`, `installLegacyTransitionReview`,
+`installConcurrentReview`, and `refuseLegacySettingsImport`. The four historical
+v32–v35 checks require obsolete exact bootstrap tags. Their failures are not
+proof that those functions are missing, and are not passing release evidence.
+An additional existing published-audio v23 verifier (44023609026) was triggered
+by the audio QA change; it also fails its old November 13 cache-chain gate before
+gameplay. Published workflows were not weakened, deployed or relabeled green. A preceding
+Genesis 14 run also hit a Chromium launch timeout before its full Story step;
+its failed job was rerun, and both that rerun and the final-head workflow passed.
+Post-publication TEST verification remains required after approval.
+
+All imports/restores above used disposable local/CI fixtures. No real user save
+was imported. The recovery branch is a code checkpoint; before any eventual
+approved publication retain actual players' complete v2 exports as well. Do not
+delete original/private namespaces or treat a code rollback as a data merge.
+
+## Earlier isolated-candidate record
+
+The evidence below predates current-main integration; the current checklist above
+and the final combined CI record take precedence.
+
 ## Cause and correction
 
 The normal URL never activated the proven opt-in native bridge. Word Trails
