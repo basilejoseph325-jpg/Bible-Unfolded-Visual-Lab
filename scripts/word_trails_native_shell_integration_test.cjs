@@ -2,6 +2,7 @@
 const puppeteer=require('puppeteer-core');
 const assert=require('node:assert/strict');
 const {execSync}=require('node:child_process');
+const QA_ORIGIN=new URL(process.env.BU_NATIVE_HOST_QA_URL||'http://127.0.0.1:8891/index.html').origin;
 const chrome=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 (async()=>{
   const browser=await puppeteer.launch({headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
@@ -173,7 +174,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
     // lookalike. ?native=1 forces this route in the localhost test server.
     const deep=await browser.newPage();deep.setDefaultTimeout(60000);
     await deep.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-    await deep.goto('http://127.0.0.1:8891/experiments/word-trails-next-v1.html?native=1',{waitUntil:'domcontentloaded',timeout:120000});
+    await deep.goto(QA_ORIGIN+'/experiments/word-trails-next-v1.html?native=1',{waitUntil:'domcontentloaded',timeout:120000});
     await deep.waitForFunction(()=>location.pathname.endsWith('/index.html')&&window.BUWTNativeShell?.active?.() &&
       !!document.getElementById('bu-wt-native-game')?.contentWindow?.BUWTUnifiedMenu,{timeout:60000});
     let link=await deep.evaluate(()=>({pathname:location.pathname,hash:location.hash,query:location.search,
@@ -205,7 +206,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
     // Never let the fallback UI overwrite a second pseudo-global audio record.
     const standalone=await browser.newPage();
     await standalone.setViewport({width:390,height:705,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-    await standalone.goto('http://127.0.0.1:8891/experiments/word-trails-next-v1.html?standalone=qa',
+    await standalone.goto(QA_ORIGIN+'/experiments/word-trails-next-v1.html?standalone=qa',
       {waitUntil:'domcontentloaded',timeout:120000});
     await standalone.waitForFunction(()=>!!window.BUWTMainSettings?.open&&!!window.BUWTPolish?.state,
       {timeout:60000});

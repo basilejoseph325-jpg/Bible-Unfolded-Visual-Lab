@@ -160,16 +160,14 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.());
   const afterReload=await page.evaluate(()=>({state:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'),url:location.href}));
   console.log('TEST_SAVE_AFTER_RELOAD',JSON.stringify(afterReload));
-  await page.evaluate(()=>window.BUWTNativeShell.launch());
-  await page.waitForFunction(()=>{const f=document.getElementById('bu-wt-native-game')?.contentWindow?.document;return f?.getElementById('solved-count')?.textContent==='1 / 4'&&f?.getElementById('points')?.textContent==='177'}, {timeout:60000});
-  const progress=await page.evaluate(()=>{
-   const f=document.getElementById('bu-wt-native-game').contentWindow.document;
-   return {level:f.getElementById('level-label').textContent,solved:f.getElementById('solved-count').textContent,
-     coins:f.getElementById('points').textContent};
-  });
-  console.log('RESTORED_PUZZLE_IN_REAL_GAME',JSON.stringify(progress));
-  console.log('TEST_SAVE_AFTER_CHILD_LOAD',JSON.stringify(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')||'null'))));
-  assert.equal(progress.level,'LEVEL 1 / 50');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');
+  // Exercise the restored legacy format in the explicit standalone QA engine.
+  // Native shared-wallet resume is independently exercised on the normal URL.
+  const legacyWheel=await browser.newPage();await legacyWheel.setViewport({width:390,height:705,isMobile:true,hasTouch:true});
+  await legacyWheel.goto(new URL('experiments/word-trails-next-v1.html?standalone=qa',url).href,{waitUntil:'domcontentloaded',timeout:120000});
+  await legacyWheel.waitForFunction(()=>document.getElementById('solved-count')?.textContent==='1 / 4'&&document.getElementById('points')?.textContent==='177',{timeout:60000});
+  const progress=await legacyWheel.evaluate(()=>({level:document.getElementById('level-label').textContent,solved:document.getElementById('solved-count').textContent,coins:document.getElementById('points').textContent}));
+  console.log('RESTORED_LEGACY_PUZZLE_IN_STANDALONE_QA',JSON.stringify(progress));
+  assert.equal(progress.level,'LEVEL 1 / 50');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');await legacyWheel.close();
   // Older TEST saves lacked the later claimedSparks/boardBible ledgers.
   const legacyWT=await page.evaluate(()=>{
    const source=window.BUPlatformSaves.makeBackup();
