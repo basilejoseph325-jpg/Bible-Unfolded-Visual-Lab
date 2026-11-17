@@ -25,10 +25,12 @@ button:focus-visible,a:focus-visible{outline:3px solid #ffe7a6;outline-offset:2p
 .heading h1{font:700 clamp(24px,6.6vw,30px)/1.07 Georgia,serif;color:#fff5d7;margin:0;text-shadow:0 2px 4px #000c}
 .heading span{display:block;margin-top:3px;font-size:clamp(10px,2.55vw,12px);font-weight:800;letter-spacing:.12em;color:#f7ddb2;white-space:nowrap}
 .top-actions{display:flex;justify-content:flex-end;align-items:center;gap:5px}
-.points{display:flex;align-items:center;gap:5px;min-width:56px;height:37px;justify-content:center;padding:0 7px;
- border-radius:25px;background:#112d36bb;border:1px solid #ddc48f8c;font-size:17px;color:#f9d983;
+.points{display:grid;grid-template-columns:auto auto;grid-template-rows:19px 11px;column-gap:3px;row-gap:0;align-content:center;align-items:center;justify-content:center;min-width:56px;height:43px;padding:2px 5px;
+ border-radius:22px;background:#112d36e8;border:1px solid #ddc48fbb;font-size:16px;color:#f9d983;
  font-weight:850;box-shadow:0 3px 6px #0003;white-space:nowrap}
-.points strong{font-variant-numeric:tabular-nums;color:#fff0c3;font-size:16px}
+.points>span{grid-column:1;grid-row:1/3;font-size:16px;line-height:1}
+.points strong{grid-column:2;grid-row:1;font-variant-numeric:tabular-nums;color:#fff0c3;font-size:16px;line-height:1}
+.points small{grid-column:2;grid-row:2;color:#ffe0a0;font-size:8px;font-weight:900;letter-spacing:.045em;line-height:1;text-shadow:none}
 #reset{display:grid;place-items:center;width:36px;height:36px;border:1px solid #f3d7aa99;
  background:#092e3bb6;color:#ffe6ad;border-radius:50%;font-size:23px}
 .board-region{position:relative;display:flex;justify-content:center;align-items:center;min-height:0;padding:5px 10px 1px}
