@@ -63,21 +63,35 @@ then verifies the correct durable daily grant and no duplicate payout.
   staged copies roll back their added keys; interrupted copies are never silently
   overwritten. Current HTTPS browsers are required for Web Locks.
 
-## Save transfer and recovery boundary
+## Coordinated backup restore (PR #55 review follow-up)
 
-The existing TEST restore is already paused (`bu-platform-saves-v2.js`, v35).
-This candidate does not import that experimental backup implementation into LIVE
-or build another restore engine. The existing snapshot exporter is reused with
-an explicitly different `BibleUnfoldedSharedInsightTest` format, including wallet
-and Word Trails state together, `restoreAllowed: false`. Settings explains this.
-The old Import action is blocked before it can replace a wallet without the
-matching receipts/progress. Downloading a snapshot is NOT a successful restore.
+Regular TEST now exports restorable `BibleUnfoldedSharedInsightTest` version 2
+snapshots with a SHA-256 checksum. Only matching, complete snapshots are accepted.
+The native wallet, recovery copy, Word Trails progress, purchase ownership,
+booster stock, Return Challenge state, award receipts and other scoped game saves
+are restored together. Legacy v1/non-restorable snapshots and private-preview
+backups are rejected before writes. No old Trail Coins are converted or merged.
 
-A reviewed matching shared-state restore remains a release gate. Do not manually
-copy a snapshot over canonical keys or roll back just the token record. Before
-any approved integration, retain the base commit and original player records.
-Code rollback alone is not a merge of later regular-scope progress back into
-legacy saves. Neither namespace nor originals should be deleted during review.
+The existing Settings Import button reviews the file before an explicit confirm.
+Cancel and invalid files do not import anything. A fingerprint prevents a stale
+review replacing gameplay that changed after the preview. The exclusive writer
+pauses while the restore applies; a verified full checkpoint and intent journal
+recover interrupted writes before gameplay becomes writable. A damaged journal
+can roll back only to its matching verified checkpoint. Unverifiable recovery
+stays read-only and offers recovery from a separately supplied valid full backup.
+Unknown/corrupt current state is never treated as a safe rollback checkpoint.
+
+The pending migration marker also blocks older cached PR #55 code from playing
+against a partially applied restore. Original unscoped saves and private preview
+namespaces remain unchanged. Old TEST backup component APIs are preserved, but
+cannot intercept normal shared Settings import/export. Their browser fixtures
+use the existing localhost-only standalone QA route; published verifiers keep
+their real published URL and cannot opt out this way. Normal shared restore is
+covered by its own mandatory two-engine CI matrix, not those legacy fixtures.
+
+No experimental backup code is imported into Story-Trails. A code rollback is
+not a migration of later shared TEST progress into legacy saves. Retain the base
+commit, source records and exports before any owner-approved integration.
 
 ## Verification
 
@@ -150,28 +164,51 @@ booster regression now funds ONLY its isolated shared-wallet fixture and verifie
 shared spending, instead of assuming the retired 225-token trial grant or
 byte-identical inventory-less wallet JSON.
 
-Other repository checks still need alignment/triage before integration:
+### Follow-up checklist and actual evidence
 
-- Genesis-only scope gates reject this wallet PR's non-Genesis files (confirmed
-  in run 44006166742); they are not Genesis gameplay failures.
-- The older launcher test dereferences the retired raw Trail-save key and fails
-  on null, after successfully opening the real 50-level game (44005825573).
-- The seal test reads the old save key when checking post-Level-30 unlock
-  (44006166612); the current engine's actual level data/unlock code is unchanged.
-- The all-mode smoke test expects Books navigation without handling the approved
-  purchase gate; run 44005825747 stops at that gate. Our separate owned-Books
-  migration/round-trip and protected purchase tests pass.
-- Several published-site backup checks run against the deployed TEST site, not
-  this unmerged candidate. No deployment was performed to satisfy them. Full
-  legacy CI adaptation and published-site release verification remain open.
+- [x] Read independent review of `9ea596f` (GitHub PR review).
+- [x] Scoped seal assertions: 32 cases across regular shared mode and standalone
+  QA at 320/430; upgrade 30→31, 35→36, 40→41, 45→46, completed 50, full first
+  level payment and final-level replay without duplicate level/seal awards.
+- [x] Chromium real CDP touch swipes/taps at 320/390, native hidden-word payment
+  and resume; original records unchanged (`work/pr55-real-touch.log`).
+- [x] Genesis 13/14 compatible immutable chapter/audio boundaries and actual
+  navigation/ending/artwork checks (`work/pr55-g13-r2.log`, `pr55-g14-final.log`).
+  Genesis-only exact allowlists remain for Genesis-only releases; cross-mode
+  wallet changes use chapter/audio hashes against the current PR base.
+- [x] Cross-mode smoke including an actual Books purchase and navigation
+  (`work/pr55-crossmode.log`); James/Return Challenge purchase, Trivia, banking,
+  insurance, refill, mastery and refresh at 390/832 (`pr55-james-r2.log`).
+- [x] Settings practice-link regression at 320/390 (`pr55-settings-practice-final.log`).
+- [x] Restore contracts: 14 invalid files, stale review, concurrent calls, all
+  11 injected failure points and all 11 crash points, checksum-verified recovery,
+  unreadable-state recovery and unscoped/private-preview canaries.
+- [ ] Final complete restore browser matrix, 320/430 Chromium and WebKit.
+- [ ] Final head CI results and legacy component browser reruns.
+- [ ] Physical Samsung Chrome / iPhone Safari acceptance.
 
-CI results are separate from these local passes. Review the latest head's actual
-checks and artifacts; no CI success is implied by adding a workflow.
+Initial follow-up head `3aa00ac`: 55 workflows were triggered. Red checks were
+triaged rather than treated as wallet failures: missing historical Git object in
+shallow checkout (fixed fetch depth); old launcher/seal-visual raw keys; original
+Story comparison to a pre-approved-fix historical checkpoint; James trial funds;
+pre-migration Settings snapshot timing; scoped audio write tracing; legacy backup
+fixtures exercising the normal shared URL; and published-only cache verifiers.
+Later fixes preserve the actual gameplay, purchase, ownership, refresh and
+original-save assertions. The standard wallet matrix also exposed a fixture
+snapshot taken before the existing 1400ms booster reconciliation; it now waits for
+that reconciliation before checking exact unchanged bytes on cancel.
+
+Published-only v32–v35 verifiers target deployed TEST and contain fixed historical
+cache-version strings. They cannot verify this unpublished branch. Their red
+results are not relabeled as candidate passes; deployment is not performed to
+satisfy them. The fourteen-group legacy umbrella inherits its component results.
+Review the latest head's actual checks/artifacts: no entire-PR green claim is made.
 
 ## Before release
 
 - Independent source/PR review, including migration and atomic booster inventory.
-- Matching shared-state restore review; current exports are safety snapshots.
+- Independent review of the coordinated v2 restore, checkpoint/journal recovery
+  and rejection of partial/legacy files.
 - Physical Samsung Chrome and iPhone Safari: touch/keyboard, suspending/reopening,
   audio, navigation, storage pressure, two-tab handoff and cached-update acceptance.
 - Owner approval and recovery checkpoint before any merge/deployment. The optional
