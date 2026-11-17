@@ -72,7 +72,9 @@ booster stock, Return Challenge state, award receipts and other scoped game save
 are restored together. Legacy v1/non-restorable snapshots and private-preview
 backups are rejected before writes. No old Trail Coins are converted or merged.
 
-The existing Settings Import button reviews the file before an explicit confirm.
+Settings Import exposes a directly tapped native file control, then reviews the
+file before an explicit confirm. Scripted picker activation proved unreliable
+in both engines; it is no longer required. Review actions have 44px touch targets.
 Cancel and invalid files do not import anything. A fingerprint prevents a stale
 review replacing gameplay that changed after the preview. The exclusive writer
 pauses while the restore applies; a verified full checkpoint and intent journal
@@ -120,7 +122,7 @@ Serve the checkout on localhost:8894. The two older regressions accept STORY_URL
 and BU_WT_NATIVE_PARITY_URL respectively. WT_ENGINES selects the new matrix;
 WT_SHOTS=1 captures screenshots; WT_EVIDENCE selects its JSON evidence path.
 
-Final local results:
+Previously verified baseline (`9ea596f`, before the restore follow-up):
 
 | Check | Actual result |
 | --- | --- |
@@ -183,8 +185,15 @@ byte-identical inventory-less wallet JSON.
 - [x] Restore contracts: 14 invalid files, stale review, concurrent calls, all
   11 injected failure points and all 11 crash points, checksum-verified recovery,
   unreadable-state recovery and unscoped/private-preview canaries.
-- [ ] Final complete restore browser matrix, 320/430 Chromium and WebKit.
-- [ ] Final head CI results and legacy component browser reruns.
+- [x] Complete restore browser matrix: 4/4 at 320/430 in Chromium/WebKit,
+  with zero page errors and original/private-preview canaries unchanged
+  (`work/shared-restore/{chromium,webkit}-final.json`).
+- [x] Native menu host, coordinated legacy save and fourteen-group regression CI
+  pass at `4761c75` (runs 44018607216, 44018607274 and 44018607287).
+- [x] Final shared-wallet/restore matrix: both Chromium and WebKit pass at
+  `2f2bc2dda36acf33ab6d58ef82aff9ac07a9de01` (44020243624). This includes
+  8 fresh/existing profiles, 4 actual process restarts, 4 complete restore
+  scenarios and real 44px mobile touch-target assertions.
 - [ ] Physical Samsung Chrome / iPhone Safari acceptance.
 
 Initial follow-up head `3aa00ac`: 55 workflows were triggered. Red checks were
@@ -196,13 +205,43 @@ fixtures exercising the normal shared URL; and published-only cache verifiers.
 Later fixes preserve the actual gameplay, purchase, ownership, refresh and
 original-save assertions. The standard wallet matrix also exposed a fixture
 snapshot taken before the existing 1400ms booster reconciliation; it now waits for
-that reconciliation before checking exact unchanged bytes on cancel.
+that reconciliation before checking exact unchanged bytes on cancel. Navigation
+fixtures also wait for actual Genesis 13/14 registration before leaving the page;
+this prevents unload-aborted fetch errors without filtering any browser errors.
 
 Published-only v32–v35 verifiers target deployed TEST and contain fixed historical
-cache-version strings. They cannot verify this unpublished branch. Their red
+cache-version strings. They cannot verify this unpublished branch. Their historical red
 results are not relabeled as candidate passes; deployment is not performed to
 satisfy them. The fourteen-group legacy umbrella inherits its component results.
 Review the latest head's actual checks/artifacts: no entire-PR green claim is made.
+
+Final tested code: `2f2bc2dda36acf33ab6d58ef82aff9ac07a9de01`.
+All 10 workflows triggered for that code commit passed, including:
+
+| Workflow | Run | Result |
+| --- | --- | --- |
+| Regular shared wallet + complete restore, both engines | 44020243624 | Pass |
+| Protected shared preview, both engines | 44020243609 | Pass |
+| Seal progression | 44020243592 | Pass |
+| Story Adventure candidate | 44020243748 | Pass |
+| Genesis 12 | 44020243811 | Pass |
+| Genesis 13 integration | 44020244024 | Pass |
+| Genesis 14 integration | 44020243663 | Pass |
+| Daily Word Trail | 44020243751 | Pass |
+| Exclusive music ownership | 44020244157 | Pass |
+| Existing Family Worship relay integration | 44020243720 | Pass |
+
+The four inspected historical published failures are v32 run 44017888119
+(`external-writer guard not yet deployed`), v33 44017888134 (`bootstrap not
+published`), v34 44017888238 (`file picker not yet deployed`), and v35 44017888220
+(`old import gate not yet deployed`). Their cache-chain probes target the
+published site, not this branch. They remain pending publication verification;
+no deployment or production save import was attempted. CI artifact downloads
+returned HTTP 403 in this environment; actual local review-dialog screenshots
+were inspected, and the final CI independently asserts 44px touch targets.
+
+Validation currently matches the approved 50-level engine. Later level additions
+need corresponding schema/test review; they are deliberately absent here.
 
 ## Before release
 
