@@ -1,0 +1,31 @@
+name: QA separate Bible Crosswords and Word Trails player paths (TEST only)
+on:
+  push:
+    branches:
+      - 'fix/test-distinct-bible-crosswords-name-20261116'
+    paths:
+      - 'word-trails-next-launcher.js'
+      - 'scripts/qa_distinct_bible_crosswords_word_trails_v1.cjs'
+      - '.github/workflows/qa-distinct-bible-crosswords-word-trails-v1.yml'
+permissions: {contents: read}
+jobs:
+  preserve-both:
+    runs-on: ubuntu-latest
+    timeout-minutes: 23
+    steps:
+      - uses: actions/checkout@v4
+      - name: JS syntax and zero gameplay changes
+        run: |
+          node --check word-trails-next-launcher.js
+          node --check scripts/qa_distinct_bible_crosswords_word_trails_v1.cjs
+      - name: Install Chromium/WebKit browser automation
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-distinct-crossword-qa playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-distinct-crossword-qa/node_modules/.bin/playwright install --with-deps webkit
+      - name: Actual separate games in emulated Android/Safari at 320px and 430px
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-distinct-crossword-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-distinct-crossword-qa/node_modules node scripts/qa_distinct_bible_crosswords_word_trails_v1.cjs

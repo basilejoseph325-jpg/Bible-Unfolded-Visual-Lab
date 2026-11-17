@@ -50,6 +50,31 @@ function install(){
 /* The expanded Scripture Crosswords collection is a separate REAL playable
    home choice. Leave Word Trails NEXT's existing home route unchanged. The
    twenty-one previous Crosswords packs retain their save indices. */
+/* Bible Crosswords and Word Trails are distinct, playable games.
+   The classic question-led 33-pack Bible Crosswords game lives inside the
+   original native #cross-pick / #crossword-screen flow. Never remove or
+   redirect it to the NEW 50-level Word Trails wheel game. Only correct the
+   misleading old player-facing labels. No progress or economy writes. */
+function labelCrosswordsDistinctly(){
+ const pick=document.querySelector('#cross-pick .hub-headtitle b');
+ if(pick)pick.textContent='Bible Crosswords';
+ const play=document.querySelector('#crossword-screen .xword-title');
+ if(play)play.textContent='Bible Crosswords';
+ const screen=document.getElementById('crossword-screen');
+ if(screen)screen.setAttribute('aria-label','Bible Crosswords');
+ const back=document.getElementById('xword-back');
+ if(back){back.textContent='‹ Crosswords';back.setAttribute('aria-label','Back to Bible Crosswords');}
+ const choose=document.querySelector('#choose-crossword strong');
+ if(choose)choose.textContent='Bible Crosswords';
+ const menu=document.getElementById('menu-crossword');
+ if(menu){
+  for(const n of menu.childNodes)if(n.nodeType===3&&n.textContent.includes('Bible Word Trails'))
+   n.textContent=n.textContent.replace('Bible Word Trails','Bible Crosswords');
+ }
+ const foot=document.querySelector('#game-menu .drawer-foot');
+ if(foot&&foot.textContent.includes('Story Adventure and Bible Word Trails'))
+  foot.textContent='Story Adventure, Bible Crosswords and Word Trails use shared Settings.';
+}
 function installCrosswordsHomeCard(){
  const existing=document.getElementById('home-crossword-packs');
  if(existing)return true;
@@ -100,6 +125,7 @@ function routeHomeCard(){
 }
 routeHomeCard();
 function start(){
+ labelCrosswordsDistinctly();
  installCrosswordsHomeCard();
  if(install())return;
  const observer=new MutationObserver(()=>{if(install())observer.disconnect()});
