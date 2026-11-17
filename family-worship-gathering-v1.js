@@ -171,17 +171,17 @@ else start();
 })();
 
 
-/* Visual Lab TEST — Bible Clue Relay is its OWN HOME GAME, not a Family
- * Worship setup/quick-play button. The native Family Worship hub, setup,
- * playlists, saved sessions, wallet, sound settings and other games are
- * untouched. Relay scores are isolated and exist only for the current game. */
+/* Visual Lab TEST — One Bible Clue Relay activity card within the Family
+ * Worship "Play Together" hub. Do not add it to the outer Bible Unfolded
+ * game cards, or to Family Worship setup / Quick Play. Its game remains an
+ * isolated iframe; wallet, family saves, playlists and other modes untouched. */
 (()=>{'use strict';
  if(location.pathname.includes('/experiments/')||window.BUFamilyClueRelayMenuV1)return;
- const CARD='home-clue-relay',SHELL='bu-fw-clue-relay-shell';
+ const CARD='bu-fw-clue-relay-card',SHELL='bu-fw-clue-relay-shell';
  const MUSIC=['music-navigation','music-story','music-trails','music',
    'music-daily','music-builder','music-name'];
  const lease=new Map();
- let shell=null,launchButton=null,muteTimer=null,scheduled=false;
+ let shell=null,launchButton=null,muteTimer=null,scheduled=false,returnUrl=null,returnState=null;
  function silence(){
   if(!shell?.isConnected)return;
   try{window.pauseAudio?.()}catch(_){}
@@ -201,24 +201,25 @@ else start();
   lease.clear();
   try{window.syncMusic?.()}catch(_){}
  }
- function showHome(){
-  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
-  try{window.focusHome?.()}catch(_){}
- }
  function close(fromHistory=false){
   if(!shell?.isConnected)return;
   const old=shell;shell=null;old.remove();
   document.documentElement.classList.remove('bu-fw-clue-relay-active');
   restoreAudio();
-  // Explicit Back must not fire unrelated parent popstate handlers.
   if(!fromHistory&&location.hash==='#family-clue-relay')
-   history.replaceState(history.state,'',location.pathname+location.search);
-  requestAnimationFrame(showHome);
+   history.replaceState(returnState,'',returnUrl||
+    (location.pathname+location.search));
+  returnUrl=null;returnState=null;
+  // The underlying Family Worship Play Together view was never closed.
   if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
  }
  function launch(){
   if(shell?.isConnected)return true;
-  showHome();
+  const body=document.getElementById('bu35-body');
+  if(!body?.querySelector(':scope > .bu35-hero #bu35-new'))return false;
+  try{window.closeMenu?.();window.closeDialog?.()}catch(_){}
+  returnUrl=location.pathname+location.search+location.hash;
+  returnState=history.state;
   shell=document.createElement('section');
   shell.id=SHELL;shell.setAttribute('role','dialog');
   shell.setAttribute('aria-modal','true');
@@ -226,15 +227,15 @@ else start();
   const top=document.createElement('header');
   const back=document.createElement('button');
   back.id='bu-fw-clue-relay-back';back.type='button';
-  back.textContent='‹ All Games';
-  back.setAttribute('aria-label','Return to Bible Unfolded games');
+  back.textContent='‹ Play Together';
+  back.setAttribute('aria-label','Return to Family Worship Play Together');
   back.addEventListener('click',()=>close());
   const title=document.createElement('span');
   title.textContent='BIBLE CLUE RELAY · TEST';
   const frame=document.createElement('iframe');
   frame.id='bu-fw-clue-relay-frame';
   frame.title='Bible Clue Relay — pass-the-phone Bible discovery game';
-  frame.src='experiments/family-clue-relay-v1.html?v=standalone-home-card-test-v1';
+  frame.src='experiments/family-clue-relay-v1.html?v=play-together-card-test-v1';
   top.append(back,title);shell.append(top,frame);
   document.body.appendChild(shell);
   document.documentElement.classList.add('bu-fw-clue-relay-active');
@@ -244,38 +245,63 @@ else start();
   return true;
  }
  function mount(){
-  const cards=document.querySelector('.cinematic-cards');
-  if(!cards||document.getElementById(CARD))return;
-  // Same home-card component and hierarchy as the other standalone games.
-  const card=document.createElement('button');
-  card.type='button';card.id=CARD;card.className='cinematic-card';
-  card.setAttribute('aria-label','Play Bible Clue Relay, a separate multiplayer Bible discovery game');
-  card.innerHTML=
-   '<span class="cinematic-poster" aria-hidden="true"></span>'+
-   '<span class="cinematic-card-body">'+
-    '<span class="cinematic-card-title">Bible Clue Relay</span>'+
-    '<span class="v37-card-desc">Three clues, one Bible discovery. Pass the phone and play!</span>'+
-    '<span class="cinematic-card-cta v37-card-cta">PLAY CLUE RELAY <span aria-hidden="true">›</span></span>'+
-   '</span>';
-  card.addEventListener('click',e=>{
-   e.preventDefault();e.stopPropagation();launchButton=card;launch();
+  // Make sure the original incorrect outer-home card never remains visible.
+  document.getElementById('home-clue-relay')?.remove();
+  const body=document.getElementById('bu35-body');
+  if(!body?.querySelector(':scope > .bu35-hero #bu35-new'))return;
+  if(body.querySelector('#'+CARD))return;
+  const card=document.createElement('div');
+  card.id=CARD;card.className='bu35-card';
+  const title=document.createElement('h3');
+  title.textContent='Bible Clue Relay';
+  const row=document.createElement('div');
+  row.className='bu35-button-row';
+  const play=document.createElement('button');
+  play.id='bu-fw-clue-relay-launch';
+  play.type='button';
+  play.textContent='Play Bible Clue Relay';
+  play.setAttribute('aria-label','Play Bible Clue Relay with family or friends');
+  play.addEventListener('click',e=>{
+   e.preventDefault();e.stopPropagation();launchButton=play;launch();
   });
-  const family=document.getElementById('home-family');
-  if(family?.parentElement===cards)family.insertAdjacentElement('afterend',card);
-  else cards.append(card);
+  row.append(play);card.append(title,row);
+  const builder=body.querySelector('#wb36-family-open')?.closest('.bu35-card');
+  if(builder?.parentElement===body)builder.insertAdjacentElement('afterend',card);
+  else body.append(card);
  }
  function requestMount(){
   if(scheduled)return;scheduled=true;
   requestAnimationFrame(()=>{scheduled=false;mount()});
  }
  function boot(){
-  if(document.getElementById('bu-clue-relay-home-card-style'))return;
+  if(document.getElementById('bu-fw-clue-relay-play-together-style'))return;
   const style=document.createElement('style');
-  style.id='bu-clue-relay-home-card-style';
+  style.id='bu-fw-clue-relay-play-together-style';
   style.textContent=
-   '#'+CARD+' .cinematic-poster{background:linear-gradient(180deg,#061f292b 0%,#072f3e10 48%,#051c26cf 100%),'+
-    'url("family-worship-menu-art/v1/topic-02-bible-people-events.jpg") center 47%/cover no-repeat!important}'+
-   '#'+CARD+':focus-visible,#bu-fw-clue-relay-back:focus-visible{outline:2px solid #ffe4a3;outline-offset:2px}'+
+   '#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>#'+CARD+'{'+
+    '--pt-photo:url("family-worship-menu-art/v1/topic-02-bible-people-events.jpg");'+
+    '--pt-x:50%;--pt-y:47%;min-height:clamp(160px,22dvh,202px)!important;'+
+    'display:block!important;position:relative!important;padding:14px 15px!important}'+
+   '#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>#'+CARD+' h3{'+
+    'position:absolute!important;bottom:22px!important;left:15px!important;'+
+    'max-width:calc(100% - 90px)!important;margin:0!important;'+
+    'font-size:clamp(22px,5.8vw,29px)!important}'+
+   '#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>#'+CARD+' .bu35-button-row{'+
+    'position:static!important;margin:0!important;padding:0!important}'+
+   '#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>#'+CARD+' #bu-fw-clue-relay-launch{'+
+    'position:absolute!important;right:13px!important;bottom:13px!important;'+
+    'height:50px!important;width:50px!important;min-width:50px!important;'+
+    'display:flex!important;align-items:center!important;justify-content:center!important;'+
+    'padding:0!important;margin:0!important;border-radius:12px!important;'+
+    'border:1.5px solid #ffe9b8!important;'+
+    'background:linear-gradient(165deg,#ffe6a6,#cba055)!important;'+
+    'color:transparent!important;font-size:0!important;'+
+    'box-shadow:inset 0 0 0 1px #ffffff50,0 3px 10px #0008!important}'+
+   '#bu35-family #bu35-body:has(> .bu35-hero #bu35-new)>#'+CARD+' #bu-fw-clue-relay-launch::before{'+
+    'content:"▶"!important;font:800 23px/1 system-ui,sans-serif!important;'+
+    'color:#153944!important}'+
+   '#bu-fw-clue-relay-launch:focus-visible,#bu-fw-clue-relay-back:focus-visible{'+
+    'outline:2px solid #ffe4a3;outline-offset:2px}'+
    '#'+SHELL+'{position:fixed!important;inset:0!important;z-index:25000!important;'+
     'display:flex!important;flex-direction:column!important;min-height:0!important;'+
     'padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);'+
@@ -293,11 +319,14 @@ else start();
   new MutationObserver(requestMount).observe(document.body,{childList:true,subtree:true});
   requestMount();
  }
- window.addEventListener('popstate',()=>{if(shell?.isConnected)close(true);});
+ // Browser/device Back closes just the relay. Do not let parent navigation
+ // consume this same popstate and leave Play Together unexpectedly.
+ window.addEventListener('popstate',e=>{
+  if(shell?.isConnected){e.stopImmediatePropagation();close(true);}
+ },true);
  if(document.readyState==='loading')
   document.addEventListener('DOMContentLoaded',boot,{once:true});
  else boot();
- // Keep the existing public name for compatibility; it now owns a HOME card.
  window.BUFamilyClueRelayMenuV1=Object.freeze({
   active:()=>!!shell?.isConnected,close,launch
  });
