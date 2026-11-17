@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - 'fix/test-distinct-bible-crosswords-name-20261116'
+      - 'fix/test-word-trails-remove-obsolete-compare-toggle-20261116'
     paths:
       - 'word-trails-next-launcher.js'
       - 'scripts/qa_distinct_bible_crosswords_word_trails_v1.cjs'
