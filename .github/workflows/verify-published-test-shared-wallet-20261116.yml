@@ -1,0 +1,45 @@
+name: Verify published TEST shared-wallet preview (release safety only)
+on:
+  push:
+    branches:
+      - 'release/verify-published-shared-wallet-test-20261116'
+permissions: {contents: read}
+jobs:
+  published-shared-wallet-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate published-test verification script
+        run: node --check scripts/qa_verify_published_test_shared_wallet_v1.cjs
+      - name: Wait for both published TEST files, not GitHub branch content
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab'
+          ready=false
+          for attempt in $(seq 1 48); do
+            if curl -fsSL --max-time 65 -H 'Cache-Control: no-cache' "$BASE/index.html?coin-release=$attempt" -o /tmp/BU-public-wallet-index.html &&
+              grep -F 'experiments/bu-test-native-storage-fence-v1.js' /tmp/BU-public-wallet-index.html >/dev/null &&
+              curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/experiments/bu-test-native-storage-fence-v1.js?coin-release=$attempt" -o /tmp/BU-public-wallet-fence.js &&
+              grep -F 'ISOLATED COIN TEST' /tmp/BU-public-wallet-fence.js >/dev/null &&
+              curl -fsSL --max-time 40 -H 'Cache-Control: no-cache' "$BASE/experiments/bu-test-insight-native-bridge-v2.js?coin-release=$attempt" -o /tmp/BU-public-wallet-bridge.js &&
+              grep -F 'BUTestInsightBridge' /tmp/BU-public-wallet-bridge.js >/dev/null; then
+              ready=true
+              break
+            fi
+            sleep 6
+          done
+          test "$ready" = true || { echo 'FAIL: real public TEST is not serving merged wallet code'; exit 1; }
+          echo 'PASS: public TEST serves the opt-in wallet loader and both bridge files'
+      - name: Install Chromium and Linux WebKit
+        shell: bash
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-public-wallet-qa playwright@latest --no-fund --no-audit --silent
+          /tmp/bu-public-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+      - name: Test actual published game in Chromium/WebKit, normal vs opt-in
+        env:
+          NODE_PATH: /tmp/bu-public-wallet-qa/node_modules
+        shell: bash
+        run: node scripts/qa_verify_published_test_shared_wallet_v1.cjs
