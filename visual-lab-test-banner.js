@@ -116,7 +116,7 @@ else install();
 })();
 
 /* Visual Lab ONLY — mount Word Trails under the real main-game UI. */
-(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=standard-shared-v1';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=shared-restore-v2';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Visual Lab ONLY — extend the actual native Settings backup controls so one
@@ -183,7 +183,7 @@ else install();
  document.head.append(style);
  const script=document.createElement('script');script.defer=true;
  script.id='bu-native-boost-shop-v1-loader';
- script.src='native-boost-shop-test-v1.js?v=standard-shared-v1';
+ script.src='native-boost-shop-test-v1.js?v=shared-restore-v2';
  document.head.append(script);
 })();
 
@@ -225,7 +225,7 @@ else install();
  css.href='james-return-loop-test-v1.css?v=20261110-recover-life-v2';
  document.head.append(css);
  const script=document.createElement('script');script.id='bu-james-return-loop-loader';script.defer=true;
- script.src='james-return-loop-test-v1.js?v=standard-shared-v1';
+ script.src='james-return-loop-test-v1.js?v=shared-restore-v2';
  document.head.append(script);
 })();
 

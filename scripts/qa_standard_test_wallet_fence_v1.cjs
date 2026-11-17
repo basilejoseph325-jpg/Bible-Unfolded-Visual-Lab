@@ -11,7 +11,7 @@ function boot(records={},opts={}){
  const document={readyState:'loading',addEventListener(){},getElementById(){return null;}};
  const navigator=opts.unsupported?{}:{locks:{request(name,options,cb){return Promise.resolve(cb(opts.conflict?null:{}));}}};
  const ctx={window,Storage,document,location,navigator,URLSearchParams,localStorage:raw,sessionStorage:session};
- vm.runInNewContext(code,vm.createContext(ctx));
+ const scope=vm.createContext(ctx);vm.runInNewContext(fs.readFileSync('experiments/bu-test-shared-backup-v2.js','utf8'),scope);vm.runInNewContext(opts.code||code,scope);
  return {raw,api:window.BUPreviewStorageFence,records:()=>Object.fromEntries(raw.map),reloads:()=>reloads};
 }
 const original={
@@ -61,4 +61,6 @@ assert.equal(boot({}, {local:true,search:'?standalone=qa'}).api,undefined,'Expli
 assert.equal(boot({}, {local:true,search:'?qaDate=2026-11-16'}).api,undefined,'Explicit local Daily fixture preserved');
 assert(boot({}, {local:true,search:'?bu_shared_wallet_preview=1&standalone=qa'}).api.active,'Explicit preview isolation wins over a QA flag');
 for(const local of [false,true])assert.equal(boot(original,{live:true,local}).api,undefined,'LIVE path stays inactive');
+const oldFence=require('node:child_process').execFileSync('git',['show','9ea596f:experiments/bu-test-native-storage-fence-v1.js'],{encoding:'utf8'});
+const oldView=boot({...original,[P+W]:original[W],[P+'__imported_regular_test_v1__']:'restore-pending-v2:test-intent'},{code:oldFence});assert.equal(oldView.api.writerStatus().writable,false,'Older cached candidate must not play a partial restore');assert.equal(oldView.records()[P+W],original[W]);
 console.log('PASS standard TEST fence: fresh default, one-time copy, negative Points, preview/session/frame isolation, no old-coin conversion, corrupt/colliding/quota rollback, lock protection, LIVE inactive');

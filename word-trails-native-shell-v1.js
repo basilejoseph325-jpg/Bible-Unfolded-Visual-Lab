@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=standard-shared-v1';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=shared-restore-v2';
 let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
@@ -92,7 +92,7 @@ function openDaily(){
  try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-enter'))}catch(_){}
  const daily=document.createElement('iframe');
  daily.id='bu-wt-daily-frame';daily.title='Daily Word Trail';
- daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=standard-shared-v1'+
+ daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=shared-restore-v2'+
   (window.BUPreviewStorageFence?.active&&!window.BUPreviewStorageFence.standardMode?'&bu_shared_wallet_preview=1':'');
  daily.allow='autoplay';
  shell.appendChild(daily);dailyFrame=daily;

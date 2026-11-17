@@ -53,7 +53,15 @@ const scoped=k=>{const name=String(k);return protectedKey(name)?PREFIX+name:name
 // No fallback to a weak localStorage lease: unsupported = read-only blocked.
 const LOCK='bu-visual-lab-shared-native-wallet-writer-20261116';
 const SEED_KEY=PREFIX+'__imported_regular_test_v1__';
-let writerState='pending',releaseWriter=null,generation=0,copyError='';
+let writerState='pending',releaseWriter=null,generation=0,copyError='',writerLeaseHeld=false;
+const sharedBackup=standardMode&&window.parent===window&&window.BUSharedTestBackup?.create({
+ list:()=>{const keys=[];for(let i=0;i<storage.length;i++){const k=original.key.call(storage,i);if(k?.startsWith(PREFIX))keys.push(k.slice(PREFIX.length));}return keys;},
+ get:k=>original.getItem.call(storage,PREFIX+k),
+ set:(k,v)=>original.setItem.call(storage,PREFIX+k,v),
+ remove:k=>original.removeItem.call(storage,PREFIX+k),
+ writable:()=>writerStatus().writable,ownsLock:()=>writerLeaseHeld,
+ pause:()=>{writerState='restoring';refreshLockNotice();}
+});
 // One-time READ-ONLY clone of the user's *existing* regular TEST game save.
 // It retains 533 native tokens and Word Trails' current level (but never
 // converts the 111 separate old Trail Coins into additional spendable tokens).
@@ -110,7 +118,7 @@ function writerStatus(){
 function refreshLockNotice(){
  if(!isTop||document.readyState==='loading')return;
  let shield=document.getElementById('bu-preview-wallet-lock-shield');
- const preparing=standardMode&&['pending','seeding','paused'].includes(writerState);
+ const preparing=standardMode&&['pending','seeding','paused','restoring','recovering'].includes(writerState);
  const blocked=preparing||writerState==='conflict'||writerState==='unsupported'||writerState==='error';
  if(!blocked){shield?.remove();return;}
  if(!shield){shield=document.createElement('div');shield.id='bu-preview-wallet-lock-shield';
@@ -136,6 +144,15 @@ function acquireWriter(){
   navigator.locks.request(LOCK,{mode:'exclusive',ifAvailable:true},async lock=>{
    if(attempt!==generation)return;
    if(!lock){writerState='conflict';refreshLockNotice();return;}
+   writerLeaseHeld=true;
+   if(standardMode&&(!sharedBackup||sharedBackup.hasPending())){
+    writerState='recovering';refreshLockNotice();
+    try{
+     if(!sharedBackup)throw Error('Shared TEST backup coordinator is unavailable');
+     await sharedBackup.recoverPending();location.reload();
+    }catch(error){copyError=String(error.message||error);writerState='error';refreshLockNotice();}
+    await new Promise(resolve=>{releaseWriter=resolve;});releaseWriter=null;return;
+   }
    if((importMode||standardMode)&&original.getItem.call(storage,SEED_KEY)!=='1'){
     writerState='seeding';refreshLockNotice();
     try{
@@ -166,7 +183,7 @@ function acquireWriter(){
 }
 function releaseOwnedWriter(){
  if(!isTop)return;
- generation++;
+ generation++;writerLeaseHeld=false;
  writerState='paused';
  if(releaseWriter){const done=releaseWriter;releaseWriter=null;done();}
 }
@@ -213,6 +230,11 @@ proto.key=function(n){
 // Keep preview exports separate from ordinary TEST v2 backups. A normal
 // TEST/LIVE restore must reject this intentionally different file format.
 function makePreviewBackup(){
+ if(standardMode){
+  if(typeof bu3824RefreshWallet==='function')bu3824RefreshWallet();
+  if(typeof saveEconomy!=='function'||saveEconomy()!==true)throw Error('The native wallet could not be checkpointed');
+  return sharedBackup.exportSnapshot();
+ }
  if(!writerStatus().writable)throw Error('Cannot export while another tab owns this preview');
  const entries={};
  for(let i=0;i<storage.length;i++){
@@ -244,7 +266,7 @@ if(isTop){
   const homeBooks=event.target?.closest?.('#home-books');
   if(homeBooks&&window.BUJamesReturnLoopV1?.inspect?.()?.owned?.includes('books')){
    event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
-   location.assign(new URL('bible-book-guides/index.html'+(standardMode?'?v=standard-shared-v1':'?bu_shared_wallet_preview=1')+
+   location.assign(new URL('bible-book-guides/index.html'+(standardMode?'?v=shared-restore-v2':'?bu_shared_wallet_preview=1')+
      (importMode?'&bu_import_regular_test=1':''),
      new URL('./',location.href)).href);
    return;
@@ -263,16 +285,17 @@ if(isTop){
   }
   if(!standardMode)dest.searchParams.set('bu_shared_wallet_preview','1');
   else if(/\/bible-book-guides\/(?:index|read)\.html$/.test(dest.pathname))
-   dest.searchParams.set('v','standard-shared-v1');
+   dest.searchParams.set('v','shared-restore-v2');
   if(importMode)dest.searchParams.set('bu_import_regular_test','1');
   anchor.href=dest.href;
  },true);
  // Capture BEFORE the native TEST v2 listener. A v2 export would omit the
  // isolated Word Trails preview save and have an incompatible restore format.
- document.addEventListener('click',event=>{
+ document.addEventListener('click',async event=>{
   if(standardMode&&event.target?.closest?.('#save-import')){
    event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
-   alert('Earlier backups cannot be imported into shared-token TEST yet. Your current saved game has not changed.');
+   if(!sharedBackup||!writerStatus().writable){alert('Your TEST wallet is not ready for a restore. No data changed.');return;}
+   window.BUSharedTestBackup.openImport(sharedBackup,()=>location.reload());
    return;
   }
   if(!event.target?.closest?.('#save-export, #bu-wt-recovery-current-backup'))return;
@@ -280,7 +303,7 @@ if(isTop){
   event.stopImmediatePropagation();
   event.stopPropagation();
   try{
-   const data=makePreviewBackup();
+   const data=await makePreviewBackup();
    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
    const url=URL.createObjectURL(blob);
    const link=document.createElement('a');
@@ -297,7 +320,7 @@ if(isTop){
  },true);
 }
 window.BUPreviewStorageFence=Object.freeze({
- active:true,standardMode,importMode,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,makePreviewBackup,
+ active:true,standardMode,importMode,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,makePreviewBackup,sharedBackup,
  protectedKey,originalKeyValue:(key)=>original.getItem.call(storage,String(key)),
  // Read-only status for QA and player diagnostics.
  status:()=>({active:true,standardMode,importMode,imported:original.getItem.call(storage,SEED_KEY)==='1',previewWalletPresent:
@@ -305,10 +328,12 @@ window.BUPreviewStorageFence=Object.freeze({
 });
 function showBanner(){
  if(standardMode){
+  const recovered=original.getItem.call(storage,PREFIX+'__shared_restore_notice_v2__');
+  if(recovered&&writerStatus().writable){alert(recovered);original.removeItem.call(storage,PREFIX+'__shared_restore_notice_v2__');}
   const note=document.querySelector('.save-transfer p');
-  if(note)note.textContent='Export a safety copy of this shared-token TEST game. Import is unavailable until the matching restore has been reviewed.';
+  if(note)note.textContent='Export or restore one complete shared-token TEST snapshot. Earlier backups and protected previews stay separate.';
   const detail=document.querySelector('.save-transfer>small');
-  if(detail)detail.textContent='Keep your earlier backups. They cannot be imported into this shared-token TEST yet.';
+  if(detail)detail.textContent='Restore replaces TEST progress, purchases and reward records together. A recovery checkpoint is kept; your original saves stay unchanged.';
   return;
  }
  if(window.parent!==window)return; // Parent owns the only visible preview warning.
@@ -322,6 +347,7 @@ function showBanner(){
  banner.style.cssText='position:fixed;left:5px;right:5px;top:env(safe-area-inset-top,0px);z-index:9998;pointer-events:none;text-align:center;background:#073541e8;color:#ffe7a7;border:1px solid #c89c48;border-radius:8px;padding:5px 8px;font:700 10px system-ui;letter-spacing:.04em';
  document.body.appendChild(banner);
 }
+if(standardMode)window.addEventListener('bu-test-wallet-writable',showBanner);
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showBanner,{once:true});
 else showBanner();
 })();
