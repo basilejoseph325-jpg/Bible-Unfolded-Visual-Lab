@@ -6,7 +6,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),cp=require('node:child_process');
 const FILE='experiments/word-trails-levels-51-55-v1.js';
 const BASE='72650b278b034f7eafe1dcce468e9dca5882e526';
-const NEW_FILES=new Set([FILE,'scripts/qa_word_trails_levels_51_55.cjs','scripts/qa_word_trails_levels_51_55_browser.cjs','scripts/fixtures/word-trails-51-55-sources.json']);
+const NEW_FILES=new Set([FILE,'scripts/qa_word_trails_levels_51_55.cjs','scripts/qa_word_trails_levels_51_55_browser.cjs','scripts/fixtures/word-trails-51-55-sources.json','experiments/word-trails-levels-51-55-metadata-v1.json','docs/WORD_TRAILS_LEVELS_51_55_INTEGRATION_REVIEW.md']);
 function readPack(){
  const window={},scope={window};
  for(const name of ['localStorage','fetch','navigator','document','location'])Object.defineProperty(scope,name,{get(){throw Error('Content must not access '+name);}});
@@ -81,6 +81,13 @@ function validatePack(){
  const fixture=JSON.parse(fs.readFileSync('scripts/fixtures/word-trails-51-55-sources.json','utf8'));
  assert.equal(fixture.independentHumanApproval,false);const entries=pack.flatMap(discoveries);assert.equal(fixture.items.length,entries.length);assert.equal(new Set(fixture.items.map(x=>x.id)).size,entries.length);
  for(const x of fixture.items)assert(entries.some(d=>d.word===x.word&&d.reference===x.reference&&d.url===x.url),'Source review does not match content');
+ const review=fixture.qualityReview;assert.equal(review.crosswordAnswers.length,30);assert.equal(review.discoveries.length,39);assert.equal(review.hiddenDiscoveriesReviewed,10);assert.equal(review.bonusWords.length,60);
+ for(const [i,l] of pack.entries())for(const word of l.bonus.split(' '))assert(review.bonusWords.some(r=>r.level===i+51&&r.word===word&&r.meaning.length>3),'Bonus review missing');
+ const meta=JSON.parse(fs.readFileSync('experiments/word-trails-levels-51-55-metadata-v1.json','utf8'));
+ assert.equal(meta.status,'review-only-not-integrated');assert.equal(meta.firstSaveIndex,50);assert.equal(meta.lastSaveIndex,54);assert.equal(meta.mapChapter.number,11);assert.equal(meta.mapChapter.firstLevel,51);assert.equal(meta.mapChapter.lastLevel,55);
+ assert.deepEqual(Object.keys(meta.journeySeals),['55']);const seal=meta.journeySeals['55'];assert.deepEqual(Object.keys(seal).sort(),['detail','name','symbol']);
+ assert(seal.name.length<=24&&seal.detail.length<=60);assert(!fs.readFileSync('experiments/word-trails-next-v1.js','utf8').includes(seal.name),'Seal accidentally integrated');
+ assert.deepEqual(meta.counts,{crosswordAnswers:30,scriptureBoardDiscoveries:29,hiddenBibleDiscoveries:10,bonusWords:60});
  // Prove the independent validator rejects meaningful content regressions.
  const copy=()=>JSON.parse(JSON.stringify(pack[0]));
  for(const mutate of [l=>l.rack='AAAAAAA',l=>l.words[1][1]=6,l=>l.words[1][2]=0,l=>l.spark=l.words[0][0],l=>l.extraSparks=[],l=>l.bibleBoard[0].url='https://example.com/',l=>l.scene='missing.webp',l=>l.bonus+=' AAAAAAA']){const bad=copy();mutate(bad);assert.throws(()=>validateLevel(bad));}

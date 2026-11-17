@@ -156,7 +156,7 @@ window.BUWTLevels51to55=Object.freeze([
       },
       {
         "word": "NEAR",
-        "clue": "Psalm 145 describes Jehovah's closeness to those who sincerely call on him. He is what to them?",
+        "clue": "How does Psalm 145:18 describe Jehovah in relation to those who call on him in truth?",
         "reference": "Psalm 145:18",
         "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/145/",
         "insight": "The psalm says Jehovah is near to those calling on him in truth. Prayer isn't just sending words into the distance; this verse gives us a warm reason to approach him sincerely."
@@ -245,10 +245,10 @@ window.BUWTLevels51to55=Object.freeze([
     "bibleBoard": [
       {
         "word": "PRAISED",
-        "clue": "From sunrise to sunset, how does Psalm 113 say Jehovah's name should be honored? It should be what?",
-        "reference": "Psalm 113:3",
+        "clue": "From the sun's rising to its setting, what does Psalm 113:3 say Jehovah's name should be?",
+        "reference": "Psalm 113:3, 4",
         "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/113/",
-        "insight": "The psalm stretches the picture from the sun's rising to its setting. Jehovah's name deserves praise throughout the day, not just during a brief moment of worship."
+        "insight": "The psalm calls for praise from the sun's rising to its setting. Its next line puts Jehovah above all the nations and his glory above the heavens. That's a wonderfully wide view of his greatness."
       },
       {
         "word": "PAIRS",
@@ -488,7 +488,7 @@ window.BUWTLevels51to55=Object.freeze([
         "clue": "Revelation says all things exist because of Jehovah's will. What did he do to bring them into existence?",
         "reference": "Revelation 4:11",
         "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/4/",
-        "insight": "The heavenly expression of praise gives a clear reason to honor Jehovah: he created all things. Their existence comes from his will. Everything we see gives us a reason to think about our Creator."
+        "insight": "Revelation's heavenly expression of praise gives a reason to honor Jehovah: he created all things. It says they came into existence because of his will."
       },
       {
         "word": "EARTH",
@@ -502,7 +502,7 @@ window.BUWTLevels51to55=Object.freeze([
     "extraSparks": [
       {
         "word": "HATE",
-        "clue": "Amos pairs loving what is good with doing what toward what is bad?",
+        "clue": "Amos says to love what is good. What does he urge people to do toward what is bad?",
         "reference": "Amos 5:15",
         "url": "https://www.jw.org/en/library/bible/nwt/books/amos/5/",
         "insight": "Amos called for hating what is bad, loving what is good, and letting justice prevail in the city gate. Those attitudes were meant to affect how people treated one another."

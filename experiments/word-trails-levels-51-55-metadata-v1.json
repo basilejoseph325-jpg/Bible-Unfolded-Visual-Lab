@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "status": "review-only-not-integrated",
+  "contentFile": "experiments/word-trails-levels-51-55-v1.js",
+  "contentGlobal": "BUWTLevels51to55",
+  "firstLevel": 51,
+  "lastLevel": 55,
+  "firstSaveIndex": 50,
+  "lastSaveIndex": 54,
+  "mapChapter": {
+    "number": 11,
+    "title": "Learning and Serving",
+    "firstLevel": 51,
+    "lastLevel": 55
+  },
+  "journeySeals": {
+    "55": {
+      "symbol": "✧",
+      "name": "Ready to Serve",
+      "detail": "Fifty-five trails explored"
+    }
+  },
+  "counts": {
+    "crosswordAnswers": 30,
+    "scriptureBoardDiscoveries": 29,
+    "hiddenBibleDiscoveries": 10,
+    "bonusWords": 60
+  },
+  "integrationPolicy": {
+    "registration": "Append after Levels 1–50; never replace an existing level or index.",
+    "unlock": "Level 51 requires completion of Level 50 under the approved progression rules.",
+    "economy": "Use the existing approved engine and shared-wallet integration. This metadata defines no amounts or costs.",
+    "artwork": "Reuse current approved Bible-book artwork and the existing Journey Seal presentation.",
+    "approval": "ChatGPT/owner review and a separate integration change are required before loading this pack."
+  }
+}
