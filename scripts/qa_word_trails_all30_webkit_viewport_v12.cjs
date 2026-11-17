@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict';
-/* TEST-only all-30 native Word Trails in REAL WebKit.
+/* TEST-only all-50 native Word Trails in REAL WebKit.
  * Exercises genuine home card + embedded Word Trails, actual level-map buttons,
  * both phone-sized viewports, board/wheel layout, and saved level after refresh.
  * Everything is synthetic in isolated browser contexts; not physical iPhone QA.
  */
 const assert=require('node:assert/strict');
 const {webkit}=require('playwright');
-const ROOT='http://127.0.0.1:8898/index.html';
-const TEST='bu-visual-lab-wordtrails-next-v1';
+const ROOT=process.env.WT_NATIVE_QA_URL||'http://127.0.0.1:8898/index.html';
+const TEST='bu-visual-lab-wordtrails-shared-preview-v1';
 const LIVE='bible-unfolded-word-trails-next-v1';
 const WALLET='bible-unfolded-rewards-v17';
 const WHEELS='bible-unfolded-wheel-ownership-v3825-backup';
@@ -25,7 +25,7 @@ const seed={
 };
 const protectedKeys=[LIVE,WALLET,WHEELS,VOICE,SENTINEL];
 async function snapshot(page,keys){
- return page.evaluate(keys=>Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)])),keys);
+ return page.evaluate(keys=>Object.fromEntries(keys.map(k=>[k,(k==='bu-visual-lab-wordtrails-shared-preview-v1'||k==='bible-unfolded-rewards-v17')?localStorage.getItem(k):BUPreviewStorageFence.originalKeyValue(k)])),keys);
 }
 async function gameFrame(page){
  await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
@@ -61,6 +61,8 @@ async function gameFrame(page){
     await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:110000});
     await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
      !!document.querySelector('#home-cross'),null,{timeout:100000});
+    await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),null,{timeout:100000});
+    await page.evaluate(()=>document.getElementById('daily-continue')?.click());
     const beforeNative=await snapshot(page,protectedKeys);
     // The fictional LIVE save and independent sentinel must be exact.
     for(const key of [LIVE,SENTINEL])assert.equal(beforeNative[key],seed[key],

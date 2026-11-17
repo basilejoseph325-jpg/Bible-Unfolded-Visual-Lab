@@ -13,6 +13,7 @@ on:
       - 'native-boost-shop-test-v1.js'
       - 'index.html'
       - 'scripts/qa_standard_test_*'
+      - 'scripts/qa_shared_test_backup_v2*'
       - '.github/workflows/qa-standard-test-shared-wallet-v1.yml'
   workflow_dispatch:
 permissions:
@@ -29,6 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Storage and native bridge contracts
         run: |
+          node scripts/qa_shared_test_backup_v2.cjs
           node scripts/qa_standard_test_wallet_fence_v1.cjs
           node scripts/qa_standard_test_boost_wallet_v1.cjs
           node scripts/qa_test_insight_native_bridge_v2.cjs
@@ -51,8 +53,17 @@ jobs:
           done
           export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
           node scripts/qa_standard_test_shared_wallet_browser_v1.cjs
+      - name: Complete backup restore and interrupted-write recovery
+        env:
+          WT_ENGINES: '${{ matrix.engine }}'
+          NODE_PATH: /tmp/bu-standard-wallet-qa/node_modules
+        run: |
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_shared_test_backup_v2_browser.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: 'standard-wallet-${{ matrix.engine }}'
-          path: work/standard-wallet/
+          path: |
+            work/standard-wallet/
+            work/shared-restore/

@@ -4,7 +4,9 @@
    No user's real storage, coins, native wallet or LIVE game is accessed. */
 const assert=require('node:assert/strict');
 const puppeteer=require('puppeteer-core');
-const cp=require('node:child_process');
+const cp=require('node:child_process'),fs=require('node:fs'),vm=require('node:vm');
+const content={window:{}};vm.runInNewContext(fs.readFileSync('experiments/word-trails-levels-46-50-v1.js','utf8'),content);
+const lastWords=content.window.BUWTLevels46to50[4].words.map(w=>w[0]);
 const chrome=cp.execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 const root=process.env.WT_URL||'http://127.0.0.1:8890/experiments/word-trails-next-v1.html';
 const SAVE_KEY='bu-visual-lab-wordtrails-next-v1';
@@ -22,18 +24,29 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
 (async()=>{
  const browser=await puppeteer.launch(browserOpts);
  try{
-  for(const [width,height] of [[320,568],[390,705]]){
-   for(const scenario of scenarios){
+  for(const [width,height] of [[320,568],[430,932]]){
+   for(const shared of [false,true])for(const scenario of scenarios){
     const ctx=await browser.createBrowserContext(),page=await ctx.newPage(),errors=[];
     page.on('pageerror',e=>errors.push(e.message));
     await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:1});
     const seed={level:scenario.level,unlocked:scenario.unlocked,completed:scenario.completed,coins:scenario.coins,progress:null};
-    await page.evaluateOnNewDocument((key,value)=>localStorage.setItem(key,JSON.stringify(value)),SAVE_KEY,seed);
-    await page.goto(root,{waitUntil:'domcontentloaded',timeout:120000});
-    await page.waitForFunction(()=>document.querySelector('#board .tile')&&document.querySelectorAll('#wheel .wheel-letter').length>=5,{timeout:90000});
-    const before=await page.evaluate(key=>localStorage.getItem(key),SAVE_KEY);
-    await page.$eval('#level-map',b=>b.click());
-    const map=await page.evaluate(()=>{
+    await page.evaluateOnNewDocument((key,value,shared)=>{
+     if(localStorage.getItem('__seal_seeded'))return;localStorage.setItem('__seal_seeded','1');localStorage.setItem(key,JSON.stringify(value));
+     if(shared){localStorage.setItem('bible-unfolded-rewards-v17',JSON.stringify({coins:533,points:20,earned:[],purchases:[],hints:{}}));localStorage.setItem('bu-visual-lab-shared-preview-20261116:bible-unfolded-rewards-v17','private-canary');}
+    },SAVE_KEY,seed,shared);
+    const url=new URL(root);if(!shared)url.searchParams.set('standalone','qa');else{url.pathname=url.pathname.replace(/experiments\/word-trails-next-v1\.html$/,'index.html');url.search='';}
+    await page.goto(url.href,{waitUntil:'domcontentloaded',timeout:120000});
+    let game=page;const activeKey=shared?'bu-visual-lab-wordtrails-shared-preview-v1':SAVE_KEY;
+    if(shared){
+     await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUWTNativeShell?.nativeReady()&&window.BUTestInsightBridge?.nativeBalance().ok,{timeout:90000});
+     await page.evaluate(()=>{document.getElementById('daily-continue')?.click();BUWTNativeShell.launch()});
+     await page.waitForSelector('#bu-wt-native-game');game=await(await page.$('#bu-wt-native-game')).contentFrame();
+    }
+    await game.waitForFunction(()=>document.querySelector('#board .tile')&&document.querySelectorAll('#wheel .wheel-letter').length>=5,{timeout:90000});
+    const nativeBefore=shared?await page.evaluate(()=>economy.coins):null;
+    const before=await game.evaluate(key=>localStorage.getItem(key),activeKey);
+    await game.$eval('#level-map',b=>b.click());
+    const map=await game.evaluate(()=>{
       const el=document.querySelector('#wt-map-seal-track');
       return {
         open:document.getElementById('map').open,
@@ -47,7 +60,7 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
         level36Unlocked:!document.querySelectorAll('#map-list .map-level')[35].disabled,
         level41Unlocked:!document.querySelectorAll('#map-list .map-level')[40].disabled,
         level46Unlocked:!document.querySelectorAll('#map-list .map-level')[45].disabled,
-        storedUnlocked:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1')).unlocked,
+        storedUnlocked:JSON.parse(localStorage.getItem(document.getElementById('coin-label')?.textContent==='TOKENS'?'bu-visual-lab-wordtrails-shared-preview-v1':'bu-visual-lab-wordtrails-next-v1')).unlocked,
         bodyOverflow:document.documentElement.scrollWidth>innerWidth+1
       };
     });
@@ -75,12 +88,12 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     }
     assert(map.coinExplainer.includes('15')&&map.coinExplainer.includes('free hint'),'Coin spending unclear');
     assert(!map.bodyOverflow,'Horizontal overflow at '+width);
-    const after=await page.evaluate(key=>localStorage.getItem(key),SAVE_KEY);
+    const after=await game.evaluate(key=>localStorage.getItem(key),activeKey);
     assert.equal(after,before,'Viewing milestone must never write a save');
-    await page.$eval('#map-x',b=>b.click());
-    if(scenario.name==='new'){
-      for(const word of ['ANTIC','TACO','TONIC','COIN']){
-        const outcome=await page.evaluate(word=>{
+    await game.$eval('#map-x',b=>b.click());
+    if(scenario.name==='new'||(shared&&scenario.name==='all-seals')){
+      for(const word of scenario.name==='new'?['ANTIC','TACO','TONIC','COIN']:lastWords){
+        const outcome=await game.evaluate(word=>{
           const rack=[...document.querySelectorAll('#wheel .wheel-letter')],used=new Set();
           for(const c of word){
             const b=rack.find(x=>x.textContent===c&&!used.has(x));
@@ -90,26 +103,28 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
           document.getElementById('submit').click();
           return document.getElementById('solved-count').textContent;
         },word);
-        assert(outcome.includes('/ 4'),'Unexpected Level 1 board: '+outcome);
+        assert(outcome.includes('/ '+(scenario.name==='new'?4:lastWords.length)),'Unexpected board: '+outcome);
       }
-      await page.waitForFunction(()=>document.getElementById('finish').open,{timeout:12000});
-      const win=await page.evaluate(()=>{
+      await game.waitForFunction(()=>document.getElementById('finish').open,{timeout:12000});
+      const win=await game.evaluate(()=>{
         const p=document.getElementById('finish-next-seal'),next=document.getElementById('next-level'),
           parent=document.getElementById('finish').querySelector('.finish-panel');
         return {label:p.textContent,level:document.getElementById('finish-level').textContent,
           buttons:!!next&&!next.disabled,
           frameHeight:parent.clientHeight,frameScroll:parent.scrollHeight,
           viewportHeight:innerHeight,
-          wallet:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'))};
+          wallet:JSON.parse(localStorage.getItem(document.getElementById('coin-label')?.textContent==='TOKENS'?'bu-visual-lab-wordtrails-shared-preview-v1':'bu-visual-lab-wordtrails-next-v1'))};
       });
-      assert(win.label.includes('First Steps')&&win.label.includes('1/5'),'Win screen lacks next milestone');
-      assert(win.level.includes('LEVEL 1 COMPLETE')&&win.buttons,'Normal win action missing');
+      if(scenario.name==='new')assert(win.label.includes('First Steps')&&win.label.includes('1/5'),'Win screen lacks next milestone');else assert(win.label.includes('All ten'),'Completed Level 50 lost its final seal');
+      assert(win.level.includes('LEVEL '+(scenario.name==='new'?1:50)+' COMPLETE')&&win.buttons,'Normal win action missing');
       assert(win.frameHeight<=height*0.91,'Win frame too tall');
-      assert.equal(win.wallet.completed.filter(x=>x===0).length,1,'Win did not save exactly one completion');
+      assert.equal(win.wallet.completed.filter(x=>x===(scenario.name==='new'?0:49)).length,1,'Win did not save exactly one completion');
+      if(shared){assert.equal(await page.evaluate(()=>economy.coins),nativeBefore+(scenario.name==='new'?4:0),'Once-only native level/seal reward failed');assert.equal(win.wallet.unlocked,scenario.name==='new'?1:49);}
       assert.deepEqual(errors,[],'Game threw errors while finishing puzzle');
     }
+    if(shared){assert.equal(await page.evaluate(()=>BUPreviewStorageFence.originalKeyValue('bu-visual-lab-wordtrails-next-v1')),JSON.stringify(seed),'Original progress changed');assert.equal(await page.evaluate(()=>BUPreviewStorageFence.originalKeyValue('bu-visual-lab-shared-preview-20261116:bible-unfolded-rewards-v17')),'private-canary');if(scenario.name!=='new')assert.equal(await page.evaluate(()=>economy.coins),nativeBefore,'Legacy accomplishments repaid');}
     assert.deepEqual(errors,[],'Browser error in '+scenario.name+' '+width);
-    console.log('PASS_WT_SEAL_PROGRESS',JSON.stringify({width,height,case:scenario.name,done:scenario.done,title:scenario.title,saveUnchangedOnMap:true,fullFirstLevel:scenario.name==='new'}));
+    console.log('PASS_WT_SEAL_PROGRESS',JSON.stringify({width,height,shared,case:scenario.name,done:scenario.done,title:scenario.title,saveUnchangedOnMap:true,fullFirstLevel:scenario.name==='new'}));
     await ctx.close();
    }
   }

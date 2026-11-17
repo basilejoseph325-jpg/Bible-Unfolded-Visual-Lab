@@ -24,8 +24,17 @@ const allowed=new Set([
  'scripts/qa_story_ep14_public.cjs',
  '.github/workflows/qa-genesis14-public-test.yml'
 ]);
-for(const file of modified)assert(allowed.has(file),'Unrelated TEST file changed: '+file);
-console.log('PASS_G14_PUBLIC_EXACT_CHANGE_ALLOWLIST',JSON.stringify(modified));
+const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&modified.some(f=>!allowed.has(f)));
+if(!crossMode){
+ for(const file of modified)assert(allowed.has(file),'Unrelated TEST file changed: '+file);
+ console.log('PASS_G14_PUBLIC_EXACT_CHANGE_ALLOWLIST',JSON.stringify(modified));
+}else{
+ const ref=event.pull_request?baseline:(process.env.BU_SCOPE_BASE||'origin/main');
+ const files=cp.execFileSync('git',['ls-tree','-r','--name-only',ref],{encoding:'utf8'}).trim().split('\n').filter(f=>/^story-adventure-(?:art\/genesis14\/|content\/genesis-episode14-|episode14-)/.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||/\.(mp3|wav|ogg|m4a)$/.test(f));
+ assert(files.length>20,'Missing protected Genesis baseline');
+ for(const file of files)assert.equal(cp.execFileSync('git',['hash-object',file],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',ref+':'+file],{encoding:'utf8'}).trim(),'Cross-mode PR changed protected Episode 14/audio: '+file);
+ console.log('PASS_G14_CROSS_MODE_IMMUTABLE_CHAPTER',files.length);
+}
 (async()=>{
  const browser=await puppeteer.launch({headless:true,executablePath:CHROME,args:['--no-sandbox','--disable-dev-shm-usage'],protocolTimeout:120000});
  try{

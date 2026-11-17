@@ -59,7 +59,7 @@ const sharedBackup=standardMode&&window.parent===window&&window.BUSharedTestBack
  get:k=>original.getItem.call(storage,PREFIX+k),
  set:(k,v)=>original.setItem.call(storage,PREFIX+k,v),
  remove:k=>original.removeItem.call(storage,PREFIX+k),
- writable:()=>writerStatus().writable,ownsLock:()=>writerLeaseHeld,
+ writable:()=>writerStatus().writable,ownsLock:()=>writerLeaseHeld,recoveryAllowed:()=>writerLeaseHeld&&writerState==='error',
  pause:()=>{writerState='restoring';refreshLockNotice();}
 });
 // One-time READ-ONLY clone of the user's *existing* regular TEST game save.
@@ -132,6 +132,9 @@ function refreshLockNotice(){
   'Bible Unfolded TEST is already open in another tab. Close that tab, then reload this page. Nothing has been charged here.':
   copyError?'Your saved TEST game could not be prepared: '+copyError+'. Your original saves are unchanged.':
   'This browser cannot safely protect shared Insight Tokens. Please use a current browser over HTTPS. Your saved game is protected.';
+ if(standardMode&&writerLeaseHeld&&writerState==='error'&&sharedBackup){
+  shield.style.flexDirection='column';const button=document.createElement('button');button.id='bu-shared-restore-recovery';button.className='gold-button';button.style.marginTop='18px';button.textContent='Recover from a complete TEST backup';button.onclick=()=>window.BUSharedTestBackup.openImport(sharedBackup,()=>location.reload());shield.appendChild(button);
+ }
 }
 function acquireWriter(){
  if(!isTop)return;
