@@ -333,10 +333,11 @@ function showBanner(){
  if(standardMode){
   const recovered=original.getItem.call(storage,PREFIX+'__shared_restore_notice_v2__');
   if(recovered&&writerStatus().writable){alert(recovered);original.removeItem.call(storage,PREFIX+'__shared_restore_notice_v2__');}
-  const note=document.querySelector('.save-transfer p');
-  if(note)note.textContent='Export or restore one complete shared-token TEST snapshot. Earlier backups and protected previews stay separate.';
-  const detail=document.querySelector('.save-transfer>small');
-  if(detail)detail.textContent='Restore replaces TEST progress, purchases and reward records together. A recovery checkpoint is kept; your original saves stay unchanged.';
+  const setText=(node,value)=>{if(node&&node.textContent!==value)node.textContent=value;};
+  setText(document.querySelector('.save-transfer p'),'Export or restore one complete shared-token TEST snapshot. Earlier backups and protected previews stay separate.');
+  setText(document.querySelector('.save-transfer>small'),'Restore replaces TEST progress, purchases and reward records together. A recovery checkpoint is kept; your original saves stay unchanged.');
+  const importer=document.getElementById('save-import');
+  for(const name of ['aria-label','title'])if(importer&&importer.getAttribute(name)!=='Review and restore a complete shared TEST backup')importer.setAttribute(name,'Review and restore a complete shared TEST backup');
   return;
  }
  if(window.parent!==window)return; // Parent owns the only visible preview warning.
@@ -350,7 +351,7 @@ function showBanner(){
  banner.style.cssText='position:fixed;left:5px;right:5px;top:env(safe-area-inset-top,0px);z-index:9998;pointer-events:none;text-align:center;background:#073541e8;color:#ffe7a7;border:1px solid #c89c48;border-radius:8px;padding:5px 8px;font:700 10px system-ui;letter-spacing:.04em';
  document.body.appendChild(banner);
 }
-if(standardMode)window.addEventListener('bu-test-wallet-writable',showBanner);
+if(standardMode){window.addEventListener('bu-test-wallet-writable',showBanner);document.addEventListener('DOMContentLoaded',()=>{const transfer=document.querySelector('.save-transfer');if(transfer)new MutationObserver(showBanner).observe(transfer,{subtree:true,childList:true,attributes:true,attributeFilter:['title','aria-label']});},{once:true});}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showBanner,{once:true});
 else showBanner();
 })();

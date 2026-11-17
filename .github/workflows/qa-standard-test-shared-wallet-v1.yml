@@ -28,6 +28,8 @@ jobs:
         engine: [chromium, webkit]
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Storage and native bridge contracts
         run: |
           node scripts/qa_shared_test_backup_v2.cjs

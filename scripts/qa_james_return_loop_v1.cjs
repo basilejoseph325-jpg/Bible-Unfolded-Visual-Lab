@@ -4,7 +4,7 @@ const assert=require('node:assert/strict');
 const puppeteer=require('puppeteer-core');
 const {execSync}=require('node:child_process');
 const executablePath=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
-const base='http://127.0.0.1:8899/';
+const base=process.env.BU_JAMES_QA_URL||'http://127.0.0.1:8899/';
 const KEYS=['bible-unfolded-rewards-v17','bible-unfolded-rewards-v17-recovery-v3811',
  'bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ownership-v3825-backup'];
 const sleep=t=>new Promise(r=>setTimeout(r,t));
@@ -19,13 +19,16 @@ const sleep=t=>new Promise(r=>setTimeout(r,t));
    page.on('pageerror',e=>errors.push(e.message));
    await page.goto(base+'index.html',{waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForSelector('#home-books',{timeout:60000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),{timeout:60000});
    await page.evaluate(()=>document.getElementById('daily-continue')?.click());
    await sleep(120);
    await page.addStyleTag({url:base+'james-return-loop-test-v1.css'});
    await page.addScriptTag({url:base+'james-return-loop-test-v1.js'});
    await page.waitForFunction(()=>!!window.BUJamesReturnLoopV1&&!!document.querySelector('#bu-james-rewards'),{timeout:10000});
+   const initialShared=await page.evaluate(()=>BUJamesReturnLoopV1.inspect().balance);assert.equal(initialShared,60,'Fresh balance must use native daily reward, not trial funds');
+   await page.evaluate(()=>{economy.coins=600;saveEconomy()}); // Isolated purchase fixture, no player grant.
    const init=await page.evaluate(keys=>({
-    native:keys.map(k=>localStorage.getItem(k)),
+    native:keys.map(k=>BUPreviewStorageFence.originalKeyValue(k)),
     state:window.BUJamesReturnLoopV1.inspect(),
     products:document.querySelectorAll('#bu-james-rewards .bu-james-item').length,
     layout:(()=>{const r=document.querySelector('#bu-james-rewards .bu-james-hero').getBoundingClientRect();return {x:r.x,right:r.right,width:r.width}})()
@@ -47,7 +50,8 @@ const sleep=t=>new Promise(r=>setTimeout(r,t));
    ]);
    await page.waitForFunction(()=>document.querySelectorAll('#hebrew-books .book-card.ready').length>=4,{timeout:15000});
    const unlocked=await page.evaluate(()=>({
-    ...JSON.parse(localStorage.getItem('bu-james-return-loop-v1-test-only')||'null'),
+    ...JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')).buJamesReturnState,
+    balance:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')).coins,
     shelf:location.pathname.endsWith('/bible-book-guides/index.html'),
     gateOpen:!!document.querySelector('#bu-james-gate')
    }));
@@ -122,10 +126,13 @@ const sleep=t=>new Promise(r=>setTimeout(r,t));
    assert(!mastered.mastery.active,'Mastery completes after five correct');
    assert.equal(mastered.mastery.awarded.length,1);
    // Refresh persistence and canonical money untouched (except native Trivia's normal awards).
-   const nativeAfter=await page.evaluate(keys=>keys.map(k=>localStorage.getItem(k)),KEYS);
+   const nativeAfter=await page.evaluate(keys=>keys.map(k=>BUPreviewStorageFence.originalKeyValue(k)),KEYS);
+   assert.deepEqual(nativeAfter,init.native,'Original unscoped wallet and ownership must stay unchanged');
+   assert.equal(await page.evaluate(()=>economy.coins),mastered.balance,'Return Challenge shares the native wallet');
    assert.deepEqual(nativeAfter.slice(2),init.native.slice(2),'New shop must never modify wheel entitlements');
    await page.reload({waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForSelector('#home-books',{timeout:60000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),{timeout:60000});
    await page.addScriptTag({url:base+'james-return-loop-test-v1.js'});
    await page.waitForFunction(()=>window.BUJamesReturnLoopV1?.inspect?.().owned.includes('books'),{timeout:10000});
    const persisted=await page.evaluate(()=>window.BUJamesReturnLoopV1.inspect());

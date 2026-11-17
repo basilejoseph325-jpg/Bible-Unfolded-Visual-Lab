@@ -18,7 +18,7 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
         window.__qaAudioShadowWrites=[];
         const original=Storage.prototype.setItem;
         Storage.prototype.setItem=function(k,v){
-          if(k==='bu-platform-audio-preferences-v1'){
+          if(k==='bu-platform-audio-preferences-v1'||k==='bu-visual-lab-shared-standard-v1:bu-platform-audio-preferences-v1'){
             window.__qaAudioShadowWrites.push({
               key:k,
               value:String(v).slice(0,250),
@@ -28,8 +28,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
           return original.call(this,k,v);
         };
       });
-      await page.goto('http://127.0.0.1:8891/index.html',{waitUntil:'domcontentloaded',timeout:120000});
-      await page.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.(),{timeout:120000});
+      await page.goto((process.env.BU_NATIVE_HOST_QA_URL||'http://127.0.0.1:8891/index.html'),{waitUntil:'domcontentloaded',timeout:120000});
+      await page.waitForFunction(()=>!!window.BUWTNativeShell?.nativeReady?.()&&window.BUPreviewStorageFence?.writerStatus().writable,{timeout:120000});
       // The original Visual Lab audio bridge intentionally installs its
       // native Settings listeners 800 ms after window load. Exercise settings
       // only after that OWNER bridge is initialized on THIS PAGE (a previous

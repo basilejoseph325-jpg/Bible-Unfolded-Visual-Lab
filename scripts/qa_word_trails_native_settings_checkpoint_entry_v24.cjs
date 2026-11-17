@@ -24,7 +24,7 @@ const ids=['bible-unfolded-rewards-v17','bible-unfolded-wheel-ownership-v3825-ba
    await page.setViewport({width,height,deviceScaleFactor:2,isMobile:true,hasTouch:true});
    await page.goto(root,{waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
-    window.BUPlatformSaves?.bound?.()&&!!document.getElementById('bu-wt-checkpoint-practice-native-link'),
+    window.BUPlatformSaves?.bound?.()&&window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay()&&!!document.getElementById('bu-wt-checkpoint-practice-native-link'),
     {timeout:120000});
    const before=await page.evaluate(keys=>{
     localStorage.setItem('bu-practice-checkpoint-test-sentinel','do-not-change');

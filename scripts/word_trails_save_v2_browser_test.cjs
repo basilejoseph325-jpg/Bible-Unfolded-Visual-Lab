@@ -4,7 +4,8 @@ const puppeteer=require('puppeteer-core');
 const assert=require('node:assert/strict');
 const {execSync}=require('node:child_process');
 const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
-const url='http://127.0.0.1:8894/index.html';
+// Frozen legacy backup component contract; normal shared restore has its own v2 browser matrix.
+const url=(process.env.BU_LEGACY_SAVE_QA_URL||'http://127.0.0.1:8894/index.html')+'?standalone=qa';
 const TEST='bu-visual-lab-wordtrails-next-v1',FEEL='bu-wt-next-feel-v2';
 const WK='bible-unfolded-rewards-v17',RK='bible-unfolded-rewards-v17-recovery-v3811';
 const OK='bible-unfolded-wheel-ownership-v3825',OB='bible-unfolded-wheel-ownership-v3825-backup';

@@ -24,7 +24,7 @@ const allowed=new Set([
  'scripts/qa_story_ep14_public.cjs',
  '.github/workflows/qa-genesis14-public-test.yml'
 ]);
-const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&modified.some(f=>!allowed.has(f)));
+const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&modified.some(f=>f==='experiments/bu-test-native-storage-fence-v1.js'));
 if(!crossMode){
  for(const file of modified)assert(allowed.has(file),'Unrelated TEST file changed: '+file);
  console.log('PASS_G14_PUBLIC_EXACT_CHANGE_ALLOWLIST',JSON.stringify(modified));
