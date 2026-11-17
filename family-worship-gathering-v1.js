@@ -207,7 +207,15 @@ else start();
   const old=shell;shell=null;old.remove();
   document.documentElement.classList.remove('bu-fw-clue-relay-active');
   restoreAudio();
-  if(!fromHistory&&location.hash==='#family-clue-relay')history.back();
+  // Native Family Worship has its own browser history handler. An explicit
+  // "Family Worship" button must not fire that handler and send us home.
+  if(!fromHistory&&location.hash==='#family-clue-relay')
+   history.replaceState(history.state,'',location.pathname+location.search);
+  if(fromHistory)requestAnimationFrame(()=>{
+   const family=document.getElementById(ROOT);
+   if(!family||family.hidden||getComputedStyle(family).display==='none')
+    document.getElementById('home-family')?.click();
+  });
   if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
  }
  function launch(){
