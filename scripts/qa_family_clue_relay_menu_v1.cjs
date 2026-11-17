@@ -61,11 +61,12 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
    assert(await page.evaluate(v=>v.filter(id=>document.getElementById(id)).every(id=>document.getElementById(id).muted),ids),'No native soundtrack leak');
    await page.$eval('#bu-fw-clue-relay-back',b=>b.click());
    await page.waitForFunction(()=>!BUFamilyClueRelayMenuV1.active()&&location.hash!=='#family-clue-relay');
-   assert(await page.evaluate(()=>[...document.querySelectorAll('#bu35-body button,#bu35-body a')].some(b=>/start family worship/i.test(b.textContent||'')&&b.getClientRects().length>0)),'Back returns to native Family Worship landing');
+   await page.waitForFunction(()=>[...document.querySelectorAll('#bu35-body button,#bu35-body a,#bu35-body [role="button"]')].some(b=>/start family worship/i.test(b.textContent||'')&&b.getClientRects().length>0),{timeout:10000});
    await page.$eval('#bu-fw-clue-relay-launch',b=>b.click());
    await page.waitForFunction(()=>BUFamilyClueRelayMenuV1.active());
    await page.evaluate(()=>history.back());
    await page.waitForFunction(()=>!BUFamilyClueRelayMenuV1.active());
+   await page.waitForFunction(()=>[...document.querySelectorAll('#bu35-body button,#bu35-body a,#bu35-body [role="button"]')].some(b=>/start family worship/i.test(b.textContent||'')&&b.getClientRects().length>0),{timeout:10000});
    const after=await page.evaluate(()=>({
     coins:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')||'{}').coins,
     points:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')||'{}').points,
