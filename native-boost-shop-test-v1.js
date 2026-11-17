@@ -2,13 +2,15 @@
  * Scope: existing Rewards & Progress and existing Trivia/Story question screens.
  * Crucial: TEST and LIVE share an origin! This feature NEVER writes to
  * bible-unfolded-rewards-v17, recovery, purchases or wheel entitlements.
- * Trial purchases/stock use this module's TEST-only ledger. Production wallet
+ * Regular TEST uses the native wallet for both balance and inventory.
+ * Explicit protected previews retain their original isolated trial ledger. Production wallet
  * integration must be separately approved, atomic and migration-tested.
  */
 (()=>{'use strict';
 if(window.BUNativeBoostShop)return;
 const KEY='bu-native-boost-shop-v1-test-only';
 const WALLET='bible-unfolded-rewards-v17';
+const SHARED_STANDARD=window.BUPreviewStorageFence?.standardMode===true;
 const products=Object.freeze([
  {id:'fifty',icon:'◉',name:'50/50 Flash',desc:'Remove two wrong answers in Bible Trivia.',price:45,qty:1,kind:'trivia'},
  {id:'shield',icon:'◇',name:'Second Chance',desc:'Catch one wrong Trivia tap without losing the question.',price:35,qty:1,kind:'trivia'},
@@ -25,14 +27,14 @@ const fmt=n=>Math.max(0,Math.floor(n||0)).toLocaleString('en-US');
 const saveJSON=s=>{try{const json=JSON.stringify(s);localStorage.setItem(KEY,json);if(localStorage.getItem(KEY)!==json)return false;return true}catch(e){console.warn('[BOOST TEST] Could not save inventory',e);return false}};
 const valid=o=>Number.isSafeInteger(o)&&o>=0&&o<1e8;
 function initial(){
- return {version:1,tokens:Math.max(225,Math.floor(nowCoins())),sourceCoins:nowCoins(),inventory:{fifty:0,shield:0,letter:0},
+ return {version:1,tokens:SHARED_STANDARD?nowCoins():Math.max(225,Math.floor(nowCoins())),sourceCoins:nowCoins(),inventory:{fifty:0,shield:0,letter:0},
   stars:0,earnedSet:earned().slice(-6000),granted:0};
 }
 function load(){
- let v;try{v=JSON.parse(localStorage.getItem(KEY)||'null')}catch(_){v=null}
+ let v;try{v=(SHARED_STANDARD?JSON.parse(localStorage.getItem(WALLET)||'null')?.buNativeBoostState:null)||JSON.parse(localStorage.getItem(KEY)||'null')}catch(_){v=null}
  if(v?.version!==1)return initial();
  const d=initial();
- d.tokens=valid(v.tokens)?v.tokens:d.tokens;
+ d.tokens=SHARED_STANDARD?nowCoins():(valid(v.tokens)?v.tokens:d.tokens);
  d.sourceCoins=Number.isFinite(v.sourceCoins)?v.sourceCoins:d.sourceCoins;
  d.inventory=each(v.inventory);
  d.stars=valid(v.stars)?v.stars:0;
@@ -42,13 +44,29 @@ function load(){
 }
 let state=load();
 const runtime={quiz:null,stepEffects:new Map(),shieldArmed:false,pop:null,lastStarAt:0,lastRewardChecked:0};
-function commit(n){if(!saveJSON(n))return false;state=n;return true}
+function commit(n){
+ if(SHARED_STANDARD){
+  // Balance and inventory commit in the same proven native wallet record.
+  // Old trial tokens never become Insight Tokens. Preserve owned boosters.
+  try{
+   bu3824RefreshWallet();const before=JSON.parse(JSON.stringify(economy));
+   const delta=n.tokens-state.tokens,balance=economy.coins+delta;
+   if(!Number.isSafeInteger(delta)||!Number.isSafeInteger(balance)||balance<0)return false;
+   n={...n,tokens:balance,sourceCoins:balance};
+   economy.coins=balance;economy.buNativeBoostState=n;
+   if(saveEconomy()!==true){economy=before;updateWallet();return false;}
+   state=n;updateWallet();return true;
+  }catch(_){return false;}
+ }
+ if(!saveJSON(n))return false;state=n;return true;
+}
 function grantGift(n,num){
  n.inventory={...n.inventory,fifty:n.inventory.fifty+num};
  n.granted+=num;
 }
 function refresh(){renderShop();paintQuestion()}
 function reconcile(){
+ if(SHARED_STANDARD){bu3824RefreshWallet();state.tokens=nowCoins();state.sourceCoins=state.tokens;}
  const native=nowCoins(),delta=native-state.sourceCoins;
  const next={...state,inventory:{...state.inventory},earnedSet:[...state.earnedSet]};
  let changed=false;
@@ -110,12 +128,13 @@ function shell(){
  renderShop();
 }
 function renderShop(){
+ if(SHARED_STANDARD)state.tokens=nowCoins();
  const host=$('#bu-native-boosters');if(!host)return;
  const progress=state.stars%5;
  host.innerHTML='<div class="bu-boost-head">'+
   '<div><span class="bu-boost-eyebrow">★ NEW · GAMEPLAY POWER-UPS</span><h2>Give Your Tokens Power</h2>'+
   '<p>Buy here. Use boosts inside real Bible games.</p></div>'+
-  '<div class="bu-boost-balance"><strong>◈ '+fmt(state.tokens)+'</strong><span>TEST TOKENS</span></div></div>'+
+  '<div class="bu-boost-balance"><strong>◈ '+fmt(state.tokens)+'</strong><span>'+(SHARED_STANDARD?'INSIGHT TOKENS':'TEST TOKENS')+'</span></div></div>'+
   '<div class="bu-boost-star-track"><div><b>✦ NEXT FREE 50/50</b><span>'+progress+' / 5 earned ★</span></div>'+
   '<div class="bu-boost-bar"><i style="width:'+(progress*20)+'%"></i></div></div>'+
   '<div class="bu-boost-inventory"><b>MY BOOSTS</b>'+
@@ -125,9 +144,9 @@ function renderShop(){
   '<div class="bu-boost-grid">'+products.map(p=>'<article class="bu-boost-item '+(p.kind==='bundle'?'bundle':'')+'">'+
    '<span class="bu-boost-icon" aria-hidden="true">'+p.icon+'</span>'+
    '<div class="bu-boost-copy"><strong>'+esc(p.name)+'</strong><small>'+esc(p.desc)+'</small></div>'+
-   '<button type="button" data-boost-buy="'+p.id+'" aria-label="Buy '+esc(p.name)+' for '+p.price+' test tokens">'+
+   '<button type="button" data-boost-buy="'+p.id+'" aria-label="Buy '+esc(p.name)+' for '+p.price+(SHARED_STANDARD?' Insight Tokens':' test tokens')+'">'+
    '◈ '+p.price+'</button></article>').join('')+'</div>'+
-  '<div class="bu-boost-foot"><span>TEST preview: purchases never spend real Insight Tokens or modify LIVE balances.</span>'+
+  '<div class="bu-boost-foot"><span>'+(SHARED_STANDARD?'Shares your game’s Insight Tokens. Purchases and boosts stay in TEST.':'TEST preview: purchases never spend real Insight Tokens or modify LIVE balances.')+'</span>'+
   '<button type="button" data-boost-info="1" aria-label="How to use purchased boosts">How to use ↗</button></div>';
 }
 function getQuiz(){
@@ -334,6 +353,6 @@ function boot(){
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot,{once:true});
 else boot();
 window.BUNativeBoostShop=Object.freeze({version:'1.0.0-test',storageKey:KEY,
- preview:()=>({tokens:state.tokens,stars:state.stars,inventory:{...state.inventory},sourceCoins:state.sourceCoins,granted:state.granted}),
+ preview:()=>({tokens:SHARED_STANDARD?nowCoins():state.tokens,stars:state.stars,inventory:{...state.inventory},sourceCoins:state.sourceCoins,granted:state.granted}),
  testActions:Object.freeze({purchase,clickFifty:useFifty,armShield:toggleShield,useLens,refresh:()=>{renderShop();paintQuestion()}})});
 })();

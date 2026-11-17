@@ -188,8 +188,9 @@ const MILESTONE_SEALS=Object.freeze({
  50:{symbol:'✺',name:'Listening Heart',detail:'Fifty levels completed'}
 });
 const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues','Faith and Discovery','Growing in Knowledge','Paths of Purpose','Hope and Understanding'];
-const SHARED_PREVIEW=window.parent!==window&&
- new URLSearchParams(location.search).get('bu_shared_wallet_preview')==='1';
+// The native host owns currency routing; regular TEST needs no special URL.
+const SHARED_PREVIEW=(()=>{try{return window.parent!==window&&
+ window.parent.BUPreviewStorageFence?.active===true;}catch(_){return false;}})();
 const LEGACY_STORAGE='bu-visual-lab-wordtrails-next-v1';
 const STORAGE=SHARED_PREVIEW?'bu-visual-lab-wordtrails-shared-preview-v1':LEGACY_STORAGE;
 let sharedBalance=null;
@@ -263,7 +264,8 @@ BIBLE_SPARKS.forEach((list,i)=>{
 const DEFAULT=()=>({level:0,unlocked:0,coins:60,points:0,completed:[],sparks:[],claimedSparks:[],boardBible:[],paidWords:[],paidBonuses:[],claimedFreeHints:[],sound:true,progress:null});
 function load(){
  try{const raw=localStorage.getItem(STORAGE)||
-  (SHARED_PREVIEW?window.parent.BUPreviewStorageFence?.originalKeyValue(LEGACY_STORAGE):null);
+  (SHARED_PREVIEW?(window.parent.BUPreviewStorageFence?.standardMode?
+   localStorage.getItem(LEGACY_STORAGE):window.parent.BUPreviewStorageFence?.originalKeyValue(LEGACY_STORAGE)):null);
   const o=JSON.parse(raw);if(!o||typeof o!=='object')return DEFAULT();
   const x={...DEFAULT(),...o};
   if(!Number.isInteger(x.level)||x.level<0||x.level>=LEVELS.length)x.level=0;

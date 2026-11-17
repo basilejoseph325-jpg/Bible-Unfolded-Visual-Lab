@@ -28,7 +28,7 @@ function scenario(preview=true,lockMode='owned'){
  const legacy={level:0,completed:[0],sparks:[],claimedSparks:['0:CAIN'],
   paidBonuses:['satchel:0'],claimedFreeHints:[1]};
  storage.setItem('bu-visual-lab-wordtrails-next-v1',JSON.stringify(legacy));
- const location={pathname:'/Bible-Unfolded-Visual-Lab/index.html',
+ const location={pathname:preview?'/Bible-Unfolded-Visual-Lab/index.html':'/Story-Trails/index.html',
   hostname:'basilejoseph325-jpg.github.io',
   search:preview?'?bu_shared_wallet_preview=1':''};
  const window={location,localStorage:storage,sessionStorage:session,indexedDB:null,

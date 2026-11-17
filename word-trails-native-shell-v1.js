@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=daily-music-same-song-20261116-v27';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=standard-shared-v1';
 let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}
@@ -92,8 +92,8 @@ function openDaily(){
  try{frame?.contentWindow?.dispatchEvent(new Event('bu-wt-daily-enter'))}catch(_){}
  const daily=document.createElement('iframe');
  daily.id='bu-wt-daily-frame';daily.title='Daily Word Trail';
- daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=back-button-20261116'+
-  (window.BUPreviewStorageFence?.active?'&bu_shared_wallet_preview=1':'');
+ daily.src='experiments/word-trails-daily-v1.html?embedded=word-trails&v=standard-shared-v1'+
+  (window.BUPreviewStorageFence?.active&&!window.BUPreviewStorageFence.standardMode?'&bu_shared_wallet_preview=1':'');
  daily.allow='autoplay';
  shell.appendChild(daily);dailyFrame=daily;
  history.pushState({buWtDaily:true},'','#daily-word-trail');
@@ -136,7 +136,7 @@ function launch(){
   const response=window.BUTestInsightBridge?.nativeBalance?.();
   if(!response?.ok){opening=false;alert('Shared TEST tokens could not be prepared. No game data changed.');return false;}
  }
- iframe.src=preview?FRAME_URL+'&bu_shared_wallet_preview=1':FRAME_URL;
+ iframe.src=preview&&!window.BUPreviewStorageFence.standardMode?FRAME_URL+'&bu_shared_wallet_preview=1':FRAME_URL;
  root.appendChild(iframe);
  document.body.appendChild(root);shell=root;frame=iframe;
  document.documentElement.classList.add('bu-wt-native-active');

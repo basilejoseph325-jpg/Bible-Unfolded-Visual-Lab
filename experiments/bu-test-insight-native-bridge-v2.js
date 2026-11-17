@@ -1,7 +1,8 @@
 /* Bible Unfolded — isolated native-wallet bridge for shared TEST preview.
  * THE NATIVE SANDBOX WALLET is authoritative: real game awards, purchases,
  * paid hints and Word Trails all mutate the same native wallet record.
- * Requires early Storage fence and explicit ?bu_shared_wallet_preview=1.
+ * Requires the early TEST storage fence; regular TEST and protected previews
+ * use the same validated bridge within their own storage scopes.
  * No production key or standalone Trail Coin balance is written or converted.
  */
 (()=>{'use strict';
@@ -33,6 +34,8 @@ function trails(){
  const existing=read(testSaveKey);
  if(existing)return existing;
  try{const raw=window.BUPreviewStorageFence?.originalKeyValue(legacySaveKey);
+  const copied=read(legacySaveKey);
+  if(window.BUPreviewStorageFence?.standardMode)return copied||{};
   const old=raw?JSON.parse(raw):null;
   return old&&typeof old==='object'&&!Array.isArray(old)?old:{};
  }catch(_){return {};}
