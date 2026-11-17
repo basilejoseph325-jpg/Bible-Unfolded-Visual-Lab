@@ -24,7 +24,7 @@ jobs:
           node --check family-worship-gathering-v1.js
           node --check scripts/qa_family_clue_relay_menu_v1.cjs
           grep -F 'BUFamilyClueRelayMenuV1' family-worship-gathering-v1.js
-          grep -F 'family-worship-gathering-v1.js?v=20261117-clue-relay-menu-v1' journey-progress-caption.js
+          grep -F 'family-worship-gathering-v1.js?v=20261117-clue-relay-home-card-v1' journey-progress-caption.js
           test -f experiments/family-clue-relay-v1.html
       - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
       - name: Start disposable TEST server
