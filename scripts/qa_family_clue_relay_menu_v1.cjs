@@ -28,7 +28,8 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
      card:!!document.getElementById('bu35-start')?.closest('.bu35-card'),
      kicker:document.querySelector('#bu35-body .bu35-hero .bu35-kicker')?.textContent,
      familyVisible:!!document.getElementById('bu35-family')?.getClientRects().length,
-     familyExcerpt:document.getElementById('bu35-body')?.textContent?.slice(0,800)
+     familyExcerpt:document.getElementById('bu35-body')?.textContent?.slice(0,800),
+     choices:[...(document.getElementById('bu35-body')?.querySelectorAll('button,a,[role="button"]')||[])].slice(0,25).map(el=>({tag:el.tagName,id:el.id,text:el.textContent.trim().slice(0,90)}))
     }));
     console.error('RELAY_FAMILY_SETUP_DIAGNOSTIC',JSON.stringify({...diagnosis,jsErrors:errors.slice(0,8)}));
     throw error;
@@ -44,7 +45,7 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
     !!document.getElementById('bu-fw-clue-relay-frame')?.contentDocument?.getElementById('start-relay'),{timeout:45000});
    assert.equal(await page.evaluate(()=>location.hash),'#family-clue-relay');
    assert(await page.evaluate(v=>v.filter(id=>document.getElementById(id)).every(id=>document.getElementById(id).muted),ids),'Only relay owns audio');
-   assert(await page.$eval('#bu35-start',b=>!!b),'Original mode preserved');
+   assert(await page.$eval('#bu35-family',b=>b.textContent.includes('Start Family Worship')),'Original Family Worship entry preserved');
    await page.evaluate(()=>document.getElementById('bu-fw-clue-relay-frame').contentDocument.getElementById('start-relay').click());
    await page.waitForFunction(()=>!!document.getElementById('bu-fw-clue-relay-frame')?.contentDocument?.getElementById('begin-round'));
    await page.evaluate(()=>document.getElementById('bu-fw-clue-relay-frame').contentDocument.getElementById('begin-round').click());
@@ -55,12 +56,12 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
     child.getElementById('submit-guess').click();
    });
    await page.waitForFunction(()=>document.getElementById('bu-fw-clue-relay-frame')?.contentDocument?.getElementById('clue-list')?.children.length===2);
-   await page.evaluate(()=>syncMusic?.());
+   await page.evaluate(()=>window.syncMusic?.());
    await new Promise(r=>setTimeout(r,650));
    assert(await page.evaluate(v=>v.filter(id=>document.getElementById(id)).every(id=>document.getElementById(id).muted),ids),'No native soundtrack leak');
    await page.$eval('#bu-fw-clue-relay-back',b=>b.click());
    await page.waitForFunction(()=>!BUFamilyClueRelayMenuV1.active()&&location.hash!=='#family-clue-relay');
-   assert(await page.$eval('#bu35-start',b=>b.getClientRects().length>0),'Back returns to Family Worship');
+   assert(await page.evaluate(()=>[...document.querySelectorAll('#bu35-body button,#bu35-body a')].some(b=>/start family worship/i.test(b.textContent||'')&&b.getClientRects().length>0)),'Back returns to native Family Worship landing');
    await page.$eval('#bu-fw-clue-relay-launch',b=>b.click());
    await page.waitForFunction(()=>BUFamilyClueRelayMenuV1.active());
    await page.evaluate(()=>history.back());
