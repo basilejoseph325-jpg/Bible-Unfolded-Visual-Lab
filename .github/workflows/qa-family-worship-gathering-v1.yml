@@ -41,7 +41,7 @@ jobs:
           from pathlib import Path
           loader=Path('journey-progress-caption.js').read_text()
           assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
-          assert 'family-worship-gathering-v1.js?v=20261106-compact-gathering-v1' in loader
+          assert 'family-worship-gathering-v1.js?v=20261117-clue-relay-play-together-card-v1' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
           assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
           print('PASS: standalone Visual Lab Family Worship setup, approved V5 sound still loaded')
