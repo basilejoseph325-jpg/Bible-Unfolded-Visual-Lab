@@ -1,0 +1,43 @@
+name: Family Worship Clue Relay menu integration (TEST only)
+on:
+  pull_request:
+    paths:
+      - family-worship-gathering-v1.js
+      - journey-progress-caption.js
+      - scripts/qa_family_clue_relay_menu_v1.cjs
+      - .github/workflows/qa-family-clue-relay-menu-v1.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  family-menu-relay:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax and exact TEST feature boundaries
+        run: |
+          node --check family-worship-gathering-v1.js
+          node --check scripts/qa_family_clue_relay_menu_v1.cjs
+          grep -F 'BUFamilyClueRelayMenuV1' family-worship-gathering-v1.js
+          grep -F 'family-worship-gathering-v1.js?v=20261117-clue-relay-play-together-card-v1' journey-progress-caption.js
+          test -f experiments/family-clue-relay-v1.html
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start disposable TEST server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8896 --bind 127.0.0.1 > work/http-family-relay-menu.log 2>&1 &
+          for attempt in $(seq 1 25); do
+            if curl --silent --fail http://127.0.0.1:8896/index.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Test real Family Worship entry, relay clues, audio, Back and wallet on phone sizes
+        env:
+          NODE_PATH: ./work/node_modules
+          BU_RELAY_URL: http://127.0.0.1:8896/index.html
+        run: node scripts/qa_family_clue_relay_menu_v1.cjs
