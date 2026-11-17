@@ -265,7 +265,15 @@ else start();
   button.addEventListener('click',e=>{
    e.preventDefault();e.stopPropagation();launchButton=button;launch();
   });
-  entry.append(caption,button);start.insertAdjacentElement('afterend',entry);
+  entry.append(caption,button);
+  // The modern Family Worship hero uses an artwork/title overlay and a
+  // floating Play control. Adding an ordinary button inside that hero
+  // overlaps its heading. Mount as a separate sibling AFTER the hero card.
+  let topCard=start;
+  while(topCard.parentElement&&topCard.parentElement!==body)
+   topCard=topCard.parentElement;
+  if(topCard.parentElement===body)topCard.insertAdjacentElement('afterend',entry);
+  else body.append(entry);
  }
  function requestMount(){
   if(scheduled)return;scheduled=true;
@@ -277,7 +285,11 @@ else start();
   const style=document.createElement('style');
   style.id='bu-fw-clue-relay-menu-style';
   style.textContent=
-   '#'+ENTRY+'{margin:7px 0 0;text-align:center;display:grid;gap:4px}'+
+   '#'+ENTRY+'{box-sizing:border-box!important;position:relative!important;z-index:1!important;'+
+   'margin:12px 10px 15px!important;padding:10px 12px!important;text-align:center;'+
+   'display:grid!important;gap:7px!important;border:1px solid #bc9c60;'+
+   'border-radius:13px;background:linear-gradient(145deg,#113a49,#092936);'+
+   'box-shadow:0 3px 12px #0006}'+
    '#'+ENTRY+'>span{font:800 9px/1.2 system-ui,sans-serif;letter-spacing:.1em;color:#ddc58b}'+
    '#'+ENTRY+'>button{box-sizing:border-box;width:100%;min-height:42px;border-radius:11px;'+
     'border:1.3px solid #cfba83;background:linear-gradient(140deg,#245561,#113845);'+
