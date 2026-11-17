@@ -210,8 +210,20 @@ else start();
    history.replaceState(returnState,'',returnUrl||
     (location.pathname+location.search));
   returnUrl=null;returnState=null;
-  // The underlying Family Worship Play Together view was never closed.
-  if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
+  // The native Family Worship popstate router may also hide its panel when
+  // device Back fires. After that event settles, reopen the Play Together hub.
+  if(fromHistory){
+   requestAnimationFrame(()=>{
+    const family=document.getElementById('bu35-family');
+    if(!family||family.hidden||!family.getClientRects().length)
+     document.getElementById('home-family')?.click();
+    requestAnimationFrame(()=>{
+     if(launchButton?.isConnected)launchButton.focus({preventScroll:true});
+    });
+   });
+  }else if(launchButton?.isConnected){
+   launchButton.focus({preventScroll:true});
+  }
  }
  function launch(){
   if(shell?.isConnected)return true;
