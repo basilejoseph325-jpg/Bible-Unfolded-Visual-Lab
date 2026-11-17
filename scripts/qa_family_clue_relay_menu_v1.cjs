@@ -28,10 +28,9 @@ const ids=['music-navigation','music-story','music-trails','music','music-daily'
      card:!!document.getElementById('bu35-start')?.closest('.bu35-card'),
      kicker:document.querySelector('#bu35-body .bu35-hero .bu35-kicker')?.textContent,
      familyVisible:!!document.getElementById('bu35-family')?.getClientRects().length,
-     familyExcerpt:document.getElementById('bu35-body')?.textContent?.slice(0,800),
-     jsErrors:errors.slice(0,8)
+     familyExcerpt:document.getElementById('bu35-body')?.textContent?.slice(0,800)
     }));
-    console.error('RELAY_FAMILY_SETUP_DIAGNOSTIC',JSON.stringify(diagnosis));
+    console.error('RELAY_FAMILY_SETUP_DIAGNOSTIC',JSON.stringify({...diagnosis,jsErrors:errors.slice(0,8)}));
     throw error;
    }
    assert(await page.$eval('#bu-fw-clue-relay-launch',b=>b.getClientRects().length>0),'Visible Family Worship entry');
