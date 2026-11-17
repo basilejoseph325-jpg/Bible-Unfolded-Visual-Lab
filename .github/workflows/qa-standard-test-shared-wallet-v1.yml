@@ -1,0 +1,54 @@
+name: QA regular TEST shared Insight Tokens (no deployment)
+on:
+  pull_request:
+    paths:
+      - 'experiments/bu-test-*.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'experiments/word-trails-*.html'
+      - 'bible-book-guides/*.html'
+      - 'journey-progress-caption.js'
+      - 'visual-lab-test-banner.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'james-return-loop-test-v1.js'
+      - 'native-boost-shop-test-v1.js'
+      - 'index.html'
+      - 'scripts/qa_standard_test_*'
+      - '.github/workflows/qa-standard-test-shared-wallet-v1.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  regular-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        engine: [chromium, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Storage and native bridge contracts
+        run: |
+          node scripts/qa_standard_test_wallet_fence_v1.cjs
+          node scripts/qa_standard_test_boost_wallet_v1.cjs
+          node scripts/qa_test_insight_native_bridge_v2.cjs
+          node scripts/word_trails_quality_gate.mjs
+          node scripts/word_trails_shared_rewards_integration_test.mjs
+      - name: Install browser tooling
+        run: |
+          npm install --prefix /tmp/bu-standard-wallet-qa playwright@1.58.2 --no-audit --no-fund --silent
+          /tmp/bu-standard-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+      - name: Fresh and existing players on the normal URL
+        env:
+          WT_ENGINES: '${{ matrix.engine }}'
+          WT_SHOTS: '1'
+          NODE_PATH: /tmp/bu-standard-wallet-qa/node_modules
+        run: |
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-standard-wallet-http.log 2>&1 &
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_standard_test_shared_wallet_browser_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'standard-wallet-${{ matrix.engine }}'
+          path: work/standard-wallet/
