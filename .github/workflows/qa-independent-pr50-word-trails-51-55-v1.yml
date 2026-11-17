@@ -31,7 +31,8 @@ jobs:
           NODE_USE_ENV_PROXY: '1'
         run: node scripts/qa_word_trails_levels_51_55.cjs --verify-sources
   actual-phone-sized-browser:
-    runs-on: ubuntu-latest
+    # Playwright 1.58.2 WebKit does not support ubuntu-26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
