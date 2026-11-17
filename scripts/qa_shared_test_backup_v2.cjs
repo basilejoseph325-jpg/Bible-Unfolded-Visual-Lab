@@ -27,6 +27,14 @@ const copy=x=>JSON.parse(JSON.stringify(x));
  // with a freshly recomputed checksum must still fail semantic validation.
  const tooLarge=fixture({[P+'bu-qa-large']:'é'.repeat(1600000)});await assert.rejects(()=>tooLarge.service.exportSnapshot(),/size/);
  const wrong=copy(desired);wrong.keys[T]=JSON.stringify({...saved,level:49,unlocked:0});delete wrong.checksum;wrong.checksum=await api.hash(wrong);await assert.rejects(()=>api.validate(wrong));
+ // Approved engine remains Levels 1–50. Even newly checksummed future-level
+ // records must reject before any write; PR #50 is a separate integration.
+ for(const kind of ['progress','receipt']){
+  const future=copy(desired);delete future.checksum;
+  if(kind==='progress')future.keys[T]=JSON.stringify({...targetState,level:50,unlocked:54,progress:null});
+  else{const w=JSON.parse(future.keys[W]);w.wtReceipts['trails:l51:complete']={delta:4,kind:'credit'};future.keys[W]=JSON.stringify(w);future.keys[R]=future.keys[W];}
+  future.checksum=await api.hash(future);const f=fixture(),before=Object.fromEntries(f.map);await assert.rejects(()=>f.service.inspect(future),/Invalid Trail (level|receipt)/);assert.deepEqual(Object.fromEntries(f.map),before);
+ }
  const stale=fixture(),stalePreview=await stale.service.inspect(desired);stale.io.set('buGuideLast:0','22');const staleBefore=stale.game();const staleResult=await stale.service.restore(desired,stalePreview.currentHash);assert(!staleResult.ok);assert.deepEqual(stale.game(),staleBefore,'Stale review cannot roll back newer progress');
  const concurrent=fixture(),concurrentPreview=await concurrent.service.inspect(desired);const first=concurrent.service.restore(desired,concurrentPreview.currentHash);await assert.rejects(()=>concurrent.service.restore(desired,concurrentPreview.currentHash),/already running/);assert((await first).ok);assert.equal(JSON.parse(concurrent.io.get(W)).coins,42);
  // Inject storage failure at every transaction operation, including cleanup.
@@ -43,5 +51,5 @@ const copy=x=>JSON.parse(JSON.stringify(x));
  const interrupted=fixture({},5,true),interruptedPreview=await interrupted.service.inspect(desired);await interrupted.service.restore(desired,interruptedPreview.currentHash);interrupted.reset();assert(interrupted.service.hasPending());interrupted.io.remove(J);await interrupted.service.recoverPending();assert.equal(interrupted.io.get(M),'1');assert.deepEqual(interrupted.game(),fixture().game());
  const damaged=fixture({[P+J]:'{damaged',[P+M]:'restore-pending-v2'}),damagedBefore=damaged.game();await assert.rejects(()=>damaged.service.recoverPending());assert.deepEqual(damaged.game(),damagedBefore);assert.equal(damaged.io.get(M),'restore-pending-v2');
  const unreadable=fixture({[P+W]:'{bad',[P+J]:'{bad',[P+M]:'restore-pending-v2:bad'});unreadable.allowRecovery();const recoveryPreview=await unreadable.service.inspect(desired);assert.equal(recoveryPreview.current,null);assert((await unreadable.service.restore(desired,recoveryPreview.currentHash)).ok);assert.equal(unreadable.io.get(W),desired.keys[W]);
- console.log('PASS_SHARED_BACKUP_V2',JSON.stringify({validSnapshot:true,fullRestore:true,pointsNegative:true,purchasesInventoryReceipts:true,unscopedAndPreviewsUnchanged:true,invalidFiles:14,stalePreview:true,writeFailurePoints:count,crashRecoveryPoints:count,corruptJournalFailClosed:true}));
+ console.log('PASS_SHARED_BACKUP_V2',JSON.stringify({validSnapshot:true,fullRestore:true,pointsNegative:true,purchasesInventoryReceipts:true,unscopedAndPreviewsUnchanged:true,invalidFiles:16,checksummedFutureLevelsRejected:true,stalePreview:true,writeFailurePoints:count,crashRecoveryPoints:count,corruptJournalFailClosed:true}));
 })().catch(e=>{console.error(e);process.exitCode=1});
