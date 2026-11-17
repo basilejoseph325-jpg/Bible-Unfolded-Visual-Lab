@@ -1,0 +1,31 @@
+name: QA retire old Bible Crosswords home entry (no deployment)
+on:
+  push:
+    branches:
+      - 'fix/test-retire-duplicate-bible-crosswords-home-v1-20261116'
+    paths:
+      - 'word-trails-next-launcher.js'
+      - 'scripts/qa_test_retire_legacy_crosswords_home_v1.cjs'
+      - '.github/workflows/qa-test-retire-legacy-crosswords-home-v1.yml'
+permissions: {contents: read}
+jobs:
+  home-routing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Syntax check
+        run: |
+          node --check word-trails-next-launcher.js
+          node --check scripts/qa_test_retire_legacy_crosswords_home_v1.cjs
+      - name: Install Chromium and WebKit
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-crossword-home-audit playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-crossword-home-audit/node_modules/.bin/playwright install --with-deps webkit
+      - name: Verify real home card and new Word Trails wheel in phone-size browsers
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-crossword-audit.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-crossword-home-audit/node_modules node scripts/qa_test_retire_legacy_crosswords_home_v1.cjs
