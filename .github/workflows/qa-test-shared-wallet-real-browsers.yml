@@ -1,0 +1,45 @@
+name: QA isolated shared tokens real Chromium + WebKit (not deployment)
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-20261116'
+    paths:
+      - 'scripts/qa_test_insight_shared_preview_browser_v1.cjs'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'experiments/bu-test-insight-native-bridge-v2.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'index.html'
+      - '.github/workflows/qa-test-shared-wallet-real-browsers.yml'
+  pull_request:
+    paths:
+      - 'scripts/qa_test_insight_shared_preview_browser_v1.cjs'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'experiments/bu-test-insight-native-bridge-v2.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'word-trails-native-shell-v1.js'
+      - 'index.html'
+      - '.github/workflows/qa-test-shared-wallet-real-browsers.yml'
+permissions: {contents: read}
+jobs:
+  real-browsers:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate scripts
+        run: |
+          node --check scripts/qa_test_insight_shared_preview_browser_v1.cjs
+          node --check experiments/word-trails-next-v1.js
+          node --check experiments/bu-test-insight-native-bridge-v2.js
+      - name: Install local browser automation and WebKit
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-shared-browser-qa playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-shared-browser-qa/node_modules/.bin/playwright install --with-deps webkit
+      - name: Play REAL native Word Trails and parent in simulated phone browsers
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8894 --bind 127.0.0.1 > /tmp/bu-shared-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-shared-browser-qa/node_modules node scripts/qa_test_insight_shared_preview_browser_v1.cjs

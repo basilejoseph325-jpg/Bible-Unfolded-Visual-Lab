@@ -1,0 +1,141 @@
+#!/usr/bin/env node
+/* TEST ONLY. Real IndexedDB transactions under a Node simulated browser.
+ * Existing LIVE wallet keys and Word Trails' old coins are never read/written.
+ */
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const vm=require('node:vm');
+const {IDBFactory}=require('fake-indexeddb');
+const source=fs.readFileSync('experiments/bu-test-insight-wallet-v1.js','utf8');
+const records=async(db,key)=>new Promise((resolve,reject)=>{
+ const tx=db.transaction('wallet','readonly'),get=tx.objectStore('wallet').get(key);
+ get.onsuccess=()=>resolve(get.result);
+ get.onerror=()=>reject(get.error);
+});
+const setRecords=async(db,items)=>new Promise((resolve,reject)=>{
+ const tx=db.transaction('wallet','readwrite');
+ tx.oncomplete=()=>resolve();
+ tx.onabort=()=>reject(tx.error);
+ for(const [key,val] of items)tx.objectStore('wallet').put(val,key);
+});
+async function make({pathname='/Bible-Unfolded-Visual-Lab/index.html',idb=new IDBFactory()}={}){
+ const events=[],liveAccess=[];
+ const window={location:{pathname,hostname:'basilejoseph325-jpg.github.io'},indexedDB:idb,
+  dispatchEvent:e=>events.push(e.type)};
+ const sandbox={window,indexedDB:idb,CustomEvent:class{constructor(type){this.type=type}},
+  BroadcastChannel:class{postMessage(){}close(){}},
+  get localStorage(){liveAccess.push('access');throw Error('LIVE storage accessed');}};
+ vm.runInNewContext(source,sandbox,{filename:'bu-test-insight-wallet-v1.js',timeout:2000});
+ return {api:window.BUTestInsightWallet,events,liveAccess,idb};
+}
+(async()=>{
+ const one=await make();
+ assert(one.api,'Wallet must be available in Visual Lab');
+ const w=one.api;
+ assert.equal(w.starterBalance,60);
+ assert.deepEqual(JSON.parse(JSON.stringify(await w.snapshot())),{
+  ok:true,balance:60,revision:0,starter:'TEST-only 60, not imported',receiptCount:0});
+ assert.equal((await w.apply({id:'trails:l1:complete',delta:3,kind:'credit'})).ok,true);
+ assert.equal((await w.snapshot()).balance,63);
+ const dup=await w.apply({id:'trails:l1:complete',delta:3,kind:'credit'});
+ assert.equal(dup.duplicate,true);
+ assert.equal((await w.snapshot()).balance,63);
+ const conflict=await w.apply({id:'trails:l1:complete',delta:5,kind:'credit'});
+ assert.equal(conflict.reason,'receipt-conflict');
+ assert.equal((await w.snapshot()).balance,63);
+ assert.equal((await w.apply({id:'trails:l1:hint:1',delta:-15,kind:'spend'})).ok,true);
+ assert.equal((await w.snapshot()).balance,48);
+ assert.equal((await w.apply({id:'trails:l1:hint:1',delta:-15,kind:'spend'})).duplicate,true);
+ assert.equal((await w.snapshot()).balance,48);
+ const no=await w.apply({id:'trails:l1:hint:2',delta:-50,kind:'spend'});
+ assert.equal(no.reason,'insufficient');
+ assert.equal((await w.snapshot()).balance,48);
+ assert.equal((await w.apply({id:'trails:l1:hint:2',delta:-48,kind:'spend'})).ok,true);
+ assert.equal((await w.snapshot()).balance,0);
+ assert.equal((await w.apply({id:'trails:l1:hint:3',delta:-1,kind:'spend'})).reason,'insufficient');
+ assert.equal((await w.snapshot()).balance,0);
+ // Serialized readwrite transactions prevent duplicate credit across simultaneous tabs.
+ const many=await Promise.all(Array.from({length:12},()=>w.apply({
+  id:'trails:l2:complete',delta:3,kind:'credit'})));
+ assert(many.every(x=>x.ok));
+ assert.equal(many.filter(x=>!x.duplicate).length,1);
+ assert.equal((await w.snapshot()).balance,3);
+ const invalid=await w.apply({id:'trails:l3:complete',delta:1,kind:'spend'});
+ assert.equal(invalid.reason,'invalid-transaction');
+ assert.equal((await w.snapshot()).balance,3);
+ // No attempt to read localStorage, in particular no production LIVE wallet.
+ assert.deepEqual(one.liveAccess,[]);
+ // Both copies commit together and carry exact same receipt ledger.
+ const raw=await new Promise((resolve,reject)=>{
+  const request=one.idb.open(w.database);
+  request.onsuccess=()=>resolve(request.result);
+  request.onerror=()=>reject(request.error);
+ });
+ assert.deepEqual(await records(raw,'main'),await records(raw,'recovery'));
+ // Lose one copy: recovery wins without resetting balance.
+ await setRecords(raw,[['main',{damaged:true}]]);
+ assert.equal((await w.snapshot()).balance,3);
+ await w.apply({id:'trails:l3:complete',delta:4,kind:'credit'});
+ assert.deepEqual(await records(raw,'main'),await records(raw,'recovery'));
+ assert.equal((await w.snapshot()).balance,7);
+ // Destroy both copies: lock rather than mint a new 60 token welcome bonus.
+ await setRecords(raw,[['main',{damaged:true}],['recovery',{damaged:true}]]);
+ assert.equal((await w.snapshot()).ok,false);
+ assert.equal((await w.apply({id:'trails:l4:complete',delta:3,kind:'credit'})).ok,false);
+ assert.equal((await records(raw,'main')).damaged,true);
+ // Storage disabled => no reward is ever falsely acknowledged.
+ const blocked=await make({idb:null});
+ assert.equal((await blocked.api.snapshot()).ok,false);
+ assert.equal((await blocked.api.apply({id:'trails:l1:complete',delta:3,kind:'credit'})).ok,false);
+ // Runtime fenced out of protected LIVE path even if mistakenly imported there.
+ const live=await make({pathname:'/Story-Trails/index.html'});
+ assert.equal(live.api,undefined);
+ assert.deepEqual(live.liveAccess,[]);
+ // 50-level budget: proposal caps farming without changing Points or paid-hint price.
+ const economySource=fs.readFileSync('experiments/bu-test-word-trails-economy-v1.js','utf8');
+ const root={};
+ vm.runInNewContext(economySource,{window:root},{timeout:2000});
+ const economy=root.BUTestWordTrailsEconomy;
+ assert.equal(economy.fullJourneyBudget(50,2).earned,380);
+ assert.equal(economy.fullJourneyBudget(50,2).totalPossible,440);
+ assert.equal(economy.fullJourneyBudget(50,2).paidHintsAtFullCollection,29);
+ assert.equal(economy.transaction({type:'level',level:50}).delta,4);
+ assert.equal(economy.transaction({type:'seal',level:50}).delta,3);
+ assert.equal(economy.transaction({type:'seal',level:49}),null);
+ assert.equal(economy.transaction({type:'hint',level:5,cell:'2:4'}).delta,-15);
+ assert.equal(economy.transaction({type:'discovery',level:1,word:'CAIN'}).id,'trails:l1:discovery:cain');
+ assert.equal(economy.transaction({type:'hint',level:5,cell:'bad'}),null);
+ assert.equal(economy.transaction({type:'level',level:55}).delta,4);
+ assert.equal(economy.transaction({type:'level',level:56}),null);
+ // Bridge is owned by the parent, never a free-for-all standalone child API.
+ const hostChild={},stranger={};let nativeActive=true;
+ const host={location:{pathname:'/Bible-Unfolded-Visual-Lab/index.html',hostname:'basilejoseph325-jpg.github.io'},
+  indexedDB:new IDBFactory(),BUWTNativeShell:{active:()=>nativeActive},
+  dispatchEvent(){}};host.parent=host;
+ const hostEnv={window:host,location:host.location,indexedDB:host.indexedDB,
+  document:{getElementById:id=>id==='bu-wt-native-game'?{contentWindow:hostChild}:null},
+  CustomEvent:class{constructor(type){this.type=type}},
+  BroadcastChannel:class{postMessage(){}close(){}},
+  get localStorage(){throw Error('LIVE localStorage accessed');}};
+ vm.runInNewContext(source,hostEnv,{timeout:2000});
+ vm.runInNewContext(economySource,hostEnv,{timeout:2000});
+ const bridgeSource=fs.readFileSync('experiments/bu-test-insight-word-trails-bridge-v1.js','utf8');
+ vm.runInNewContext(bridgeSource,hostEnv,{timeout:2000});
+ const bridge=host.BUTestInsightBridge;
+ assert.equal((await bridge.snapshot(stranger)).reason,'inactive-word-trails-frame');
+ assert.equal((await bridge.snapshot(hostChild)).balance,60);
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:1,delta:10000})).balance,64);
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:1})).duplicate,true);
+ assert.equal((await bridge.transact(hostChild,{type:'hint',level:1,cell:'2:4',delta:999})).balance,49);
+ assert.equal((await bridge.snapshot(hostChild)).balance,49);
+ assert.equal((await bridge.transact(hostChild,{type:'hint',level:1,cell:'2:4'})).duplicate,true);
+ assert.equal((await bridge.snapshot(hostChild)).balance,49);
+ assert.equal((await bridge.transact(stranger,{type:'level',level:2})).ok,false);
+ assert.equal((await bridge.transact(hostChild,{type:'unknown',level:2})).ok,false);
+ nativeActive=false;
+ assert.equal((await bridge.transact(hostChild,{type:'level',level:2})).ok,false);
+ console.log('PASS parent bridge: frame ownership, no forged amounts, exact 15-token hints, idempotent receipts');
+ console.log('PASS economy: maximum 380 newly earned tokens across 50 levels, 29 paid hints possible with starter balance');
+ console.log('PASS TEST ledger: init, atomic spend/credit, 12 parallel receipts, dedupe, zero balance, backup recovery, corruption lock, storage failure, production isolation');
+})().catch(err=>{console.error(err);process.exitCode=1});

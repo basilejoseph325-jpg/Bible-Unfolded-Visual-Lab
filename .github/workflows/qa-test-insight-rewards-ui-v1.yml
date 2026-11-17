@@ -1,0 +1,28 @@
+name: QA private shared wallet Rewards UI (not deployment)
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-20261116'
+    paths:
+      - 'scripts/qa_test_insight_rewards_ui_v1.cjs'
+      - '.github/workflows/qa-test-insight-rewards-ui-v1.yml'
+      - 'experiments/bu-test-insight-native-bridge-v2.js'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'index.html'
+permissions: {contents: read}
+jobs:
+  real-rewards:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate syntax
+        run: node --check scripts/qa_test_insight_rewards_ui_v1.cjs
+      - name: Install local Chromium browser automation
+        run: npm install --prefix /tmp/bu-insight-rewards-qa playwright@latest --no-audit --no-fund --silent
+      - name: Test actual Rewards screen and isolate source wallet
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-insight-rewards-http.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-insight-rewards-qa/node_modules node scripts/qa_test_insight_rewards_ui_v1.cjs

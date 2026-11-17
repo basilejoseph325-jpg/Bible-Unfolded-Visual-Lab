@@ -1,0 +1,38 @@
+name: Install opt-in shared wallet candidate on isolated branch
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-20261116'
+    paths:
+      - 'scripts/install-shared-wallet-preview-test.py'
+      - '.github/workflows/install-test-shared-wallet-preview.yml'
+permissions: {contents: write}
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - name: Insert preview-only early sandbox loader
+        run: |
+          set -euo pipefail
+          python3 scripts/install-shared-wallet-preview-test.py
+          node --check experiments/bu-test-native-storage-fence-v1.js
+          node --check experiments/bu-test-insight-native-bridge-v2.js
+          node --check experiments/bu-test-word-trails-economy-v1.js
+          node --check experiments/word-trails-next-v1.js
+          node --check word-trails-native-shell-v1.js
+          git diff --check
+          git diff --stat
+      - name: Commit ONLY candidate index to this explicit feature branch
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = 'feature/test-shared-insight-wallet-foundation-20261116'
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- index.html
+          test "$(git diff --cached --name-only)" = 'index.html'
+          git commit -m 'TEST PREVIEW ONLY: load native shared wallet sandbox before engine'
+          git push origin HEAD:feature/test-shared-insight-wallet-foundation-20261116

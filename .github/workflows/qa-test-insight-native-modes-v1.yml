@@ -1,0 +1,35 @@
+name: QA shared Insight Tokens - real Story, Trivia, exact-price hints
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-20261116'
+    paths:
+      - 'scripts/qa_test_insight_native_modes_v1.cjs'
+      - '.github/workflows/qa-test-insight-native-modes-v1.yml'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'experiments/bu-test-insight-native-bridge-v2.js'
+      - 'experiments/word-trails-next-v1.js'
+      - 'index.html'
+permissions: {contents: read}
+jobs:
+  native-modes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate script syntax and preview guard
+        run: |
+          node --check scripts/qa_test_insight_native_modes_v1.cjs
+          node --check experiments/bu-test-native-storage-fence-v1.js
+          node --check experiments/bu-test-insight-native-bridge-v2.js
+      - name: Install real browser automation and Linux WebKit
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-insight-native-modes playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-insight-native-modes/node_modules/.bin/playwright install --with-deps webkit
+      - name: Real native Story + Trivia + 14/15 paid hint in Chrome and Safari-style browser
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8894 --bind 127.0.0.1 > /tmp/bu-insight-native-modes.log 2>&1 &
+          sleep 1
+          NODE_PATH=/tmp/bu-insight-native-modes/node_modules node scripts/qa_test_insight_native_modes_v1.cjs

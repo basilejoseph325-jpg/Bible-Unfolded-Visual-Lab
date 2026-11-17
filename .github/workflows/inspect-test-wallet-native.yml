@@ -1,0 +1,21 @@
+name: Audit TEST wallet native runtime (read-only)
+on:
+  push:
+    branches:
+      - 'feature/test-shared-insight-wallet-foundation-*'
+    paths:
+      - 'scripts/inspect-test-wallet-native.py'
+      - 'scripts/inspect-native-core-wallet.py'
+      - '.github/workflows/inspect-test-wallet-native.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect huge native HTML without changing it
+        run: |
+          python3 scripts/inspect-native-core-wallet.py
+          python3 scripts/inspect-test-wallet-native.py
