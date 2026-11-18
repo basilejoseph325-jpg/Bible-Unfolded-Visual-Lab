@@ -55,7 +55,20 @@ function render(){
   const area=node('div',undefined,'scroll-area clues');area.id='clue-list';
   q.clues.slice(0,game.clue+1).forEach((text,i)=>{const card=node('article',undefined,'paper clue'+(i<game.clue?' old':''));card.append(node('span','CLUE '+(i+1),'tag'),node('p',text));area.append(card);});screen.append(area);
   const form=node('form',undefined,'guess-form'),label=node('label',player.name+', your guess'),input=node('input');input.id='guess';input.maxLength=80;input.autocomplete='off';input.autocapitalize='words';input.spellcheck=false;label.htmlFor='guess';
-  const controls=node('div',undefined,'guess-row'),submit=node('button','Guess','gold');submit.id='submit-guess';submit.type='submit';controls.append(input,submit);const error=node('p','','error');error.id='guess-error';error.setAttribute('role','alert');form.append(label,controls,error);
+  const controls=node('div',undefined,'guess-row'),submit=node('button','Guess','gold');submit.id='submit-guess';submit.type='submit';controls.append(input,submit);const error=node('p','','error');error.id='guess-error';error.setAttribute('role','alert');// Optional family honor check for spoken answers and nonstandard spelling.
+  // Two deliberate taps prevent accidental point awards; no correct answer is shown.
+  const family=button('Family says correct?','family-approve',()=>{
+   if(family.dataset.confirm!=='yes'){
+    family.dataset.confirm='yes';
+    family.textContent='Confirm family agrees · +'+(3-game.clue)+' '+(game.clue===2?'point':'points');
+    error.textContent='Only confirm when your family agrees the answer is right.';
+    return;
+   }
+   const accepted=rules.familyApprove(game);if(!accepted.ignored)render();
+  },'quiet');
+  family.setAttribute('aria-label','Let the family count a spoken or misspelled answer as correct');
+  family.style.width='100%';family.style.fontSize='.83rem';
+  form.append(label,controls,family,error);
   form.addEventListener('submit',event=>{event.preventDefault();const result=rules.guess(game,input.value);if(result.error){error.textContent=result.error;input.focus();return;}render();if(result.nextClue){document.getElementById('guess-error').textContent='Not that one. Try the next clue.';announce("Not that one. Clue "+result.nextClue+". "+q.clues[game.clue]);document.getElementById('guess').focus({preventScroll:true});}});
   screen.append(form);showNewestClue(area);announce('Clue '+(game.clue+1)+'. '+q.clues[game.clue]);focusScreen();return;
  }

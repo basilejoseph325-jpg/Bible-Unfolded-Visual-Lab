@@ -666,6 +666,7 @@ window.BUClueRelayQuestions=Object.freeze([
     "category": "Event",
     "difficulty": "medium",
     "aliases": [
+      "furnace",
       "fiery furnace",
       "the fiery furnace",
       "fiery furnace rescue",
