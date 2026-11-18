@@ -4,6 +4,7 @@
 // registration mocks, preview wallet or real-player imports.
 const {chromium,webkit}=require('playwright'),fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict'),vm=require('node:vm'),{webcrypto}=require('node:crypto');
 const{recoveryNetworkTrace}=require('./qa_recovery_network_trace.cjs');
+const{trace}=require('./qa_word_trails_55_reset_trace.cjs');
 const BASE=process.env.WT_55_URL||'http://127.0.0.1:8905/index.html',P='bu-visual-lab-shared-standard-v1:',W='bible-unfolded-rewards-v17',R=W+'-recovery-v3811',T='bu-visual-lab-wordtrails-shared-preview-v1',M='__imported_regular_test_v1__';
 const scope={window:{}};for(const r of ['46-50','51-55'])vm.runInNewContext(fs.readFileSync('experiments/word-trails-levels-'+r+'-v1.js','utf8'),scope);
 const pack=JSON.parse(JSON.stringify(scope.window.BUWTLevels51to55)),last50=JSON.parse(JSON.stringify(scope.window.BUWTLevels46to50[4]));
@@ -15,6 +16,7 @@ function oldKeys(complete=true){const receipts={};for(let n=1;n<=(complete?50:49
  const t={level:49,unlocked:49,coins:111,points:500,completed:Array.from({length:complete?50:49},(_,i)=>i),sparks:[],claimedSparks:[],boardBible:[],paidWords:complete?last50.words.map(x=>'49|'+x[0]):[],paidBonuses:[],claimedFreeHints:[],progress:null};
  return {[W]:JSON.stringify(w),[R]:JSON.stringify(w),[T]:JSON.stringify(t),'bible-unfolded-wheel-ownership-v3825':'{"version":1,"owned":["goldwheel"]}','bible-unfolded-wheel-ownership-v3825-backup':'{"version":1,"owned":["goldwheel"]}','buGuideLast:0':'17','bu-55-preservation-canary':'preserve'};
 }
+// Historical 50-level exporter stays pinned; the current scope baseline is main #67.
 async function priorBackup(){const window={};new Function('window','crypto','TextEncoder',cp.execFileSync('git',['show','624fff4d11ab02dea673a20b67be94ab8915fa75:experiments/bu-test-shared-backup-v2.js'],{encoding:'utf8'}))(window,webcrypto,TextEncoder);const keys=oldKeys();return window.BUSharedTestBackup.create({list:()=>Object.keys(keys),get:k=>keys[k]??null,writable:()=>true}).exportSnapshot();}
 async function ready(p){await p.waitForLoadState('load',{timeout:120000});await p.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUWTNativeShell?.nativeReady()&&window.BUStoryGenesis13Test?.status==='ready'&&window.BUStoryGenesis14Test?.status==='ready'&&window.BUNativeBoostShop&&window.BUJamesReturnLoopV1&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),null,{timeout:120000});if(await p.locator('#daily-continue').isVisible())await p.locator('#daily-continue').tap();}
 async function launch(p){await home(p);await p.locator('#home-cross').tap();await p.waitForFunction(()=>document.getElementById('bu-wt-native-game')?.contentWindow?.document.getElementById('coin-label')?.textContent==='TOKENS'&&document.getElementById('bu-wt-native-game').contentWindow.document.querySelectorAll('#board .tile').length>0&&document.getElementById('bu-wt-native-game').contentWindow.document.querySelectorAll('.wheel-letter').length>=5&&document.getElementById('bu-wt-native-game').contentWindow.BUWTUnifiedMenu);const f=p.frames().find(f=>f.url().includes('/experiments/word-trails-next-v1.html'));await f.waitForLoadState('load');// WebKit needs the newly opened iframe focused before touch compatibility clicks.
@@ -39,14 +41,18 @@ async function map(f){
  await button.tap();await f.locator('#map[open]').waitFor();assert.equal(await f.locator('.map-level').count(),55);assert((await f.locator('.map-chapter-title').allTextContents()).at(-1).includes('CHAPTER 11 · Learning and Serving'));}
 const nativeDialogHandling=new WeakMap();
 function acceptNativeDialogs(p){
+ const diagnostics=trace(p);
  const state={accepted:new WeakMap(),errors:[],dialogs:[],dismissNext:false};nativeDialogHandling.set(p,state);
- p.on('dialog',dialog=>{state.dialogs.push({type:dialog.type(),message:dialog.message()});console.log('NATIVE_DIALOG',dialog.type(),dialog.message());const dismiss=dialog.type()==='confirm'&&state.dismissNext;state.dismissNext=false;const task=dismiss?dialog.dismiss():dialog.accept();state.accepted.set(dialog,task);task.catch(error=>state.errors.push(error.message));});
+ p.on('dialog',dialog=>{state.dialogs.push({type:dialog.type(),message:dialog.message()});console.log('NATIVE_DIALOG',dialog.type(),dialog.message());const dismiss=dialog.type()==='confirm'&&state.dismissNext;state.dismissNext=false;const task=dismiss?dialog.dismiss():dialog.accept();state.accepted.set(dialog,task);task.then(()=>diagnostics.responded(),error=>{state.errors.push(error.message);diagnostics.note('dialog.response-failed',{error:error.message});});});
 }
 function dismissNextNativeConfirm(p){const state=nativeDialogHandling.get(p);assert(state);state.dismissNext=true;}
-function assertNativeDialogs(p){assert.deepEqual(nativeDialogHandling.get(p)?.errors||[],[],'Native dialog handling must not fail');}
+function assertNativeDialogs(p){assert.deepEqual(nativeDialogHandling.get(p)?.errors||[],[],'Native dialog handling must not fail');assert.equal(trace(p).pendingDialogs(),0,'No native dialog may remain open');}
+async function observeGame(p,f){return trace(p).step('frame.evaluate.visibility',()=>f.evaluate(()=>({hidden:document.hidden,focus:document.hasFocus(),mapOpen:document.getElementById('map').open})));}
 async function foregroundGame(p,f){
- let timeout;const task=(async()=>{await p.bringToFront();await p.locator('#bu-wt-native-game').focus();return f.evaluate(()=>({hidden:document.hidden,focus:document.hasFocus(),mapOpen:document.getElementById('map').open}));})();
- try{return await Promise.race([task,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native game foreground/focus did not respond')),20000)})])}finally{clearTimeout(timeout)}
+ const deadline=Date.now()+20000,remaining=()=>Math.max(1,deadline-Date.now());
+ await trace(p).step('page.bringToFront',()=>p.bringToFront(),remaining());
+ await trace(p).step('parent.iframe.focus',()=>p.locator('#bu-wt-native-game').focus(),remaining());
+ return trace(p).step('frame.evaluate.visibility',()=>f.evaluate(()=>({hidden:document.hidden,focus:document.hasFocus(),mapOpen:document.getElementById('map').open})),remaining());
 }
 async function touchMapAction(p,f,id,resetDecision='accept'){
  await foregroundGame(p,f);
@@ -56,7 +62,7 @@ async function touchMapAction(p,f,id,resetDecision='accept'){
  assert(await button.evaluate(el=>{const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===el||el.contains(hit)}),'Map control must be the actual touch target');
  const r=await button.boundingBox();
  if(id==='#reset-test'){
-  const before=await state(p),handling=nativeDialogHandling.get(p);assert(handling,'Native dialog handling must be observed');
+  const before=await state(p),handling=nativeDialogHandling.get(p);assert(handling,'Native dialog handling must be observed');const beforeDialogs=handling.dialogs.length;
   assert(['accept','cancel'].includes(resetDecision));if(resetDecision==='cancel')dismissNextNativeConfirm(p);
   const confirmation=p.waitForEvent('dialog',{predicate:d=>d.type()==='confirm',timeout:20000});
   const gesture=p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2);
@@ -68,9 +74,20 @@ async function touchMapAction(p,f,id,resetDecision='accept'){
   // Require the actual native gesture acknowledgement BEFORE refreshing.
   let timeout;try{await Promise.race([gesture,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native reset touch did not acknowledge')),20000)})])}finally{clearTimeout(timeout)}
   console.log('RESET_NATIVE_TOUCH_ACKNOWLEDGED',resetDecision);
-  // Reacquire native foreground only AFTER observing input completion. Bound
-  // the driver operation so a frozen WebKit UI produces a precise failure.
-  console.log('RESET_FOREGROUND',await foregroundGame(p,f));
+  assert.equal(handling.dialogs.length,beforeDialogs+1,'Exactly one native confirmation must handle each reset input');
+  const diagnostics=trace(p),focusMode=process.env.WT_RESET_FOCUS||'passive';assert(['force','passive'].includes(focusMode));
+  diagnostics.note('post-reset.observation',{focusMode,resetDecision});
+  if(focusMode==='force')console.log('RESET_FOREGROUND',await foregroundGame(p,f));
+  const passive=await diagnostics.step('passive.raw-storage',async()=>{
+   for(let i=0;i<100;i++){
+    const result=await p.evaluate(({W,T})=>({w:JSON.parse(localStorage.getItem(W)),t:JSON.parse(localStorage.getItem(T)),hidden:document.hidden,activeElement:document.activeElement?.id,dialogs:[...document.querySelectorAll('dialog[open]')].map(d=>d.id)}),{W,T});
+    if(resetDecision==='cancel'||(result.t.level===0&&result.t.unlocked===0&&result.t.completed.length===0&&result.t.progress===null))return result;
+    await p.waitForTimeout(100);
+   }throw Error('Native reset did not persist empty progress');
+  });
+  assert.deepEqual(passive.w,before.w,'Native confirmation must preserve the complete wallet before refresh');
+  diagnostics.note('passive.storage',{tokens:passive.w.coins,level:passive.t.level,completed:passive.t.completed.length,receipts:Object.keys(passive.w.wtReceipts||{}).length,hidden:passive.hidden,activeElement:passive.activeElement,dialogs:passive.dialogs});
+  if(focusMode==='passive')console.log('RESET_PASSIVE',await observeGame(p,f));
   if(resetDecision==='cancel'){await f.locator('#map[open]').waitFor();assert.deepEqual(await state(p),before,'Cancel must not change any wallet or Trail state');assert.deepEqual(handling.errors,[]);return;}
   await f.locator('#map[open]').waitFor({state:'hidden'});
   await map(f);assert.equal(await f.locator('.map-level:enabled').count(),1,'Reset must rebuild locks, not leave the old unlocked map usable');
@@ -90,7 +107,7 @@ async function reload(p){await p.reload({waitUntil:'domcontentloaded',timeout:12
 async function context(browser,width,height,complete){const c=await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:true,timezoneId:'UTC',acceptDownloads:true});if(complete!==undefined)await c.addInitScript(({P,M,keys,originals})=>{if(localStorage.getItem('__55_seeded'))return;localStorage.setItem('__55_seeded','1');for(const[k,v]of Object.entries(originals))localStorage.setItem(k,v);for(const[k,v]of Object.entries(keys))localStorage.setItem(P+k,v);localStorage.setItem(P+M,'1');},{P,M,keys:typeof complete==='object'?complete:oldKeys(complete),originals});return c;}
 const VIEWPORTS=[[320,568],[430,932]].filter(([w])=>!process.env.WT_WIDTHS||process.env.WT_WIDTHS.split(',').includes(String(w)));assert(VIEWPORTS.length,'WT_WIDTHS must include 320 or 430');
 fs.mkdirSync('work/word-trails-55-integration',{recursive:true});const evidence=[];
-module.exports={oldKeys,pack,P,W,R,T,context,ready,launch,map,acceptNativeDialogs,assertNativeDialogs,touchMapAction,word,parity,state,exportUI,restore};
+module.exports={oldKeys,pack,P,W,R,T,context,ready,launch,map,acceptNativeDialogs,assertNativeDialogs,touchMapAction,word,parity,state,exportUI,restore,choose};
 if(require.main===module)(async()=>{const oldFile=await priorBackup();for(const engine of(process.env.WT_ENGINES||'chromium,webkit').split(',')){const browser=await(engine==='webkit'?webkit:chromium).launch(engine==='webkit'?{headless:true}:{headless:true,executablePath:process.env.CHROME_BIN||'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});try{for(const[width,height]of VIEWPORTS){
  // Genuine first login: no seeded game data and no premature extension unlock.
  {const c=await context(browser,width,height),p=await c.newPage();try{await p.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(p);const before=await parity(p);assert.equal(before.balance,60);const f=await launch(p);await map(f);assert.equal(await f.locator('.map-level:enabled').count(),1);assert(await f.locator('.map-level').nth(50).isDisabled());assert.equal((await parity(p)).balance,60);console.log('PASS_55_FRESH_LOCKS',engine,width);}finally{await c.close()}}
@@ -120,8 +137,8 @@ if(require.main===module)(async()=>{const oldFile=await priorBackup();for(const 
  // Malformed/future/foreign files, including freshly checksummed future state,
  // cannot write or reset any saved tokens, progress, purchases or receipts.
  for(const kind of ['checksum','legacy','future','foreign']){const bad=JSON.parse(JSON.stringify(complete));if(kind==='checksum')bad.keys[W]+=' ';if(kind==='legacy')bad.version=1;if(kind==='foreign')bad.storagePrefix='bu-visual-lab-shared-preview-20261116:';if(kind==='future'){const t=JSON.parse(bad.keys[T]);t.unlocked=55;bad.keys[T]=JSON.stringify(t);delete bad.checksum;bad.checksum=await p.evaluate(x=>BUSharedTestBackup.hash(x),bad);}const before=await state(p);await choose(p,bad);await p.locator('#bu-shared-restore-error').waitFor({state:'visible'});assert.deepEqual((await state(p)).w,before.w);assert.deepEqual((await state(p)).t,before.t);}
- // Confirmed reset changes the iframe synchronously. Do not wait for a
- // navigation signal from this native confirmation; verify the actual save.
+ // Observe the real deferred native confirmation and saved reset before
+ // refreshing, then restore and replay the complete 55-level backup.
  f=await launch(p);await map(f);await touchMapAction(p,f,'#reset-test');await p.waitForFunction(T=>JSON.parse(localStorage.getItem(T)).completed.length===0,T);assert.equal((await state(p)).t.completed.length,0);assert.equal((await parity(p)).balance,963);await restore(p,complete);f=await launch(p);s=await parity(p);assert.equal(s.t.level,54);assert.equal(s.t.completed.length,55);assert.equal(s.balance,963);assert.deepEqual(s.w.wtReceipts,finalWallet.wtReceipts);
  // Full final-level replay must not repay the seal, discoveries, satchel or level.
  for(const hidden of [pack[4].spark,pack[4].extraSparks[0].word])await word(f,hidden);for(const b of pack[4].bonus.split(' '))await word(f,b);for(const[w]of pack[4].words)await word(f,w);await f.locator('#finish[open]').waitFor();assert.equal((await parity(p)).balance,963);assert.deepEqual((await state(p)).w.wtReceipts,finalWallet.wtReceipts);assert((await f.locator('#finish-seal-note').textContent()).includes('previously collected'));await f.locator('#next-level').tap();assert((await f.locator('#wt-map-seal-detail').textContent()).includes('55-level journey is complete'));assert.equal((await state(p)).t.coins,111);

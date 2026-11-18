@@ -1,0 +1,261 @@
+{
+  "scope": "Synthetic profiles only; no player imports; native input and application/save assertions retained. Local diagnostic observations, not physical-device acceptance.",
+  "previousHead": "5f2e897bc8bbef6f08fda1c3e95cafedd8058e19",
+  "newTestBase": "41c2a5180e42ccbc64b0adfd81d3e297e707805f",
+  "oldRuntime": {
+    "playwright": "1.58.2",
+    "webkitBuild": 2248,
+    "findings": "Page activation completed; parent iframe focus timed out at both widths. Omitting forced focus also stalled on passive reads. Temporary console-only callback tracing stopped inside native confirm, before save/redraw/sound."
+  },
+  "oldOperationSamples": {
+    "320": [
+      {
+        "ms": 112792,
+        "event": "post-reset.observation",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "focusMode": "force",
+        "resetDecision": "accept"
+      },
+      {
+        "ms": 112793,
+        "event": "operation.start",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "page.bringToFront"
+      },
+      {
+        "ms": 112799,
+        "event": "operation.finish",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "page.bringToFront",
+        "elapsed": 6
+      },
+      {
+        "ms": 112803,
+        "event": "operation.start",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus"
+      },
+      {
+        "ms": 132811,
+        "event": "operation.failed",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus",
+        "elapsed": 20008,
+        "error": "Browser operation timed out: parent.iframe.focus"
+      }
+    ],
+    "430": [
+      {
+        "ms": 125494,
+        "event": "operation.finish",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "page.bringToFront",
+        "elapsed": 4
+      },
+      {
+        "ms": 125494,
+        "event": "operation.start",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus"
+      },
+      {
+        "ms": 125526,
+        "event": "operation.finish",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus",
+        "elapsed": 32
+      },
+      {
+        "ms": 131146,
+        "event": "post-reset.observation",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "focusMode": "force",
+        "resetDecision": "accept"
+      },
+      {
+        "ms": 131146,
+        "event": "operation.start",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "page.bringToFront"
+      },
+      {
+        "ms": 131184,
+        "event": "operation.finish",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "page.bringToFront",
+        "elapsed": 38
+      },
+      {
+        "ms": 131185,
+        "event": "operation.start",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus"
+      },
+      {
+        "ms": 151187,
+        "event": "operation.failed",
+        "url": "http://127.0.0.1:8905/index.html#word-trails",
+        "activeDialogs": 0,
+        "operation": "parent.iframe.focus",
+        "elapsed": 20002,
+        "error": "Browser operation timed out: parent.iframe.focus"
+      }
+    ]
+  },
+  "comparisonRuntime": {
+    "playwright": "1.62.1",
+    "webkitBuild": 2336,
+    "webkitVersion": "26.5",
+    "localResults": {
+      "force": [
+        {
+          "ms": 2,
+          "event": "runtime",
+          "url": "about:blank",
+          "activeDialogs": 0,
+          "playwright": "1.62.1",
+          "webkit": "26.5",
+          "width": 320
+        },
+        {
+          "ms": 42831,
+          "event": "passive.storage",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "tokens": 963,
+          "level": 0,
+          "completed": 0,
+          "receipts": 86,
+          "hidden": false,
+          "activeElement": "bu-wt-native-game",
+          "dialogs": []
+        },
+        {
+          "ms": 130517,
+          "event": "probe.pass",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "width": 320,
+          "mode": "force",
+          "invalidFiles": true,
+          "nativeResetRefresh": true,
+          "wholeWalletPreserved": true,
+          "completed55Restored": true,
+          "replayNoReward": true,
+          "pageErrors": 0
+        },
+        {
+          "ms": 0,
+          "event": "runtime",
+          "url": "about:blank",
+          "activeDialogs": 0,
+          "playwright": "1.62.1",
+          "webkit": "26.5",
+          "width": 430
+        },
+        {
+          "ms": 52458,
+          "event": "passive.storage",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "tokens": 963,
+          "level": 0,
+          "completed": 0,
+          "receipts": 86,
+          "hidden": false,
+          "activeElement": "bu-wt-native-game",
+          "dialogs": []
+        },
+        {
+          "ms": 111941,
+          "event": "probe.failed",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "error": "locator.tap: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.wheel-letter').nth(1)\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"wheel-letter\" data-letter-index=\"1\" aria-label=\"Letter T\">T</button>\u001b[22m\n\u001b[2m  - attempting tap action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m    - element is visible, enabled and stable\u001b[22m\n\u001b[2m    - scrolling into view if needed\u001b[22m\n\u001b[2m    - done scrolling\u001b[22m\n\u001b[2m    - performing tap action\u001b[22m\n\n    at Object.word (/workspace/Bible-Unfolded-WordTrails55-Integration/scripts/qa_word_trails_55_browser.cjs:27:281)\n    at async /workspace/Bible-Unfolded-WordTrails55-Integration/scripts/qa_word_trails_55_reset_probe.cjs:31:108"
+        }
+      ],
+      "passive": [
+        {
+          "ms": 3,
+          "event": "runtime",
+          "url": "about:blank",
+          "activeDialogs": 0,
+          "playwright": "1.62.1",
+          "webkit": "26.5",
+          "width": 320
+        },
+        {
+          "ms": 48080,
+          "event": "passive.storage",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "tokens": 963,
+          "level": 0,
+          "completed": 0,
+          "receipts": 86,
+          "hidden": false,
+          "activeElement": "bu-wt-native-game",
+          "dialogs": []
+        },
+        {
+          "ms": 131811,
+          "event": "probe.pass",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "width": 320,
+          "mode": "passive",
+          "invalidFiles": true,
+          "nativeResetRefresh": true,
+          "wholeWalletPreserved": true,
+          "completed55Restored": true,
+          "replayNoReward": true,
+          "pageErrors": 0
+        },
+        {
+          "ms": 0,
+          "event": "runtime",
+          "url": "about:blank",
+          "activeDialogs": 0,
+          "playwright": "1.62.1",
+          "webkit": "26.5",
+          "width": 430
+        },
+        {
+          "ms": 52214,
+          "event": "passive.storage",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "tokens": 963,
+          "level": 0,
+          "completed": 0,
+          "receipts": 86,
+          "hidden": false,
+          "activeElement": "bu-wt-native-game",
+          "dialogs": []
+        },
+        {
+          "ms": 119688,
+          "event": "probe.failed",
+          "url": "http://127.0.0.1:8905/index.html#word-trails",
+          "activeDialogs": 0,
+          "error": "locator.tap: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.wheel-letter').nth(1)\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" class=\"wheel-letter\" data-letter-index=\"1\" aria-label=\"Letter E\">E</button>\u001b[22m\n\u001b[2m  - attempting tap action\u001b[22m\n\u001b[2m    - waiting for element to be visible, enabled and stable\u001b[22m\n\n    at Object.word (/workspace/Bible-Unfolded-WordTrails55-Integration/scripts/qa_word_trails_55_browser.cjs:27:281)\n    at async /workspace/Bible-Unfolded-WordTrails55-Integration/scripts/qa_word_trails_55_reset_probe.cjs:31:108"
+        }
+      ]
+    }
+  },
+  "gameEngineSHA256": "186f8c1ec13487c4e5e97a8fdf3b5597b9218b91c60fbd8c11b4de1c33092e1c",
+  "noahFix": "Source and QA workflow byte-identical to new main; included in immutable-base scope guard.",
+  "requiredNext": "Exact-head CI with supported dependencies, including full long replay at both widths; final results recorded in PR #65 description."
+}

@@ -6,8 +6,9 @@ untouched. Final approval and physical-device acceptance remain required.
 
 ## Provenance and recovery
 
-- TEST base: `624fff4d11ab02dea673a20b67be94ab8915fa75`, including wallet #55,
-  Family Worship relay placement #61 and Books #64.
+- Current TEST base: `41c2a5180e42ccbc64b0adfd81d3e297e707805f`, including
+  the approved Noah repair #67. Original base `624fff4` and all completed work
+  remain recoverable in `checkpoint/pr65-before-noah-5f2e897`.
 - Approved content source: `cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7` from #50.
 - Pushed checkpoint: `checkpoint/test-before-word-trails-51-55-624fff4`.
 - Branch: `feature/test-word-trails-51-55-integration`.
@@ -175,3 +176,26 @@ The foreground diagnostic is bounded to 20 seconds and follows native input
 acknowledgement. A stalled WebKit UI therefore fails at its actual foreground
 operation rather than consuming the entire job timeout; no gameplay assertion
 or data-safety gate is bypassed.
+
+## Narrow WebKit continuation after main #67
+
+The feature branch was rebased onto 41c2a5180 without conflicts. Noah's source
+and QA workflow match main exactly and remain protected by the 954-file guard.
+Historical 50-level exporter/audit references intentionally stay pinned to their
+original baseline; no Scripture or 95-case editorial/compatibility review was redone.
+
+Per-operation traces isolate the old timeout to parent iframe focus after native
+confirmation. Passive reads also stall: removing forced focus alone is insufficient.
+Temporary callback diagnostics showed the 1.58.2/2248 native confirm had not returned
+to game JavaScript, before save, redraw or sound. Those temporary game edits were
+removed. Test pin 1.62.1/2336 completes that reset path without product changes.
+Local 320 forced/passive comparisons pass complete restore/replay; 430 gets through
+reset/refresh/restore but encountered a later replay-tap timeout in the container.
+Exact final-head CI with supported browser dependencies remains required.
+
+[Compact diagnosis record](WORD_TRAILS_65_RESET_DIAGNOSTICS.json) preserves local
+comparisons. Lifecycle/dialog logs and bounded per-operation traces accompany the
+actual native-input tests. Full-wallet equality, locks, real refresh, complete-55
+restore/replay, duplicate-payment and strict page-error assertions remain. The
+production engine, wallet, backup coordinator, audio and other games are unchanged
+by this continuation. Final CI URLs and current remaining issues are in PR #65.
