@@ -136,6 +136,16 @@ function refreshLockNotice(){
   shield.style.flexDirection='column';const button=document.createElement('button');button.id='bu-shared-restore-recovery';button.className='gold-button';button.style.marginTop='18px';button.textContent='Recover from a complete TEST backup';button.onclick=()=>window.BUSharedTestBackup.openImport(sharedBackup,()=>location.reload());shield.appendChild(button);
  }
 }
+// The Bible Books shelf and reader deliberately send HUMAN refreshes home.
+// An internal first-time wallet-clone/recovery reload must not be mistaken
+// for that refresh; sessionStorage is deliberately not wallet-namespaced.
+function reloadAfterWalletMaintenance(){
+ if(location.pathname.endsWith('/bible-book-guides/index.html')||
+    location.pathname.endsWith('/bible-book-guides/read.html')){
+  try{sessionStorage.setItem('bu-books-wallet-internal-reload-v1',location.pathname);}catch(_){}
+ }
+ location.reload();
+}
 function acquireWriter(){
  if(!isTop)return;
  const attempt=++generation;
@@ -152,7 +162,7 @@ function acquireWriter(){
     writerState='recovering';refreshLockNotice();
     try{
      if(!sharedBackup)throw Error('Shared TEST backup coordinator is unavailable');
-     await sharedBackup.recoverPending();location.reload();
+     await sharedBackup.recoverPending();reloadAfterWalletMaintenance();
     }catch(error){copyError=String(error.message||error);writerState='error';refreshLockNotice();}
     await new Promise(resolve=>{releaseWriter=resolve;});releaseWriter=null;return;
    }
@@ -162,7 +172,7 @@ function acquireWriter(){
      if(!cloneRegularTestSave())throw Error('Import did not complete');
      // Old game runtime may have created fresh default coins while waiting
      // for the Web Lock. Never make it writable; reload from the cloned save.
-     location.reload();
+     reloadAfterWalletMaintenance();
     }catch(error){
      copyError=String(error.message||error);
      writerState='error';refreshLockNotice();
