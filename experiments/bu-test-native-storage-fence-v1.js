@@ -140,7 +140,8 @@ function refreshLockNotice(){
 // An internal first-time wallet-clone/recovery reload must not be mistaken
 // for that refresh; sessionStorage is deliberately not wallet-namespaced.
 function reloadAfterWalletMaintenance(){
- if(/\\/bible-book-guides\\/(?:index|read)\\.html$/.test(location.pathname)){
+ if(location.pathname.endsWith('/bible-book-guides/index.html')||
+    location.pathname.endsWith('/bible-book-guides/read.html')){
   try{sessionStorage.setItem('bu-books-wallet-internal-reload-v1',location.pathname);}catch(_){}
  }
  location.reload();
