@@ -39,7 +39,7 @@ jobs:
           node scripts/word_trails_shared_rewards_integration_test.mjs
   mobile:
     needs: content-schema
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 50
     strategy:
       fail-fast: false

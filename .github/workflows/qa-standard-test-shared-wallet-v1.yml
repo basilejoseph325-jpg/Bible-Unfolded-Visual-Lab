@@ -23,7 +23,7 @@ permissions:
   contents: read
 jobs:
   regular-test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -44,8 +44,10 @@ jobs:
           node scripts/word_trails_shared_rewards_integration_test.mjs
       - name: Install browser tooling
         run: |
-          npm install --prefix /tmp/bu-standard-wallet-qa playwright@1.58.2 --no-audit --no-fund --silent
-          /tmp/bu-standard-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+          npm install --prefix /tmp/bu-standard-wallet-qa playwright@1.62.1 --no-audit --no-fund --silent
+          if [ '${{ matrix.engine }}' = 'webkit' ]; then
+            /tmp/bu-standard-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+          fi
       - name: Fresh and existing players on the normal URL
         env:
           WT_ENGINES: '${{ matrix.engine }}'
