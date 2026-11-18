@@ -143,3 +143,13 @@ preview iframes keep their independent adapter startup (verified by the unchange
 Episode 14 public/preview test). The post-swipe map test now waits for modal close
 and two paint frames and verifies the actual hit target before its native tap;
 it retains map-open, reset, wallet equality and completed-55 restoration checks.
+
+Follow-up at 8d79d1e: the actual WebKit 320 playthrough completed all five
+levels with zero page errors, then its dispatchTapEvent held up reload after
+reset (durable state was level 0, empty progress, 963 tokens, 86 receipts). The
+independent complete-55 native-touch reset/restore fixture passed both widths.
+Keep that fixture unchanged. The long playthrough additionally uses real keyboard
+activation of the same reset button, accepted native confirm, input acknowledgement,
+refresh, wallet equality, full restoration and reward-free replay. This separates
+input modes without removing mobile touch or save/reward assertions. Final-head
+CI, including both paths, remains required before handoff.
