@@ -115,3 +115,11 @@ and unrelated baseline regressions separate from candidate-specific failures.
 - Initial WebKit frame taps preceded focus/readiness. The loaded frame is now
   explicitly focused; actual touchscreen taps pass Level 50 and new-level checks
   without changing runtime controls or substituting programmatic button clicks.
+
+- Linux WebKit 1.58.2 stalls after the test-only **Reset all test progress**
+  iframe confirmation, reproduced with an old 50-level fixture too. It does
+  clear that fixture's progress, but the automation tap then times out. This
+  unrelated QA-only control is not changed. The coordinated restore scenario
+  now creates an empty-progress disposable save fixture directly, then uses the
+  real restore file picker; it still asserts full 55-level progress and receipt
+  recovery. Actual in-game level restart remains tested through its native UI.
