@@ -156,3 +156,10 @@ remain required before refresh in both the focused and full-playthrough tests.
 The independent fixture also tests native Cancel and deep equality of the entire
 wallet and Trail. Confirmed reset must close the old map and rebuild it with only
 Level 1 enabled, preventing stale pre-reset unlock buttons from remaining usable. Final-head CI results remain in the PR description.
+
+The ea026fe WebKit full playthrough acknowledged its native reset touch but
+then timed out polling the closed-map condition. Its screenshot also failed to
+complete; saved state remained reset with 963 tokens, 86 receipts and no page
+errors. The next test revision explicitly foregrounds the real page and focuses
+its native game frame after modal dismissal, recording visibility/focus/map
+state. All native-input, lock, wallet, restore and error assertions remain.

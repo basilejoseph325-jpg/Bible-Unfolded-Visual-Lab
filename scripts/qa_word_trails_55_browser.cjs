@@ -45,6 +45,7 @@ function acceptNativeDialogs(p){
 function dismissNextNativeConfirm(p){const state=nativeDialogHandling.get(p);assert(state);state.dismissNext=true;}
 function assertNativeDialogs(p){assert.deepEqual(nativeDialogHandling.get(p)?.errors||[],[],'Native dialog handling must not fail');}
 async function touchMapAction(p,f,id,resetDecision='accept'){
+ await p.bringToFront();await p.locator('#bu-wt-native-game').focus();
  const button=f.locator(id);await button.scrollIntoViewIfNeeded();
  await f.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
  assert(await button.isVisible());assert(await button.isEnabled());
@@ -59,6 +60,11 @@ async function touchMapAction(p,f,id,resetDecision='accept'){
   gesture.catch(()=>{});confirmation.catch(()=>{});
   const dialog=await confirmation;assert.match(dialog.message(),/Restart only this isolated preview's Word Trails progress/);
   const accepted=handling.accepted.get(dialog);assert(accepted,'The actual native confirmation must be accepted and observed');await accepted;console.log('RESET_TOUCH_CONFIRM_HANDLED',resetDecision);
+  // Native modal dismissal can return focus to the top-level web view rather
+  // than its game frame. Restore the actual foreground page/frame before
+  // checking its animation-frame-polled DOM (no synthetic click or reset).
+  await p.bringToFront();await p.locator('#bu-wt-native-game').focus();
+  console.log('RESET_FOREGROUND',await f.evaluate(()=>({hidden:document.hidden,focus:document.hasFocus(),mapOpen:document.getElementById('map').open})));
   // The engine defers its confirmation until the activating input returns.
   // Require the actual native gesture acknowledgement BEFORE refreshing.
   let timeout;try{await Promise.race([gesture,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native reset touch did not acknowledge')),20000)})])}finally{clearTimeout(timeout)}
