@@ -17,6 +17,8 @@ jobs:
   normal-entry:
     if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
     runs-on: ubuntu-latest
+    # Existing cross-mode guard locks Genesis/audio bytes instead of assuming
+    # every future PR is an Episode-only patch. Gameplay assertions remain.
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -42,6 +44,7 @@ jobs:
           node scripts/qa_genesis13_content_candidate.cjs
       - name: Normal entry, locks, all 12 puzzles and native saves
         env:
+      BU_SCOPE_MODE: cross-mode
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
           STORY_EVIDENCE: work/genesis13-public-evidence.json
         run: node scripts/qa_genesis13_public_integration.cjs
