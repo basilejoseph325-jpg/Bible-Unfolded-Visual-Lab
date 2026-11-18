@@ -1,0 +1,43 @@
+name: QA Books internal wallet reload versus user refresh (TEST only)
+on:
+  pull_request:
+    paths:
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - 'bible-book-guides/index.html'
+      - 'bible-book-guides/read.html'
+      - '.github/workflows/qa-books-wallet-bootstrap.yml'
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  books-wallet-bootstrap:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify scripts
+        run: |
+          node --check experiments/bu-test-native-storage-fence-v1.js
+          node --check bible-book-guides/books-v3.js
+          node --check scripts/qa_books_header_refresh_v2.cjs
+          node --check scripts/qa_books_leviticus_27_reader_v1.cjs
+          grep -F 'bu-books-wallet-internal-reload-v1' experiments/bu-test-native-storage-fence-v1.js
+          grep -F 'bu-books-wallet-internal-reload-v1' bible-book-guides/index.html
+          grep -F 'bu-books-wallet-internal-reload-v1' bible-book-guides/read.html
+      - run: npm install --prefix /tmp/bu-books-wallet-qa puppeteer-core@24 --no-audit --no-fund --silent
+      - name: Serve scoped TEST in Chromium
+        run: |
+          python3 -m http.server 8899 --bind 127.0.0.1 >/tmp/bu-books-wallet-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8899/bible-book-guides/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Verify Genesis/Exodus shelf, manual refresh and reader return
+        env:
+          NODE_PATH: /tmp/bu-books-wallet-qa/node_modules
+          EXODUS_READY: '1'
+        run: node scripts/qa_books_header_refresh_v2.cjs
+      - name: Verify Leviticus reading, shelf cards and refresh parity
+        env:
+          NODE_PATH: /tmp/bu-books-wallet-qa/node_modules
+        run: node scripts/qa_books_leviticus_27_reader_v1.cjs
