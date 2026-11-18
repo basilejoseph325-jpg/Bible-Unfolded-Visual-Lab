@@ -1,125 +1,105 @@
 # Word Trails 51–55 TEST integration — draft PR #65
 
-This is the separate integration requested in the two latest review comments on
-PR #50 (6966819310 and 6966897366). No merge, publication, or LIVE change is
-included. PR #50 remains the unchanged isolated content source.
+Implements the separate integration requested in PR #50 comments 6966819310 and
+6966897366. PR #50 remains unchanged. Nothing is merged or published; LIVE is
+untouched. Final approval and physical-device acceptance remain required.
 
 ## Provenance and recovery
 
-- TEST base: `624fff4d11ab02dea673a20b67be94ab8915fa75` (includes shared wallet
-  #55, Family Worship relay placement #61 and Books #64).
-- Reviewed source: `cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7` from PR #50.
-- Pushed recovery ref: `checkpoint/test-before-word-trails-51-55-624fff4`.
-- Integration branch: `feature/test-word-trails-51-55-integration`.
-- Candidate: <https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pull/65>.
+- TEST base: `624fff4d11ab02dea673a20b67be94ab8915fa75`, including wallet #55,
+  Family Worship relay placement #61 and Books #64.
+- Approved content source: `cf20a7c03bf8ba5be5255a6a2317a2d746eee7b7` from #50.
+- Pushed checkpoint: `checkpoint/test-before-word-trails-51-55-624fff4`.
+- Branch: `feature/test-word-trails-51-55-integration`.
+- PR: <https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pull/65>.
 
-The content bank, metadata and source fixture match PR #50 byte for byte.
-The independent boundary gate also compares every out-of-scope tracked file
-against the TEST base. Chapters, artwork, original Levels 1–50 content, audio,
-wallet owner and reward formulas are preserved.
+The bank, source fixture and original review-only metadata are hash-identical to
+#50. The metadata's historical status is retained for provenance; the engine now
+registers the content in this candidate. The boundary gate locks every unrelated
+tracked file to the TEST base, including original level content, chapters, audio,
+artwork, wallet ownership and reward policy.
 
-The checkpoint contains the old **50-level** engine. It is a code recovery point,
-not permission to feed Level 55 progress into an older engine. Before any approved
-publication, retain coordinated V2 exports; after play, retain the new 55-level
-export too. A future rollback requires independent review of a matching full
-snapshot and code version. Never restore only the wallet, combine old trail coins,
-or point an old clamping engine at new progress. No real-player imports/restores
-were performed by this assignment.
+**The checkpoint contains a 50-level engine. Do not feed it a 55-level save.**
+Before any future approved publication, retain full coordinated V2 exports; retain
+new 55-level exports after play as well. Any rollback requires independent review
+of a matching full snapshot and code version. Never restore only a wallet, merge
+old trail coins, or let an older engine clamp newer progress. Only disposable
+profiles were imported or reset here.
 
-## Completed integration
+## Implemented
 
-- [x] Register five reviewed levels after 46–50, before Bible discovery derivation.
-- [x] Chapter 11: Learning and Serving; seal 55: Ready to Serve.
-- [x] Completed old Level 50 unlocks 51 without replay, reset or retroactive reward.
-- [x] Fresh players and unfinished Level 50 keep normal locks.
-- [x] Dynamic seal totals and final journey copy; 55-level labels and launcher.
-- [x] Existing shared wallet, native rewards, hints and anti-duplicate receipts.
-- [x] Coordinated V2 accepts indices 0–54 and receipts 1–55, rejecting future
-  indices in embedded discoveries, bonus payments and progress as well.
-- [x] Keep original namespace, ownership, checksum format, recovery journal,
-  stale-review guard, strict amounts/types and old 50-level V2 compatibility.
-- [x] Cache revisions load the 55-capable backup validator on all participating
-  pages and each link from the root loader through the iframe engine, and the
-  new bank before the engine. No navigation behavior changed.
-- [x] Independent content, integration, real-host gameplay and backup fixtures.
-- [x] Existing tests updated for 55 labels/map/seal counts; their old-level
-  gameplay assertions remain. Genesis workflows use their existing cross-mode
-  immutable chapter/audio guard for this cross-mode PR.
+- [x] Register 51–55 after 46–50, before Bible-discovery derivation.
+- [x] Chapter 11 **Learning and Serving**; seal 55 **Ready to Serve**.
+- [x] Completed old Level 50 unlocks 51 without replay, reset or retroactive pay.
+- [x] Fresh players and unfinished Level 50 retain normal progression locks.
+- [x] Dynamic 55-level / 11-seal copy and updated launcher labels.
+- [x] Existing native word wheel, hints, shared tokens, rewards and deduplication.
+- [x] V2 receipts 1–55 and progress indices 0–54, including embedded discovery,
+  bonus, hint and payment indices. Rehashed future/foreign/malformed files fail.
+- [x] Preserve V2 namespace, checksum, ownership, strict amounts/types, stale
+  review guard, coordinated checkpoint/journal recovery and old-50 compatibility.
+- [x] Version every cache link from root loader through iframe engine and every
+  participating backup-validator entry point. Navigation logic is unchanged.
+- [x] Preserve old gameplay assertions while updating obsolete 50-level totals.
+  Genesis workflows select their existing immutable cross-mode guard only on
+  this integration branch; other branches retain their original scope gate.
+- [x] Actual host gameplay tests and an independent complete-55 UI restore fixture.
+  The obsolete response-injected #50 browser fixture stays in #50.
 
-## Verification record
+## Actual verification
 
-All browser imports and purchases use disposable, seeded test profiles only.
-Automated Linux WebKit is not physical iPhone/Safari testing.
+Browser imports, purchases and fault injection use isolated synthetic profiles.
+Linux Chromium/WebKit automation is not physical Samsung/iPhone testing.
 
-| Check | Actual result |
+| Check | Result |
 | --- | --- |
 | Original 50-level quality gate | Passed; existing review warnings retained |
-| New content: 30 crossword answers, intersections and wheel multisets, 60 bonus words, ten hidden discoveries | Passed |
-| Live verse-anchor verification, 39 records / 37 NWT chapter pages | Passed; no content rewritten |
-| Scope/content hashes and 55-level registration | Passed |
-| Shared native bridge: 51–55 amounts, paid hints, seal and duplicate rejection | Passed |
-| Coordinated V2: old 50 / new 55, 23 invalid files, 11 failed-write points, 11 crash points, corrupt journal | Passed |
-| Actual Chromium 320/430: all five new levels, all 60 bonuses and ten hidden discoveries per viewport | Passed |
-| Chromium: fresh locks, incomplete 50→51, completed-50 migration, free/paid hints, wrong answers, restart, reload, old/new V2 file-picker restoration, purchases, replay/no double payouts | Passed |
-| Actual WebKit 320/430 | In progress; final result recorded in PR before handoff |
-| Fourteen-group combined regression | Passed on `e6b7a3d`, run 44226308302 (also passed run 44226090973) |
-| Shared restore independent WebKit | Passed, run 44224363822 |
-| Isolated shared tokens Chromium + WebKit | Passed, run 44224363701 |
-| Books wallet/internal reload | Passed, run 44224363719 and 44226151349 |
-| Word Trails exclusive audio ownership | Passed, run 44224363589 |
-| Existing native Episode 12, Family Worship relay, Daily Trail | Passed respective candidate CI |
-| Existing 50-level WebKit native map/layout/resume | Passed, runs 44226903565 and 44224322903 |
+| New 30 answers, crossings, wheel multisets, 60 bonus words and ten hidden discoveries | Passed |
+| 39 source records / 37 live NWT chapter pages | Verse-anchor checks passed; reviewed wording unchanged |
+| Content hashes, old levels and unrelated-file boundary | Passed |
+| Native bridge 51–55 amounts, 15-token paid hints, seal, duplicate rejection | Passed |
+| V2 old 50/new 55, 23 invalid files, 11 failed-write points, 11 crash points, corrupt journal | Passed |
+| All five new levels in Chromium and WebKit, 320/430 | 20 actual level completions passed; all 60 bonuses, ten hidden discoveries and hints per profile |
+| Fresh locks, unfinished 50→51, completed-50 migration | Passed in both engines/sizes |
+| Wrong answers, free/paid hints, level restart, reload/resume, reward parity | Passed in both engines/sizes during those playthroughs |
+| Actual 55-level V2 export/import, purchases, stock, receipts, partial-level restoration | Passed Chromium/WebKit 320/430 focused fixtures |
+| Reset-all followed by real complete-55 restoration | Passed Chromium/WebKit 320/430 focused fixtures |
+| Final Level 55 replay after focused restoration | Chromium 320/430 passed; WebKit continuation stalled after partial restoration, so no full replay pass is claimed |
+| Full fourteen-group regression | Passed `e6b7a3d`, run 44226308302; latest runtime rerun 44227589687 failed only the older Noah gallery assertion |
+| Existing 50-level WebKit map/layout/resume | Passed, runs 44226903565 and 44227602407 |
+| Story Adventure / Episodes 12–14 / Books / native audio / relay placement / Daily / regular shared wallet | Passed respective candidate CI; no runtime files for these modes changed |
+| Complete restore browser: normal/reject/cancel, lost-hint recovery, forced crash, corrupt journal, read-only recovery | Chromium 320/430 passed; WebKit state assertions passed but strict page-error gate remains red on an Story JSON load rejection during recovery navigation |
+| Visual inspection | All 20 new-level boards and four seal screens inspected; approved design preserved |
 
-The obsolete response-injected PR #50 browser fixture stays in PR #50; it is not
-carried into this integrated candidate. Its replacement exercises the actual
-registered bank.
+The real-host test uses normal TEST entry, without intercepted responses or a
+protected preview URL. Chromium swiping uses actual CDP touch; WebKit swiping uses
+native pointer input. Both use real touchscreen letter taps. Map actions verify
+visibility, enabled state and the actual hit target before native touchscreen
+input. The fixtures wait for full root/frame readiness and navigation settling before
+interacting with the iframe; earlier runs encountered a disappearing-frame race.
 
-The real-host integration test uses genuine normal TEST entry, without intercepted
-responses or a protected preview URL. Chromium uses touchscreen taps and a CDP
-swipe; WebKit uses touchscreen taps and native pointer swiping. Focus the loaded
-iframe before automated touch, matching browser interaction readiness. Existing
-private preview and unscoped storage canaries must remain byte-identical.
+The coordinated-restore crash fixture now stops writes after the wallet and
+explicitly reopens the document once. This avoids racing an in-hook reload against
+the test's own navigation. Recovery notices, full data equality, cleared journals,
+read-only behavior and zero unexpected page errors remain asserted. No recovery
+algorithm or Story loader was changed to suppress errors.
 
-## Remaining review and release checks
+## Remaining checks / exact handoff
 
-- [ ] Finish final candidate mobile and CI runs, record failures without hiding them.
-- [ ] Inspect all five boards and final seal in both engines/sizes.
-- [ ] Final ChatGPT content/integration signoff (fresh source-anchor verification
-  does not substitute for an editorial approval).
-- [ ] Physical Samsung Android Chrome and iPhone Safari: touch/swipe, small-screen
-  map controls, app resume, audio, navigation and disposable backup round trip.
-- [ ] Owner approval for a separate TEST publication. Nothing is deployed here.
+- [ ] Resolve the WebKit continuation/input acknowledgement stall and complete its final replay; collect updated CI results.
+- [ ] Investigate the WebKit forced-recovery Story JSON error while retaining the
+  strict error assertion. State recovery succeeded; this is not an all-green run.
+- [ ] Independently triage the older Noah photo/class assertion. The unchanged
+  gallery script also failed that assertion on base main; Family runtime/artwork
+  is byte-identical here. Full-suite Family gameplay and relay tests passed in
+  earlier runs. No assertion was removed or relaxed.
+- [ ] ChatGPT content/integration signoff; live verse anchors alone do not replace
+  final human editorial approval.
+- [ ] Physical Samsung Chrome and iPhone Safari: touch/swipe, 320px dialog scroll,
+  audio, app resume, navigation and a disposable backup round trip.
+- [ ] Owner approval for a separate TEST publication. Do not merge/deploy here.
 
-Published-site checks inspect the currently published TEST site, not this local
-candidate. They cannot validate unmerged Level 55 code. Keep historical failures
-and unrelated baseline regressions separate from candidate-specific failures.
-
-## Historical and unrelated failures investigated
-
-- Older published-site v32/v33/v34/v35 runs 44224322403, 44224322845,
-  44224322686 and 44224322799 failed their explicit “not yet deployed” gates.
-  No publication was attempted to satisfy them. Their candidate/local equivalents
-  passed in the fourteen-group suite.
-- Initial Episode 13/14 runs applied their Episode-only file allowlists to this
-  Word Trails integration. Their existing cross-mode guard is now selected only
-  on this integration branch, retaining immutable Genesis/audio checks and
-  all gameplay checks. Other branches retain their original scope selection.
-- Initial Story touch-cancel assertion failed; the identical test passed against
-  base 624fff4 locally. The later candidate run is tracked separately below.
-- The standalone older Family Worship V6 gallery workflow (44224322856)
-  failed its immediate Noah-card photo/class assertion. Running its unchanged
-  browser script against base 624fff4 reproduced the same failing assertion;
-  Family Worship runtime/artwork is byte-identical in this candidate. The
-  fourteen-group Family gameplay/visual tests and relay placement tests passed.
-  This older gallery fixture failure remains disclosed for independent triage.
-- Initial WebKit frame taps preceded focus/readiness. The loaded frame is now
-  explicitly focused; actual touchscreen taps pass Level 50 and new-level checks
-  without changing runtime controls or substituting programmatic button clicks.
-
-- The first full WebKit run reached all five completed levels, then timed out
-  waiting for the test-only reset-all tap to finish, despite progress already
-  being reset and tokens unchanged. A focused old-50 fixture passed the native
-  confirmation with `noWaitAfter:true`. The test now uses that supported input
-  option and directly verifies the real save before complete V2 restoration;
-  it retains the real reset button and all restoration assertions. No runtime
-  reset behavior was changed. The complete rerun remains required.
+Older public-site v32–v35 runs 44224322403, 44224322845, 44224322686 and
+44224322799 explicitly failed because expected code was **not yet deployed**.
+They inspect the published site, not this candidate. Their local equivalents
+passed in the fourteen-group suite. No deployment was attempted to satisfy them.

@@ -35,7 +35,7 @@ jobs:
   mobile:
     needs: content-schema
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 50
     strategy:
       fail-fast: false
       matrix: {engine: [chromium, webkit]}
@@ -56,6 +56,11 @@ jobs:
             sleep 1
           done
           echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+      - name: Independent complete-55 V2 export and real file-picker restoration
+        env:
+          NODE_PATH: /tmp/bu-55-qa/node_modules
+          WT_ENGINES: '${{ matrix.engine }}'
+        run: node scripts/qa_word_trails_55_restore_browser.cjs
       - name: Actual 50→51 and 51→55 wheel, wallet, seals and old/new V2 restoration
         env:
           NODE_PATH: /tmp/bu-55-qa/node_modules
