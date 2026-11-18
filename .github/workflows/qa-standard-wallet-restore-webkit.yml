@@ -1,0 +1,43 @@
+name: QA shared wallet complete restore independent WebKit (no deployment)
+on:
+  pull_request:
+    paths:
+      - 'scripts/qa_shared_test_backup_v2_browser.cjs'
+      - 'scripts/qa_shared_wallet_family_relay_browser_v1.cjs'
+      - 'experiments/bu-test-shared-backup-v2.js'
+      - 'experiments/bu-test-native-storage-fence-v1.js'
+      - '.github/workflows/qa-standard-wallet-restore-webkit.yml'
+permissions:
+  contents: read
+jobs:
+  webkit-restore:
+    if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify unchanged strict restore assertions
+        run: |
+          node --check scripts/qa_shared_test_backup_v2_browser.cjs
+          node --check scripts/qa_shared_wallet_family_relay_browser_v1.cjs
+          node scripts/qa_shared_test_backup_v2.cjs
+      - name: Install supported WebKit Playwright on current runner
+        run: |
+          set -euo pipefail
+          npm install --prefix /tmp/bu-webkit-restore-check playwright@latest --no-audit --no-fund --silent
+          /tmp/bu-webkit-restore-check/node_modules/.bin/playwright install --with-deps webkit
+      - name: Start isolated TEST server
+        run: |
+          python3 -m http.server 8894 --bind 127.0.0.1 >/tmp/bu-webkit-restore-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8894/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Real WebKit 320/430 full restore, crash recovery and Family/Clue Relay
+        env:
+          WT_ENGINES: webkit
+          NODE_PATH: /tmp/bu-webkit-restore-check/node_modules
+        run: |
+          node scripts/qa_shared_test_backup_v2_browser.cjs
+          node scripts/qa_shared_wallet_family_relay_browser_v1.cjs
