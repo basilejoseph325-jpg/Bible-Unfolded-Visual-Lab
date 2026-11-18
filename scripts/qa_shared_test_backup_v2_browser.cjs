@@ -18,6 +18,24 @@ async function current(page){return page.evaluate(()=>({wallet:JSON.parse(localS
 async function exportUI(page){await page.evaluate(()=>{BUWTNativeShell.close();openDialog('settings')});const [download]=await Promise.all([page.waitForEvent('download',{timeout:60000}),page.locator('#save-export').tap()]);const data=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(data.version,2);assert.equal(data.restoreAllowed,true);await page.evaluate(()=>closeDialog());return data;}
 async function choose(page,data){await page.waitForTimeout(350);await page.evaluate(()=>{BUWTNativeShell.close();openDialog('settings')});await page.locator('#save-import').tap();const choosing=page.waitForEvent('filechooser',{timeout:60000}).then(chooser=>chooser.setFiles({name:'shared-test-backup.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))}));await Promise.all([choosing,page.locator('#bu-shared-restore-file').tap({timeout:60000})]);}
 async function restoreUI(page,data){await choose(page,data);await page.locator('#bu-shared-restore-review').waitFor({state:'visible'});await page.locator('#bu-shared-restore-confirm').tap();await page.waitForFunction(()=>document.querySelector('#bu-shared-restore-review [role=status]')?.textContent||(!document.getElementById('bu-shared-restore-review')&&window.BUPreviewStorageFence?.writerStatus().writable),null,{timeout:120000});assert.equal(await page.evaluate(()=>document.querySelector('#bu-shared-restore-review [role=status]')?.textContent||''),'','Restore UI reported a real failure');await ready(page);}
+async function interruptRestore(page,target,corrupt=false){
+ // Do not arm a storage fault while the detached game's queued hint/ownership
+ // saves can still run: that would interrupt an ordinary save instead of the
+ // coordinated restore under test, or correctly trigger stale-review rejection.
+ await home(page);await page.waitForFunction(()=>!document.getElementById('bu-wt-native-game'));await page.waitForTimeout(1800);
+ const injected=await page.evaluate(async({target,corrupt})=>{
+  const s=BUPreviewStorageFence.sharedBackup,preview=await s.inspect(target);
+  window.__qaCrashRestore=true;window.__qaCorruptJournal=corrupt;
+  const result=await s.restore(target,preview.currentHash);
+  return {result,walletApplied:!!window.__qaAppliedWallet,subsequentWriteBlocked:!!window.__qaRestoreFault,pending:s.hasPending(),writer:BUPreviewStorageFence.writerStatus()};
+ },{target,corrupt});
+ console.log('RESTORE_INJECTED_CRASH',JSON.stringify(injected));
+ assert.equal(injected.result.ok,false);assert.equal(injected.result.reloadRequired,true);
+ assert.equal(injected.walletApplied,true,'Fault fixture must reach the restore wallet write');
+ assert.equal(injected.subsequentWriteBlocked,true,'Fault fixture must interrupt a later restore write');
+ assert.equal(injected.pending,true,'A real interrupted restore must retain its recovery intent');
+ assert.equal(injected.writer.writable,false,'Interrupted restore must prohibit gameplay writes');
+}
 async function run(browser,engine,width,height){const context=await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:true,acceptDownloads:true});
  // Original setter captured by the early fence: simulate a crash AFTER the
  // primary wallet write but BEFORE its recovery/progress records are applied.
@@ -49,14 +67,14 @@ await context.addInitScript(data=>{if(localStorage.getItem('__restore_seeded'))r
   // Simulate an actual interrupted multi-key write, then close/reopen the
   // document. The early fence must finish recovery before it becomes writable.
   // The fault hook stops writes; this test owns the single reopen navigation.
-  console.log('RESTORE_STAGE',engine,width,'crash');await page.evaluate(async target=>{const s=BUPreviewStorageFence.sharedBackup,preview=await s.inspect(target);window.__qaCrashRestore=true;return s.restore(target,preview.currentHash)},a).catch(e=>{if(!/context.*destroyed|navigation|Target closed/i.test(String(e)))throw e});
+  console.log('RESTORE_STAGE',engine,width,'crash');await interruptRestore(page,a);
   // Reopen the document explicitly: the fixture interrupts a multi-key write,
   // and WebKit may defer its in-hook reload until the interrupted evaluation ends.
   // Recovery must run from persisted journal/checkpoint state in a new document.
   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(page);const afterCrash=await current(page);assert.equal(afterCrash.wallet.coins,aWallet.coins);assert.deepEqual(afterCrash.trail,aTrail);assert.deepEqual(afterCrash.wallet.wtReceipts,aWallet.wtReceipts);assert.equal(await page.evaluate(()=>localStorage.getItem(BUSharedTestBackup.keys.journal)),null);assert(dialogs.some(x=>/interrupted TEST restore finished/.test(x)));
   // Corrupt journal: only THIS intent's checksum-verified complete checkpoint
   // may be recovered. A damaged/unmatched checkpoint fails closed in unit QA.
-  const coherent=await current(page);console.log('RESTORE_STAGE',engine,width,'crash');await page.evaluate(async target=>{const s=BUPreviewStorageFence.sharedBackup,preview=await s.inspect(target);window.__qaCrashRestore=true;window.__qaCorruptJournal=true;return s.restore(target,preview.currentHash)},pending).catch(e=>{if(!/context.*destroyed|navigation|Target closed/i.test(String(e)))throw e});await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(page);assert.equal((await current(page)).wallet.coins,coherent.wallet.coins);assert.deepEqual((await current(page)).trail,coherent.trail);assert(dialogs.some(x=>/rolled back.*complete recovery checkpoint/.test(x)));
+  const coherent=await current(page);console.log('RESTORE_STAGE',engine,width,'crash');await interruptRestore(page,pending,true);await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(page);assert.equal((await current(page)).wallet.coins,coherent.wallet.coins);assert.deepEqual((await current(page)).trail,coherent.trail);assert(dialogs.some(x=>/rolled back.*complete recovery checkpoint/.test(x)));
   // Both recovery records damaged: stay read-only, then recover ONLY from a
   // separately supplied and fully validated complete backup, never mixed data.
   await page.evaluate(({P,W})=>{localStorage.setItem(W,'{broken');localStorage.setItem('__shared_restore_journal_v2__','{broken');localStorage.setItem('__shared_restore_checkpoint_v2__','{broken');localStorage.setItem('__imported_regular_test_v1__','restore-pending-v2:damaged');},{P,W});

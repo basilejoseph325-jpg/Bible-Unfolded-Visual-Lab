@@ -163,3 +163,10 @@ complete; saved state remained reset with 963 tokens, 86 receipts and no page
 errors. The next test revision explicitly foregrounds the real page and focuses
 its native game frame after modal dismissal, recording visibility/focus/map
 state. All native-input, lock, wallet, restore and error assertions remain.
+
+The independent WebKit run on 4369bd8 reported 507 rather than 522 tokens
+after its crash fixture. That fixture previously ignored the restore result. It
+now drains detached-frame saves before arming faults and requires proof of the
+wallet write, subsequent blocked write, retained recovery intent and read-only
+state before navigating. Expected restored balances, complete records, notices
+and strict page errors are unchanged; production backup protections are untouched.
