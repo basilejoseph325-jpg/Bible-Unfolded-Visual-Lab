@@ -9,6 +9,9 @@ on:
       - 'scripts/qa_word_trails_55*'
       - 'scripts/qa_word_trails_levels_51_55*'
       - 'scripts/fixtures/word-trails-51-55-sources.json'
+      - 'scripts/fixtures/word-trails-50-native-save.json'
+      - 'scripts/qa_story_wallet_startup_gate.cjs'
+      - 'scripts/qa_recovery_network_trace.cjs'
       - '.github/workflows/qa-word-trails-55-integration.yml'
   workflow_dispatch:
 permissions:
@@ -27,6 +30,8 @@ jobs:
           node scripts/qa_word_trails_55_integration.cjs
           node scripts/word_trails_quality_gate.mjs
           node scripts/qa_word_trails_levels_51_55.cjs --integration --verify-sources
+          node scripts/qa_story_wallet_startup_gate.cjs
+          node scripts/qa_word_trails_55_legacy_formats.cjs
           node scripts/qa_shared_test_backup_v2.cjs
           node scripts/qa_test_insight_native_bridge_v2.cjs
           node scripts/qa_standard_test_wallet_fence_v1.cjs
@@ -86,3 +91,4 @@ jobs:
             work/standard-wallet/
             work/shared-restore/
             work/shared-family-relay/
+            docs/WORD_TRAILS_65_RECOVERY_DIAGNOSTICS.json

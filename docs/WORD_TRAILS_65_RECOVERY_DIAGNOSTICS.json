@@ -1,0 +1,731 @@
+{
+  "scope": "Synthetic browser profiles only. No owner backup or LIVE data. Same-origin Python HTTP servers; 200 JSON after recovery. Story code/art/content unchanged.",
+  "baselineCommit": "624fff4d11ab02dea673a20b67be94ab8915fa75",
+  "candidateBeforeCommit": "8c8e9fcc0fefd6671422dfe3457da857427f76b8",
+  "fixedLoaderSHA256": "429bc7de3cde928174368a57728c004ca428fe8f119e9773445fd0251a1d5a6d",
+  "before": [
+    {
+      "case": "base",
+      "origin": "http://127.0.0.1:8906/index.html",
+      "pageErrors": [
+        "/127.0.0.1:8906/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks."
+      ],
+      "unhandledRejections": 0,
+      "observations": [
+        {
+          "t": 31655,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984849984,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 36553,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984876338,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 60545,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "http://127.0.0.1:8906/index.html",
+          "doc": 1794984881232,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 60796,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8906/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:05 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:52:25 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 61904,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "http://127.0.0.1:8906/index.html",
+          "doc": 1794984881232,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 61953,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8906/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:06 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:52:25 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 62400,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984881232,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 64491,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "",
+          "doc": 1794984907085,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "pending",
+            "writable": false
+          }
+        },
+        {
+          "t": 64556,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8906/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:09 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:52:25 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 65184,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984907085,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 65192,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "",
+          "doc": 1794984907085,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 65192,
+          "stage": "corrupt-recovery",
+          "kind": "pageerror",
+          "message": "/127.0.0.1:8906/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks."
+        },
+        {
+          "t": 67511,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "http://127.0.0.1:8906/index.html",
+          "doc": 1794984909870.0002,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 67547,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8906/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:12 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:52:25 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 67978,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8906/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8906",
+          "referrer": "http://127.0.0.1:8906/index.html",
+          "doc": 1794984909870.0002,
+          "url": "http://127.0.0.1:8906/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 67987,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8906/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:12 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:52:25 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        }
+      ]
+    },
+    {
+      "case": "candidate",
+      "origin": "http://127.0.0.1:8905/index.html",
+      "pageErrors": [
+        "/127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks.",
+        "/127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks."
+      ],
+      "unhandledRejections": 0,
+      "observations": [
+        {
+          "t": 12609,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984917418,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 15068,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "",
+          "doc": 1794984927627,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "pending",
+            "writable": false
+          }
+        },
+        {
+          "t": 15114,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:30 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 15619,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984927627,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 15625,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "",
+          "doc": 1794984927627,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 15625,
+          "stage": "recovery",
+          "kind": "pageerror",
+          "message": "/127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks."
+        },
+        {
+          "t": 17820,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1794984930579,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 17849,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:32 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 18168,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1794984930579,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 18172,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:33 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 20152,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984930579,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 22440,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "",
+          "doc": 1794984935174,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "pending",
+            "writable": false
+          }
+        },
+        {
+          "t": 22502,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:37 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 23036,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1794984935174,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 23044,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "",
+          "doc": 1794984935174,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 23044,
+          "stage": "corrupt-recovery",
+          "kind": "pageerror",
+          "message": "/127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json due to access control checks."
+        },
+        {
+          "t": 25096,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1794984938028,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 25116,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:40 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 25467,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1794984938028,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 25477,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 06:55:40 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        }
+      ]
+    }
+  ],
+  "after": [
+    {
+      "case": "candidate",
+      "origin": "http://127.0.0.1:8905/index.html",
+      "pageErrors": [],
+      "unhandledRejections": 0,
+      "observations": [
+        {
+          "t": 20885,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1795018848277,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 30907,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1795018865377,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 37546,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1795018875388,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 37586,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 16:21:22 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 39051,
+          "stage": "recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1795018875388,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 39064,
+          "stage": "recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 16:21:23 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 41060,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1795018875388,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "restoring",
+            "writable": false
+          }
+        },
+        {
+          "t": 48694,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "beforeunload",
+          "doc": 1795018885553,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "recovering",
+            "writable": false
+          }
+        },
+        {
+          "t": 53005,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode13-bethel-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:294:33\nstart@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:340:9\n@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:352:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode13-integration-test.js:353:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1795018893183,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 53045,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode13-bethel-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 16:21:37 GMT",
+            "content-type": "application/json",
+            "content-length": "50323",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 53689,
+          "stage": "corrupt-recovery",
+          "kind": "application",
+          "type": "fetch",
+          "resource": "story-adventure-content/genesis-episode14-joseph-v1.json",
+          "initiator": "@web-inspector://bootstrap.js:538:703\nload@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:327:33\nstart@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:373:9\n@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:385:13\nglobal code@http://127.0.0.1:8905/story-adventure-episode14-integration-test.js:386:3",
+          "origin": "http://127.0.0.1:8905",
+          "referrer": "http://127.0.0.1:8905/index.html",
+          "doc": 1795018893183,
+          "url": "http://127.0.0.1:8905/index.html",
+          "writer": {
+            "status": "owned",
+            "writable": true
+          }
+        },
+        {
+          "t": 53694,
+          "stage": "corrupt-recovery",
+          "kind": "response",
+          "url": "http://127.0.0.1:8905/story-adventure-content/genesis-episode14-joseph-v1.json",
+          "status": 200,
+          "headers": {
+            "date": "Wed, 18 Nov 2026 16:21:38 GMT",
+            "content-type": "application/json",
+            "content-length": "62493",
+            "last-modified": "Wed, 18 Nov 2026 02:16:47 GMT",
+            "server": "SimpleHTTP/0.6 Python/3.12.14"
+          }
+        },
+        {
+          "t": 57806,
+          "stage": "play-story",
+          "kind": "playable",
+          "played": [
+            {
+              "chapter": "genesis_ep13",
+              "answer": "DINAH",
+              "solved": true
+            },
+            {
+              "chapter": "genesis_ep14",
+              "answer": "ROBE",
+              "solved": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "familyBaseline": {
+    "issue": "https://github.com/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/issues/66",
+    "workflow": ".github/workflows/qa-family-worship-picker-gallery-v3.yml",
+    "workflowJavaScriptSHA256": "325e7d2ef2f7848253cae5b1c6ca28dec66d0cb4a10ed7e865dc51b964e621e0",
+    "puppeteer": "24.43.1",
+    "baselineAndCandidateDiagnostics": {
+      "initialNoahLegacyClass": false,
+      "photo": "none",
+      "backgroundWidth": 344,
+      "title": "Noah and the Ark",
+      "legacy": true,
+      "failedAssertion": "Existing Noah card conflicted with isolated V3 photo"
+    },
+    "parameterChanges": "Only local origin/module location and failure screenshots; assertions unchanged"
+  }
+}

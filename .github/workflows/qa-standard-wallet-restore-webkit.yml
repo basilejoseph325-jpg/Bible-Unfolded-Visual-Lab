@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'scripts/qa_shared_test_backup_v2_browser.cjs'
+      - 'scripts/qa_recovery_network_trace.cjs'
       - 'scripts/qa_shared_wallet_family_relay_browser_v1.cjs'
       - 'experiments/bu-test-shared-backup-v2.js'
       - 'experiments/bu-test-native-storage-fence-v1.js'

@@ -298,6 +298,11 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Genesis Episode 13 TEST integration; wait for the existing Episode 12 registration. */
 (()=>{'use strict';
  const start=()=>{if(document.getElementById('bu-story-genesis13-native-loader'))return;
+  // Recovery deliberately reloads this document. Do not start a chapter fetch
+  // in that outgoing, read-only page (WebKit reports it as an access error).
+  if(window.BUPreviewStorageFence?.standardMode&&!window.BUPreviewStorageFence.writerStatus().writable){
+   window.addEventListener('bu-test-wallet-writable',start,{once:true});return;
+  }
   const script=document.createElement('script');script.id='bu-story-genesis13-native-loader';script.async=false;
   script.src='story-adventure-episode13-integration-test.js?v=20261115-g13-integration-v1';
   script.onerror=()=>console.warn('[Genesis13] TEST chapter integration did not load');document.head.appendChild(script);};
@@ -314,6 +319,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  const id='bu-story-genesis14-native-loader',deadline=Date.now()+60000;
  function start(){
   if(document.getElementById(id))return;
+  if(window.BUPreviewStorageFence?.standardMode&&!window.BUPreviewStorageFence.writerStatus().writable){
+   window.addEventListener('bu-test-wallet-writable',start,{once:true});return;
+  }
   if(window.BUStoryGenesis13Test?.status==='failed'){console.warn('[Genesis14] Episode 13 prerequisite failed');return;}
   if(window.BUStoryGenesis13Test?.status!=='ready'){
    if(Date.now()<deadline)setTimeout(start,80);

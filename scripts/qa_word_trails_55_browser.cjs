@@ -3,6 +3,7 @@
 // Actual normal TEST host and real 55-level engine. No response interception,
 // registration mocks, preview wallet or real-player imports.
 const {chromium,webkit}=require('playwright'),fs=require('node:fs'),cp=require('node:child_process'),assert=require('node:assert/strict'),vm=require('node:vm'),{webcrypto}=require('node:crypto');
+const{recoveryNetworkTrace}=require('./qa_recovery_network_trace.cjs');
 const BASE=process.env.WT_55_URL||'http://127.0.0.1:8905/index.html',P='bu-visual-lab-shared-standard-v1:',W='bible-unfolded-rewards-v17',R=W+'-recovery-v3811',T='bu-visual-lab-wordtrails-shared-preview-v1',M='__imported_regular_test_v1__';
 const scope={window:{}};for(const r of ['46-50','51-55'])vm.runInNewContext(fs.readFileSync('experiments/word-trails-levels-'+r+'-v1.js','utf8'),scope);
 const pack=JSON.parse(JSON.stringify(scope.window.BUWTLevels51to55)),last50=JSON.parse(JSON.stringify(scope.window.BUWTLevels46to50[4]));
@@ -28,12 +29,38 @@ async function swipe(p,f,answer,engine){const letters=await f.locator('.wheel-le
  else{await p.mouse.move(points[0].x,points[0].y);await p.mouse.down();for(const q of points.slice(1))await p.mouse.move(q.x,q.y);await p.mouse.up();}await p.waitForTimeout(250);await closeDiscovery(f);
 }
 async function map(f){await f.locator('#level-map').tap();await f.locator('#map[open]').waitFor();assert.equal(await f.locator('.map-level').count(),55);assert((await f.locator('.map-chapter-title').allTextContents()).at(-1).includes('CHAPTER 11 · Learning and Serving'));}
+const nativeDialogHandling=new WeakMap();
+function acceptNativeDialogs(p){
+ const state={accepted:new WeakMap(),errors:[],dialogs:[]};nativeDialogHandling.set(p,state);
+ p.on('dialog',dialog=>{state.dialogs.push({type:dialog.type(),message:dialog.message()});console.log('NATIVE_DIALOG',dialog.type(),dialog.message());const task=dialog.accept();state.accepted.set(dialog,task);task.catch(error=>state.errors.push(error.message));});
+}
+function assertNativeDialogs(p){assert.deepEqual(nativeDialogHandling.get(p)?.errors||[],[],'Native dialog handling must not fail');}
 async function touchMapAction(p,f,id){
  const button=f.locator(id);await button.scrollIntoViewIfNeeded();
  await f.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
  assert(await button.isVisible());assert(await button.isEnabled());
  assert(await button.evaluate(el=>{const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===el||el.contains(hit)}),'Map control must be the actual touch target');
- const r=await button.boundingBox();let timeout;try{await Promise.race([p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native touchscreen did not acknowledge '+id)),20000)})])}finally{clearTimeout(timeout)}
+ const r=await button.boundingBox();
+ if(id==='#reset-test'){
+  const before=await state(p),handling=nativeDialogHandling.get(p);assert(handling,'Native dialog handling must be observed');
+  const confirmation=p.waitForEvent('dialog',{predicate:d=>d.type()==='confirm',timeout:20000});
+  const gesture=p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2);
+  // Observe both promises immediately, including on failure/teardown.
+  gesture.catch(()=>{});confirmation.catch(()=>{});
+  const dialog=await confirmation;assert.match(dialog.message(),/Restart only this isolated preview's Word Trails progress/);
+  const accepted=handling.accepted.get(dialog);assert(accepted,'The actual native confirmation must be accepted and observed');await accepted;console.log('RESET_TOUCH_CONFIRM_ACCEPTED');
+  // WebKit can keep dispatchTapEvent pending inside a native confirmation.
+  // Do not poll/evaluate that paused JS context or abandon the actual touch.
+  // A real refresh after accepting the confirm releases the old frame and also
+  // proves the reset was durably saved, rather than only painted in its UI.
+  await p.reload({waitUntil:'domcontentloaded',timeout:120000});
+  let timeout;try{await Promise.race([gesture,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native reset touch did not acknowledge after refresh')),20000)})])}finally{clearTimeout(timeout)}
+  await ready(p);const after=await parity(p);
+  assert.equal(after.t.level,0);assert.equal(after.t.unlocked,0);assert.deepEqual(after.t.completed,[]);assert.equal(after.t.progress,null);
+  assert.deepEqual(after.w,before.w,'Reset and refresh must preserve the complete shared wallet, stock, purchases and receipts');
+  assert.deepEqual(handling.errors,[]);console.log('RESET_TOUCH_REFRESH_ACK_DURABLE',JSON.stringify({completed:after.t.completed.length,tokens:after.balance,receipts:Object.keys(after.w.wtReceipts||{}).length,walletUnchanged:true}));return;
+ }
+ let timeout;try{await Promise.race([p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native touchscreen did not acknowledge '+id)),20000)})])}finally{clearTimeout(timeout)}
 }
 async function exportUI(p){await home(p);await p.evaluate(()=>openDialog('settings'));const[download]=await Promise.all([p.waitForEvent('download',{timeout:60000}),p.locator('#save-export').click()]);const data=JSON.parse(fs.readFileSync(await download.path(),'utf8'));assert.equal(data.version,2);assert.equal(data.format,'BibleUnfoldedSharedInsightTest');await p.evaluate(()=>closeDialog());return data;}
 async function choose(p,data){await home(p);await p.evaluate(()=>openDialog('settings'));await p.locator('#save-import').tap();const file=p.waitForEvent('filechooser',{timeout:60000}).then(c=>c.setFiles({name:'complete55.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(data))}));await Promise.all([file,p.locator('#bu-shared-restore-file').click()]);}
@@ -42,13 +69,13 @@ async function reload(p){await p.reload({waitUntil:'domcontentloaded',timeout:12
 async function context(browser,width,height,complete){const c=await browser.newContext({viewport:{width,height},hasTouch:true,isMobile:true,timezoneId:'UTC',acceptDownloads:true});if(complete!==undefined)await c.addInitScript(({P,M,keys,originals})=>{if(localStorage.getItem('__55_seeded'))return;localStorage.setItem('__55_seeded','1');for(const[k,v]of Object.entries(originals))localStorage.setItem(k,v);for(const[k,v]of Object.entries(keys))localStorage.setItem(P+k,v);localStorage.setItem(P+M,'1');},{P,M,keys:typeof complete==='object'?complete:oldKeys(complete),originals});return c;}
 const VIEWPORTS=[[320,568],[430,932]].filter(([w])=>!process.env.WT_WIDTHS||process.env.WT_WIDTHS.split(',').includes(String(w)));assert(VIEWPORTS.length,'WT_WIDTHS must include 320 or 430');
 fs.mkdirSync('work/word-trails-55-integration',{recursive:true});const evidence=[];
-module.exports={oldKeys,pack,P,W,R,T,context,ready,launch,map,touchMapAction,word,parity,state,exportUI,restore};
+module.exports={oldKeys,pack,P,W,R,T,context,ready,launch,map,acceptNativeDialogs,assertNativeDialogs,touchMapAction,word,parity,state,exportUI,restore};
 if(require.main===module)(async()=>{const oldFile=await priorBackup();for(const engine of(process.env.WT_ENGINES||'chromium,webkit').split(',')){const browser=await(engine==='webkit'?webkit:chromium).launch(engine==='webkit'?{headless:true}:{headless:true,executablePath:process.env.CHROME_BIN||'/usr/bin/chromium',args:['--no-sandbox','--disable-dev-shm-usage']});try{for(const[width,height]of VIEWPORTS){
  // Genuine first login: no seeded game data and no premature extension unlock.
  {const c=await context(browser,width,height),p=await c.newPage();try{await p.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(p);const before=await parity(p);assert.equal(before.balance,60);const f=await launch(p);await map(f);assert.equal(await f.locator('.map-level:enabled').count(),1);assert(await f.locator('.map-level').nth(50).isDisabled());assert.equal((await parity(p)).balance,60);console.log('PASS_55_FRESH_LOCKS',engine,width);}finally{await c.close()}}
  // Incomplete Level 50 remains locked; genuine completion unlocks 51 once.
  {const c=await context(browser,width,height,false),p=await c.newPage();try{await p.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(p);const f=await launch(p);await map(f);assert(await f.locator('.map-level').nth(50).isDisabled());await f.locator('#map-x').tap();for(const [w]of last50.words)await word(f,w);await f.locator('#finish[open]').waitFor();assert.equal((await parity(p)).balance,1007);await f.locator('#next-level').tap();assert((await f.locator('#level-label').textContent()).includes('51 / 55'));assert.equal((await state(p)).t.unlocked,50);console.log('PASS_55_NORMAL_50_BOUNDARY',engine,width);}finally{await c.close()}}
- const c=await context(browser,width,height,true),p=await c.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));p.on('dialog',d=>d.accept());try{
+ const c=await context(browser,width,height,true),p=await c.newPage(),errors=[],network=await recoveryNetworkTrace(p,{engine,width,height,scenario:'actual levels 51-55, reset, restore and replay'});p.on('pageerror',e=>errors.push(e.message));acceptNativeDialogs(p);try{
  await p.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});await ready(p);let f=await launch(p);let s=await parity(p);assert.equal(s.balance,1000);assert.equal(s.w.points,-40);assert.deepEqual(s.t.completed,Array.from({length:50},(_,i)=>i));assert.equal(s.t.unlocked,50);assert.equal(s.t.coins,111);const oldReceipts=JSON.parse(oldFile.keys[W]).wtReceipts;assert.deepEqual(s.w.wtReceipts,oldReceipts);
  // An authentic V2 snapshot exported by the old main validator remains valid.
  await restore(p,oldFile);f=await launch(p);assert.equal((await parity(p)).balance,1000);await map(f);assert(!await f.locator('.map-level').nth(50).isDisabled());assert(await f.locator('.map-level').nth(51).isDisabled());assert((await f.locator('#wt-map-seal-title').textContent()).includes('Ready to Serve'));await f.locator('.map-level').nth(50).tap();let expected=1000;
@@ -77,7 +104,7 @@ if(require.main===module)(async()=>{const oldFile=await priorBackup();for(const 
  f=await launch(p);await map(f);await touchMapAction(p,f,'#reset-test');await p.waitForFunction(T=>JSON.parse(localStorage.getItem(T)).completed.length===0,T);assert.equal((await state(p)).t.completed.length,0);assert.equal((await parity(p)).balance,963);await restore(p,complete);f=await launch(p);s=await parity(p);assert.equal(s.t.level,54);assert.equal(s.t.completed.length,55);assert.equal(s.balance,963);assert.deepEqual(s.w.wtReceipts,finalWallet.wtReceipts);
  // Full final-level replay must not repay the seal, discoveries, satchel or level.
  for(const hidden of [pack[4].spark,pack[4].extraSparks[0].word])await word(f,hidden);for(const b of pack[4].bonus.split(' '))await word(f,b);for(const[w]of pack[4].words)await word(f,w);await f.locator('#finish[open]').waitFor();assert.equal((await parity(p)).balance,963);assert.deepEqual((await state(p)).w.wtReceipts,finalWallet.wtReceipts);assert((await f.locator('#finish-seal-note').textContent()).includes('previously collected'));await f.locator('#next-level').tap();assert((await f.locator('#wt-map-seal-detail').textContent()).includes('55-level journey is complete'));assert.equal((await state(p)).t.coins,111);
- assert(!await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert(!await f.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert.deepEqual(await p.evaluate(keys=>Object.fromEntries(keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),Object.keys(originals)),originals);assert.deepEqual(errors,[]);
+ assert(!await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert(!await f.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert.deepEqual(await p.evaluate(keys=>Object.fromEntries(keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),Object.keys(originals)),originals);assert.deepEqual(errors,[]);assertNativeDialogs(p);
  evidence.push({engine,width,height,levelsCompleted:5,bonusWords:60,hiddenDiscoveries:10,old50BackupRestored:true,new55BackupRestored:true,finalReplayNoPayout:true,originalsUnchanged:true,pageErrors:0});console.log('PASS_55_INTEGRATION_BROWSER',engine,width,'old/new V2 restore; 50→51; all five levels; no duplicate payments; original/private scopes intact');
- }catch(e){await p.screenshot({path:`work/word-trails-55-integration/${engine}-${width}-FAIL.png`,timeout:10000}).catch(()=>{});console.error('55_DIAGNOSTIC',engine,width,JSON.stringify(await state(p).then(s=>({coins:s.balance,level:s.t?.level,unlocked:s.t?.unlocked,completed:s.t?.completed.length,progress:s.t?.progress,receipts:Object.keys(s.w.wtReceipts||{}).length,errors})).catch(()=>null)));throw e;}finally{await c.close()}
+ }catch(e){await p.screenshot({path:`work/word-trails-55-integration/${engine}-${width}-FAIL.png`,timeout:10000}).catch(()=>{});console.error('55_DIAGNOSTIC',engine,width,JSON.stringify(await state(p).then(s=>({coins:s.balance,level:s.t?.level,unlocked:s.t?.unlocked,completed:s.t?.completed.length,progress:s.t?.progress,receipts:Object.keys(s.w.wtReceipts||{}).length,errors})).catch(()=>null)));throw e;}finally{await network.save(`work/word-trails-55-integration/network-${engine}-${width}.json`);await c.close()}
  } }finally{await browser.close()}}fs.writeFileSync(process.env.WT_55_EVIDENCE||'work/word-trails-55-integration/evidence.json',JSON.stringify(evidence,null,2));})().catch(e=>{console.error(e);process.exitCode=1});
