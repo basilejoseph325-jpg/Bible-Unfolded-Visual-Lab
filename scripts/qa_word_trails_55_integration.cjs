@@ -29,5 +29,15 @@ const html=fs.readFileSync('experiments/word-trails-next-v1.html','utf8');assert
 assert(source.indexOf('if(Array.isArray(window.BUWTLevels51to55))')<source.indexOf('const BIBLE_SPARKS='));assert(!/All ten Journey|Your 50-level/.test(source));
 const window={};vm.runInNewContext(fs.readFileSync('experiments/bu-test-word-trails-economy-v1.js','utf8'),{window});for(let n=51;n<=55;n++)assert.equal(window.BUTestWordTrailsEconomy.transaction({type:'level',level:n}).delta,4);assert.equal(window.BUTestWordTrailsEconomy.transaction({type:'level',level:56}),null);
 for(const p of ['index.html','bible-book-guides/index.html','bible-book-guides/read.html','experiments/word-trails-next-v1.html','experiments/word-trails-daily-v1.html'])assert(fs.readFileSync(p,'utf8').includes('bu-test-shared-backup-v2.js?v=wordtrails55-v1'),'Stale validator cache URL: '+p);
+// Bust every link, including the root loader, so cached 50-level hosts cannot
+// load an old engine alongside the new backup validator.
+for(const [file,url] of [
+ ['index.html','journey-progress-caption.js?v=wordtrails55-v1'],
+ ['journey-progress-caption.js','visual-lab-test-banner.js?v=wordtrails55-v1'],
+ ['visual-lab-test-banner.js','word-trails-native-shell-v1.js?v=wordtrails55-v1'],
+ ['visual-lab-test-banner.js','word-trails-next-launcher.js?v=wordtrails55-v1'],
+ ['word-trails-native-shell-v1.js','word-trails-next-v1.html?v=wordtrails55-v1'],
+ ['experiments/word-trails-next-v1.html','word-trails-next-v1.js?v=wordtrails55-v1']
+])assert(fs.readFileSync(file,'utf8').includes(url),'Stale 50-level cache chain: '+file);
 require('./qa_word_trails_levels_51_55.cjs').validatePack({integrated:true});
 console.log('PASS_55_INTEGRATION_BOUNDARIES',JSON.stringify({base:BASE,content:CONTENT,protectedFiles,legacyLevelsUnchanged:50,registeredTotal:55,seals:11,chapter11:meta.mapChapter.title,sharedPolicyUnchanged:true,recoveryScopeUnchanged:true}));

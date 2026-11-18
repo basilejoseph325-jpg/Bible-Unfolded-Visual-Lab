@@ -1,5 +1,11 @@
 # Levels 51–55: review-only integration handoff
 
+> Historical PR #50 handoff, retained for provenance. The separate approved
+> integration assignment is implemented in draft PR #65. See
+> [current integration record](WORD_TRAILS_55_TEST_INTEGRATION.md) for its scope,
+> recovery checkpoint, current tests, and remaining acceptance checks. The
+> isolation statements below describe PR #50, not PR #65.
+
 PR #50 remains an isolated content candidate. This document is a plan, not a
 loader or authorization to integrate. No current engine, map, wallet, index,
 navigation, audio, reward, or Levels 1–50 file is changed.
