@@ -116,10 +116,10 @@ and unrelated baseline regressions separate from candidate-specific failures.
   explicitly focused; actual touchscreen taps pass Level 50 and new-level checks
   without changing runtime controls or substituting programmatic button clicks.
 
-- Linux WebKit 1.58.2 stalls after the test-only **Reset all test progress**
-  iframe confirmation, reproduced with an old 50-level fixture too. It does
-  clear that fixture's progress, but the automation tap then times out. This
-  unrelated QA-only control is not changed. The coordinated restore scenario
-  now creates an empty-progress disposable save fixture directly, then uses the
-  real restore file picker; it still asserts full 55-level progress and receipt
-  recovery. Actual in-game level restart remains tested through its native UI.
+- The first full WebKit run reached all five completed levels, then timed out
+  waiting for the test-only reset-all tap to finish, despite progress already
+  being reset and tokens unchanged. A focused old-50 fixture passed the native
+  confirmation with `noWaitAfter:true`. The test now uses that supported input
+  option and directly verifies the real save before complete V2 restoration;
+  it retains the real reset button and all restoration assertions. No runtime
+  reset behavior was changed. The complete rerun remains required.
