@@ -65,10 +65,10 @@ Linux Chromium/WebKit automation is not physical Samsung/iPhone testing.
 | Actual 55-level V2 export/import, purchases, stock, receipts, partial-level restoration | Passed Chromium/WebKit 320/430 focused fixtures |
 | Reset-all followed by real complete-55 restoration | Passed Chromium/WebKit 320/430 focused fixtures |
 | Final Level 55 replay after focused restoration | Passed Chromium/WebKit 320/430; no duplicate level, seal, discovery or bonus payments |
-| Full fourteen-group regression | Passed `e6b7a3d`, run 44226308302; latest runtime rerun 44227589687 failed only the older Noah gallery assertion |
+| Full fourteen-group regression | Passed on `59a3b65`, run 44350337327; older Noah assertion failure baseline-confirmed in issue #66 |
 | Existing 50-level WebKit map/layout/resume | Passed, runs 44226903565 and 44227602407 |
-| Story Adventure / Episodes 12–14 / Books / native audio / relay placement / Daily / regular shared wallet | Passed respective candidate CI; no runtime files for these modes changed |
-| Complete restore browser: normal/reject/cancel, lost-hint recovery, forced crash, corrupt journal, read-only recovery | Chromium 320/430 passed; WebKit state assertions passed but strict page-error gate remains red on an Story JSON load rejection during recovery navigation |
+| Story Adventure / Episodes 12–14 / Books / native audio / relay placement / Daily / regular shared wallet | Passed candidate CI; the launcher recovery gate preserves chapter runtime/content/art |
+| Complete restore browser: normal/reject/cancel, lost-hint recovery, forced crash, corrupt journal, read-only recovery | Chromium 320/430 and strict WebKit 320/430 passed after the recovery-launch gate; independent WebKit CI 44350358169 passed |
 | Visual inspection | All 20 new-level boards and four seal screens inspected; approved design preserved |
 
 The real-host test uses normal TEST entry, without intercepted responses or a
@@ -134,6 +134,12 @@ board/hidden discoveries, legacy sparks and hints. No validator was relaxed.
 Final CI URLs/results are maintained in the PR description so a documentation
 update does not invalidate the tested head SHA. Required runs: 55-level browser
 matrix, standard shared wallet, independent WebKit restore, and fourteen-group
-release-safety suite. Keep the suite's pre-existing Noah failure visible; do not
-claim a fully green suite while issue #66 is open. Physical-device acceptance
+release-safety suite. Report the exact latest result; Noah is an intermittent
+baseline failure tracked in #66 (the unchanged suite passed on 59a3b65). Physical-device acceptance
 and independent approval remain outstanding; no TEST/LIVE merge or deployment.
+
+The final follow-up confines recovery gating to top-level pages. Isolated Genesis
+preview iframes keep their independent adapter startup (verified by the unchanged
+Episode 14 public/preview test). The post-swipe map test now waits for modal close
+and two paint frames and verifies the actual hit target before its native tap;
+it retains map-open, reset, wallet equality and completed-55 restoration checks.

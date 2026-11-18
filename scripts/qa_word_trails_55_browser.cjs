@@ -28,7 +28,15 @@ async function swipe(p,f,answer,engine){const letters=await f.locator('.wheel-le
  if(engine==='chromium'){const d=await p.context().newCDPSession(p),touch=q=>({...q,id:1,radiusX:2,radiusY:2,force:1});await d.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch(points[0])]});for(const q of points.slice(1))await d.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[touch(q)]});await d.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await d.detach();}
  else{await p.mouse.move(points[0].x,points[0].y);await p.mouse.down();for(const q of points.slice(1))await p.mouse.move(q.x,q.y);await p.mouse.up();}await p.waitForTimeout(250);await closeDiscovery(f);
 }
-async function map(f){await f.locator('#level-map').tap();await f.locator('#map[open]').waitFor();assert.equal(await f.locator('.map-level').count(),55);assert((await f.locator('.map-chapter-title').allTextContents()).at(-1).includes('CHAPTER 11 · Learning and Serving'));}
+async function map(f){
+ // Treat the post-swipe map action like every other native map control: allow
+ // the preceding pointer release/dialog close to paint, then verify the real
+ // target. A fixed delay alone did not guarantee this in CI Chromium at 430px.
+ await f.locator('#discovery[open]').waitFor({state:'hidden'});
+ const button=f.locator('#level-map');await button.scrollIntoViewIfNeeded();
+ await f.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
+ assert(await button.evaluate(el=>{const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===el||el.contains(hit)}),'Level map must be the actual touch target');
+ await button.tap();await f.locator('#map[open]').waitFor();assert.equal(await f.locator('.map-level').count(),55);assert((await f.locator('.map-chapter-title').allTextContents()).at(-1).includes('CHAPTER 11 · Learning and Serving'));}
 const nativeDialogHandling=new WeakMap();
 function acceptNativeDialogs(p){
  const state={accepted:new WeakMap(),errors:[],dialogs:[]};nativeDialogHandling.set(p,state);

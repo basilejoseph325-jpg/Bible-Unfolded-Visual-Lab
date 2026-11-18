@@ -727,5 +727,6 @@
       "failedAssertion": "Existing Noah card conflicted with isolated V3 photo"
     },
     "parameterChanges": "Only local origin/module location and failure screenshots; assertions unchanged"
-  }
+  },
+  "fixedLoaderProvenance": "fixedLoaderSHA256 identifies the loader tested for the recorded before/after trace (59a3b65). The follow-up limits this same recovery gate to the top-level document so isolated preview adapters retain their startup; final-head gameplay/recovery CI is reported in PR #65."
 }
