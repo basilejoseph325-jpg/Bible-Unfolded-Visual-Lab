@@ -20,6 +20,8 @@ jobs:
     # Existing cross-mode guard locks Genesis/audio bytes instead of assuming
     # every future PR is an Episode-only patch. Gameplay assertions remain.
     timeout-minutes: 25
+    env:
+      BU_SCOPE_MODE: cross-mode
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,7 +46,6 @@ jobs:
           node scripts/qa_genesis13_content_candidate.cjs
       - name: Normal entry, locks, all 12 puzzles and native saves
         env:
-      BU_SCOPE_MODE: cross-mode
           NODE_PATH: '${{ github.workspace }}/work/node_modules'
           STORY_EVIDENCE: work/genesis13-public-evidence.json
         run: node scripts/qa_genesis13_public_integration.cjs
