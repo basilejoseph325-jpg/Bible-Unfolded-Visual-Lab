@@ -64,7 +64,7 @@ Linux Chromium/WebKit automation is not physical Samsung/iPhone testing.
 | Wrong answers, free/paid hints, level restart, reload/resume, reward parity | Passed in both engines/sizes during those playthroughs |
 | Actual 55-level V2 export/import, purchases, stock, receipts, partial-level restoration | Passed Chromium/WebKit 320/430 focused fixtures |
 | Reset-all followed by real complete-55 restoration | Passed Chromium/WebKit 320/430 focused fixtures |
-| Final Level 55 replay after focused restoration | Chromium 320/430 passed; WebKit continuation stalled after partial restoration, so no full replay pass is claimed |
+| Final Level 55 replay after focused restoration | Passed Chromium/WebKit 320/430; no duplicate level, seal, discovery or bonus payments |
 | Full fourteen-group regression | Passed `e6b7a3d`, run 44226308302; latest runtime rerun 44227589687 failed only the older Noah gallery assertion |
 | Existing 50-level WebKit map/layout/resume | Passed, runs 44226903565 and 44227602407 |
 | Story Adventure / Episodes 12–14 / Books / native audio / relay placement / Daily / regular shared wallet | Passed respective candidate CI; no runtime files for these modes changed |
@@ -86,7 +86,8 @@ algorithm or Story loader was changed to suppress errors.
 
 ## Remaining checks / exact handoff
 
-- [ ] Resolve the WebKit continuation/input acknowledgement stall and complete its final replay; collect updated CI results.
+- [x] Complete focused 55-level restoration/reset/replay in all four browser/viewport profiles.
+- [ ] Collect the final refreshed CI results; do not infer that all broader checks are green.
 - [ ] Investigate the WebKit forced-recovery Story JSON error while retaining the
   strict error assertion. State recovery succeeded; this is not an all-green run.
 - [ ] Independently triage the older Noah photo/class assertion. The unchanged
