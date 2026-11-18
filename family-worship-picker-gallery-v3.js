@@ -114,8 +114,34 @@
        }
      },{root:list,rootMargin:'240px 0px',threshold:0});
    }else lazyObserver=null;
-   choiceObserver=new MutationObserver(()=>decorate(overlay));
-   choiceObserver.observe(list,{childList:true});
+   // Word Challenges' older global scanner can re-add its Noah card class
+   // after this photo picker is decorated. Watch only option-node attributes
+   // and new choice rows so the isolated gallery always wins, without
+   // modifying the original Word Challenges feature or artwork.
+   choiceObserver=new MutationObserver(records=>{
+     let newChoices=false,legacyReapplied=false;
+     for(const change of records){
+       if(change.type==='childList'){
+         for(const node of change.addedNodes){
+           if(node.nodeType===1&&
+             (node.matches?.('.bu-fw-picker-option')||
+              node.querySelector?.('.bu-fw-picker-option'))){
+             newChoices=true;break;
+           }
+         }
+       }else if(change.type==='attributes'&&
+         change.target.matches?.('.bu-fw-picker-option')&&
+         change.target.classList.contains('bu-word-challenge-card')){
+         legacyReapplied=true;
+       }
+     }
+     if(newChoices)decorate(overlay);
+     // Synchronous cleanup prevents a later global paint from briefly
+     // replacing Noah's private photo/card layout with the old challenge skin.
+     if(legacyReapplied)cleanOldChallengeStyling(overlay);
+   });
+   choiceObserver.observe(list,{childList:true,subtree:true,attributes:true,
+     attributeFilter:['class','style']});
    decorate(overlay);
  }
  function check(){

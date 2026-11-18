@@ -137,6 +137,29 @@ jobs:
               console.log('NOAH_PHOTO',JSON.stringify(noah));
               if(!noah.photo.includes('topic-09-noah-and-the-ark.jpg')||noah.backgroundWidth<100||noah.legacy)
                 throw Error('Existing Noah card conflicted with isolated V3 photo');
+              // The legacy Word Challenges scanner runs after child mutations.
+              // Explicitly reproduce a *late* Noah class and inline background
+              // reapplication; the picker must keep its isolated topic photo.
+              await page.evaluate(()=>{
+                const el=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')]
+                  .find(x=>x.textContent.includes('Noah and the Ark'));
+                el.classList.add('bu-word-challenge-card','bu-copy-pseudos');
+                el.style.setProperty('background-image','url("02-noah-and-the-ark.jpg")','important');
+                el.style.setProperty('background-position','center','important');
+                el.style.setProperty('background-size','cover','important');
+              });
+              await page.waitForFunction(()=>{
+                const el=[...document.querySelectorAll('#bu-fw-picker-layer .bu-fw-picker-option')]
+                  .find(x=>x.textContent.includes('Noah and the Ark'));
+                const photo=el?.querySelector('.bu-fw-gallery-photo');
+                return !!el&&!!photo&&!el.classList.contains('bu-word-challenge-card')&&
+                  !el.classList.contains('bu-copy-pseudos')&&
+                  !el.style.getPropertyValue('background-image')&&
+                  !el.style.getPropertyValue('background-position')&&
+                  !el.style.getPropertyValue('background-size')&&
+                  getComputedStyle(photo).backgroundImage.includes('topic-09-noah-and-the-ark.jpg');
+              });
+              console.log('PASS Noah isolated photo survives late legacy class/background reapplication');
               // Searching and changing the native topic must work.
               await page.evaluate(()=>{
                 const input=document.querySelector('#bu-fw-picker-layer .bu-fw-picker-search');
