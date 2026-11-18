@@ -25,7 +25,16 @@ async function home(p){await p.evaluate(()=>{BUWTNativeShell.close();closeDialog
 async function state(p){return p.evaluate(({W,T})=>{const w=JSON.parse(localStorage.getItem(W));return {w,t:JSON.parse(localStorage.getItem(T)),balance:economy.coins,root:BUPlatformRewards.wallet().coins,boost:BUNativeBoostShop.preview().tokens,james:BUJamesReturnLoopV1.inspect().balance};},{W,T});}
 async function parity(p){const s=await state(p);assert.equal(s.balance,s.w.coins);for(const k of ['root','boost','james'])assert.equal(s[k],s.balance,k);return s;}
 async function closeDiscovery(f){if(await f.locator('#discovery').isVisible())await f.locator('#spark-next').tap();}
-async function word(f,answer){const letters=await f.locator('.wheel-letter').allTextContents(),used=new Set();for(const c of answer){const i=letters.findIndex((s,n)=>s===c&&!used.has(n));assert(i>=0,'Missing '+c+' for '+answer);used.add(i);await f.locator('.wheel-letter').nth(i).tap();}assert.equal(await f.locator('#preview').textContent(),answer);await f.locator('#submit').tap();await closeDiscovery(f);}
+async function tapPuzzleControl(f,button,label){
+ await button.scrollIntoViewIfNeeded();assert(await button.isVisible());assert(await button.isEnabled());
+ assert(await button.evaluate(el=>{const r=el.getBoundingClientRect(),hit=document.elementFromPoint(r.x+r.width/2,r.y+r.height/2);return hit===el||el.contains(hit)}),'Puzzle control must be the actual native touch target');
+ const r=await button.boundingBox();await trace(f.page()).step('native-input.'+label,()=>f.page().touchscreen.tap(r.x+r.width/2,r.y+r.height/2));
+}
+async function word(f,answer){
+ const letters=await f.locator('.wheel-letter').allTextContents(),used=new Set();let prefix='';
+ for(const c of answer){const i=letters.findIndex((s,n)=>s===c&&!used.has(n));assert(i>=0,'Missing '+c+' for '+answer);used.add(i);await tapPuzzleControl(f,f.locator('.wheel-letter').nth(i),'letter:'+c);prefix+=c;assert.equal(await trace(f.page()).step('selection.preview',()=>f.locator('#preview').textContent()),prefix);}
+ assert.equal(await f.locator('#preview').textContent(),answer);await tapPuzzleControl(f,f.locator('#submit'),'submit:'+answer);await closeDiscovery(f);
+}
 async function swipe(p,f,answer,engine){const letters=await f.locator('.wheel-letter').allTextContents(),used=new Set(),points=[];for(const c of answer){const i=letters.findIndex((s,n)=>s===c&&!used.has(n));assert(i>=0);used.add(i);const b=await f.locator('.wheel-letter').nth(i).boundingBox();points.push({x:b.x+b.width/2,y:b.y+b.height/2});}
  if(engine==='chromium'){const d=await p.context().newCDPSession(p),touch=q=>({...q,id:1,radiusX:2,radiusY:2,force:1});await d.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[touch(points[0])]});for(const q of points.slice(1))await d.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[touch(q)]});await d.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await d.detach();}
  else{await p.mouse.move(points[0].x,points[0].y);await p.mouse.down();for(const q of points.slice(1))await p.mouse.move(q.x,q.y);await p.mouse.up();}await p.waitForTimeout(250);await closeDiscovery(f);

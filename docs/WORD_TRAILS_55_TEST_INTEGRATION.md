@@ -199,3 +199,10 @@ actual native-input tests. Full-wallet equality, locks, real refresh, complete-5
 restore/replay, duplicate-payment and strict page-error assertions remain. The
 production engine, wallet, backup coordinator, audio and other games are unchanged
 by this continuation. Final CI URLs and current remaining issues are in PR #65.
+
+The later 430 replay timeout was isolated to the locator tap/selection path.
+A direct native touchscreen comparison passed complete 430 reset/refresh,
+restoration and replay. The shared puzzle-input test helper now checks visibility,
+enabled state and actual hit target before each bounded native gesture, then
+asserts the selected prefix after every letter. It does not synthesize clicks or
+retry a failed gesture. Full candidate CI remains the release-review authority.
