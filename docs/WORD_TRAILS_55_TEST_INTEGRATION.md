@@ -170,3 +170,8 @@ now drains detached-frame saves before arming faults and requires proof of the
 wallet write, subsequent blocked write, retained recovery intent and read-only
 state before navigating. Expected restored balances, complete records, notices
 and strict page errors are unchanged; production backup protections are untouched.
+
+The foreground diagnostic is bounded to 20 seconds and follows native input
+acknowledgement. A stalled WebKit UI therefore fails at its actual foreground
+operation rather than consuming the entire job timeout; no gameplay assertion
+or data-safety gate is bypassed.
