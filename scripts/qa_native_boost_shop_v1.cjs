@@ -5,14 +5,16 @@ const p=require('puppeteer-core');
 const assert=require('node:assert/strict');
 const {execSync}=require('child_process');
 const bin=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
-const base='http://127.0.0.1:8899/';
+const base=process.env.BU_BOOST_TEST_URL||'http://127.0.0.1:8899/';
 const ls=['bible-unfolded-rewards-v17','bible-unfolded-rewards-v17-recovery-v3811',
  'bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ownership-v3825-backup'];
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 async function state(page){return page.evaluate((keys)=>({
   preview:window.BUNativeBoostShop.preview(),
-  native:keys.map(k=>localStorage.getItem(k))
+  native:keys.map(k=>localStorage.getItem(k)),
+  original:keys.map(k=>window.BUPreviewStorageFence?.originalKeyValue(k))
 }),ls)}
+function funds(s){const w=JSON.parse(s.native[0]);return {coins:w.coins,points:w.points,purchases:w.purchases};}
 (async()=>{
  let browser;
  try{
@@ -31,6 +33,9 @@ async function state(page){return page.evaluate((keys)=>({
     await page.addStyleTag({url:base+'native-boost-shop-test-v1.css'});
     await page.addScriptTag({url:base+'native-boost-shop-test-v1.js'});
     await page.waitForFunction(()=>!!window.BUNativeBoostShop&&!!document.querySelector('#bu-native-boosters'),{timeout:10000});
+    // Fixture-only funds replace the retired 225-token trial grant.
+    await page.waitForFunction(()=>window.BUPreviewStorageFence?.standardMode&&BUPreviewStorageFence.writerStatus().writable&&typeof saveEconomy==='function');
+    await page.evaluate(()=>{economy.coins=225;if(!saveEconomy())throw Error('Fixture wallet save failed');updateWallet();BUNativeBoostShop.testActions.refresh()});
     const before=await state(page);
     const initial=await page.evaluate(()=>({homeCards:[...document.querySelectorAll('#home .cinematic-cards button')].map(x=>x.id),
      storeCount:document.querySelectorAll('#bu-native-boosters .bu-boost-item').length,
@@ -52,7 +57,8 @@ async function state(page){return page.evaluate((keys)=>({
     assert.equal(bought.preview.inventory.shield,1);
     assert.equal(bought.preview.inventory.letter,1);
     assert.equal(bought.preview.tokens,before.preview.tokens-110);
-    assert.deepEqual(bought.native,before.native,'TEST purchases cannot touch actual saved currency');
+    assert.equal(funds(bought).coins,funds(before).coins-110,'Purchases spend the native shared balance');
+    assert.equal(funds(bought).points,funds(before).points);assert.deepEqual(bought.original,before.original,'Original unscoped game stays unchanged');
     await page.evaluate(()=>{document.querySelector('#bu-boost-celebration')?.remove();focusHome()});
     await page.evaluate(()=>document.getElementById('home-trivia').click());
     await wait(350);
@@ -126,7 +132,7 @@ async function state(page){return page.evaluate((keys)=>({
     assert(shieldWrong,'Second Chance must prevent native question loss');
     const afterShield=await state(page);
     assert.equal(afterShield.preview.inventory.shield,0);
-    assert.deepEqual(afterShield.native,before.native,'Boost usage must not change real wallet');
+    assert.deepEqual(funds(afterShield),funds(bought),'Using owned boosts costs no additional tokens or Points');assert.deepEqual(afterShield.original,before.original);
     await page.evaluate(()=>{
       document.querySelector('#bu-boost-celebration')?.remove();
       const correct=bu34Quiz.items[bu34Quiz.step].correct;
@@ -171,7 +177,7 @@ async function state(page){return page.evaluate((keys)=>({
     }));
     assert(lens.text.includes(story.source.slice(0,2).split('').join('  ·  ')),'Lens must reveal the true current native Story word');
     assert.equal(lens.stock,0);
-    assert.equal(lens.real[0],afterLegitimatePlay.native[0]);assert.equal(lens.real[1],afterLegitimatePlay.native[2]);
+    assert.deepEqual(funds({native:[lens.real[0]]}),funds(afterLegitimatePlay));assert.equal(lens.real[1],afterLegitimatePlay.native[2]);
     await page.evaluate(()=>{document.querySelector('.bu-boost-lens-message button').click()});
     // A real earned marker produces one star; every five gives a free functional booster.
     const beforeMilestone=await page.evaluate(()=>window.BUNativeBoostShop.preview());
@@ -190,7 +196,7 @@ async function state(page){return page.evaluate((keys)=>({
     assert.equal(reload.preview.tokens,gifted.preview.tokens);
     assert.equal(reload.preview.inventory.fifty,gifted.preview.inventory.fifty);
     assert.equal(reload.preview.stars,gifted.preview.stars);
-    assert.deepEqual(reload.native,afterLegitimatePlay.native,'After refresh canonical LIVE-safe keys must reflect only legitimate gameplay');
+    assert.deepEqual(funds(reload),funds(afterLegitimatePlay),'Inventory/achievement saves cannot change native currency');assert.deepEqual(reload.original,before.original);
     assert.equal(errs.length,0,'No runtime page errors: '+JSON.stringify(errs));
     console.log('PASS_Native_Boosters_'+viewport.width+' checkout, gameplay effects, free booster, persistence and LIVE-wallet protection');
     await ctx.close();

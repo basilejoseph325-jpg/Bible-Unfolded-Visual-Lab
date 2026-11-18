@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Frozen legacy backup component fixture on localhost only. The normal shared
+// wallet/restore path is mandatory in qa_shared_test_backup_v2_browser.cjs.
 'use strict';
 /* v34 mobile Chromium test of actual native Settings read-only v34
  * backup file inputs. All saved data is fictional in fresh browser
@@ -45,7 +47,7 @@ async function choose(page,id,doc){
    await a.bringToFront();
    a.on('pageerror',e=>errors.push(e.message));
    await a.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-   await a.goto(ROOT+'/index.html?qa-safe-preview-v34='+width,
+   await a.goto(ROOT+'/index.html?qa-safe-preview-v34='+width+(['127.0.0.1','localhost'].includes(new URL(ROOT).hostname)?'&standalone=qa':''),
     {waitUntil:'domcontentloaded',timeout:120000});
    await a.waitForFunction(()=>window.BUPlatformSaves?.bound?.()&&
     typeof window.BUPlatformSaves?.verifyCurrentBackupCopy==='function'&&

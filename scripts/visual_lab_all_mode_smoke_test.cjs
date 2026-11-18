@@ -3,6 +3,7 @@
 const puppeteer=require('puppeteer-core');
 const assert=require('node:assert/strict');
 const {execSync}=require('node:child_process');
+const BASE=process.env.BU_ALL_MODES_URL||'http://127.0.0.1:8895/index.html';
 const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 (async()=>{
  const browser=await puppeteer.launch({headless:true,executablePath:BIN,args:['--no-sandbox','--disable-setuid-sandbox','--autoplay-policy=no-user-gesture-required']});
@@ -13,8 +14,10 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
    const page=await context.newPage();page.setDefaultTimeout(45000);
    const errors=[];page.on('pageerror',e=>errors.push(e.message.slice(0,180)));
    await page.setViewport(vp);
-   await page.goto('http://127.0.0.1:8895/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+   await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&window.BUPlatformSaves?.bound?.(),{timeout:60000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUJamesReturnLoopV1&&window.BUTestInsightBridge?.nativeBalance().ok,{timeout:60000});
+   await page.evaluate(()=>document.getElementById('daily-continue')?.click());
    const initial=await page.evaluate(()=>({
      home:!!document.getElementById('home'),focusHome:typeof window.focusHome,
      rewardsCore:!!window.BUPlatformRewards?.hasNativeHost?.(),
@@ -64,6 +67,12 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
       }));
       assert.equal(result.root,'/index.html','Unowned Books tap cannot navigate away before the TEST token purchase');
       assert(gate.visible&&gate.price.includes('180'),'Unowned Bible Books must show a functional token gate');
+      // Isolated fixture funds: the retired challenge trial grant no longer
+      // funds this shared-wallet purchase. The gate must reject 60 first.
+      const funds=await page.evaluate(()=>economy.coins);assert(funds<180);
+      await page.evaluate(()=>{document.querySelector('#bu-james-gate [data-buj-action="unlock-books"]').click()});
+      assert.equal(await page.evaluate(()=>economy.coins),funds,'Unaffordable Books purchase charged');
+      await page.evaluate(()=>{economy.coins=180;if(!saveEconomy())throw Error('Fixture save');updateWallet()});
       // The unlocked mode deliberately opens its own full-page reading shelf.
       // Wait for the actual navigation, then verify purchased ownership persists.
       await Promise.all([
@@ -72,7 +81,7 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
       ]);
       await page.waitForFunction(()=>document.querySelectorAll('#hebrew-books .book-card.ready').length>=4,{timeout:15000});
       const unlocked=await page.evaluate(()=>({
-       owned:JSON.parse(localStorage.getItem('bu-james-return-loop-v1-test-only')||'null')?.owned?.includes('books'),
+       owned:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')||'null')?.buJamesReturnState?.owned?.includes('books'),
        gate:!!document.querySelector('#bu-james-gate'),
        shelf:location.pathname.endsWith('/bible-book-guides/index.html'),
        readyBooks:document.querySelectorAll('#hebrew-books .book-card.ready').length
@@ -81,8 +90,10 @@ const BIN=execSync('command -v google-chrome || command -v chromium',{encoding:'
       assert(unlocked.owned&&!unlocked.gate,'Token purchase must persist and close the TEST gate');
       assert(unlocked.shelf&&unlocked.readyBooks>=4,'Unlocked Bible Books must display the full-page reading shelf');
       // Continue validating the other native modes from the main application.
-      await page.goto('http://127.0.0.1:8895/index.html',{waitUntil:'domcontentloaded',timeout:120000});
+      await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:120000});
       await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&window.BUPlatformSaves?.bound?.(),{timeout:60000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUJamesReturnLoopV1&&window.BUTestInsightBridge?.nativeBalance().ok,{timeout:60000});
+   await page.evaluate(()=>document.getElementById('daily-continue')?.click());
      }
      else if(id==='home-builder')assert(result.screenVisible.some(x=>/build|wb-/i.test(x.id+' '+x.cls))||result.builderIds.some(x=>x.display!=='none'&&!x.hidden),'Builder must present a visible game screen');
      else assert(result.help||result.active.some(x=>x!=='home'),'Native mode card must open a real destination: '+id);

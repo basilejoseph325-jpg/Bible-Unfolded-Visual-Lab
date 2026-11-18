@@ -1,10 +1,10 @@
-<!doctype html><html lang="en"><head><script src="experiments/bu-test-native-storage-fence-v1.js"></script><script src="experiments/bu-test-word-trails-economy-v1.js" defer></script><script src="experiments/bu-test-insight-native-bridge-v2.js" defer></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#092c35"><title>Bible Unfolded v3.9.231 WORKING — Genesis Word Adventure</title><meta name="build-version" content="v3.9.72-noah-editorial-working">
+<!doctype html><html lang="en"><head><script src="experiments/bu-test-shared-backup-v2.js?v=shared-restore-v2"></script><script src="experiments/bu-test-native-storage-fence-v1.js?v=shared-restore-v2"></script><script src="experiments/bu-test-word-trails-economy-v1.js" defer></script><script src="experiments/bu-test-insight-native-bridge-v2.js?v=shared-restore-v2" defer></script><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#092c35"><title>Bible Unfolded v3.9.231 WORKING — Genesis Word Adventure</title><meta name="build-version" content="v3.9.72-noah-editorial-working">
 <script id="bu-books-direct-entry-v5">
 /* TEST: capture actual menu entry "Levels / Browse Bible books" before
    Story Adventure handles the click. The book reader is a separate page.
    Native adventure remains available with bu_native_story=1. */
 (()=>{'use strict';
-const SHELF='bible-book-guides/index.html';
+const SHELF='bible-book-guides/index.html?v=shared-restore-v2';
 let nativeOnce=new URLSearchParams(location.search).get('bu_native_story')==='1';
 function levelsMenuItem(target){
  if(target.closest('#levels'))return false;
@@ -2271,7 +2271,7 @@ html.reduce-motion #home .bu3924-glint{display:none!important}
 </style><link id="bu-trivia-uniform-v7-css" rel="stylesheet" href="trivia-stone-uniform-v7.css?v=20261110-stone-stable-v7">
 <link id="bu-wb-score-layout-test-v1" rel="stylesheet" href="word-builder-score-layout-test-v1.css?v=20261110-wb-score-fix-v1">
 <link id="bu-james-life-direct-style-v2" rel="stylesheet" href="james-return-loop-test-v1.css?v=20261110-recover-life-v2">
-<script id="bu-james-life-direct-script-v2" src="james-return-loop-test-v1.js?v=20261110-recover-life-v2"></script>
+<script id="bu-james-life-direct-script-v2" src="james-return-loop-test-v1.js?v=shared-restore-v2"></script>
 </head><body><main id="app" role="main">
 <section id="home" class="screen cinematic-home-screen"><div class="cinematic-dashboard" id="home-hero">
 <div class="cinematic-vignette" aria-hidden="true"></div>
@@ -7803,5 +7803,5 @@ function bu39226SourceLink(q){
 <script defer src="word-builder-players-visual.js?v=1"></script>
 <script defer src="word-builder-landing-banner.js?v=2"></script>
 <link rel="stylesheet" href="story-adventure-assistance.css?v=1">
-<script defer src="journey-progress-caption.js?v=20261115-genesis13-integration-v1"></script>
+<script defer src="journey-progress-caption.js?v=shared-restore-v2"></script>
 </body></html>

@@ -28,7 +28,9 @@ function safeRaw(){
  try{
   if(SHARED_PREVIEW){
    const wallet=JSON.parse(localStorage.getItem(NATIVE_WALLET)||'null');
-   return wallet?.buJamesReturnState||null;
+   // Preserve existing TEST purchases/achievements, never its old balance.
+   return wallet?.buJamesReturnState||(window.BUPreviewStorageFence?.standardMode?
+    JSON.parse(localStorage.getItem(KEY)||'null'):null);
   }
   return JSON.parse(localStorage.getItem(KEY)||'null');
  }catch(_){return null}
@@ -55,6 +57,7 @@ function normalize(v){
  return b;
 }
 let state=normalize(safeRaw());
+if(SHARED_PREVIEW)state.balance=nativeCoins();
 function commit(next,action){
  const n={...next,history:[...next.history,{action,at:Date.now(),balance:next.balance,pot:next.pot}].slice(-75)};
  if(SHARED_PREVIEW){

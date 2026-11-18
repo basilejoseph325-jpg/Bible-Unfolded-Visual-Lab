@@ -7,8 +7,8 @@
  * only disposable CI browser profiles served from local TEST. */
 const assert=require('node:assert/strict');
 const {webkit}=require('playwright');
-const ROOT='http://127.0.0.1:8896/index.html';
-const TEST='bu-visual-lab-wordtrails-next-v1';
+const ROOT=process.env.WT_NATIVE_QA_URL||'http://127.0.0.1:8896/index.html';
+const TEST='bu-visual-lab-wordtrails-shared-preview-v1';
 const LIVE='bible-unfolded-word-trails-next-v1';
 const SENTINEL='bu-wt-webkit-v10-sentinel';
 const wallet='bible-unfolded-rewards-v17';
@@ -20,13 +20,13 @@ const seed={
 };
 async function init(context){
  await context.addInitScript(records=>{
-  for(const [k,v] of Object.entries(records))localStorage.setItem(k,v);
+  if(localStorage.getItem('__native_touch_seeded'))return;localStorage.setItem('__native_touch_seeded','1');for(const [k,v] of Object.entries(records))localStorage.setItem(k,v);
  },seed);
 }
 async function getSave(page){
  return page.evaluate(key=>{
   const s=localStorage.getItem(key);
-  return s?JSON.parse(s):null;
+  return s?{...JSON.parse(s),balance:economy.coins}:null;
  },TEST);
 }
 async function waitGame(page){
@@ -85,28 +85,30 @@ async function swipeWord(frame,word){
    await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:110000});
    await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
     !!document.querySelector('#home-cross'),null,{timeout:100000});
+   await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),null,{timeout:100000});
+   await page.evaluate(()=>document.getElementById('daily-continue')?.click());
    const before=await page.evaluate(keys=>
-    Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)])),
+    Object.fromEntries(keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),
     [LIVE,SENTINEL,wallet,wheels,voice]);
    assert.equal(before[LIVE],seed[LIVE]);
    await page.evaluate(()=>document.querySelector('#home-cross').click());
    let child=await waitGame(page);
    assert.equal((await getSave(page)).level,0,'First TEST play starts level 1');
    assert.equal((await child.locator('#solved-count').textContent()).trim(),'0 / 4');
-   const firstCoin=(await getSave(page)).coins;
+   const firstCoin=(await getSave(page)).balance,pointsBefore=await page.evaluate(()=>economy.points);
    assert.equal(firstCoin,60);
    const hint=child.locator('#hint');
    assert.equal(await child.locator('#hint-cost').textContent(),'FREE');
    await hint.tap();
    await child.waitForFunction(()=>document.querySelectorAll('.tile').length>0);
    let afterHint=await getSave(page);
-   assert.equal(afterHint.coins,firstCoin,'One free hint spends no coins');
+   assert.equal(afterHint.balance,firstCoin,'One free hint spends no coins');
    assert(afterHint.claimedFreeHints.includes(0));
    assert.equal(afterHint.progress.hinted.length,1);
    assert.equal(await child.locator('#hint-cost').textContent(),'15');
    await hint.tap();
    afterHint=await getSave(page);
-   assert.equal(afterHint.coins,firstCoin-15,'Second hint costs 15 TEST coins');
+   assert.equal(afterHint.balance,firstCoin-15,'Second hint costs 15 shared Insight Tokens');
    assert.equal(afterHint.progress.hinted.length,2);
    // First genuine touch events, not DOM dispatch or calling internal functions.
    await tapWord(child,'ANTIC');
@@ -114,7 +116,7 @@ async function swipeWord(frame,word){
     .trim()==='1 / 4',{timeout:25000});
    const afterTap=await getSave(page);
    assert(afterTap.progress.found.includes('ANTIC'));
-   assert.equal(afterTap.coins,firstCoin-15,'Correct board words give points not extra TEST coins');
+   assert.equal(afterTap.balance,firstCoin-15,'Correct board words give points not extra TEST coins');
 
    // Exercise pointer capture, hit-testing and automatic submit after drag.
    await swipeWord(child,'TACO');
@@ -137,7 +139,7 @@ async function swipeWord(frame,word){
    assert(story.content.length>45);
    assert(story.count.startsWith('1/'));
    const rewarded=await getSave(page);
-   assert.equal(rewarded.coins,firstCoin-15+25,'Bible discovery adds exactly 25 TEST coins');
+   assert.equal(rewarded.balance,firstCoin-15+1,'Bible discovery adds exactly one shared Insight Token');
    assert(rewarded.claimedSparks.includes('0:CAIN'));
    await child.locator('#spark-next').tap();
    await child.waitForFunction(()=>!document.querySelector('#discovery')?.open);
@@ -145,14 +147,14 @@ async function swipeWord(frame,word){
    // A repeated Bible word is not a wallet-minting replay.
    await tapWord(child,'CAIN');
    const afterRepeat=await getSave(page);
-   assert.equal(afterRepeat.coins,rewarded.coins,'Repeat discovery must never pay twice');
+   assert.equal(afterRepeat.balance,rewarded.balance,'Repeat discovery must never pay twice');
 
    // A refresh returns to HOME while keeping the partially solved TEST board.
    await page.reload({waitUntil:'domcontentloaded',timeout:110000});
    await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
     !window.BUWTNativeShell?.active?.(),null,{timeout:100000});
    assert.notEqual(await page.evaluate(()=>location.hash),'#word-trails');
-   assert.equal((await getSave(page)).coins,rewarded.coins);
+   assert.equal((await getSave(page)).balance,rewarded.balance);
    await page.evaluate(()=>document.querySelector('#home-cross').click());
    child=await waitGame(page);
    assert.equal((await child.locator('#solved-count').textContent()).trim(),'2 / 4',
@@ -161,23 +163,24 @@ async function swipeWord(frame,word){
    assert(resumed.progress.found.includes('ANTIC')&&resumed.progress.found.includes('TACO'));
    assert.equal(resumed.progress.hinted.length,2);
    assert(resumed.claimedSparks.includes('0:CAIN'));
-   assert.equal(resumed.coins,rewarded.coins);
+   assert.equal(resumed.balance,rewarded.balance);
 
    const after=await page.evaluate(keys=>
-    Object.fromEntries(keys.map(k=>[k,localStorage.getItem(k)])),
+    Object.fromEntries(keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),
     [LIVE,SENTINEL,wallet,wheels,voice]);
    for(const key of [LIVE,SENTINEL])assert.equal(after[key],before[key]);
    // All other native system values were baseline snapshots and must not be
    // changed by standalone TEST crossword rewards.
    for(const key of [wallet,wheels,voice])assert.equal(after[key],before[key],
     'Word Trails altered shared native state '+key);
+   assert.equal(await page.evaluate(()=>economy.points),pointsBefore,'Hints and tokens cannot change native Points');
    assert.deepEqual(errors,[],'Real WebKit gameplay JavaScript exceptions');
    console.log('PASS_WEBKIT_WORD_TRAILS_REAL_PLAY_V10',JSON.stringify({
     viewport:width+'x'+height,trueTouchscreenTapWord:'ANTIC',
     mousePointerSwipeWord:'TACO',hintFreeThenPaid:true,
     BibleSpark:'CAIN',jwOrgBibleLink:true,claimPaidOnce:true,
     refreshHomeAndResumeBoard:true,saveHintAndCoins:true,
-    protectedLiveAndNativeValuesUnchanged:true,zeroPageErrors:true,
+    originalUnscopedWalletAndLiveUnchanged:true,sharedEarnSpendVerified:true,zeroPageErrors:true,
     physicalTouchSwipeOrAudioCertified:false
    }));
   }finally{await context.close();}

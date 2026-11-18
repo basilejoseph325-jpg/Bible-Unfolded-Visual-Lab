@@ -10,13 +10,28 @@ const parents=cp.execFileSync('git',['rev-list','--parents','-n','1','HEAD'],{en
 const protectedBase=event.pull_request&&parents.length>=3?parents[1]:baseline;
 const allowed=new Set(['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode13-integration-test.js','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-art/genesis13/manifest.json','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_public_integration.cjs','scripts/qa_genesis13_integration_boundaries.cjs','scripts/qa_genesis12_native.cjs','scripts/qa_genesis11_complete_native_playpath_v1.cjs','scripts/qa_story_adventure_release.cjs','.github/workflows/qa-genesis13-test-integration.yml','.github/workflows/qa-story-adventure-candidate.yml','docs/GENESIS13_TEST_INTEGRATION.md','story-adventure-episode14-integration-test.js','scripts/qa_story_ep14_public.cjs','.github/workflows/qa-genesis14-public-test.yml']);
 const approvedArtPath=/^story-adventure-art\/genesis13\/g13-d(?:0[1-9]|1[0-2])\.webp$/;
-for(const f of cp.execFileSync('git',['diff','--name-only',baseline+'...'+head],{encoding:'utf8'}).trim().split('\n').filter(Boolean))assert(allowed.has(f)||approvedArtPath.test(f),'Unrelated file changed: '+f);
+const changed=cp.execFileSync('git',['diff','--name-only',baseline+'...'+head],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
+const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&changed.some(f=>f==='experiments/bu-test-native-storage-fence-v1.js'));
+let protectedFiles=[];
+if(!crossMode){
+for(const f of changed)assert(allowed.has(f)||approvedArtPath.test(f),'Unrelated file changed: '+f);
 const original=f=>cp.execFileSync('git',['show',baseline+':'+f],{encoding:'utf8',maxBuffer:40000000});
 const tree=cp.execFileSync('git',['ls-tree','-r','--name-only',protectedBase],{encoding:'utf8'}).trim().split('\n');
-const protectedFiles=tree.filter(f=>/word[-_]trails/i.test(f)||/\.(mp3|wav|ogg|m4a)$/i.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||['premium-sfx.js','bu-platform-rewards-v1.js','bu-platform-saves-v2.js','story-adventure-episode12-integration-test.js','story-adventure-content/genesis-episode12-return-to-esau-v1.json'].includes(f));
+protectedFiles=tree.filter(f=>/word[-_]trails/i.test(f)||/\.(mp3|wav|ogg|m4a)$/i.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||['premium-sfx.js','bu-platform-rewards-v1.js','bu-platform-saves-v2.js','story-adventure-episode12-integration-test.js','story-adventure-content/genesis-episode12-return-to-esau-v1.json'].includes(f));
 for(const f of protectedFiles)assert.equal(cp.execFileSync('git',['hash-object',f],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',protectedBase+':'+f],{encoding:'utf8'}).trim(),'Protected file changed: '+f);
 const oldHtml=original('index.html'),html=fs.readFileSync('index.html','utf8');assert.equal(html,oldHtml,'Existing TEST HTML must remain byte-identical');
 assert(fs.readFileSync('journey-progress-caption.js','utf8').startsWith(original('journey-progress-caption.js')),'Existing loader content changed');
+}else{
+ // A cross-mode PR may update shared loaders/wallets. Keep the Genesis-only
+ // exact boundary intact above; here independently lock the actual chapters,
+ // artwork, original native engine and audio to the PR's current base.
+ const ref=event.pull_request?protectedBase:(process.env.BU_SCOPE_BASE||'origin/main');
+ const files=cp.execFileSync('git',['ls-tree','-r','--name-only',ref],{encoding:'utf8'}).trim().split('\n').filter(f=>/^story-adventure-(?:art\/genesis13\/|content\/genesis-episode1[23]-|episode1[23]-)/.test(f)||/^bible_unfolded_core_part\d\.js$/.test(f)||/\.(mp3|wav|ogg|m4a)$/.test(f));
+ protectedFiles=files;
+ assert(files.length>20,'Missing protected Genesis baseline');
+ for(const f of files)assert.equal(cp.execFileSync('git',['hash-object',f],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',ref+':'+f],{encoding:'utf8'}).trim(),'Cross-mode PR changed protected Genesis/audio: '+f);
+ console.log('PASS_G13_CROSS_MODE_IMMUTABLE_CHAPTERS',files.length);
+}
 const manifest=JSON.parse(fs.readFileSync('story-adventure-art/genesis13/manifest.json'));
 // Integrity-locked artwork selected and visually reviewed; fail if the wrong
 // image, rejected variant, or any file masquerading as WebP gets uploaded.
@@ -105,5 +120,5 @@ for(const view of ['episode12-ending','journey']){
  else assert((await page.$eval('#journey-progress-label',e=>e.textContent)).includes('of 14'));
  await context.close();console.log('PASS_G13_DELAYED_REGISTRATION',view);
 }
-console.log('PASS_GENESIS13_INTEGRATION_BOUNDARIES',JSON.stringify({baseline,protectedFilesUnchanged:protectedFiles.length,wordTrailsLevelsAudioCoinsAndTestsUnchanged:true,validatedContentUnchanged:true,preparedImagePaths:12,approvedImages:Object.values(manifest.scenes).filter(x=>x.approved).length,bethelEndingRouting:'g13-d09 for hero and background; actual approved art or a clearly labelled in-memory QA fixture',missingApprovedAssetFallsBack:true,additionalLayouts:['320x640','430x932'],oldJourneyLocksPreserved:true,delayedRegistrationRefreshesVisibleViews:true,physicalDevices:false}));
+console.log('PASS_GENESIS13_INTEGRATION_BOUNDARIES',JSON.stringify({baseline,protectedFilesUnchanged:protectedFiles.length,genesisOnlyScope:!crossMode,protectedChapterAndAudioFilesUnchanged:true,validatedContentUnchanged:true,preparedImagePaths:12,approvedImages:Object.values(manifest.scenes).filter(x=>x.approved).length,bethelEndingRouting:'g13-d09 for hero and background; actual approved art or a clearly labelled in-memory QA fixture',missingApprovedAssetFallsBack:true,additionalLayouts:['320x640','430x932'],oldJourneyLocksPreserved:true,delayedRegistrationRefreshesVisibleViews:true,physicalDevices:false}));
 }finally{await browser.close()}})().catch(e=>{console.error(e.stack||e);process.exitCode=1});

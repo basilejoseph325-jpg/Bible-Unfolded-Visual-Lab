@@ -58,10 +58,18 @@ const red=bank.find(q=>q.id==='cr-red-sea'),article=rules.create(bank,['One','Tw
 const domSource=fs.readFileSync('experiments/family-clue-relay-v1.js','utf8');const declarations=[...domSource.matchAll(/function ([a-zA-Z]+)\(/g)].map(m=>m[1]);assert.equal(new Set(declarations).size,declarations.length,'Duplicate UI function');
 for(const names of [['One'],Array(7).fill('One'),['One',' one '],['a'.repeat(25),'Two']])assert.throws(()=>rules.create(bank,names));
 const tie=rules.create(bank,['One','Two'],2,seeded(4));while(tie.phase!=='complete'){rules.begin(tie);for(let i=0;i<3;i++)rules.guess(tie,'no match');rules.next(tie);}assert.equal(rules.winners(tie).length,2);
+if(process.env.BU_RELAY_INTEGRATION==='1'){
+ // The original standalone PR boundary remains below. In the integrated game,
+ // lock the approved relay runtime/content to current main instead.
+ const ref=process.env.BU_RELAY_SCOPE_BASE||'origin/main';
+ for(const file of ['experiments/family-clue-relay-questions-v1.js','experiments/family-clue-relay-rules-v1.js','experiments/family-clue-relay-v1.html','experiments/family-clue-relay-v1.css','experiments/family-clue-relay-v1.js','scripts/fixtures/family-clue-relay-sources-v1.json'])assert.equal(cp.execFileSync('git',['hash-object',file],{encoding:'utf8'}).trim(),cp.execFileSync('git',['rev-parse',ref+':'+file],{encoding:'utf8'}).trim(),'Approved relay changed: '+file);
+}else{
 const changed=cp.execFileSync('git',['diff','--name-status','72650b278b034f7eafe1dcce468e9dca5882e526'],{encoding:'utf8'}).trim().split('\n').filter(Boolean);assert(changed.every(line=>line.startsWith('A\t')),'Existing file changed');
 const allowed=new Set(['experiments/family-clue-relay-questions-v1.js','experiments/family-clue-relay-rules-v1.js','experiments/family-clue-relay-v1.html','experiments/family-clue-relay-v1.css','experiments/family-clue-relay-v1.js','scripts/fixtures/family-clue-relay-sources-v1.json','scripts/qa_family_clue_relay_v1.cjs','scripts/qa_family_clue_relay_browser_v1.cjs','scripts/qa_family_clue_relay_review_v1.cjs']);
 for(const line of changed)assert(allowed.has(line.slice(2)),'Unrelated PR change: '+line);
 for(const file of cp.execFileSync('git',['ls-files','--others','--exclude-standard'],{encoding:'utf8'}).trim().split('\n').filter(Boolean))assert(allowed.has(file),'Unrelated untracked file: '+file);
+
+}
 
 for(const file of ['experiments/family-clue-relay-questions-v1.js','experiments/family-clue-relay-rules-v1.js','experiments/family-clue-relay-v1.js']){const text=fs.readFileSync(file,'utf8');assert(!/\b(?:localStorage|sessionStorage|AudioContext|new Audio|BUPlatform|BURewards|indexedDB)\b/.test(text),'Shared state/audio dependency: '+file);new vm.Script(text);}
 for(const file of ['daily-discovery-explanation-scroll-v3.webp','daily-explanation-wax-next-v2.svg','daily-complete-laurel-v1.svg'])assert(fs.existsSync('assets/ui/'+file));

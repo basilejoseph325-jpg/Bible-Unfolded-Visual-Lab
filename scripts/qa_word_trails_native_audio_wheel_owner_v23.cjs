@@ -17,6 +17,8 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
   await page.setViewport({...vp,isMobile:true,hasTouch:true,deviceScaleFactor:2});
   // Inspect the real detached Word Trails Audio element without production instrumentation.
   await page.evaluateOnNewDocument(()=>{
+   window.__qaNativeAudioOwnerWrites=0;const set=Storage.prototype.setItem;
+   Storage.prototype.setItem=function(k,v){if((String(k)==='bu-platform-audio-preferences-v1'||String(k).endsWith(':bu-platform-audio-preferences-v1'))&&String(new Error().stack).includes('visual-lab-test-banner.js'))window.__qaNativeAudioOwnerWrites++;return set.call(this,k,v)};
    const Original=window.Audio;
    window.Audio=function(...args){
     const player=new Original(...args);
@@ -32,7 +34,9 @@ const chrome=execSync('command -v google-chrome || command -v chromium',{encodin
    window.Audio.prototype=Original.prototype;
   });
   await page.goto(process.env.BU_WT_NATIVE_PARITY_URL||'http://127.0.0.1:8899/index.html',{waitUntil:'domcontentloaded',timeout:120000});
-  await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.(),{timeout:90000});
+  // The real native audio bridge installs after load + 800ms. Wait for a
+  // write from THIS document's owner, not a stale previous viewport's record.
+  await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&window.__qaNativeAudioOwnerWrites>0&&(!window.BUPreviewStorageFence?.active||BUPreviewStorageFence.writerStatus().writable),{timeout:90000});
   await page.evaluate(()=>document.getElementById('home-cross').click());
   await page.waitForFunction(()=>{
    const c=document.getElementById('bu-wt-native-game')?.contentWindow;

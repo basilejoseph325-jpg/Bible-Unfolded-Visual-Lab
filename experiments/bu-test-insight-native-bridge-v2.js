@@ -1,7 +1,8 @@
 /* Bible Unfolded — isolated native-wallet bridge for shared TEST preview.
  * THE NATIVE SANDBOX WALLET is authoritative: real game awards, purchases,
  * paid hints and Word Trails all mutate the same native wallet record.
- * Requires early Storage fence and explicit ?bu_shared_wallet_preview=1.
+ * Requires the early TEST storage fence; regular TEST and protected previews
+ * use the same validated bridge within their own storage scopes.
  * No production key or standalone Trail Coin balance is written or converted.
  */
 (()=>{'use strict';
@@ -33,6 +34,8 @@ function trails(){
  const existing=read(testSaveKey);
  if(existing)return existing;
  try{const raw=window.BUPreviewStorageFence?.originalKeyValue(legacySaveKey);
+  const copied=read(legacySaveKey);
+  if(window.BUPreviewStorageFence?.standardMode)return copied||{};
   const old=raw?JSON.parse(raw):null;
   return old&&typeof old==='object'&&!Array.isArray(old)?old:{};
  }catch(_){return {};}
@@ -182,4 +185,26 @@ window.BUTestInsightBridge=Object.freeze({
  version:'2.0.0-native-sandbox',snapshot,transact,
  nativeBalance:balance,migrateExisting:ensureMigration
 });
+// Complete the native startup only AFTER this regular TEST page owns its
+// writer lock. The original daily timer may have safely failed its write
+// while the asynchronous Web Lock was pending. Reuse its original date gate,
+// reward amounts and save rollback, so this cannot grant a second daily gift.
+function finishStandardStartup(){
+ if(!window.BUPreviewStorageFence?.standardMode||
+  !window.BUPreviewStorageFence.writerStatus().writable||
+  document.readyState==='loading'||!ready())return;
+ try{
+  bu3824RefreshWallet();
+  if(typeof bu3824MergeEntitlements==='function')bu3824MergeEntitlements();
+  if(typeof bu3824PersistEntitlements==='function')bu3824PersistEntitlements();
+  if(typeof rewardPopup==='function')rewardPopup();
+ }catch(error){console.warn('Shared TEST startup could not finish',error);}
+}
+if(window.BUPreviewStorageFence?.standardMode){
+ window.addEventListener('bu-test-wallet-writable',finishStandardStartup);
+ if(document.readyState==='loading')
+  document.addEventListener('DOMContentLoaded',finishStandardStartup,{once:true});
+ else finishStandardStartup();
+}
+
 })();

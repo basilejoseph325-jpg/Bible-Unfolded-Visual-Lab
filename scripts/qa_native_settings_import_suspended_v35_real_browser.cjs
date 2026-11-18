@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+// Frozen legacy backup component fixture on localhost only. The normal shared
+// wallet/restore path is mandatory in qa_shared_test_backup_v2_browser.cjs.
 'use strict';
 /* v35 native Settings UI import stop, REAL Chromium; local or PUBLIC TEST
  * root only, fresh synthetic browser contexts. No player save data, no LIVE.
@@ -27,7 +29,7 @@ const live=JSON.stringify({level:20,unlocked:22,coins:255,completed:[0,1]});
    await page.bringToFront();
    page.on('pageerror',e=>errors.push(e.message));
    await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});
-   await page.goto(ROOT+'/index.html?qa-import-suspended-v35='+width,
+   await page.goto(ROOT+'/index.html?qa-import-suspended-v35='+width+(['127.0.0.1','localhost'].includes(new URL(ROOT).hostname)?'&standalone=qa':''),
     {waitUntil:'domcontentloaded',timeout:120000});
    await page.waitForFunction(()=>window.BUPlatformSaves?.bound?.()&&
     document.getElementById('bu-wt-safe-preview-v34')&&

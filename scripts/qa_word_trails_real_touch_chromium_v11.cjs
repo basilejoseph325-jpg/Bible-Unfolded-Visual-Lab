@@ -6,8 +6,8 @@
  */
 const assert=require('node:assert/strict');
 const {chromium}=require('playwright');
-const ROOT='http://127.0.0.1:8896/index.html';
-const LIVE='bible-unfolded-word-trails-next-v1',TEST='bu-visual-lab-wordtrails-next-v1';
+const ROOT=process.env.WT_NATIVE_QA_URL||'http://127.0.0.1:8896/index.html';
+const LIVE='bible-unfolded-word-trails-next-v1',TEST='bu-visual-lab-wordtrails-shared-preview-v1';
 const SENTINEL='bu-qa-real-finger-touch-v11';
 const WALLET='bible-unfolded-rewards-v17';
 const WHEELS='bible-unfolded-wheel-ownership-v3825-backup';
@@ -16,9 +16,9 @@ const seed={
  [LIVE]:JSON.stringify({level:15,unlocked:16,coins:60,completed:[0,1,2,3]}),
  [SENTINEL]:'must-never-change'
 };
-const readSave=async page=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)||'null'),TEST);
+const readSave=async page=>page.evaluate(key=>({...JSON.parse(localStorage.getItem(key)||'null'),balance:economy.coins}),TEST);
 const snapshot=async page=>page.evaluate(keys=>Object.fromEntries(
- keys.map(k=>[k,localStorage.getItem(k)])),[LIVE,SENTINEL,WALLET,WHEELS,VOICE]);
+ keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),[LIVE,SENTINEL,WALLET,WHEELS,VOICE]);
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 async function frameFor(page){
  await page.waitForFunction(()=>window.BUWTNativeShell?.active?.()&&
@@ -73,7 +73,7 @@ async function tapWord(session,frame,word){
  await session.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[],modifiers:0});
 }
 (async()=>{
- const browser=await chromium.launch({headless:true,timeout:90000,
+ const browser=await chromium.launch({...((process.env.CHROME_BIN)?{executablePath:process.env.CHROME_BIN}:{}),headless:true,timeout:90000,
   args:['--disable-dev-shm-usage','--no-sandbox']});
  try{
   for(const [width,height] of [[390,705],[320,568]]){
@@ -81,14 +81,16 @@ async function tapWord(session,frame,word){
     isMobile:true,hasTouch:true,deviceScaleFactor:2});
    try{
     await context.addInitScript(data=>{
-     for(const [key,value] of Object.entries(data))localStorage.setItem(key,value);
+     if(localStorage.getItem('__native_touch_seeded'))return;localStorage.setItem('__native_touch_seeded','1');for(const [key,value] of Object.entries(data))localStorage.setItem(key,value);
     },seed);
     const page=await context.newPage(),errors=[];
     page.on('pageerror',error=>errors.push(error.message));
     await page.goto(ROOT,{waitUntil:'domcontentloaded',timeout:110000});
     await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&
      document.querySelector('#home-cross'),null,{timeout:100000});
-    const previous=await snapshot(page);
+    await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable&&window.BUTestInsightBridge?.nativeBalance().ok&&economy.lastDay===currentLocalDay(),null,{timeout:100000});
+    await page.evaluate(()=>document.getElementById('daily-continue')?.click());
+    const previous=await snapshot(page),pointsBefore=await page.evaluate(()=>economy.points);
     assert.equal(previous[LIVE],seed[LIVE]);
     await page.evaluate(()=>document.querySelector('#home-cross').click());
     const frame=await frameFor(page);
@@ -118,12 +120,12 @@ async function tapWord(session,frame,word){
     assert(discovery.title.includes('CAIN'));
     assert.equal(discovery.href,'https://www.jw.org/en/library/bible/nwt/books/genesis/4/');
     const withBible=await readSave(page);
-    assert.equal(withBible.coins,afterTwo.coins+25);
+    assert.equal(withBible.balance,afterTwo.balance+1,'Hidden discovery must credit the shared native wallet once');
     assert(withBible.claimedSparks.includes('0:CAIN'));
     await frame.locator('#spark-next').tap();
     // Repeated Bible discovery must never pay coins twice.
     await tapWord(session,frame,'CAIN');
-    assert.equal((await readSave(page)).coins,withBible.coins);
+    assert.equal((await readSave(page)).balance,withBible.balance);
     // Escape and re-enter maintains partial 2/4 board with Bible find.
     await page.evaluate(()=>window.BUWTNativeShell.close());
     await page.waitForFunction(()=>!window.BUWTNativeShell.active());
@@ -135,6 +137,7 @@ async function tapWord(session,frame,word){
     assert(resumed.progress.found.includes('ANTIC')&&resumed.progress.found.includes('TACO'));
     assert(resumed.claimedSparks.includes('0:CAIN'));
     const final=await snapshot(page);
+    assert.equal(await page.evaluate(()=>economy.points),pointsBefore,'Token rewards cannot change native Points');
     assert.deepEqual(final,previous,'TEST swipe must not alter original LIVE, native wallet, purchases, voices');
     assert.deepEqual(errors,[],'No unexpected game JS exceptions');
     console.log('PASS_NATIVE_CHROME_REAL_TOUCH_WORD_TRAILS_V11',JSON.stringify({
@@ -142,7 +145,7 @@ async function tapWord(session,frame,word){
      actualCdpTouchSwipeWords:['ANTIC','TACO'],touchInputNotMouse:true,
      touchTapAfterSwipe:'CAIN',oneTimeBibleReward:true,
      jwOrgLinkVerified:true,progressReopenPassed:true,
-     protectedLiveAndWalletByteIdentical:true,
+     originalUnscopedWalletAndLiveUnchanged:true,sharedTokenRewardVerified:true,
      jsPageErrors:0,physicalSamsungOrIphoneCertified:false
     }));
    }finally{await context.close()}

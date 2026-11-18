@@ -1,22 +1,40 @@
 /* Bible Unfolded Visual Lab — experimental native storage fence.
- * Opt-in via ?bu_shared_wallet_preview=1 on the Visual Lab page ONLY.
+ * Regular Visual Lab TEST uses one shared native wallet by default.
+ * Explicit preview links retain their original separate namespaces.
  * Must be loaded synchronously BEFORE the native compressed game transport.
  * No canonical LIVE wallet / progress / entitlement key is written by this shim.
  */
 (()=>{'use strict';
 if(window.BUPreviewStorageFence)return;
 const isTest=/^\/Bible-Unfolded-Visual-Lab(?:\/|$)/.test(location.pathname)||
-  ['localhost','127.0.0.1'].includes(location.hostname);
+  (['localhost','127.0.0.1'].includes(location.hostname)&&!/^\/Story-Trails(?:\/|$)/.test(location.pathname));
 const params=new URLSearchParams(location.search);
-const active=isTest&&params.get('bu_shared_wallet_preview')==='1';
+// Preserve explicitly local standalone QA fixtures; public links still use
+// the native host, and framed gameplay always inherits its host's wallet.
+const localFixture=['localhost','127.0.0.1'].includes(location.hostname)&&
+ window.parent===window&&params.get('bu_shared_wallet_preview')!=='1'&&
+ (params.get('standalone')==='qa'||params.has('qaDate'));
+// Standalone Daily only stores Discovery Stamps, never currency. Keep its
+// existing direct-link behavior; the normal game's Daily frame is scoped.
+const standaloneDaily=window.parent===window&&
+ location.pathname.endsWith('/word-trails-daily-v1.html')&&params.get('bu_shared_wallet_preview')!=='1';
+const active=isTest&&!localFixture&&!standaloneDaily;
 if(!active)return;
 // Explicit, *separate* copy-preview namespace. Never replace an existing
 // private wallet preview, and never write regular TEST/LIVE keys.
 const IMPORT_SESSION='bu-visual-lab-current-test-copy-session-v1';
 const importRequested=params.get('bu_import_regular_test')==='1';
 if(importRequested&&window.parent===window)sessionStorage.setItem(IMPORT_SESSION,'1');
-const importMode=importRequested||sessionStorage.getItem(IMPORT_SESSION)==='1';
-const PREFIX=importMode?'bu-visual-lab-regular-wallet-copy-20261116:':
+// A framed game inherits its host's scope even when its legacy URL carries
+// the preview flag. A normal top-level visit never inherits preview sessions.
+let hostFence=null;
+try{if(window.parent!==window)hostFence=window.parent.BUPreviewStorageFence;}catch(_){}
+const standardMode=hostFence?hostFence.standardMode===true:
+ params.get('bu_shared_wallet_preview')!=='1';
+const importMode=hostFence?hostFence.importMode===true:
+ !standardMode&&(importRequested||sessionStorage.getItem(IMPORT_SESSION)==='1');
+const STANDARD_PREFIX='bu-visual-lab-shared-standard-v1:';
+const PREFIX=hostFence?hostFence.previewPrefix:standardMode?STANDARD_PREFIX:importMode?'bu-visual-lab-regular-wallet-copy-20261116:':
  'bu-visual-lab-shared-preview-20261116:';
 const storage=window.localStorage,proto=Storage.prototype;
 const original={
@@ -35,25 +53,36 @@ const scoped=k=>{const name=String(k);return protectedKey(name)?PREFIX+name:name
 // No fallback to a weak localStorage lease: unsupported = read-only blocked.
 const LOCK='bu-visual-lab-shared-native-wallet-writer-20261116';
 const SEED_KEY=PREFIX+'__imported_regular_test_v1__';
-let writerState='pending',releaseWriter=null,generation=0,copyError='';
+let writerState='pending',releaseWriter=null,generation=0,copyError='',writerLeaseHeld=false;
+const sharedBackup=standardMode&&window.parent===window&&window.BUSharedTestBackup?.create({
+ list:()=>{const keys=[];for(let i=0;i<storage.length;i++){const k=original.key.call(storage,i);if(k?.startsWith(PREFIX))keys.push(k.slice(PREFIX.length));}return keys;},
+ get:k=>original.getItem.call(storage,PREFIX+k),
+ set:(k,v)=>original.setItem.call(storage,PREFIX+k,v),
+ remove:k=>original.removeItem.call(storage,PREFIX+k),
+ writable:()=>writerStatus().writable,ownsLock:()=>writerLeaseHeld,recoveryAllowed:()=>writerLeaseHeld&&writerState==='error',
+ pause:()=>{writerState='restoring';refreshLockNotice();}
+});
 // One-time READ-ONLY clone of the user's *existing* regular TEST game save.
 // It retains 533 native tokens and Word Trails' current level (but never
 // converts the 111 separate old Trail Coins into additional spendable tokens).
 // Writes ONLY to a new isolated namespace, under the exclusive Web Lock.
 function cloneRegularTestSave(){
- if(!importMode||original.getItem.call(storage,SEED_KEY)==='1')return false;
+ if((!importMode&&!standardMode)||original.getItem.call(storage,SEED_KEY)==='1')return false;
  const rawWallet=original.getItem.call(storage,'bible-unfolded-rewards-v17');
  let wallet;
  try{wallet=JSON.parse(rawWallet||'null');}catch(_){wallet=null;}
- if(!wallet||!Number.isSafeInteger(wallet.coins)||wallet.coins<0||
-  !Number.isFinite(wallet.points)||wallet.points<0)
+ if((!standardMode||rawWallet!==null)&&(!wallet||!Number.isSafeInteger(wallet.coins)||wallet.coins<0||
+  !Number.isFinite(wallet.points)))
   throw Error('Existing native token record was missing or invalid');
  const existing=[];
  let bytes=0;
  for(let i=0;i<storage.length;i++){
   const key=original.key.call(storage,i);
   if(!key||key.startsWith('bu-visual-lab-shared-preview-')||
-   key.startsWith('bu-visual-lab-regular-wallet-copy-'))continue;
+   key.startsWith('bu-visual-lab-regular-wallet-copy-')||
+   key.startsWith(STANDARD_PREFIX))continue;
+  // Regular TEST imports game records only, never another app's data.
+  if(standardMode&&!/^(?:bible-unfolded-|story-trails-|bu|chat)/.test(key))continue;
   const value=original.getItem.call(storage,key);
   if(typeof value!=='string')continue;
   bytes+=key.length+value.length;
@@ -89,7 +118,8 @@ function writerStatus(){
 function refreshLockNotice(){
  if(!isTop||document.readyState==='loading')return;
  let shield=document.getElementById('bu-preview-wallet-lock-shield');
- const blocked=writerState==='conflict'||writerState==='unsupported'||writerState==='error';
+ const preparing=standardMode&&['pending','seeding','paused','restoring','recovering'].includes(writerState);
+ const blocked=preparing||writerState==='conflict'||writerState==='unsupported'||writerState==='error';
  if(!blocked){shield?.remove();return;}
  if(!shield){shield=document.createElement('div');shield.id='bu-preview-wallet-lock-shield';
   shield.setAttribute('role','alert');
@@ -97,10 +127,14 @@ function refreshLockNotice(){
   document.body.appendChild(shield);
  }
  const conflict=writerState==='conflict';
- shield.textContent=conflict?
-  'Shared coin TEST is already open in another tab. Close that tab, then reload this page. Nothing has been charged or changed here.':
-  copyError?'The regular TEST save could not be copied: '+copyError+'. Your original game is unchanged.':
-  'This browser cannot safely protect the shared coin TEST. Close this preview and use the regular game. Your saved coins are protected.';
+ shield.setAttribute('role',preparing?'status':'alert');
+ shield.textContent=preparing?'Getting your saved TEST game ready…':conflict?
+  'Bible Unfolded TEST is already open in another tab. Close that tab, then reload this page. Nothing has been charged here.':
+  copyError?'Your saved TEST game could not be prepared: '+copyError+'. Your original saves are unchanged.':
+  'This browser cannot safely protect shared Insight Tokens. Please use a current browser over HTTPS. Your saved game is protected.';
+ if(standardMode&&writerLeaseHeld&&writerState==='error'&&sharedBackup){
+  shield.style.flexDirection='column';const button=document.createElement('button');button.id='bu-shared-restore-recovery';button.className='gold-button';button.style.marginTop='18px';button.textContent='Recover from a complete TEST backup';button.onclick=()=>window.BUSharedTestBackup.openImport(sharedBackup,()=>location.reload());shield.appendChild(button);
+ }
 }
 function acquireWriter(){
  if(!isTop)return;
@@ -113,7 +147,16 @@ function acquireWriter(){
   navigator.locks.request(LOCK,{mode:'exclusive',ifAvailable:true},async lock=>{
    if(attempt!==generation)return;
    if(!lock){writerState='conflict';refreshLockNotice();return;}
-   if(importMode&&original.getItem.call(storage,SEED_KEY)!=='1'){
+   writerLeaseHeld=true;
+   if(standardMode&&(!sharedBackup||sharedBackup.hasPending())){
+    writerState='recovering';refreshLockNotice();
+    try{
+     if(!sharedBackup)throw Error('Shared TEST backup coordinator is unavailable');
+     await sharedBackup.recoverPending();location.reload();
+    }catch(error){copyError=String(error.message||error);writerState='error';refreshLockNotice();}
+    await new Promise(resolve=>{releaseWriter=resolve;});releaseWriter=null;return;
+   }
+   if((importMode||standardMode)&&original.getItem.call(storage,SEED_KEY)!=='1'){
     writerState='seeding';refreshLockNotice();
     try{
      if(!cloneRegularTestSave())throw Error('Import did not complete');
@@ -129,6 +172,10 @@ function acquireWriter(){
     return;
    }
    writerState='owned';refreshLockNotice();
+   // Native startup can reach its daily timer before an asynchronous Web
+   // Lock arrives (observed in WebKit). Let the existing guarded startup
+   // finish when writes are actually permitted, never before.
+   if(standardMode)try{window.dispatchEvent(new CustomEvent('bu-test-wallet-writable'));}catch(_){}
    await new Promise(resolve=>{releaseWriter=resolve;});
    releaseWriter=null;
    if(attempt===generation){writerState='paused';refreshLockNotice();}
@@ -139,7 +186,7 @@ function acquireWriter(){
 }
 function releaseOwnedWriter(){
  if(!isTop)return;
- generation++;
+ generation++;writerLeaseHeld=false;
  writerState='paused';
  if(releaseWriter){const done=releaseWriter;releaseWriter=null;done();}
 }
@@ -186,6 +233,11 @@ proto.key=function(n){
 // Keep preview exports separate from ordinary TEST v2 backups. A normal
 // TEST/LIVE restore must reject this intentionally different file format.
 function makePreviewBackup(){
+ if(standardMode){
+  if(typeof bu3824RefreshWallet==='function')bu3824RefreshWallet();
+  if(typeof saveEconomy!=='function'||saveEconomy()!==true)throw Error('The native wallet could not be checkpointed');
+  return sharedBackup.exportSnapshot();
+ }
  if(!writerStatus().writable)throw Error('Cannot export while another tab owns this preview');
  const entries={};
  for(let i=0;i<storage.length;i++){
@@ -197,8 +249,8 @@ function makePreviewBackup(){
  if(!Object.hasOwn(entries,'bible-unfolded-rewards-v17'))
   throw Error('The shared native wallet has not finished saving');
  const data={
-  format:'BibleUnfoldedSharedCoinPreview',
-  version:1,scope:'Isolated TEST preview only',
+  format:standardMode?'BibleUnfoldedSharedInsightTest':'BibleUnfoldedSharedCoinPreview',
+  version:1,scope:standardMode?'Regular TEST shared wallet':'Isolated TEST preview only',
   exportedAt:new Date().toISOString(),storagePrefix:PREFIX,
   restoreAllowed:false,
   keys:entries
@@ -217,7 +269,7 @@ if(isTop){
   const homeBooks=event.target?.closest?.('#home-books');
   if(homeBooks&&window.BUJamesReturnLoopV1?.inspect?.()?.owned?.includes('books')){
    event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
-   location.assign(new URL('bible-book-guides/index.html?bu_shared_wallet_preview=1'+
+   location.assign(new URL('bible-book-guides/index.html'+(standardMode?'?v=shared-restore-v2':'?bu_shared_wallet_preview=1')+
      (importMode?'&bu_import_regular_test=1':''),
      new URL('./',location.href)).href);
    return;
@@ -234,24 +286,32 @@ if(isTop){
    alert('This link opens outside the protected shared coin preview. Open it from the regular TEST game instead.');
    return;
   }
-  dest.searchParams.set('bu_shared_wallet_preview','1');
+  if(!standardMode)dest.searchParams.set('bu_shared_wallet_preview','1');
+  else if(/\/bible-book-guides\/(?:index|read)\.html$/.test(dest.pathname))
+   dest.searchParams.set('v','shared-restore-v2');
   if(importMode)dest.searchParams.set('bu_import_regular_test','1');
   anchor.href=dest.href;
  },true);
  // Capture BEFORE the native TEST v2 listener. A v2 export would omit the
  // isolated Word Trails preview save and have an incompatible restore format.
- document.addEventListener('click',event=>{
+ document.addEventListener('click',async event=>{
+  if(standardMode&&event.target?.closest?.('#save-import')){
+   event.preventDefault();event.stopImmediatePropagation();event.stopPropagation();
+   if(!sharedBackup||!writerStatus().writable){alert('Your TEST wallet is not ready for a restore. No data changed.');return;}
+   window.BUSharedTestBackup.openImport(sharedBackup,()=>location.reload());
+   return;
+  }
   if(!event.target?.closest?.('#save-export, #bu-wt-recovery-current-backup'))return;
   event.preventDefault();
   event.stopImmediatePropagation();
   event.stopPropagation();
   try{
-   const data=makePreviewBackup();
+   const data=await makePreviewBackup();
    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
    const url=URL.createObjectURL(blob);
    const link=document.createElement('a');
    link.href=url;
-   link.download='Bible_Unfolded_SHARED_COINS_TEST_PREVIEW.json';
+   link.download=standardMode?'Bible_Unfolded_SHARED_INSIGHT_TEST.json':'Bible_Unfolded_SHARED_COINS_TEST_PREVIEW.json';
    link.style.display='none';
    document.body.appendChild(link);
    link.click();
@@ -263,13 +323,23 @@ if(isTop){
  },true);
 }
 window.BUPreviewStorageFence=Object.freeze({
- active:true,importMode,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,makePreviewBackup,
+ active:true,standardMode,importMode,previewPrefix:PREFIX,scopeKey:scoped,writerStatus,makePreviewBackup,sharedBackup,
  protectedKey,originalKeyValue:(key)=>original.getItem.call(storage,String(key)),
  // Read-only status for QA and player diagnostics.
- status:()=>({active:true,importMode,imported:original.getItem.call(storage,SEED_KEY)==='1',previewWalletPresent:
+ status:()=>({active:true,standardMode,importMode,imported:original.getItem.call(storage,SEED_KEY)==='1',previewWalletPresent:
   original.getItem.call(storage,PREFIX+'bible-unfolded-rewards-v17')!==null,writer:writerStatus()})
 });
 function showBanner(){
+ if(standardMode){
+  const recovered=original.getItem.call(storage,PREFIX+'__shared_restore_notice_v2__');
+  if(recovered&&writerStatus().writable){alert(recovered);original.removeItem.call(storage,PREFIX+'__shared_restore_notice_v2__');}
+  const setText=(node,value)=>{if(node&&node.textContent!==value)node.textContent=value;};
+  setText(document.querySelector('.save-transfer p'),'Export or restore one complete shared-token TEST snapshot. Earlier backups and protected previews stay separate.');
+  setText(document.querySelector('.save-transfer>small'),'Restore replaces TEST progress, purchases and reward records together. A recovery checkpoint is kept; your original saves stay unchanged.');
+  const importer=document.getElementById('save-import');
+  for(const name of ['aria-label','title'])if(importer&&importer.getAttribute(name)!=='Review and restore a complete shared TEST backup')importer.setAttribute(name,'Review and restore a complete shared TEST backup');
+  return;
+ }
  if(window.parent!==window)return; // Parent owns the only visible preview warning.
  if(document.getElementById('bu-preview-wallet-banner'))return;
  const banner=document.createElement('div');
@@ -281,6 +351,7 @@ function showBanner(){
  banner.style.cssText='position:fixed;left:5px;right:5px;top:env(safe-area-inset-top,0px);z-index:9998;pointer-events:none;text-align:center;background:#073541e8;color:#ffe7a7;border:1px solid #c89c48;border-radius:8px;padding:5px 8px;font:700 10px system-ui;letter-spacing:.04em';
  document.body.appendChild(banner);
 }
+if(standardMode){window.addEventListener('bu-test-wallet-writable',showBanner);window.addEventListener('click',()=>setTimeout(showBanner,0),true);}
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',showBanner,{once:true});
 else showBanner();
 })();

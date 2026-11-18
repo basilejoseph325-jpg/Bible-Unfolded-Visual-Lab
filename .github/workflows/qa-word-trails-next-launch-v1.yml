@@ -71,6 +71,7 @@ jobs:
               console.log('PASS distinct Bible Crosswords collection without obsolete A/B toggle');
               await page.goto('http://127.0.0.1:8766/index.html',{waitUntil:'domcontentloaded',timeout:120000});
               await page.waitForSelector('#wt-next-entry',{timeout:60000});
+              await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable,{timeout:60000});
               const real=await page.evaluate(()=>({
                 banner:!!document.querySelector('#home #bu-visual-lab-test-banner'),
                 entry:!!document.querySelector('#cross-pick #wt-next-entry'),
@@ -150,7 +151,7 @@ jobs:
               console.log('TRAILS_HOME_NAV_SOUND',clickCue);
               assert.equal(clickCue,'navigate','Word Trails entrance uses the shared navigation sound');
               await page.evaluate(()=>{
-                const key='bu-visual-lab-wordtrails-next-v1',state=JSON.parse(localStorage.getItem(key));
+                const key='bu-visual-lab-wordtrails-shared-preview-v1',state=JSON.parse(localStorage.getItem(key));
                 state.level=0;state.progress={level:0,found:['COIN'],bonuses:[],hinted:[],combo:1};
                 localStorage.setItem(key,JSON.stringify(state));
               });
@@ -160,7 +161,7 @@ jobs:
               await page.waitForFunction(()=>window.BUWTNativeShell?.nativeReady?.()&&!window.BUWTNativeShell.active(),{timeout:30000});
               const refreshed=await page.evaluate(()=>({
                 path:location.pathname,hash:location.hash,home:!document.getElementById('home').hidden,
-                saved:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-next-v1'))?.progress?.found
+                saved:JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-shared-preview-v1'))?.progress?.found
               }));
               console.log('WORD_TRAILS_REFRESH_RETURNS_HOME',JSON.stringify(refreshed));
               assert(refreshed.home&&refreshed.hash==='','Browser refresh must return to the home card');
@@ -178,6 +179,7 @@ jobs:
               console.log('WORD_TRAILS_BACK_THEN_REENTER_SUCCESS',await page.evaluate(()=>location.href));
               await page.goto('http://127.0.0.1:8766/index.html?trails=previous',{waitUntil:'domcontentloaded',timeout:120000});
               await page.waitForSelector('#wt-next-entry',{timeout:60000});
+              await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable,{timeout:60000});
               await page.evaluate(()=>document.querySelector('#home-cross').click());
               const legacy=await page.evaluate(()=>({
                 pathname:location.pathname,
