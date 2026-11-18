@@ -32,7 +32,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 else install();
 })();
 /* Load new Word Trails selector only within the isolated Visual Lab. */
-(()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=word-trails-home-image-nov09-v3';s.defer=true;document.head.appendChild(s)})();
+(()=>{const s=document.createElement('script');s.src='word-trails-next-launcher.js?v=wordtrails55-v1';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Word Trails standalone page -> existing Bible Unfolded screens.
@@ -116,7 +116,7 @@ else install();
 })();
 
 /* Visual Lab ONLY — mount Word Trails under the real main-game UI. */
-(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=shared-restore-v2';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(window.BUWTNativeShell||document.getElementById('bu-wt-native-host-loader'))return;const s=document.createElement('script');s.id='bu-wt-native-host-loader';s.src='word-trails-native-shell-v1.js?v=wordtrails55-v1';s.defer=true;document.head.appendChild(s)})();
 
 
 /* Visual Lab ONLY — extend the actual native Settings backup controls so one

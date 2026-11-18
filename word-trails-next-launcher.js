@@ -1,5 +1,5 @@
 /* Visual Lab only: Bible Crosswords 33-pack collection and Word Trails
-   50-level wheel are distinct home games. Remove the obsolete 'previous
+   55-level wheel are distinct home games. Remove the obsolete 'previous
    Word Trails' A/B toggle, but preserve both games and all saved data.
    LIVE is unchanged. */
 (()=>{'use strict';
@@ -31,10 +31,10 @@ function install(){
  const style=document.createElement('style');style.id='wt-next-launch-style';style.textContent=css;
  document.head.appendChild(style);
  const section=document.createElement('section');section.id='wt-next-entry';
- section.innerHTML='<a href="'+PATH+'" aria-label="Play the 50-level Bible Word Trails game">'+
+ section.innerHTML='<a href="'+PATH+'" aria-label="Play the 55-level Bible Word Trails game">'+
  '<span class="wt-next-kicker">VISUAL LAB · BIBLE WORD GAME</span>'+
  '<strong class="wt-next-title">Word Trails</strong>'+
- '<span class="wt-next-copy">50 crossword levels · Bible discoveries · rewards · original sounds</span>'+
+ '<span class="wt-next-copy">55 crossword levels · Bible discoveries · rewards · original sounds</span>'+
  '<span class="wt-next-go">PLAY WORD TRAILS →</span></a>';
  scroll.prepend(section);
  section.querySelector('a[href="'+PATH+'"]').addEventListener('click',event=>{
@@ -48,7 +48,7 @@ function install(){
 /* Bible Crosswords and Word Trails are distinct, playable games.
    The classic question-led 33-pack Bible Crosswords game lives inside the
    original native #cross-pick / #crossword-screen flow. Never remove or
-   redirect it to the NEW 50-level Word Trails wheel game. Only correct the
+   redirect it to the NEW 55-level Word Trails wheel game. Only correct the
    misleading old player-facing labels. No progress or economy writes. */
 function labelCrosswordsDistinctly(){
  const pick=document.querySelector('#cross-pick .hub-headtitle b');

@@ -4,6 +4,7 @@
 const FORMAT='BibleUnfoldedSharedInsightTest',SCOPE='bu-visual-lab-shared-standard-v1:';
 const W='bible-unfolded-rewards-v17',R=W+'-recovery-v3811',T='bu-visual-lab-wordtrails-shared-preview-v1';
 const JOURNAL='__shared_restore_journal_v2__',CHECKPOINT='__shared_restore_checkpoint_v2__',MARKER='__imported_regular_test_v1__',NOTICE='__shared_restore_notice_v2__';
+const APPROVED_TRAIL_LEVELS=55; // Version 2 remains compatible with prior 50-level snapshots.
 const LIMIT=3000000,MAX_KEYS=3000,OWNERS=['bible-unfolded-wheel-ownership-v3825','bible-unfolded-wheel-ownership-v3825-backup'],WHEELS=['goldwheel','moonwheel','seawheel'];
 const plain=o=>!!o&&typeof o==='object'&&!Array.isArray(o)&&Object.getPrototypeOf(o)===Object.prototype;
 const need=(ok,message)=>{if(!ok)throw Error(message);};
@@ -19,7 +20,7 @@ function wallet(raw){let w;try{w=JSON.parse(raw);}catch(_){throw Error('Invalid 
  if(w.hints!==undefined)need(plain(w.hints),'Invalid hint records');
  if(w.wtReceipts!==undefined){need(plain(w.wtReceipts)&&Object.keys(w.wtReceipts).length<=4000,'Invalid reward ledger');for(const [id,r] of Object.entries(w.wtReceipts)){
   const m=/^trails:l(\d{1,2}):(complete|seal|satchel|discovery:[a-z]{3,12}|hint:[0-6]:[0-6])$/.exec(id);
-  need(m&&+m[1]>=1&&+m[1]<=50&&plain(r),'Invalid Trail receipt');
+  need(m&&+m[1]>=1&&+m[1]<=APPROVED_TRAIL_LEVELS&&plain(r),'Invalid Trail receipt');
   const kind=m[2],delta=kind==='complete'?4:kind==='seal'?3:kind.startsWith('hint:')?-15:1;
   need(kind!=='seal'||+m[1]%5===0,'Invalid seal receipt');
   need(r.kind==='legacy'?r.delta===0:r.delta===delta&&r.kind===(delta<0?'spend':'credit'),'Invalid receipt amount');
@@ -28,8 +29,11 @@ function wallet(raw){let w;try{w=JSON.parse(raw);}catch(_){throw Error('Invalid 
  if(w.buJamesReturnState!==undefined){const b=w.buJamesReturnState;need(plain(b)&&b.v===1&&strings(b.owned)&&strings(b.achievements),'Invalid Return Challenge records');for(const k of ['balance','pot','lives','totalCorrect','chain','best','insurance'])need(integer(b[k]),'Invalid Return Challenge '+k);}
  return w;
 }
-function trail(raw){if(raw===null)return null;let t;try{t=JSON.parse(raw);}catch(_){throw Error('Invalid Trail JSON');}need(plain(t),'Invalid Trail state');safeTree(t);const level=n=>integer(n)&&n<50;need(level(t.level)&&level(t.unlocked)&&t.unlocked>=t.level,'Invalid Trail level/unlock');need(Array.isArray(t.completed)&&t.completed.every(level)&&new Set(t.completed).size===t.completed.length,'Invalid completed levels');
- for(const k of ['claimedSparks','boardBible','paidWords','paidBonuses'])if(t[k]!==undefined)need(strings(t[k]),'Invalid Trail '+k);
+function trail(raw){if(raw===null)return null;let t;try{t=JSON.parse(raw);}catch(_){throw Error('Invalid Trail JSON');}need(plain(t),'Invalid Trail state');safeTree(t);const level=n=>integer(n)&&n<APPROVED_TRAIL_LEVELS;need(level(t.level)&&level(t.unlocked)&&t.unlocked>=t.level,'Invalid Trail level/unlock');need(Array.isArray(t.completed)&&t.completed.every(level)&&new Set(t.completed).size===t.completed.length,'Invalid completed levels');
+ // Retain the engine's historical key shapes, but bound every embedded level.
+ const patterns={claimedSparks:/^(\d{1,2}):[A-Z]{3,12}$/,boardBible:/^(\d{1,2}):[A-Z]{3,12}$/,paidWords:/^(?:(\d{1,2})\|[A-Z]{3,12}|combo:(\d{1,2}))$/,paidBonuses:/^(?:(\d{1,2})\|[A-Z]{3,12}|satchel:(\d{1,2}))$/};
+ for(const[k,re]of Object.entries(patterns))if(t[k]!==undefined){need(strings(t[k]),'Invalid Trail '+k);for(const key of t[k]){const m=re.exec(key);need(m&&level(Number(m[1]??m[2])),'Invalid Trail '+k+' level/key');}}
+ if(t.sparks!==undefined)need(Array.isArray(t.sparks)&&t.sparks.every(level),'Invalid Trail spark level');
  if(t.claimedFreeHints!==undefined)need(Array.isArray(t.claimedFreeHints)&&t.claimedFreeHints.every(level),'Invalid free hint record');
  if(t.progress!==null&&t.progress!==undefined){const p=t.progress;need(plain(p)&&p.level===t.level&&strings(p.found)&&strings(p.bonuses)&&Array.isArray(p.hinted)&&p.hinted.every(k=>/^[0-6]:[0-6]$/.test(k)),'Invalid in-progress puzzle');}
  return t;
