@@ -39,7 +39,8 @@ profiles were imported or reset here.
 - [x] Preserve V2 namespace, checksum, ownership, strict amounts/types, stale
   review guard, coordinated checkpoint/journal recovery and old-50 compatibility.
 - [x] Version every cache link from root loader through iframe engine and every
-  participating backup-validator entry point. Navigation logic is unchanged.
+  participating backup-validator entry point. Shared/chapter navigation is unchanged;
+  the scoped native-reset modal lifecycle correction is documented below.
 - [x] Preserve old gameplay assertions while updating obsolete 50-level totals.
   Genesis workflows select their existing immutable cross-mode guard only on
   this integration branch; other branches retain their original scope gate.
@@ -118,11 +119,12 @@ was recovering. The next document received HTTP 200 and both chapters remained
 playable. The guarded candidate produced zero errors and both chapters' first
 discoveries were solved after recovery. No CORS policy or error filter changed.
 
-Native reset testing now observes the real confirmation, accepts it, refreshes
-and then awaits the real touch acknowledgement. The refreshed saved progress
+Native reset testing observes the real confirmation, accepts it, requires the
+real touch acknowledgement, verifies rebuilt locks and then refreshes. The refreshed saved progress
 must be empty and the entire shared wallet deeply equal to its pre-reset value.
 The completed-55 backup must subsequently restore and replay without rewards.
-No game control, reset handler or reward policy was changed. Request/lifecycle
+Reward policy is unchanged; the reset handler now defers its native confirmation
+until after the activating event and closes its stale map. Request/lifecycle
 JSON diagnostics are uploaded with the normal CI screenshots and logs.
 
 The backup compatibility gate restores **95** old-exporter V2 snapshots without
@@ -144,12 +146,13 @@ Episode 14 public/preview test). The post-swipe map test now waits for modal clo
 and two paint frames and verifies the actual hit target before its native tap;
 it retains map-open, reset, wallet equality and completed-55 restoration checks.
 
-Follow-up at 8d79d1e: the actual WebKit 320 playthrough completed all five
-levels with zero page errors, then its dispatchTapEvent held up reload after
-reset (durable state was level 0, empty progress, 963 tokens, 86 receipts). The
-independent complete-55 native-touch reset/restore fixture passed both widths.
-Keep that fixture unchanged. The long playthrough additionally uses real keyboard
-activation of the same reset button, accepted native confirm, input acknowledgement,
-refresh, wallet equality, full restoration and reward-free replay. This separates
-input modes without removing mobile touch or save/reward assertions. Final-head
-CI, including both paths, remains required before handoff.
+Follow-up: WebKit's long playthrough completed all five levels with zero page
+errors, then native input held up reload after reset (durable state: level 0,
+empty progress, 963 tokens, 86 receipts). Keyboard activation hit the same driver
+stall and was not retained as a workaround. The reset handler now defers its
+native confirmation until the activating input returns and closes the map first;
+Cancel reopens the same map without writing. Real touch and input acknowledgement
+remain required before refresh in both the focused and full-playthrough tests.
+The independent fixture also tests native Cancel and deep equality of the entire
+wallet and Trail. Confirmed reset must close the old map and rebuild it with only
+Level 1 enabled, preventing stale pre-reset unlock buttons from remaining usable. Final-head CI results remain in the PR description.

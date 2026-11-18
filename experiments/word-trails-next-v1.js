@@ -852,8 +852,13 @@ $('spark-x').addEventListener('click',()=>$('discovery').close());
 $('map-x').addEventListener('click',()=>$('map').close());
 $('reset-level').addEventListener('click',()=>{$('map').close();resetLevel()});
 $('reset-test').addEventListener('click',()=>{
- if(!confirm(SHARED_PREVIEW?'Restart only this isolated preview\'s Word Trails progress? Shared tokens and earned reward receipts will NOT reset.':'Reset only Word Trails NEXT test progress, coins and unlocks? The live game will not be affected.'))return;
+ // Finish the activating touch before opening a native modal. WebKit can
+ // otherwise retain the input dispatch inside confirm and block navigation.
+ setTimeout(()=>{
+ $('map').close();
+ if(!confirm(SHARED_PREVIEW?'Restart only this isolated preview\'s Word Trails progress? Shared tokens and earned reward receipts will NOT reset.':'Reset only Word Trails NEXT test progress, coins and unlocks? The live game will not be affected.')){$('map').showModal();return;}
  save=DEFAULT();store();showLevel(0);cue('touch');
+ },0);
 });
 window.addEventListener('keydown',e=>{
  if(e.key==='Enter'&&!($('finish').open||$('map').open||$('discovery').open)){submit()}

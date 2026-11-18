@@ -39,11 +39,12 @@ async function map(f){
  await button.tap();await f.locator('#map[open]').waitFor();assert.equal(await f.locator('.map-level').count(),55);assert((await f.locator('.map-chapter-title').allTextContents()).at(-1).includes('CHAPTER 11 · Learning and Serving'));}
 const nativeDialogHandling=new WeakMap();
 function acceptNativeDialogs(p){
- const state={accepted:new WeakMap(),errors:[],dialogs:[]};nativeDialogHandling.set(p,state);
- p.on('dialog',dialog=>{state.dialogs.push({type:dialog.type(),message:dialog.message()});console.log('NATIVE_DIALOG',dialog.type(),dialog.message());const task=dialog.accept();state.accepted.set(dialog,task);task.catch(error=>state.errors.push(error.message));});
+ const state={accepted:new WeakMap(),errors:[],dialogs:[],dismissNext:false};nativeDialogHandling.set(p,state);
+ p.on('dialog',dialog=>{state.dialogs.push({type:dialog.type(),message:dialog.message()});console.log('NATIVE_DIALOG',dialog.type(),dialog.message());const dismiss=dialog.type()==='confirm'&&state.dismissNext;state.dismissNext=false;const task=dismiss?dialog.dismiss():dialog.accept();state.accepted.set(dialog,task);task.catch(error=>state.errors.push(error.message));});
 }
+function dismissNextNativeConfirm(p){const state=nativeDialogHandling.get(p);assert(state);state.dismissNext=true;}
 function assertNativeDialogs(p){assert.deepEqual(nativeDialogHandling.get(p)?.errors||[],[],'Native dialog handling must not fail');}
-async function touchMapAction(p,f,id,resetActivation='touch'){
+async function touchMapAction(p,f,id,resetDecision='accept'){
  const button=f.locator(id);await button.scrollIntoViewIfNeeded();
  await f.evaluate(()=>new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r))));
  assert(await button.isVisible());assert(await button.isEnabled());
@@ -51,26 +52,26 @@ async function touchMapAction(p,f,id,resetActivation='touch'){
  const r=await button.boundingBox();
  if(id==='#reset-test'){
   const before=await state(p),handling=nativeDialogHandling.get(p);assert(handling,'Native dialog handling must be observed');
-  assert(['touch','keyboard'].includes(resetActivation));
-  if(resetActivation==='keyboard')await button.focus();
+  assert(['accept','cancel'].includes(resetDecision));if(resetDecision==='cancel')dismissNextNativeConfirm(p);
   const confirmation=p.waitForEvent('dialog',{predicate:d=>d.type()==='confirm',timeout:20000});
-  const gesture=resetActivation==='keyboard'?p.keyboard.press('Enter'):p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2);
+  const gesture=p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2);
   // Observe both promises immediately, including on failure/teardown.
   gesture.catch(()=>{});confirmation.catch(()=>{});
   const dialog=await confirmation;assert.match(dialog.message(),/Restart only this isolated preview's Word Trails progress/);
-  const accepted=handling.accepted.get(dialog);assert(accepted,'The actual native confirmation must be accepted and observed');await accepted;console.log('RESET_CONFIRM_ACCEPTED',resetActivation);
-  // WebKit can keep dispatchTapEvent pending inside a native confirmation.
-  // Do not poll/evaluate that paused JS context or abandon the actual touch.
-  // A real refresh after accepting the confirm releases the old frame and also
-  // proves the reset was durably saved, rather than only painted in its UI.
-  async function acknowledged(){let timeout;try{await Promise.race([gesture,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native reset '+resetActivation+' did not acknowledge')),20000)})])}finally{clearTimeout(timeout)}}
-  if(resetActivation==='keyboard')await acknowledged();
+  const accepted=handling.accepted.get(dialog);assert(accepted,'The actual native confirmation must be accepted and observed');await accepted;console.log('RESET_TOUCH_CONFIRM_HANDLED',resetDecision);
+  // The engine defers its confirmation until the activating input returns.
+  // Require the actual native gesture acknowledgement BEFORE refreshing.
+  let timeout;try{await Promise.race([gesture,new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native reset touch did not acknowledge')),20000)})])}finally{clearTimeout(timeout)}
+  console.log('RESET_NATIVE_TOUCH_ACKNOWLEDGED',resetDecision);
+  if(resetDecision==='cancel'){await f.locator('#map[open]').waitFor();assert.deepEqual(await state(p),before,'Cancel must not change any wallet or Trail state');assert.deepEqual(handling.errors,[]);return;}
+  await f.locator('#map[open]').waitFor({state:'hidden'});
+  await map(f);assert.equal(await f.locator('.map-level:enabled').count(),1,'Reset must rebuild locks, not leave the old unlocked map usable');
+  assert(await f.locator('.map-level').nth(50).isDisabled());await f.locator('#map-x').tap();
   await p.reload({waitUntil:'domcontentloaded',timeout:120000});
-  if(resetActivation==='touch')await acknowledged();
   await ready(p);const after=await parity(p);
   assert.equal(after.t.level,0);assert.equal(after.t.unlocked,0);assert.deepEqual(after.t.completed,[]);assert.equal(after.t.progress,null);
   assert.deepEqual(after.w,before.w,'Reset and refresh must preserve the complete shared wallet, stock, purchases and receipts');
-  assert.deepEqual(handling.errors,[]);console.log('RESET_REFRESH_ACK_DURABLE',JSON.stringify({activation:resetActivation,completed:after.t.completed.length,tokens:after.balance,receipts:Object.keys(after.w.wtReceipts||{}).length,walletUnchanged:true}));return;
+  assert.deepEqual(handling.errors,[]);console.log('RESET_TOUCH_REFRESH_ACK_DURABLE',JSON.stringify({completed:after.t.completed.length,tokens:after.balance,receipts:Object.keys(after.w.wtReceipts||{}).length,walletUnchanged:true}));return;
  }
  let timeout;try{await Promise.race([p.touchscreen.tap(r.x+r.width/2,r.y+r.height/2),new Promise((_,reject)=>{timeout=setTimeout(()=>reject(Error('Native touchscreen did not acknowledge '+id)),20000)})])}finally{clearTimeout(timeout)}
 }
@@ -113,15 +114,10 @@ if(require.main===module)(async()=>{const oldFile=await priorBackup();for(const 
  for(const kind of ['checksum','legacy','future','foreign']){const bad=JSON.parse(JSON.stringify(complete));if(kind==='checksum')bad.keys[W]+=' ';if(kind==='legacy')bad.version=1;if(kind==='foreign')bad.storagePrefix='bu-visual-lab-shared-preview-20261116:';if(kind==='future'){const t=JSON.parse(bad.keys[T]);t.unlocked=55;bad.keys[T]=JSON.stringify(t);delete bad.checksum;bad.checksum=await p.evaluate(x=>BUSharedTestBackup.hash(x),bad);}const before=await state(p);await choose(p,bad);await p.locator('#bu-shared-restore-error').waitFor({state:'visible'});assert.deepEqual((await state(p)).w,before.w);assert.deepEqual((await state(p)).t,before.t);}
  // Confirmed reset changes the iframe synchronously. Do not wait for a
  // navigation signal from this native confirmation; verify the actual save.
- // The independent complete-55 fixture above retains real native-touch reset
- // at BOTH widths. This long, mixed-input playthrough additionally exercises
- // accessible keyboard activation: WebKit dispatchTapEvent can retain a native
- // confirm after hundreds of gestures, blocking even reload despite durable
- // reset state. Do not remove any touch, confirm, wallet or restore assertion.
- f=await launch(p);await map(f);await touchMapAction(p,f,'#reset-test','keyboard');await p.waitForFunction(T=>JSON.parse(localStorage.getItem(T)).completed.length===0,T);assert.equal((await state(p)).t.completed.length,0);assert.equal((await parity(p)).balance,963);await restore(p,complete);f=await launch(p);s=await parity(p);assert.equal(s.t.level,54);assert.equal(s.t.completed.length,55);assert.equal(s.balance,963);assert.deepEqual(s.w.wtReceipts,finalWallet.wtReceipts);
+ f=await launch(p);await map(f);await touchMapAction(p,f,'#reset-test');await p.waitForFunction(T=>JSON.parse(localStorage.getItem(T)).completed.length===0,T);assert.equal((await state(p)).t.completed.length,0);assert.equal((await parity(p)).balance,963);await restore(p,complete);f=await launch(p);s=await parity(p);assert.equal(s.t.level,54);assert.equal(s.t.completed.length,55);assert.equal(s.balance,963);assert.deepEqual(s.w.wtReceipts,finalWallet.wtReceipts);
  // Full final-level replay must not repay the seal, discoveries, satchel or level.
  for(const hidden of [pack[4].spark,pack[4].extraSparks[0].word])await word(f,hidden);for(const b of pack[4].bonus.split(' '))await word(f,b);for(const[w]of pack[4].words)await word(f,w);await f.locator('#finish[open]').waitFor();assert.equal((await parity(p)).balance,963);assert.deepEqual((await state(p)).w.wtReceipts,finalWallet.wtReceipts);assert((await f.locator('#finish-seal-note').textContent()).includes('previously collected'));await f.locator('#next-level').tap();assert((await f.locator('#wt-map-seal-detail').textContent()).includes('55-level journey is complete'));assert.equal((await state(p)).t.coins,111);
  assert(!await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert(!await f.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2));assert.deepEqual(await p.evaluate(keys=>Object.fromEntries(keys.map(k=>[k,BUPreviewStorageFence.originalKeyValue(k)])),Object.keys(originals)),originals);assert.deepEqual(errors,[]);assertNativeDialogs(p);
- evidence.push({engine,width,height,levelsCompleted:5,bonusWords:60,hiddenDiscoveries:10,old50BackupRestored:true,new55BackupRestored:true,finalReplayNoPayout:true,resetActivation:'keyboard (independent restore fixture uses native touch)',originalsUnchanged:true,pageErrors:0});console.log('PASS_55_INTEGRATION_BROWSER',engine,width,'old/new V2 restore; 50→51; all five levels; no duplicate payments; original/private scopes intact');
+ evidence.push({engine,width,height,levelsCompleted:5,bonusWords:60,hiddenDiscoveries:10,old50BackupRestored:true,new55BackupRestored:true,finalReplayNoPayout:true,originalsUnchanged:true,pageErrors:0});console.log('PASS_55_INTEGRATION_BROWSER',engine,width,'old/new V2 restore; 50→51; all five levels; no duplicate payments; original/private scopes intact');
  }catch(e){await p.screenshot({path:`work/word-trails-55-integration/${engine}-${width}-FAIL.png`,timeout:10000}).catch(()=>{});console.error('55_DIAGNOSTIC',engine,width,JSON.stringify(await state(p).then(s=>({coins:s.balance,level:s.t?.level,unlocked:s.t?.unlocked,completed:s.t?.completed.length,progress:s.t?.progress,receipts:Object.keys(s.w.wtReceipts||{}).length,errors})).catch(()=>null)));throw e;}finally{await network.save(`work/word-trails-55-integration/network-${engine}-${width}.json`);await c.close()}
  } }finally{await browser.close()}}fs.writeFileSync(process.env.WT_55_EVIDENCE||'work/word-trails-55-integration/evidence.json',JSON.stringify(evidence,null,2));})().catch(e=>{console.error(e);process.exitCode=1});
