@@ -1,0 +1,45 @@
+name: Clue Relay zero-cost answer flexibility (TEST only)
+on:
+  pull_request:
+    paths:
+      - 'experiments/family-clue-relay-*.js'
+      - scripts/qa_clue_relay_answer_v1.cjs
+      - .github/workflows/qa-clue-relay-answer-v1.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  family-answer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Syntax of production and acceptance paths
+        run: |
+          node --check experiments/family-clue-relay-rules-v1.js
+          node --check experiments/family-clue-relay-v1.js
+          node --check experiments/family-clue-relay-questions-v1.js
+          node --check scripts/qa_clue_relay_answer_v1.cjs
+      - run: npm install --prefix work --no-audit --no-fund puppeteer-core@25.17.0
+      - name: Start disposable preview server
+        run: |
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+          python3 -m http.server 8896 --bind 127.0.0.1 >/tmp/bu-clue-answer-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8896/experiments/family-clue-relay-v1.html -o /dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Validate no-cost answer matching, phone UI, scoring, repeated taps
+        env:
+          NODE_PATH: ./work/node_modules
+          BU_RELAY_URL: http://127.0.0.1:8896/experiments/family-clue-relay-v1.html
+        run: node scripts/qa_clue_relay_answer_v1.cjs
+      - name: Validate Play Together menu and audio/save/Back isolation
+        env:
+          NODE_PATH: ./work/node_modules
+          BU_RELAY_URL: http://127.0.0.1:8896/index.html
+        run: node scripts/qa_family_clue_relay_menu_v1.cjs

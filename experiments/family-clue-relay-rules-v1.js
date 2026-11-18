@@ -36,11 +36,20 @@ function guess(game,value){
  }
  game.clue++;return {correct:false,nextClue:game.clue+1};
 }
+// A family may judge a spoken, abbreviated, or misspelled answer together.
+// Only the active guessing turn can be approved; this is an optional honor rule.
+function familyApprove(game){
+ if(game.phase!=='guess')return {ignored:true};
+ const points=3-game.clue;
+ game.players[active(game)].score+=points;
+ game.result={correct:true,points,clue:game.clue+1,player:active(game),familyApproved:true};
+ game.phase='result';return {...game.result};
+}
 function next(game){
  if(game.phase!=='result')return false;
  game.round++;game.clue=0;game.result=null;game.phase=game.round===game.questions.length?'complete':'handoff';return true;
 }
 function winners(game){if(game.phase!=='complete')return [];const best=Math.max(...game.players.map(p=>p.score));return game.players.filter(p=>p.score===best);}
-const api=Object.freeze({normalize,shuffle,create,active,begin,guess,next,winners});
+const api=Object.freeze({normalize,shuffle,create,active,begin,guess,familyApprove,next,winners});
 if(typeof module==='object'&&module.exports)module.exports=api;else root.BUClueRelayRules=api;
 })(typeof window==='object'?window:globalThis);
