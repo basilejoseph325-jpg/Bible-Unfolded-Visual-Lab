@@ -257,5 +257,20 @@
   },
   "gameEngineSHA256": "186f8c1ec13487c4e5e97a8fdf3b5597b9218b91c60fbd8c11b4de1c33092e1c",
   "noahFix": "Source and QA workflow byte-identical to new main; included in immutable-base scope guard.",
-  "requiredNext": "Exact-head CI with supported dependencies, including full long replay at both widths; final results recorded in PR #65 description."
+  "requiredNext": "Exact-head CI with supported dependencies, including full long replay at both widths; final results recorded in PR #65 description.",
+  "ci_432e204_followup": {
+    "run": 44412434072,
+    "job": 135184780562,
+    "artifact": 14480431909,
+    "status": "diagnostically canceled after long step; not a pass",
+    "playwright": "1.62.1",
+    "webkit": "26.5 / 2336",
+    "compact_forced_and_passive": "PASS both320/430",
+    "focused_complete55_restore": "PASS both320/430",
+    "full_gameplay_320": "PASS including reset/refresh/restore/replay",
+    "full_gameplay_430": "page.crash at2026-11-18T22:42:04.909Z, after wrong native wheel answer REB in Level51, BEFORE reset/focus",
+    "collector_hang": "awaited protocol operation on crashed page did not reject; crash-aware whole-scenario race and bounded diagnostic/cleanup added",
+    "replacement_tooling": "exact Playwright1.65.1 onUbuntu26.04, matching successful independent workflow version; full rerun required",
+    "local_1621_long_gameplay": "PASS both320/430, zero page errors, no duplicate payment; this does not override the CI renderer crash"
+  }
 }

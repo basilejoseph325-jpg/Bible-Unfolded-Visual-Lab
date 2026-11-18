@@ -20,4 +20,14 @@ function trace(p){
   finally{clearTimeout(timer);}
  }};pages.set(p,result);return result;
 }
-module.exports={trace};
+// A renderer crash may leave an outstanding WebKit protocol request unresolved.
+// Race the entire scenario, not only locator calls; a crash is always a failure.
+async function withPageHealth(p,fn){
+ let reject;const failed=new Promise((_,r)=>{reject=r});
+ const crash=()=>reject(Error('Browser page crashed during gameplay'));
+ const close=()=>reject(Error('Browser page closed during gameplay'));
+ p.once('crash',crash);p.once('close',close);
+ try{return await Promise.race([Promise.resolve().then(fn),failed]);}
+ finally{p.off('crash',crash);p.off('close',close);}
+}
+module.exports={trace,withPageHealth};
