@@ -22,7 +22,7 @@ jobs:
     # original Episode-only scope gate. Gameplay assertions remain.
     timeout-minutes: 25
     env:
-      BU_SCOPE_MODE: "${{ (github.head_ref == 'feature/test-word-trails-51-55-integration' || github.ref_name == 'feature/test-word-trails-51-55-integration') && 'cross-mode' || '' }}"
+      BU_SCOPE_MODE: "${{ (github.head_ref == 'feature/test-word-trails-51-55-integration' || github.ref_name == 'feature/test-word-trails-51-55-integration' || github.head_ref == 'feature/test-owner-grant-45000' || github.ref_name == 'feature/test-owner-grant-45000') && 'cross-mode' || '' }}"
     steps:
       - uses: actions/checkout@v4
         with:

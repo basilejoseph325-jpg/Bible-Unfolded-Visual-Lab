@@ -42,7 +42,9 @@ remain authoritative; no alternate spendable balance or legacy-coin conversion.
 ## Verification
 
 `qa_test_developer_grant_scope_v1.cjs` protects every existing file from the approved
-TEST merge except the exact new script tag. Unit and real-browser tests cover
+TEST merge except the exact new script tag and a Genesis CI branch predicate. That predicate
+selects its already-approved cross-mode chapter/audio hash guard for this feature
+branch; no gameplay assertion is removed. Unit and real-browser tests cover
 consent, target arithmetic, once-only behavior, native hints/purchases, preserved
 progress, old/new V2 restoration, storage failures and LIVE/preview exclusion.
 Chromium/WebKit automation uses isolated synthetic profiles at 320px and 430px.
