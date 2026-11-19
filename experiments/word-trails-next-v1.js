@@ -171,6 +171,13 @@ if(Array.isArray(window.BUWTLevels46to50)){
   LEVELS.push(next);EXTRA_SPARKS.push(next.extraSparks);
  }
 }
+// Approved continuation: append without changing existing level/save indices.
+if(Array.isArray(window.BUWTLevels51to55)){
+ for(const next of window.BUWTLevels51to55){
+  if(!next||!Array.isArray(next.words)||!Array.isArray(next.extraSparks))throw Error('Broken 51–55 level data');
+  LEVELS.push(next);EXTRA_SPARKS.push(next.extraSparks);
+ }
+}
 const BIBLE_SPARKS=LEVELS.map((lev,i)=>[
  {word:lev.spark,clue:lev.clue,reference:lev.reference,url:lev.url,insight:lev.insight},
  ...EXTRA_SPARKS[i]
@@ -185,9 +192,10 @@ const MILESTONE_SEALS=Object.freeze({
  35:{symbol:'✧',name:'Scripture Explorer',detail:'Thirty-five levels completed'},
  40:{symbol:'✦',name:'Steady Journey',detail:'Forty levels completed'},
  45:{symbol:'✧',name:'Purposeful Paths',detail:'Forty-five levels completed'},
- 50:{symbol:'✺',name:'Listening Heart',detail:'Fifty levels completed'}
+ 50:{symbol:'✺',name:'Listening Heart',detail:'Fifty levels completed'},
+ 55:{symbol:'✧',name:'Ready to Serve',detail:'Fifty-five trails explored'}
 });
-const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues','Faith and Discovery','Growing in Knowledge','Paths of Purpose','Hope and Understanding'];
+const MAP_CHAPTERS=['The First Steps','Courage & Discovery','Stories of Faith','People & Places','Across the Scriptures','The Journey Continues','Faith and Discovery','Growing in Knowledge','Paths of Purpose','Hope and Understanding','Learning and Serving'];
 // The native host owns currency routing; regular TEST needs no special URL.
 const SHARED_PREVIEW=(()=>{try{return window.parent!==window&&
  window.parent.BUPreviewStorageFence?.active===true;}catch(_){return false;}})();
@@ -278,6 +286,8 @@ function load(){
   if(LEVELS.length>35&&x.completed.includes(34))x.unlocked=Math.max(x.unlocked,35);
   if(LEVELS.length>40&&x.completed.includes(39))x.unlocked=Math.max(x.unlocked,40);
   if(LEVELS.length>45&&x.completed.includes(44))x.unlocked=Math.max(x.unlocked,45);
+  // Completed Level 50 saves gain access without replaying or paying again.
+  if(LEVELS.length>50&&x.completed.includes(49))x.unlocked=Math.max(x.unlocked,50);
   if(!Array.isArray(x.claimedSparks))x.claimedSparks=[];
   if(!Array.isArray(x.boardBible))x.boardBible=[];
   // Migration: a completed old single star was the FIRST Bible word in its level.
@@ -298,7 +308,7 @@ function nextSealProgress(){
  const completed=new Set(save.completed.filter(n=>Number.isInteger(n)&&n>=0&&n<LEVELS.length));
  const targets=Object.keys(MILESTONE_SEALS).map(Number).sort((a,b)=>a-b);
  const target=targets.find(n=>!completed.has(n-1));
- if(!target)return {all:true,done:5,goal:5,title:'All ten Journey Seals collected'};
+ if(!target)return {all:true,done:5,goal:5,title:'All '+targets.length+' Journey Seals collected'};
  const start=target-5;
  const done=Array.from({length:5},(_,offset)=>start+offset).filter(n=>completed.has(n)).length;
  return {all:false,done,goal:5,title:MILESTONE_SEALS[target].name,target};
@@ -308,17 +318,17 @@ function renderNextSealProgress(){
  const mapLabel=$('wt-map-seal-title'),mapDetail=$('wt-map-seal-detail'),
   mapBar=$('wt-map-seal-track'),mapFill=$('wt-map-seal-fill'),
   finishLabel=$('finish-next-seal');
- if(mapLabel)mapLabel.textContent=seal.all?'✦ All ten Journey Seals collected':
+ if(mapLabel)mapLabel.textContent=seal.all?'✦ '+seal.title:
   'NEXT JOURNEY SEAL · '+seal.title;
- if(mapDetail)mapDetail.textContent=seal.all?'Your 50-level journey is complete!':
+ if(mapDetail)mapDetail.textContent=seal.all?'Your '+LEVELS.length+'-level journey is complete!':
   seal.done+' of '+seal.goal+' levels completed · '+(SHARED_PREVIEW?'+3 Insight Tokens':'+60 bonus TEST coins')+' at Level '+seal.target;
  if(mapBar){
   mapBar.setAttribute('aria-valuenow',String(seal.done));
-  mapBar.setAttribute('aria-label',seal.all?'All ten Journey Seals collected':
+  mapBar.setAttribute('aria-label',seal.all?seal.title:
    seal.title+': '+seal.done+' of 5 levels complete');
  }
  if(mapFill)mapFill.style.width=(seal.done/seal.goal*100)+'%';
- if(finishLabel)finishLabel.textContent=seal.all?'✦ All ten Journey Seals collected!':
+ if(finishLabel)finishLabel.textContent=seal.all?'✦ '+seal.title+'!':
   'UP NEXT · '+seal.title+' · '+seal.done+'/5 levels toward your next seal';
 }
 let found=new Set(),bonuses=new Set(),hinted=new Set(),chosen=[],letters=[],combo=0;
@@ -842,8 +852,13 @@ $('spark-x').addEventListener('click',()=>$('discovery').close());
 $('map-x').addEventListener('click',()=>$('map').close());
 $('reset-level').addEventListener('click',()=>{$('map').close();resetLevel()});
 $('reset-test').addEventListener('click',()=>{
- if(!confirm(SHARED_PREVIEW?'Restart only this isolated preview\'s Word Trails progress? Shared tokens and earned reward receipts will NOT reset.':'Reset only Word Trails NEXT test progress, coins and unlocks? The live game will not be affected.'))return;
+ // Finish the activating touch before opening a native modal. WebKit can
+ // otherwise retain the input dispatch inside confirm and block navigation.
+ setTimeout(()=>{
+ $('map').close();
+ if(!confirm(SHARED_PREVIEW?'Restart only this isolated preview\'s Word Trails progress? Shared tokens and earned reward receipts will NOT reset.':'Reset only Word Trails NEXT test progress, coins and unlocks? The live game will not be affected.')){$('map').showModal();return;}
  save=DEFAULT();store();showLevel(0);cue('touch');
+ },0);
 });
 window.addEventListener('keydown',e=>{
  if(e.key==='Enter'&&!($('finish').open||$('map').open||$('discovery').open)){submit()}

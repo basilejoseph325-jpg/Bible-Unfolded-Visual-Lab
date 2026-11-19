@@ -14,6 +14,7 @@ on:
       - 'index.html'
       - 'scripts/qa_standard_test_*'
       - 'scripts/qa_shared_test_backup_v2*'
+      - 'scripts/qa_recovery_network_trace.cjs'
       - 'scripts/qa_shared_wallet_family_relay_browser_v1.cjs'
       - 'family-worship-gathering-v1.js'
       - '.github/workflows/qa-standard-test-shared-wallet-v1.yml'
@@ -22,7 +23,7 @@ permissions:
   contents: read
 jobs:
   regular-test:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     timeout-minutes: 25
     strategy:
       fail-fast: false
@@ -43,8 +44,10 @@ jobs:
           node scripts/word_trails_shared_rewards_integration_test.mjs
       - name: Install browser tooling
         run: |
-          npm install --prefix /tmp/bu-standard-wallet-qa playwright@1.58.2 --no-audit --no-fund --silent
-          /tmp/bu-standard-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+          npm install --prefix /tmp/bu-standard-wallet-qa playwright@1.65.1 --no-audit --no-fund --silent
+          if [ '${{ matrix.engine }}' = 'webkit' ]; then
+            /tmp/bu-standard-wallet-qa/node_modules/.bin/playwright install --with-deps webkit
+          fi
       - name: Fresh and existing players on the normal URL
         env:
           WT_ENGINES: '${{ matrix.engine }}'

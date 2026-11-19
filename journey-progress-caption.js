@@ -74,7 +74,7 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 (()=>{if(document.getElementById('bu-daily-question-visual'))return;const l=document.createElement('link');l.id='bu-daily-question-visual';l.rel='stylesheet';l.href='daily-discovery-question-premium.css?v=20261104-stone-feedback-v4';document.head.appendChild(l)})();
 
 /* Visual Lab ONLY: home screen TEST label; no layout or input interception. */
-(()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=shared-restore-v2';document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-test-home-loader'))return;const s=document.createElement('script');s.id='bu-test-home-loader';s.src='visual-lab-test-banner.js?v=wordtrails55-v1';document.head.appendChild(s)})();
 
 /* Visual Lab ONLY — four Daily Discovery polish refinements (no other game modes). */
 (()=>{if(document.getElementById('bu-daily-polish-test'))return;const l=document.createElement('link');l.id='bu-daily-polish-test';l.rel='stylesheet';l.href='daily-discovery-polish-test.css?v=20261104-metallic-art-v3';document.head.appendChild(l)})();
@@ -298,6 +298,12 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* Genesis Episode 13 TEST integration; wait for the existing Episode 12 registration. */
 (()=>{'use strict';
  const start=()=>{if(document.getElementById('bu-story-genesis13-native-loader'))return;
+  // Top-level wallet recovery deliberately reloads this document. Leave isolated
+  // preview frames on their existing adapter; do not start a chapter fetch
+  // in that outgoing, read-only page (WebKit reports it as an access error).
+  if(window.parent===window&&window.BUPreviewStorageFence?.standardMode&&!window.BUPreviewStorageFence.writerStatus().writable){
+   window.addEventListener('bu-test-wallet-writable',start,{once:true});return;
+  }
   const script=document.createElement('script');script.id='bu-story-genesis13-native-loader';script.async=false;
   script.src='story-adventure-episode13-integration-test.js?v=20261115-g13-integration-v1';
   script.onerror=()=>console.warn('[Genesis13] TEST chapter integration did not load');document.head.appendChild(script);};
@@ -314,6 +320,9 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
  const id='bu-story-genesis14-native-loader',deadline=Date.now()+60000;
  function start(){
   if(document.getElementById(id))return;
+  if(window.parent===window&&window.BUPreviewStorageFence?.standardMode&&!window.BUPreviewStorageFence.writerStatus().writable){
+   window.addEventListener('bu-test-wallet-writable',start,{once:true});return;
+  }
   if(window.BUStoryGenesis13Test?.status==='failed'){console.warn('[Genesis14] Episode 13 prerequisite failed');return;}
   if(window.BUStoryGenesis13Test?.status!=='ready'){
    if(Date.now()<deadline)setTimeout(start,80);

@@ -1,0 +1,126 @@
+{
+  "provenance": {
+    "base": "624fff4d11ab02dea673a20b67be94ab8915fa75",
+    "source": "Synthetic profile played through the actual unchanged 50-level native TEST engine; never owner data",
+    "publicLevel": 50,
+    "interactions": {
+      "hints": 2,
+      "hidden": [
+        "TEN",
+        "SIN"
+      ],
+      "bonuses": [
+        "LENS",
+        "SENT",
+        "LINE"
+      ],
+      "answers": [
+        "LISTENS",
+        "LISTEN",
+        "SILENT"
+      ]
+    }
+  },
+  "trail": {
+    "level": 49,
+    "unlocked": 49,
+    "coins": 111,
+    "points": 530,
+    "completed": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48
+    ],
+    "sparks": [
+      49
+    ],
+    "claimedSparks": [
+      "49:TEN",
+      "49:SIN"
+    ],
+    "boardBible": [
+      "49:LISTENS",
+      "49:LISTEN",
+      "49:SILENT"
+    ],
+    "paidWords": [
+      "49|LISTENS",
+      "49|LISTEN",
+      "49|SILENT"
+    ],
+    "paidBonuses": [
+      "49|LENS",
+      "49|SENT",
+      "49|LINE",
+      "satchel:49"
+    ],
+    "claimedFreeHints": [
+      49
+    ],
+    "sound": true,
+    "progress": {
+      "level": 49,
+      "found": [
+        "LISTENS",
+        "LISTEN",
+        "SILENT"
+      ],
+      "bonuses": [
+        "LENS",
+        "SENT",
+        "LINE"
+      ],
+      "hinted": [
+        "0:0",
+        "2:0"
+      ],
+      "combo": 6
+    }
+  }
+}

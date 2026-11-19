@@ -40,7 +40,7 @@ async function run(browser,engine,width,height,legacy){
    assert(first.native>=533&&first.native<644,'No 111 old Trail Coins may be converted');assert(first.points>=13605);
    const kept=await page.evaluate(()=>({wallet:JSON.parse(localStorage.getItem('bible-unfolded-rewards-v17')),james:BUJamesReturnLoopV1.inspect(),books:localStorage.getItem('buGuideLast:0')}));
    assert(kept.wallet.purchases.includes('goldwheel'));assert(kept.wallet.earned.includes('old-achievement'));assert(kept.james.owned.includes('books'));assert(kept.james.achievements.includes('streak:3'));assert.equal(kept.james.pot,14);assert.equal(kept.books,'17');assert.equal(await page.evaluate(()=>BUNativeBoostShop.preview().inventory.fifty),2);
-   const frame=await launch(page);assert((await frame.locator('#level-label').textContent()).includes('6 / 50'));
+   const frame=await launch(page);assert((await frame.locator('#level-label').textContent()).includes('6 / 55'));
    assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('bu-visual-lab-wordtrails-shared-preview-v1')).coins),111);
    const legacyReceipt=await page.evaluate(()=>{const f=document.getElementById('bu-wt-native-game').contentWindow;return BUTestInsightBridge.transact(f,{type:'level',level:1})});assert(legacyReceipt.legacy&&legacyReceipt.duplicate);assert.equal((await same(page)).native,first.native);
    await frame.locator('#hint').tap();await frame.locator('#hint').tap();assert.equal((await same(page)).native,first.native-15);
@@ -65,7 +65,7 @@ async function run(browser,engine,width,height,legacy){
    const letters=await page.locator('.xword-letter').allTextContents(),used=new Set();for(const ch of 'ESTHER'){const i=letters.findIndex((v,n)=>v===ch&&!used.has(n));assert(i>=0);used.add(i);await page.locator('.xword-letter').nth(i).tap()}
    await page.waitForFunction(()=>document.querySelector('.trail-topline strong')?.textContent?.startsWith('1 /'));assert.equal(await page.locator('#xword-coin-count').textContent(),String((await same(page)).native));await shot(page,engine,width,'bible-crosswords');
    // Normal home tile -> shared Word Trails; zero URL opt-ins.
-   let frame=await launch(page);assert((await frame.locator('#level-label').textContent()).includes('1 / 50'));const beforeTrail=await same(page);await shot(page,engine,width,'word-trails');
+   let frame=await launch(page);assert((await frame.locator('#level-label').textContent()).includes('1 / 55'));const beforeTrail=await same(page);await shot(page,engine,width,'word-trails');
    await word(frame,'NOI');assert.equal((await same(page)).native,beforeTrail.native);
    await frame.locator('#hint').tap();assert.equal((await same(page)).native,beforeTrail.native);await frame.locator('#hint').tap();assert.equal((await same(page)).native,beforeTrail.native-15);
    const beforeFind=(await same(page)).native;await word(frame,'CAIN');await frame.locator('#spark-next').tap();assert.equal((await same(page)).native,beforeFind+1);await word(frame,'CAIN');assert.equal((await same(page)).native,beforeFind+1);

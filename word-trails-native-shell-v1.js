@@ -4,7 +4,7 @@
  * TEST ONLY: never injected into Story-Trails LIVE. */
 (()=>{'use strict';
 if(window.BUWTNativeShell)return;
-const FRAME_URL='experiments/word-trails-next-v1.html?v=shared-restore-v2';
+const FRAME_URL='experiments/word-trails-next-v1.html?v=wordtrails55-v1';
 let shell=null,frame=null,opening=false,dailyFrame=null,dailyBackPending=false;
 const $=id=>document.getElementById(id);
 function active(){return !!shell?.isConnected}

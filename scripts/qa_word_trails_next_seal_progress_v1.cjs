@@ -7,6 +7,8 @@ const puppeteer=require('puppeteer-core');
 const cp=require('node:child_process'),fs=require('node:fs'),vm=require('node:vm');
 const content={window:{}};vm.runInNewContext(fs.readFileSync('experiments/word-trails-levels-46-50-v1.js','utf8'),content);
 const lastWords=content.window.BUWTLevels46to50[4].words.map(w=>w[0]);
+vm.runInNewContext(fs.readFileSync('experiments/word-trails-levels-51-55-v1.js','utf8'),content);
+const finalWords=content.window.BUWTLevels51to55[4].words.map(w=>w[0]);
 const chrome=cp.execSync('command -v google-chrome || command -v chromium',{encoding:'utf8'}).trim();
 const root=process.env.WT_URL||'http://127.0.0.1:8890/experiments/word-trails-next-v1.html';
 const SAVE_KEY='bu-visual-lab-wordtrails-next-v1';
@@ -18,7 +20,8 @@ const scenarios=[
  {name:'legacy35',completed:Array.from({length:35},(_,i)=>i),level:34,unlocked:34,coins:700,title:'Steady Journey',done:0},
  {name:'legacy40',completed:Array.from({length:40},(_,i)=>i),level:39,unlocked:39,coins:700,title:'Purposeful Paths',done:0},
  {name:'legacy45',completed:Array.from({length:45},(_,i)=>i),level:44,unlocked:44,coins:700,title:'Listening Heart',done:0},
- {name:'all-seals',completed:Array.from({length:50},(_,i)=>i),level:49,unlocked:49,coins:700,title:'All ten Journey Seals collected',done:5}
+ {name:'legacy50',completed:Array.from({length:50},(_,i)=>i),level:49,unlocked:49,coins:700,title:'Ready to Serve',done:0},
+ {name:'all-seals',completed:Array.from({length:55},(_,i)=>i),level:54,unlocked:54,coins:700,title:'All 11 Journey Seals collected',done:5}
 ];
 const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--disable-setuid-sandbox','--disable-dev-shm-usage','--autoplay-policy=no-user-gesture-required'],protocolTimeout:120000};
 (async()=>{
@@ -69,7 +72,8 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     assert.equal(map.now,String(scenario.done),'Milestone count wrong '+scenario.name);
     assert.equal(map.max,'5');
     assert.equal(map.fill,scenario.done*20+'%');
-    assert.equal(map.levels,50,'Expected 50 levels');
+    assert.equal(map.levels,55,'Expected 55 levels');
+    if(scenario.name==='legacy50')assert.equal(map.storedUnlocked,50,'Completed Level 50 must unlock Level 51');
     if(scenario.name==='legacy30'){
       assert.equal(map.storedUnlocked,30,'Completed Level 30 must unlock Level 31');
       assert(map.level31Unlocked,'Level 31 must be playable without replaying Level 30');
@@ -91,8 +95,9 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
     const after=await game.evaluate(key=>localStorage.getItem(key),activeKey);
     assert.equal(after,before,'Viewing milestone must never write a save');
     await game.$eval('#map-x',b=>b.click());
-    if(scenario.name==='new'||(shared&&scenario.name==='all-seals')){
-      for(const word of scenario.name==='new'?['ANTIC','TACO','TONIC','COIN']:lastWords){
+    if(scenario.name==='new'||(shared&&['legacy50','all-seals'].includes(scenario.name))){
+      const replayWords=scenario.name==='all-seals'?finalWords:lastWords;
+      for(const word of scenario.name==='new'?['ANTIC','TACO','TONIC','COIN']:replayWords){
         const outcome=await game.evaluate(word=>{
           const rack=[...document.querySelectorAll('#wheel .wheel-letter')],used=new Set();
           for(const c of word){
@@ -103,7 +108,7 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
           document.getElementById('submit').click();
           return document.getElementById('solved-count').textContent;
         },word);
-        assert(outcome.includes('/ '+(scenario.name==='new'?4:lastWords.length)),'Unexpected board: '+outcome);
+        assert(outcome.includes('/ '+(scenario.name==='new'?4:replayWords.length)),'Unexpected board: '+outcome);
       }
       await game.waitForFunction(()=>document.getElementById('finish').open,{timeout:12000});
       const win=await game.evaluate(()=>{
@@ -115,11 +120,11 @@ const browserOpts={headless:true,executablePath:chrome,args:['--no-sandbox','--d
           viewportHeight:innerHeight,
           wallet:JSON.parse(localStorage.getItem(document.getElementById('coin-label')?.textContent==='TOKENS'?'bu-visual-lab-wordtrails-shared-preview-v1':'bu-visual-lab-wordtrails-next-v1'))};
       });
-      if(scenario.name==='new')assert(win.label.includes('First Steps')&&win.label.includes('1/5'),'Win screen lacks next milestone');else assert(win.label.includes('All ten'),'Completed Level 50 lost its final seal');
-      assert(win.level.includes('LEVEL '+(scenario.name==='new'?1:50)+' COMPLETE')&&win.buttons,'Normal win action missing');
+      if(scenario.name==='new')assert(win.label.includes('First Steps')&&win.label.includes('1/5'),'Win screen lacks next milestone');else if(scenario.name==='legacy50')assert(win.label.includes('Ready to Serve'),'Level 50 must preview the new seal');else assert(win.label.includes('All 11'),'Completed Level 55 lost its final seal');
+      assert(win.level.includes('LEVEL '+(scenario.name==='new'?1:scenario.level+1)+' COMPLETE')&&win.buttons,'Normal win action missing');
       assert(win.frameHeight<=height*0.91,'Win frame too tall');
-      assert.equal(win.wallet.completed.filter(x=>x===(scenario.name==='new'?0:49)).length,1,'Win did not save exactly one completion');
-      if(shared){assert.equal(await page.evaluate(()=>economy.coins),nativeBefore+(scenario.name==='new'?4:0),'Once-only native level/seal reward failed');assert.equal(win.wallet.unlocked,scenario.name==='new'?1:49);}
+      assert.equal(win.wallet.completed.filter(x=>x===(scenario.name==='new'?0:scenario.level)).length,1,'Win did not save exactly one completion');
+      if(shared){assert.equal(await page.evaluate(()=>economy.coins),nativeBefore+(scenario.name==='new'?4:0),'Once-only native level/seal reward failed');assert.equal(win.wallet.unlocked,scenario.name==='new'?1:scenario.name==='legacy50'?50:54);}
       assert.deepEqual(errors,[],'Game threw errors while finishing puzzle');
     }
     if(shared){assert.equal(await page.evaluate(()=>BUPreviewStorageFence.originalKeyValue('bu-visual-lab-wordtrails-next-v1')),JSON.stringify(seed),'Original progress changed');assert.equal(await page.evaluate(()=>BUPreviewStorageFence.originalKeyValue('bu-visual-lab-shared-preview-20261116:bible-unfolded-rewards-v17')),'private-canary');if(scenario.name!=='new')assert.equal(await page.evaluate(()=>economy.coins),nativeBefore,'Legacy accomplishments repaid');}

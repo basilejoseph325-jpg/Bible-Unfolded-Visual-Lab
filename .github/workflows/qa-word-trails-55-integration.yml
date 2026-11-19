@@ -1,0 +1,104 @@
+name: Word Trails 51–55 shared TEST integration (no deployment)
+on:
+  pull_request:
+    paths:
+      - 'experiments/word-trails-*.js'
+      - 'experiments/word-trails-next-v1.html'
+      - 'experiments/bu-test-*.js'
+      - 'word-trails-*.js'
+      - 'scripts/qa_word_trails_55*'
+      - 'scripts/qa_word_trails_levels_51_55*'
+      - 'scripts/fixtures/word-trails-51-55-sources.json'
+      - 'scripts/fixtures/word-trails-50-native-save.json'
+      - 'scripts/qa_story_wallet_startup_gate.cjs'
+      - 'scripts/qa_recovery_network_trace.cjs'
+      - '.github/workflows/qa-word-trails-55-integration.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  content-schema:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Approved content, unchanged original levels and strict V2 contracts
+        run: |
+          node scripts/qa_word_trails_55_page_health.cjs
+          node scripts/qa_word_trails_55_integration.cjs
+          node scripts/word_trails_quality_gate.mjs
+          node scripts/qa_word_trails_levels_51_55.cjs --integration --verify-sources
+          node scripts/qa_story_wallet_startup_gate.cjs
+          node scripts/qa_word_trails_55_legacy_formats.cjs
+          node scripts/qa_shared_test_backup_v2.cjs
+          node scripts/qa_test_insight_native_bridge_v2.cjs
+          node scripts/qa_standard_test_wallet_fence_v1.cjs
+          node scripts/qa_standard_test_boost_wallet_v1.cjs
+          node scripts/word_trails_shared_rewards_integration_test.mjs
+  mobile:
+    needs: content-schema
+    runs-on: ubuntu-26.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix: {engine: [chromium, webkit]}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Install pinned browser tooling
+        run: |
+          npm install --prefix /tmp/bu-55-qa playwright@1.65.1 --no-audit --no-fund --silent
+          if [ '${{ matrix.engine }}' = 'webkit' ]; then
+            /tmp/bu-55-qa/node_modules/.bin/playwright install --with-deps webkit
+          fi
+      - name: Start disposable candidate server
+        run: |
+          python3 -m http.server 8905 --bind 127.0.0.1 >/tmp/bu-55-http.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --silent --fail http://127.0.0.1:8905/index.html -o /dev/null; then break; fi
+            sleep 1
+          done
+          echo "CHROME_BIN=$(command -v google-chrome || command -v chromium)" >> "$GITHUB_ENV"
+      - name: Compact real WebKit reset reproducer, forced versus passive observation
+        if: matrix.engine == 'webkit'
+        env:
+          NODE_PATH: /tmp/bu-55-qa/node_modules
+        run: |
+          WT_RESET_FOCUS=force WT_RESET_TRACE_FILE=work/word-trails-55-integration/force.jsonl WT_RESET_PROBE_RESULT=work/word-trails-55-integration/force.json node scripts/qa_word_trails_55_reset_probe.cjs
+          WT_RESET_FOCUS=passive WT_RESET_TRACE_FILE=work/word-trails-55-integration/passive.jsonl WT_RESET_PROBE_RESULT=work/word-trails-55-integration/passive.json node scripts/qa_word_trails_55_reset_probe.cjs
+      - name: Independent complete-55 V2 export and real file-picker restoration
+        env:
+          NODE_PATH: /tmp/bu-55-qa/node_modules
+          WT_ENGINES: '${{ matrix.engine }}'
+        run: node scripts/qa_word_trails_55_restore_browser.cjs
+      - name: Actual 50→51 and 51→55 wheel, wallet, seals and old/new V2 restoration
+        env:
+          NODE_PATH: /tmp/bu-55-qa/node_modules
+          WT_ENGINES: '${{ matrix.engine }}'
+        run: node scripts/qa_word_trails_55_browser.cjs
+      - name: Existing shared games, migration, restarts, Books and reward regressions
+        env:
+          NODE_PATH: /tmp/bu-55-qa/node_modules
+          WT_ENGINES: '${{ matrix.engine }}'
+          BU_STANDARD_TEST_URL: http://127.0.0.1:8905/index.html
+          BU_SHARED_RESTORE_URL: http://127.0.0.1:8905/index.html
+          BU_RELAY_URL: http://127.0.0.1:8905/index.html
+        run: |
+          node scripts/qa_standard_test_shared_wallet_browser_v1.cjs
+          node scripts/qa_shared_test_backup_v2_browser.cjs
+          node scripts/qa_shared_wallet_family_relay_browser_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'word-trails-55-${{ matrix.engine }}'
+          path: |
+            work/word-trails-55-integration/
+            work/standard-wallet/
+            work/shared-restore/
+            work/shared-family-relay/
+            docs/WORD_TRAILS_65_RECOVERY_DIAGNOSTICS.json

@@ -15,8 +15,12 @@ jobs:
   test-public:
     if: github.repository == 'basilejoseph325-jpg/Bible-Unfolded-Visual-Lab'
     runs-on: ubuntu-latest
+    # Existing cross-mode guard locks Genesis/audio bytes instead of assuming
+    # this integration is an Episode-only patch. Other branches retain the
+    # original Episode-only scope gate. Gameplay assertions remain.
     timeout-minutes: 30
     env:
+      BU_SCOPE_MODE: "${{ (github.head_ref == 'feature/test-word-trails-51-55-integration' || github.ref_name == 'feature/test-word-trails-51-55-integration') && 'cross-mode' || '' }}"
       NODE_PATH: '${{ github.workspace }}/work/node_modules'
       STORY_URL: http://127.0.0.1:8893/index.html
     steps:

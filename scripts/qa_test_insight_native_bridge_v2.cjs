@@ -70,6 +70,19 @@ function scenario(preview=true,lockMode='owned'){
  return {storage,session,window,child,foreign,closed,ctx,events,legacy,live:JSON.stringify(seed)};
 }
 {
+ const x=scenario(true),api=x.window.BUTestInsightBridge;api.nativeBalance();
+ vm.runInContext(load('experiments/word-trails-levels-51-55-v1.js'),x.ctx);
+ for(let n=51;n<=55;n++){
+  const level=x.window.BUWTLevels51to55[n-51],words=[level.spark,level.extraSparks[0].word];
+  x.storage.setItem('bu-visual-lab-wordtrails-shared-preview-v1',JSON.stringify({level:n-1,completed:[n-1],claimedSparks:words.map(w=>(n-1)+':'+w),paidBonuses:['satchel:'+(n-1)],claimedFreeHints:[n-1],progress:{level:n-1,hinted:[]}}));
+  for(const request of [{type:'level',level:n},...words.map(word=>({type:'discovery',level:n,word})),{type:'satchel',level:n},{type:'hint',level:n,cell:'0:0'},...(n===55?[{type:'seal',level:n}]:[])]){
+   const result=api.transact(x.child,request);assert(result.ok,JSON.stringify(result));assert(api.transact(x.child,request).duplicate);assert.equal(api.nativeBalance().balance,result.balance);
+  }
+ }
+ assert.equal(api.nativeBalance().balance,23);assert.equal(api.transact(x.child,{type:'level',level:56}).ok,false);assert.equal(x.window.BUPreviewStorageFence.originalKeyValue('bible-unfolded-rewards-v17'),x.live);
+}
+
+{
  const x=scenario(true),api=x.window.BUTestInsightBridge;
  assert(x.window.BUPreviewStorageFence?.active,'preview fence must be installed');
  x.session.setItem('same-session-key','ordinary');

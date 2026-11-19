@@ -109,7 +109,7 @@ jobs:
              localStorage.setItem('bible-unfolded-private-voice-pref-v381',JSON.stringify({mode:'charlie',volume:65}));
             });
             await page.goto(url,{waitUntil:'networkidle0',timeout:120000});
-            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 50'));
+            assert((await page.$eval('#level-label',el=>el.textContent)).includes('12 / 55'));
             const dims=()=>page.evaluate(()=>{
              const b=document.querySelector('#board').getBoundingClientRect();
              const w=document.querySelector('#wheel').getBoundingClientRect();
@@ -170,7 +170,7 @@ jobs:
              const data=await page.evaluate(i=>[...window.BUWTAdditionalLevels,...window.BUWTLevels31to35,...window.BUWTLevels36to40,...window.BUWTLevels41to45,...window.BUWTLevels46to50][i],i);
              const targetLevel=i+12;
              const label=await page.$eval('#level-label',el=>el.textContent);
-             assert(label.includes('LEVEL '+targetLevel+' / 50'),'Wrong level label '+label);
+             assert(label.includes('LEVEL '+targetLevel+' / 55'),'Wrong level label '+label);
              // Actual gameplay: early six-letter rack supports TWO good bonus
              // words; later racks use the usual three-word satchel.
              if(targetLevel===12||targetLevel===13){
@@ -222,7 +222,9 @@ jobs:
             assert(stored.claimedSparks.length>=48);
             console.log('SAVED_30_LEVELS',JSON.stringify({completed:stored.completed.length,
              claimed:stored.claimedSparks.length,coins:stored.coins,points:stored.points}));
-            await page.click('#next-level'); // Last level opens the map
+            await page.click('#next-level'); // Old Level 50 now continues into Level 51.
+            assert((await page.$eval('#level-label',e=>e.textContent)).includes('51 / 55'));
+            await page.click('#level-map');
             await page.waitForSelector('#map[open]');
             const mapQA=await page.evaluate(()=>({
              levels:document.querySelectorAll('#map .map-level').length,
@@ -232,10 +234,10 @@ jobs:
              seals:[...document.querySelectorAll('#map .map-milestone-status')].length
             }));
             console.log('SCENIC_LEVEL_MAP',JSON.stringify(mapQA));
-            assert.equal(mapQA.levels,50);
-            assert.equal(mapQA.chapters,10,'Ten five-level scenic chapters');
-            assert.equal(mapQA.scenePreviews,50,'All 50 levels need illustrated map previews');
-            assert.equal(mapQA.seals,10,'All ten milestone seals must show on the level map');
+            assert.equal(mapQA.levels,55);
+            assert.equal(mapQA.chapters,11,'Eleven five-level scenic chapters');
+            assert.equal(mapQA.scenePreviews,55,'All 55 levels need illustrated map previews');
+            assert.equal(mapQA.seals,11,'All eleven milestone seals must show on the level map');
             await page.click('#map-x');
             for(const [width,height] of [[390,705],[390,844],[412,744],[360,740],[375,667]]){
              await page.setViewport({width,height,isMobile:true,hasTouch:true,deviceScaleFactor:2});

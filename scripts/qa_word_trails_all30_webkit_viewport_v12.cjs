@@ -91,7 +91,7 @@ async function gameFrame(page){
       const items=[...document.querySelectorAll('#map-list .map-level')];
       return {count:items.length,unlocked:items.filter(el=>!el.disabled).length};
      });
-     assert.deepEqual(availability,{count:50,unlocked:50},
+     assert.deepEqual(availability,{count:55,unlocked:50},
       'All 50 fictional unlocked map entries should be accessible');
      await child.evaluate(i=>{
       const b=document.querySelectorAll('#map-list .map-level')[i];
@@ -100,7 +100,7 @@ async function gameFrame(page){
      },i);
      await child.waitForFunction(level=>
       !document.querySelector('#map')?.open&&
-      document.querySelector('#level-label')?.textContent.includes('LEVEL '+level+' / 50'),
+      document.querySelector('#level-label')?.textContent.includes('LEVEL '+level+' / 55'),
       i+1,{timeout:20000});
      const row=await child.evaluate(()=>{
       const take=id=>{
@@ -156,7 +156,7 @@ async function gameFrame(page){
      !window.BUWTNativeShell?.active?.(),null,{timeout:100000});
     await page.locator('#home-cross').evaluate(el=>el.click());
     const resumed=await gameFrame(page);
-    assert((await resumed.locator('#level-label').textContent()).includes('LEVEL 50 / 50'),
+    assert((await resumed.locator('#level-label').textContent()).includes('LEVEL 50 / 55'),
      'Reentry must resume level 50 after refresh');
     const after=await snapshot(page,protectedKeys);
     for(const key of protectedKeys)assert.equal(after[key],before[key],

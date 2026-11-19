@@ -1,0 +1,1385 @@
+{
+  "translation": "New World Translation (2013 revision)",
+  "verifiedOn": "2026-11-16",
+  "independentHumanApproval": false,
+  "items": [
+    {
+      "id": "wt51-board-rebuild",
+      "word": "REBUILD",
+      "reference": "Nehemiah 2:17, 18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/nehemiah/2/",
+      "verse": 17,
+      "expectedExcerpt": "Finally I said to them: “You can see what a terrible situation",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-builder",
+      "word": "BUILDER",
+      "reference": "Hebrews 11:9, 10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/hebrews/11/",
+      "verse": 10,
+      "expectedExcerpt": "For he was awaiting the city having real foundations, whose designer and",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-rule",
+      "word": "RULE",
+      "reference": "Proverbs 29:2",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/29/",
+      "verse": 2,
+      "expectedExcerpt": "When the righteous are many, the people rejoice, But when the wicked",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-bridle",
+      "word": "BRIDLE",
+      "reference": "Psalm 32:9",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/32/",
+      "verse": 9,
+      "expectedExcerpt": "Do not become like a horse or a mule, without understanding, Whose",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-board-build",
+      "word": "BUILD",
+      "reference": "Psalm 127:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/127/",
+      "verse": 1,
+      "expectedExcerpt": "Unless Jehovah builds the house, It is in vain that its builders",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-hidden-blue",
+      "word": "BLUE",
+      "reference": "Numbers 15:38, 39",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/numbers/15/",
+      "verse": 38,
+      "expectedExcerpt": "“Speak to the Israelites and tell them that they must make for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt51-hidden-lie",
+      "word": "LIE",
+      "reference": "Colossians 3:9, 10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/colossians/3/",
+      "verse": 9,
+      "expectedExcerpt": "Do not lie to one another. Strip off the old personality with",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-servant",
+      "word": "SERVANT",
+      "reference": "1 Samuel 3:10",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/3/",
+      "verse": 10,
+      "expectedExcerpt": "Jehovah came and stood there, and he called as at the other",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-raven",
+      "word": "RAVEN",
+      "reference": "1 Kings 17:4-6",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-kings/17/",
+      "verse": 4,
+      "expectedExcerpt": "You should drink from the stream, and I will command the ravens",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-near",
+      "word": "NEAR",
+      "reference": "Psalm 145:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/145/",
+      "verse": 18,
+      "expectedExcerpt": "Jehovah is near to all those calling on him, To all who",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-snare",
+      "word": "SNARE",
+      "reference": "Proverbs 29:25",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/29/",
+      "verse": 25,
+      "expectedExcerpt": "Trembling at men is a snare, But the one trusting in Jehovah",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-rest",
+      "word": "REST",
+      "reference": "Exodus 33:14",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/33/",
+      "verse": 14,
+      "expectedExcerpt": "So he said: “I myself will go with you, and I will",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-board-star",
+      "word": "STAR",
+      "reference": "Revelation 22:16",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/22/",
+      "verse": 16,
+      "expectedExcerpt": "“‘I, Jesus, sent my angel to bear witness to you about these",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-hidden-tear",
+      "word": "TEAR",
+      "reference": "Revelation 21:4",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/21/",
+      "verse": 4,
+      "expectedExcerpt": "And he will wipe out every tear from their eyes, and death",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt52-hidden-net",
+      "word": "NET",
+      "reference": "John 21:11",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/john/21/",
+      "verse": 11,
+      "expectedExcerpt": "So Simon Peter went on board and hauled the net ashore full",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-praised",
+      "word": "PRAISED",
+      "reference": "Psalm 113:3, 4",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/113/",
+      "verse": 3,
+      "expectedExcerpt": "From the rising of the sun to its setting, Let Jehovah’s name",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-pairs",
+      "word": "PAIRS",
+      "reference": "Luke 10:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/10/",
+      "verse": 1,
+      "expectedExcerpt": "After these things the Lord designated 70 others and sent them out",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-read",
+      "word": "READ",
+      "reference": "Acts 13:27",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/13/",
+      "verse": 27,
+      "expectedExcerpt": "For the inhabitants of Jerusalem and their rulers did not recognize this",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-spear",
+      "word": "SPEAR",
+      "reference": "1 Samuel 17:45-47",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/1-samuel/17/",
+      "verse": 45,
+      "expectedExcerpt": "David replied to the Phi·lisʹtine: “You are coming against me with sword",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-spread",
+      "word": "SPREAD",
+      "reference": "Acts 6:7",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/acts/6/",
+      "verse": 7,
+      "expectedExcerpt": "Consequently, the word of God continued to spread, and the number of",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-board-raised",
+      "word": "RAISED",
+      "reference": "Luke 7:22",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/7/",
+      "verse": 22,
+      "expectedExcerpt": "In reply he said to them: “Go and report to John what",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-hidden-pride",
+      "word": "PRIDE",
+      "reference": "Proverbs 16:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/16/",
+      "verse": 18,
+      "expectedExcerpt": "Pride is before a crash, And a haughty spirit before stumbling.",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt53-hidden-sea",
+      "word": "SEA",
+      "reference": "Psalm 95:5, 6",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/psalms/95/",
+      "verse": 5,
+      "expectedExcerpt": "The sea, which he made, belongs to him, And his hands formed",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-rescued",
+      "word": "RESCUED",
+      "reference": "Daniel 6:27",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/daniel/6/",
+      "verse": 27,
+      "expectedExcerpt": "He rescues, saves, and performs signs and wonders in the heavens and",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-cured",
+      "word": "CURED",
+      "reference": "Luke 8:43-48",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/luke/8/",
+      "verse": 43,
+      "expectedExcerpt": "Now there was a woman who had a flow of blood for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-seed",
+      "word": "SEED",
+      "reference": "Genesis 1:11-13",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 11,
+      "expectedExcerpt": "Then God said: “Let the earth cause grass to sprout, seed-bearing plants",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-reeds",
+      "word": "REEDS",
+      "reference": "Exodus 2:3, 4",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/exodus/2/",
+      "verse": 3,
+      "expectedExcerpt": "When she was no longer able to conceal him, she took a",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-secure",
+      "word": "SECURE",
+      "reference": "Isaiah 32:18",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/isaiah/32/",
+      "verse": 18,
+      "expectedExcerpt": "My people will dwell in a peaceful abiding place, In secure dwellings",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-board-curse",
+      "word": "CURSE",
+      "reference": "Numbers 23:7-12",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/numbers/23/",
+      "verse": 7,
+      "expectedExcerpt": "Then he spoke this proverbial saying: “Baʹlak the king of Moʹab has",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-hidden-sure",
+      "word": "SURE",
+      "reference": "2 Peter 1:16-19",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/2-peter/1/",
+      "verse": 19,
+      "expectedExcerpt": "So we have the prophetic word made more sure, and you are",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt54-hidden-cud",
+      "word": "CUD",
+      "reference": "Leviticus 11:3",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/leviticus/11/",
+      "verse": 3,
+      "expectedExcerpt": "Every animal that has a split hoof and a cleft in its",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-teacher",
+      "word": "TEACHER",
+      "reference": "John 13:13-15",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/john/13/",
+      "verse": 13,
+      "expectedExcerpt": "You address me as ‘Teacher’ and ‘Lord,’ and you are correct, for",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-reach",
+      "word": "REACH",
+      "reference": "Deuteronomy 30:11-14",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/deuteronomy/30/",
+      "verse": 11,
+      "expectedExcerpt": "“Now this commandment that I am commanding you today is not too",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-teach",
+      "word": "TEACH",
+      "reference": "Matthew 28:19, 20",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/matthew/28/",
+      "verse": 20,
+      "expectedExcerpt": "teaching them to observe all the things I have commanded you. And",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-heart",
+      "word": "HEART",
+      "reference": "Proverbs 4:23",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/proverbs/4/",
+      "verse": 23,
+      "expectedExcerpt": "Above all the things that you guard, safeguard your heart, For out",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-create",
+      "word": "CREATE",
+      "reference": "Revelation 4:11",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/revelation/4/",
+      "verse": 11,
+      "expectedExcerpt": "“You are worthy, Jehovah our God, to receive the glory and the",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-board-earth",
+      "word": "EARTH",
+      "reference": "Genesis 1:1",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/genesis/1/",
+      "verse": 1,
+      "expectedExcerpt": "In the beginning God created the heavens and the earth.",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-hidden-eat",
+      "word": "EAT",
+      "reference": "Ecclesiastes 3:13",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/ecclesiastes/3/",
+      "verse": 13,
+      "expectedExcerpt": "also that everyone should eat and drink and find enjoyment for all",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    },
+    {
+      "id": "wt55-hidden-hate",
+      "word": "HATE",
+      "reference": "Amos 5:15",
+      "url": "https://www.jw.org/en/library/bible/nwt/books/amos/5/",
+      "verse": 15,
+      "expectedExcerpt": "Hate what is bad, and love what is good, Let justice prevail",
+      "review": "Author source/context and separate read-aloud pass; independent owner review pending."
+    }
+  ],
+  "qualityReview": {
+    "date": "2026-11-16",
+    "reviewedHead": "637f76c7e674f203755f46b1b018746cf20e1f88",
+    "reviewer": "Codex separate editorial/source pass; not physical-device or independent human acceptance",
+    "crosswordAnswers": [
+      {
+        "level": 51,
+        "word": "REBUILD",
+        "placement": [
+          0,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Nehemiah 2:17, 18"
+      },
+      {
+        "level": 51,
+        "word": "BUILDER",
+        "placement": [
+          0,
+          2,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Hebrews 11:9, 10"
+      },
+      {
+        "level": 51,
+        "word": "RULE",
+        "placement": [
+          0,
+          0,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Proverbs 29:2"
+      },
+      {
+        "level": 51,
+        "word": "BRIDLE",
+        "placement": [
+          6,
+          1,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Psalm 32:9"
+      },
+      {
+        "level": 51,
+        "word": "BUILD",
+        "placement": [
+          2,
+          4,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Psalm 127:1"
+      },
+      {
+        "level": 52,
+        "word": "SERVANT",
+        "placement": [
+          0,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "1 Samuel 3:10"
+      },
+      {
+        "level": 52,
+        "word": "RAVEN",
+        "placement": [
+          0,
+          2,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "1 Kings 17:4-6"
+      },
+      {
+        "level": 52,
+        "word": "NEAR",
+        "placement": [
+          4,
+          2,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Psalm 145:18"
+      },
+      {
+        "level": 52,
+        "word": "SNARE",
+        "placement": [
+          2,
+          4,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Proverbs 29:25"
+      },
+      {
+        "level": 52,
+        "word": "REST",
+        "placement": [
+          6,
+          3,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Exodus 33:14"
+      },
+      {
+        "level": 52,
+        "word": "STAR",
+        "placement": [
+          0,
+          0,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Revelation 22:16"
+      },
+      {
+        "level": 53,
+        "word": "PRAISED",
+        "placement": [
+          4,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Psalm 113:3, 4"
+      },
+      {
+        "level": 53,
+        "word": "PAIRS",
+        "placement": [
+          2,
+          3,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Luke 10:1"
+      },
+      {
+        "level": 53,
+        "word": "READ",
+        "placement": [
+          3,
+          5,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Acts 13:27"
+      },
+      {
+        "level": 53,
+        "word": "SPEAR",
+        "placement": [
+          0,
+          1,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "1 Samuel 17:45-47"
+      },
+      {
+        "level": 53,
+        "word": "SPREAD",
+        "placement": [
+          0,
+          1,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Acts 6:7"
+      },
+      {
+        "level": 53,
+        "word": "RAISED",
+        "placement": [
+          6,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Luke 7:22"
+      },
+      {
+        "level": 54,
+        "word": "RESCUED",
+        "placement": [
+          0,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Daniel 6:27"
+      },
+      {
+        "level": 54,
+        "word": "CURED",
+        "placement": [
+          0,
+          3,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Luke 8:43-48"
+      },
+      {
+        "level": 54,
+        "word": "SEED",
+        "placement": [
+          4,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Genesis 1:11-13"
+      },
+      {
+        "level": 54,
+        "word": "REEDS",
+        "placement": [
+          2,
+          1,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Exodus 2:3, 4"
+      },
+      {
+        "level": 54,
+        "word": "SECURE",
+        "placement": [
+          6,
+          1,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Isaiah 32:18"
+      },
+      {
+        "level": 54,
+        "word": "CURSE",
+        "placement": [
+          2,
+          6,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Numbers 23:7-12"
+      },
+      {
+        "level": 55,
+        "word": "TEACHER",
+        "placement": [
+          0,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "John 13:13-15"
+      },
+      {
+        "level": 55,
+        "word": "REACH",
+        "placement": [
+          0,
+          6,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Deuteronomy 30:11-14"
+      },
+      {
+        "level": 55,
+        "word": "TEACH",
+        "placement": [
+          4,
+          2,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Matthew 28:19, 20"
+      },
+      {
+        "level": 55,
+        "word": "HEART",
+        "placement": [
+          2,
+          4,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Proverbs 4:23"
+      },
+      {
+        "level": 55,
+        "word": "CREATE",
+        "placement": [
+          6,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Revelation 4:11"
+      },
+      {
+        "level": 55,
+        "word": "EARTH",
+        "placement": [
+          2,
+          0,
+          "across"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "Bible board discovery",
+        "reference": "Genesis 1:1"
+      },
+      {
+        "level": 55,
+        "word": "THERE",
+        "placement": [
+          0,
+          0,
+          "down"
+        ],
+        "verdict": "valid, wheel-spellable, connected with matching crossings",
+        "kind": "ordinary wordplay; no Scripture claim",
+        "meaning": "at that place"
+      }
+    ],
+    "hiddenDiscoveriesReviewed": 10,
+    "discoveries": [
+      {
+        "id": "wt51-board-rebuild",
+        "reference": "Nehemiah 2:17, 18",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Intentional word-family theme; different insights: dependence on Jehovah, Abraham’s lasting hope, and cooperation rebuilding Jerusalem. Not duplicate source discoveries."
+      },
+      {
+        "id": "wt51-board-builder",
+        "reference": "Hebrews 11:9, 10",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Intentional word-family theme; different insights: dependence on Jehovah, Abraham’s lasting hope, and cooperation rebuilding Jerusalem. Not duplicate source discoveries."
+      },
+      {
+        "id": "wt51-board-rule",
+        "reference": "Proverbs 29:2",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt51-board-bridle",
+        "reference": "Psalm 32:9",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt51-board-build",
+        "reference": "Psalm 127:1",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Intentional word-family theme; different insights: dependence on Jehovah, Abraham’s lasting hope, and cooperation rebuilding Jerusalem. Not duplicate source discoveries."
+      },
+      {
+        "id": "wt51-hidden-blue",
+        "reference": "Numbers 15:38, 39",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt51-hidden-lie",
+        "reference": "Colossians 3:9, 10",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-board-servant",
+        "reference": "1 Samuel 3:10",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-board-raven",
+        "reference": "1 Kings 17:4-6",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-board-near",
+        "reference": "Psalm 145:18",
+        "clueVerdict": "revised",
+        "explanationVerdict": "retained",
+        "review": "Removed the awkward “He is what to them?” construction. The condition of calling in truth remains."
+      },
+      {
+        "id": "wt52-board-snare",
+        "reference": "Proverbs 29:25",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-board-rest",
+        "reference": "Exodus 33:14",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-board-star",
+        "reference": "Revelation 22:16",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-hidden-tear",
+        "reference": "Revelation 21:4",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt52-hidden-net",
+        "reference": "John 21:11",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-board-praised",
+        "reference": "Psalm 113:3, 4",
+        "clueVerdict": "revised",
+        "explanationVerdict": "revised",
+        "review": "Avoided narrowing sunrise-to-sunset language solely to time of day; included verse 4 rather than imposing a geographic or temporal interpretation."
+      },
+      {
+        "id": "wt53-board-pairs",
+        "reference": "Luke 10:1",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-board-read",
+        "reference": "Acts 13:27",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-board-spear",
+        "reference": "1 Samuel 17:45-47",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-board-spread",
+        "reference": "Acts 6:7",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-board-raised",
+        "reference": "Luke 7:22",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-hidden-pride",
+        "reference": "Proverbs 16:18",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt53-hidden-sea",
+        "reference": "Psalm 95:5, 6",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-board-rescued",
+        "reference": "Daniel 6:27",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-board-cured",
+        "reference": "Luke 8:43-48",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "CURED is an explicitly requested synonym for healed, not misrepresented as a direct NWT quotation. Credit is given to Jesus, not magical clothing."
+      },
+      {
+        "id": "wt54-board-seed",
+        "reference": "Genesis 1:11-13",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-board-reeds",
+        "reference": "Exodus 2:3, 4",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-board-secure",
+        "reference": "Isaiah 32:18",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-board-curse",
+        "reference": "Numbers 23:7-12",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt54-hidden-sure",
+        "reference": "2 Peter 1:16-19",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Clue anchored to verse 19; verses 16–18 supply the eyewitness context."
+      },
+      {
+        "id": "wt54-hidden-cud",
+        "reference": "Leviticus 11:3",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Definition is explained; both cud-chewing and split-hoof requirements are retained."
+      },
+      {
+        "id": "wt55-board-teacher",
+        "reference": "John 13:13-15",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Intentional word-family theme; teaching people to observe commands differs from a teacher’s example of humble service."
+      },
+      {
+        "id": "wt55-board-reach",
+        "reference": "Deuteronomy 30:11-14",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt55-board-teach",
+        "reference": "Matthew 28:19, 20",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Intentional word-family theme; teaching people to observe commands differs from a teacher’s example of humble service."
+      },
+      {
+        "id": "wt55-board-heart",
+        "reference": "Proverbs 4:23",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt55-board-create",
+        "reference": "Revelation 4:11",
+        "clueVerdict": "retained",
+        "explanationVerdict": "revised",
+        "review": "Kept the reason for praise explicit and removed the unnecessary broad closing statement."
+      },
+      {
+        "id": "wt55-board-earth",
+        "reference": "Genesis 1:1",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt55-hidden-eat",
+        "reference": "Ecclesiastes 3:13",
+        "clueVerdict": "retained",
+        "explanationVerdict": "retained",
+        "review": "Checked the passage in context; original paraphrase and family wording retained where sound."
+      },
+      {
+        "id": "wt55-hidden-hate",
+        "reference": "Amos 5:15",
+        "clueVerdict": "revised",
+        "explanationVerdict": "retained",
+        "review": "Replaced awkward “doing what toward” wording; hatred is directed at what is bad, not people."
+      }
+    ],
+    "bonusWords": [
+      {
+        "level": 51,
+        "word": "BIRD",
+        "meaning": "a feathered animal",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "BRIDE",
+        "meaning": "a woman at her wedding",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "IDLE",
+        "meaning": "not active or working",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "IDLER",
+        "meaning": "a person who avoids work",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "RIDE",
+        "meaning": "travel on or in something",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "RILED",
+        "meaning": "annoyed or stirred up",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "LURE",
+        "meaning": "an attraction or enticement",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "LURED",
+        "meaning": "attracted or enticed",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "RUDE",
+        "meaning": "impolite",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "BRED",
+        "meaning": "raised or produced offspring",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "BILE",
+        "meaning": "a digestive fluid",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 51,
+        "word": "RED",
+        "meaning": "a color",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "RAVENS",
+        "meaning": "plural of raven",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "AVERTS",
+        "meaning": "turns away or prevents",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "STARE",
+        "meaning": "look fixedly",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "RATES",
+        "meaning": "plural of rate; or assesses",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "VEST",
+        "meaning": "a sleeveless garment",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "NEST",
+        "meaning": "a bird’s home",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "SAVE",
+        "meaning": "rescue or keep",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "EAST",
+        "meaning": "a compass direction",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "RENT",
+        "meaning": "payment to use property",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "SEAT",
+        "meaning": "a place to sit",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "EARN",
+        "meaning": "receive for work",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 52,
+        "word": "VAST",
+        "meaning": "very large",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "DESPAIR",
+        "meaning": "loss of hope",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "ASPIRED",
+        "meaning": "aimed or hoped to achieve",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "ASPIRE",
+        "meaning": "aim or hope to achieve",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "SPARED",
+        "meaning": "saved from harm or left unused",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "DRAPES",
+        "meaning": "curtains; or hangs in folds",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "DRAPE",
+        "meaning": "arrange fabric in folds",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "RAPIDS",
+        "meaning": "fast-flowing stretches of a river",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "RAPID",
+        "meaning": "fast",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "AIDE",
+        "meaning": "an assistant",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "DEAR",
+        "meaning": "cherished or beloved",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "RIDE",
+        "meaning": "travel on or in something",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 53,
+        "word": "SIDE",
+        "meaning": "an edge or surface",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "REDUCE",
+        "meaning": "make smaller",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "CRUDE",
+        "meaning": "rough or unrefined",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "CREED",
+        "meaning": "a statement of beliefs",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "DEER",
+        "meaning": "a hoofed animal",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "REED",
+        "meaning": "a tall water-side plant",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "SEER",
+        "meaning": "a visionary or prophet",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "REUSE",
+        "meaning": "use again",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "USED",
+        "meaning": "put to use",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "USER",
+        "meaning": "someone who uses something",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "RUSE",
+        "meaning": "a trick",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "CURE",
+        "meaning": "a remedy or treatment",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 54,
+        "word": "CURSED",
+        "meaning": "placed under a curse",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "THREE",
+        "meaning": "the number after two",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "HEATER",
+        "meaning": "a device for warming",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "REHEAT",
+        "meaning": "heat again",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "RETEACH",
+        "meaning": "teach again",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "HEAR",
+        "meaning": "perceive sound",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "CHEER",
+        "meaning": "encouragement; or encourage",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "REACT",
+        "meaning": "respond",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "CRATE",
+        "meaning": "a large packing box",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "TRACE",
+        "meaning": "follow a path or outline",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "CATER",
+        "meaning": "supply food or services",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "CARE",
+        "meaning": "attention or concern",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      },
+      {
+        "level": 55,
+        "word": "TREE",
+        "meaning": "a woody plant",
+        "verdict": "valid ordinary English; correct spelling/form; wheel multiplicity checked; not reserved by board or hidden answers"
+      }
+    ],
+    "difficulty": [
+      {
+        "level": 51,
+        "review": "Five answers and unique wheel letters; construction word-family offers an accessible start."
+      },
+      {
+        "level": 52,
+        "review": "Six varied targets; shorter entries provide a reasonable breather rather than a sudden spike."
+      },
+      {
+        "level": 53,
+        "review": "Six targets with longer anagrams and an additional crossing cycle."
+      },
+      {
+        "level": 54,
+        "review": "Six targets with a repeated E; two distinct E buttons must be used for longer words."
+      },
+      {
+        "level": 55,
+        "review": "Seven targets and the largest occupied board, with repeated E and EARTH/HEART anagrams. THERE is fair ordinary wordplay."
+      }
+    ]
+  }
+}

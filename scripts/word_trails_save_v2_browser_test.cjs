@@ -167,7 +167,7 @@ const wallet=(points,coins,purchases=['classic'])=>({points,coins,purchases,earn
   await legacyWheel.waitForFunction(()=>document.getElementById('solved-count')?.textContent==='1 / 4'&&document.getElementById('points')?.textContent==='177',{timeout:60000});
   const progress=await legacyWheel.evaluate(()=>({level:document.getElementById('level-label').textContent,solved:document.getElementById('solved-count').textContent,coins:document.getElementById('points').textContent}));
   console.log('RESTORED_LEGACY_PUZZLE_IN_STANDALONE_QA',JSON.stringify(progress));
-  assert.equal(progress.level,'LEVEL 1 / 50');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');await legacyWheel.close();
+  assert.equal(progress.level,'LEVEL 1 / 55');assert.equal(progress.solved,'1 / 4');assert.equal(progress.coins,'177');await legacyWheel.close();
   // Older TEST saves lacked the later claimedSparks/boardBible ledgers.
   const legacyWT=await page.evaluate(()=>{
    const source=window.BUPlatformSaves.makeBackup();
