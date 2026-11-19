@@ -1,0 +1,16 @@
+const {chromium}=require('playwright'),assert=require('node:assert/strict'),fs=require('node:fs');
+const h=require('./qa_word_trails_55_browser.cjs');
+const ROOT='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/';
+const RELEASE=process.env.BU_TEST_RELEASE_SHA;assert(/^[a-f0-9]{40}$/.test(RELEASE||''),'Exact TEST release SHA is required');
+(async()=>{const b=await chromium.launch({executablePath:'/usr/bin/chromium',headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});const results=[];try{
+ for(const width of [320,430]){const c=await h.context(b,width,932,true),p=await c.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));try{
+ await p.goto(ROOT,{waitUntil:'domcontentloaded',timeout:120000});await h.ready(p);const before=await h.parity(p);assert.equal(before.balance,1000);assert.equal(before.t.completed.length,50);
+ let f=await h.launch(p);await h.map(f);assert.equal(await f.locator('.map-level').count(),55);assert(await f.locator('.map-level').nth(50).isEnabled());assert(await f.locator('.map-level').nth(51).isDisabled());await f.locator('.map-level').nth(50).tap();assert((await f.locator('#level-label').textContent()).includes('51 / 55'));assert.equal(await f.locator('.wheel-letter').count(),7);assert.deepEqual((await h.parity(p)).t,{...before.t,level:50,unlocked:50,sound:true});await p.screenshot({path:`work/published-${width}-level51.png`});await f.locator('#app .back').tap();await p.waitForFunction(()=>!BUWTNativeShell.active());
+ await p.locator('#home-rewards').tap();assert.equal((await h.parity(p)).balance,1000);await p.evaluate(()=>closeDialog());
+ await p.reload({waitUntil:'domcontentloaded'});await h.ready(p);assert(await p.locator('#home').isVisible());assert.equal(new URL(p.url()).hash,'');assert.deepEqual((await h.parity(p)).t,{...before.t,level:50,unlocked:50,sound:true});assert.equal((await h.parity(p)).balance,1000);
+ await p.goto(ROOT+'bible-book-guides/index.html',{waitUntil:'domcontentloaded'});await p.waitForFunction(()=>document.querySelectorAll('.book-card').length===66);await p.reload({waitUntil:'domcontentloaded'});await p.waitForURL(/\/Bible-Unfolded-Visual-Lab\/index.html\?/);await h.ready(p);assert.equal((await h.parity(p)).balance,1000);assert.deepEqual((await h.parity(p)).t,{...before.t,level:50,unlocked:50,sound:true});assert.deepEqual(errors,[]);
+ results.push({width,publishedLevels:55,oldProgressPreserved:50,unlocked51:true,wheelLetters:7,tokensBefore:1000,tokensAfter:1000,rewardsParity:true,homeBackRefresh:true,books66:true,pageErrors:0});console.log('PASS_PUBLISHED_SMOKE',JSON.stringify(results.at(-1)));
+ }finally{await c.close()}}
+ const c=await h.context(b,320,932),p=await c.newPage();try{await p.goto(ROOT,{waitUntil:'domcontentloaded'});await h.ready(p);const f=await h.launch(p);await h.map(f);assert.equal(await f.locator('.map-level:enabled').count(),1);assert(await f.locator('.map-level').nth(50).isDisabled());console.log('PASS_PUBLISHED_FRESH_LOCKS');}finally{await c.close()}
+ fs.writeFileSync('work/pr65-published-smoke.json',JSON.stringify({merge:RELEASE,syntheticProfilesOnly:true,results},null,2));
+ }finally{await b.close()}})().catch(e=>{console.error(e);process.exit(1)});
