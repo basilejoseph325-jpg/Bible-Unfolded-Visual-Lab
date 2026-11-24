@@ -16,6 +16,10 @@ LIVE paths, protected previews, frames and read-only wallets are excluded.
 2. Open **TEST testing grant** and download its complete, validated TEST V2 backup.
 3. Save the file, check the confirmation box, and type `TOP UP TEST TO 45000`.
 4. Apply the one-time top-up, then return to normal TEST.
+5. **Immediately export a NEW complete TEST V2 backup from Settings** after the
+   grant succeeds. Keep the pre-grant file separately; do not restore it merely
+   to check the balance. A pre-grant restore brings back the older balance but
+   the one-time grant remains used on this browser.
 
 The addition is `max(0, 45000 - current tokens)`. A higher balance is never reduced.
 Points, progress, purchases, inventory and existing receipts are retained. The
@@ -35,9 +39,13 @@ remain authoritative; no alternate spendable balance or legacy-coin conversion.
   operation. An interrupted/uncertain save leaves the one-time attempt locked;
   there is no automatic retry or marker-erasing button. Keep the backup and native
   recovery records for review. Existing restore validation is not changed.
+- **Do not clear Chrome site data to retry the grant.** GitHub Pages paths for
+  Visual Lab TEST and protected LIVE can share the same browser origin/storage;
+  clearing data for this origin can erase local saves for both games.
 - Clearing all site data or using a new profile with a pre-grant backup can reset
-  client-side eligibility. No static client-only mechanism can securely enforce
-  global owner identity or cross-device quotas. This is TEST tooling only.
+  client-side eligibility, but is unsafe and cannot be recommended as a retry.
+  No static client-only mechanism can securely enforce global owner identity
+  or cross-device quotas. This is TEST tooling only.
 
 ## Verification
 
