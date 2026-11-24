@@ -1,0 +1,100 @@
+name: Explicit TEST developer top-up (no deployment)
+on:
+  pull_request:
+    paths:
+      - 'index.html'
+      - 'test-developer-grant-v1.js'
+      - 'scripts/qa_test_developer_grant*'
+      - 'scripts/qa_test_published_release_smoke_v1.cjs'
+      - '.github/workflows/qa-test-developer-grant-v1.yml'
+  workflow_dispatch:
+    inputs:
+      published_sha:
+        description: Optional exact TEST Pages SHA for isolated published-release smoke
+        required: false
+        type: string
+permissions:
+  contents: read
+  pages: read
+jobs:
+  contracts:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - run: |
+          node scripts/qa_test_developer_grant_v1.cjs
+          node scripts/qa_test_developer_grant_scope_v1.cjs
+          node scripts/qa_shared_test_backup_v2.cjs
+          node scripts/qa_standard_test_wallet_fence_v1.cjs
+          node scripts/qa_standard_test_boost_wallet_v1.cjs
+          node scripts/qa_test_insight_native_bridge_v2.cjs
+  mobile:
+    needs: contracts
+    runs-on: ubuntu-26.04
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix: {engine: [chromium, webkit]}
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Install supported pinned browser tooling
+        run: |
+          npm install --prefix /tmp/bu-grant-qa playwright@1.65.1 --no-audit --no-fund --silent
+          if [ '${{ matrix.engine }}' = 'webkit' ]; then /tmp/bu-grant-qa/node_modules/.bin/playwright install --with-deps webkit; fi
+      - name: Real isolated grant, spending and restore protection at 320/430
+        env:
+          NODE_PATH: /tmp/bu-grant-qa/node_modules
+          WT_ENGINES: '${{ matrix.engine }}'
+        run: |
+          python3 -m http.server 8911 --bind 127.0.0.1 >/tmp/bu-grant-http.log 2>&1 &
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_test_developer_grant_browser_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: 'test-grant-${{ matrix.engine }}'
+          path: work/test-grant/
+  published-release:
+    if: github.event_name == 'workflow_dispatch' && inputs.published_sha != ''
+    runs-on: ubuntu-26.04
+    timeout-minutes: 20
+    env:
+      BU_TEST_RELEASE_SHA: '${{ inputs.published_sha }}'
+      GH_TOKEN: '${{ github.token }}'
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - name: Exact successful TEST Pages SHA and public asset bytes
+        run: |
+          gh api repos/basilejoseph325-jpg/Bible-Unfolded-Visual-Lab/pages/builds/latest > /tmp/test-pages-build.json
+          python3 - <<'PY'
+          import json,os,subprocess,urllib.request
+          sha=os.environ['BU_TEST_RELEASE_SHA']; assert len(sha)==40 and all(c in '0123456789abcdef' for c in sha)
+          data=json.load(open('/tmp/test-pages-build.json')); assert data['status']=='built' and data['commit']==sha,data
+          root='https://basilejoseph325-jpg.github.io/Bible-Unfolded-Visual-Lab/'
+          for p in ['index.html','experiments/word-trails-levels-51-55-v1.js','experiments/word-trails-next-v1.js','experiments/bu-test-insight-native-bridge-v2.js','experiments/bu-test-shared-backup-v2.js','family-worship-picker-gallery-v3.js','journey-progress-caption.js']:
+            expected=subprocess.check_output(['git','show',sha+':'+p]); actual=urllib.request.urlopen(root+p+'?verify='+sha,timeout=45).read(); assert actual==expected,p
+          print('PASS_EXACT_TEST_PUBLICATION',sha)
+          PY
+      - name: Published normal URL, isolated Chromium profiles, no owner data
+        env:
+          NODE_PATH: /tmp/bu-grant-public/node_modules
+        run: |
+          npm install --prefix /tmp/bu-grant-public playwright@1.65.1 --no-audit --no-fund --silent
+          export CHROME_BIN="$(command -v google-chrome || command -v chromium)"
+          node scripts/qa_test_published_release_smoke_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: published-test-release-smoke
+          path: |
+            work/pr65-published-smoke.json
+            work/published-*.png
