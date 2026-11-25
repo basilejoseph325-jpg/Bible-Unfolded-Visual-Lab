@@ -1,0 +1,9 @@
+/* Scoped native Fresh Mix additions; original modes and presentation intact. */
+#bu35-family .bu-fresh-native{width:100%;min-width:0;overflow-wrap:anywhere}
+#bu35-family .bu-fresh-native h2{font-size:clamp(19px,5.4vw,26px);line-height:1.28;margin:10px 0}
+#bu35-family .bu-fresh-native p{font-size:16px;line-height:1.4;margin:10px 0}
+#bu35-family .bu-fresh-native button{min-height:44px;touch-action:manipulation}
+#bu35-family .bu-fresh-native .bu35-scripture{display:block;font-size:15px}
+#bu35-family .bu-fresh-native .bu35-card{padding:12px;margin:8px 0}
+#bu35-family .bu-fresh-native .bu35-inline-score{display:flex;flex-wrap:wrap;gap:4px;font-size:13px}
+#bu35-family .bu-fresh-native .bu35-turn{padding:16px 8px}
