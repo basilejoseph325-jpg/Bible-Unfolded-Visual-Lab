@@ -47,7 +47,7 @@ jobs:
           assert all((v6/name).read_bytes().endswith(bytes([255,217])) for name in required), 'truncated jpeg'
           print('PASS: all three V6 Babel, Elisha and Samuel isolated photos with correct selectors')
           assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
-          assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
+          assert 'family-worship-gathering-v1.css?v=20261124-worship-experiences-v2' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
           print('PASS: 46 private image file paths, frozen V2 exterior, unchanged approved Trivia audio')
           PY

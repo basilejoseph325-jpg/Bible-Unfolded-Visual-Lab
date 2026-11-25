@@ -197,8 +197,8 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
 /* VISUAL LAB ONLY — Family Worship Gathering Room V1.
    Compact single-screen layout, custom native-backed selectors and instructions
    moved to existing Menu > How to Play. No Family Worship game logic changes. */
-(()=>{if(document.getElementById('bu-fw-gathering-css-v1'))return;const l=document.createElement('link');l.id='bu-fw-gathering-css-v1';l.rel='stylesheet';l.href='family-worship-gathering-v1.css?v=20261106-compact-gathering-v1';document.head.appendChild(l)})();
-(()=>{if(document.getElementById('bu-fw-gathering-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-gathering-js-v1';s.src='family-worship-gathering-v1.js?v=20261117-clue-relay-play-together-card-v1';s.defer=true;document.head.appendChild(s)})();
+(()=>{if(document.getElementById('bu-fw-gathering-css-v1'))return;const l=document.createElement('link');l.id='bu-fw-gathering-css-v1';l.rel='stylesheet';l.href='family-worship-gathering-v1.css?v=20261124-worship-experiences-v2';document.head.appendChild(l)})();
+(()=>{if(document.getElementById('bu-fw-gathering-js-v1'))return;const s=document.createElement('script');s.id='bu-fw-gathering-js-v1';s.src='family-worship-gathering-v1.js?v=20261124-worship-experiences-v2';s.defer=true;document.head.appendChild(s)})();
 
 /* VISUAL LAB ONLY — Family Worship outer polish V2: pressed gold controls,
    softly engraved card/hero edges and clear separation below +/- player count.

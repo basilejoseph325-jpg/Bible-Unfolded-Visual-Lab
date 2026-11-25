@@ -1,0 +1,26 @@
+name: Family Worship prominent experience choices
+on:
+  pull_request:
+    paths: ['family-worship-gathering-v1.*', 'journey-progress-caption.js', 'scripts/qa_family_worship_experiences_v1.cjs', '.github/workflows/qa-family-worship-experiences-v1.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  experiences:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - run: npm install --prefix work --no-audit --no-fund playwright@1.62.1
+      - run: ./work/node_modules/.bin/playwright install --with-deps chromium webkit
+      - name: Native setup, old saves and mode isolation on touch browsers
+        env:
+          NODE_PATH: ./work/node_modules
+          CHROME_BIN: /usr/bin/google-chrome
+        run: |
+          python3 -m http.server 8932 --bind 127.0.0.1 > work/http-experiences.log 2>&1 &
+          node scripts/qa_family_worship_experiences_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: family-experience-mobile, path: work/family-experiences}

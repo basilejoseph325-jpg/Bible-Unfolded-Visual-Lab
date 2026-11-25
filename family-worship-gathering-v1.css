@@ -268,3 +268,15 @@
  #bu35-family.bu-fw-gathering #bu35-start{height:45px!important;min-height:45px!important}
 }
 @media(prefers-reduced-motion:reduce){#bu-fw-picker-layer{backdrop-filter:none}}
+
+/* Prominent native-backed experience choices, on the existing setup screen. */
+#bu35-family.bu-fw-gathering #bu-fw-experience{margin:0 0 10px}
+#bu35-family.bu-fw-gathering #bu-fw-experience h3{margin:0 0 7px;color:#f5d594;font:700 17px/1.2 Georgia,serif}
+#bu35-family.bu-fw-gathering .bu-fw-experiences{display:grid;grid-template-columns:1fr;gap:8px}
+#bu35-family.bu-fw-gathering .bu-fw-experience{position:relative;min-width:0;width:100%;min-height:44px;padding:12px 30px 12px 13px;text-align:left;border:1px solid #bba16e;border-radius:14px;background:linear-gradient(145deg,#174855,#092b38);color:#f9e9c5;box-shadow:inset 0 1px #ffe9af26,0 3px 9px #0005;touch-action:manipulation}
+#bu35-family.bu-fw-gathering .bu-fw-experience[aria-checked="true"]{border:2px solid #f4d18b;padding:11px 29px 11px 12px;background:linear-gradient(135deg,#314e4c,#173d43);box-shadow:inset 0 0 0 1px #f6d48d33,0 0 12px #d8b56b24}
+#bu35-family.bu-fw-gathering .bu-fw-experience strong{display:block;font:700 18px/1.2 Georgia,serif;color:#ffe3a0;margin-bottom:7px}
+#bu35-family.bu-fw-gathering .bu-fw-experience-description{display:block;font:400 14px/1.35 system-ui,sans-serif}
+#bu35-family.bu-fw-gathering .bu-fw-experience-mark{position:absolute;right:10px;top:11px;color:#ffdc92;font-size:19px}
+#bu35-family.bu-fw-gathering .bu-fw-experience:focus-visible{outline:3px solid #ffdf96;outline-offset:3px}
+@media(min-width:380px){#bu35-family.bu-fw-gathering .bu-fw-experiences{grid-template-columns:repeat(2,minmax(0,1fr))}}
