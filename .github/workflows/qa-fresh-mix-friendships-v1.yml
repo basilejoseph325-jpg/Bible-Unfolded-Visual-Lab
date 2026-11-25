@@ -1,7 +1,7 @@
 name: Fresh Mix Strengthening Friendships
 on:
   pull_request:
-    paths: ['index.html', 'family-fresh-mix/**', 'family-fresh-mix-native*', 'scripts/qa_friendship*', '.github/workflows/qa-fresh-mix-friendships-v1.yml']
+    paths: ['index.html', 'family-fresh-mix/**', 'family-fresh-mix-native*', 'scripts/qa_friendship*', 'scripts/qa_fresh_mix_release_v1.cjs', '.github/workflows/qa-fresh-mix-friendships-v1.yml']
   workflow_dispatch:
 permissions: {contents: read}
 jobs:
@@ -23,6 +23,7 @@ jobs:
         run: |
           python3 -m http.server 8931 --bind 127.0.0.1 > work/http.log 2>&1 &
           node scripts/qa_friendship_browser_v1.cjs
+          node scripts/qa_fresh_mix_release_v1.cjs
       - uses: actions/upload-artifact@v4
         if: always()
-        with: {name: friendship-mobile-screens, path: work/friendships}
+        with: {name: friendship-mobile-screens, path: "work/friendships\nwork/fresh-release"}
