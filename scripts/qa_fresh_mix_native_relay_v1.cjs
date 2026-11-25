@@ -4,9 +4,12 @@ const url=process.env.BU_FRESH_URL||'http://127.0.0.1:8930/index.html';
 (async()=>{for(const type of ['chromium','webkit'])for(const width of [320,430]){
  const browser=await ({chromium,webkit}[type]).launch(type==='chromium'?{executablePath:process.env.CHROME_BIN||'/usr/bin/chromium',args:['--no-sandbox']}:{headless:true});
  const context=await browser.newContext({viewport:{width,height:width===320?568:932},hasTouch:true,isMobile:true});const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto(url);await page.waitForFunction(()=>!!window.BUFreshMixNative);
+ console.log('Open',type,width);await page.goto(url,{waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!!window.BUFreshMixNative);
+ if(await page.locator('#daily-close').isVisible())await page.locator('#daily-close').tap();
+ await page.locator('#home-family').tap();
  const baseline=await page.evaluate(()=>{localStorage.setItem('qa-save-marker','keep');return Object.fromEntries(Object.entries(localStorage).filter(([k])=>/wallet|reward|trail|grant|economy/.test(k)))});
  for(const count of [2,6])for(const minutes of [10,20,30,45,60]){
+ console.log('Relay case',type,width,count,minutes);
  await page.evaluate(({count,minutes})=>{bu35Game=null;bu35Setup={...bu35Setup,people:Array.from({length:count},(_,i)=>'Friend '+(i+1)),minutes,topic:'noah',difficulty:'intermediate',quick:'session',order:'surprise'};bu35Open('setup');bu35Begin();bu35Game.phases=['cluerelay','finish'];bu35Game.phase=0;bu35Save();bu35Render()},{count,minutes});
  const total=count*(minutes>=60?3:minutes>=45?2:1);const ids=new Set();
  for(let n=0;n<total;n++){
@@ -17,7 +20,8 @@ const url=process.env.BU_FRESH_URL||'http://127.0.0.1:8930/index.html';
   else if(n%3===1){await page.locator('#relay-guess').fill(q.answer);await page.locator('#relay-form button').tap()}
   else{for(let k=0;k<3;k++){await page.locator('#relay-guess').fill('wrong answer');await page.locator('#relay-form button').tap()}}
   const before=await page.evaluate(()=>({scores:bu35Game.scores,game:JSON.stringify(bu35Game)}));
-  if(n===0){await page.reload();await page.waitForFunction(()=>!!window.BUFreshMixNative);await page.evaluate(()=>bu35Open('game'));assert.equal(await page.evaluate(()=>JSON.stringify(bu35Game)),before.game);assert(await page.locator('#relay-next').isVisible())}
+  if(n===0){await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!!window.BUFreshMixNative);
+ if(await page.locator('#daily-close').isVisible())await page.locator('#daily-close').tap();await page.evaluate(()=>bu35Open('game'));assert.equal(await page.evaluate(()=>JSON.stringify(bu35Game)),before.game);assert(await page.locator('#relay-next').isVisible())}
   const score=await page.evaluate(()=>bu35Game.scores);assert.deepEqual(score,before.scores);
   await page.locator('#relay-next').tap();
  }
