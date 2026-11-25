@@ -1,0 +1,29 @@
+name: Native Fresh Mix Clue Relay
+on:
+  pull_request:
+    paths: ['index.html', 'family-fresh-mix-native*', 'scripts/qa_fresh_mix_native_relay_v1.cjs', '.github/workflows/qa-fresh-mix-native-relay-v1.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  native-relay:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with: {fetch-depth: 0}
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - run: npm install --prefix work --no-audit --no-fund playwright@1.62.1
+      - run: ./work/node_modules/.bin/playwright install --with-deps chromium webkit
+      - name: Existing vetted question bank and rules
+        run: BU_RELAY_INTEGRATION=1 BU_RELAY_SCOPE_BASE=dd712a60a1562ea268781501605c1b2e1a92ad48 node scripts/qa_family_clue_relay_v1.cjs
+      - name: Real mobile native session gameplay
+        env:
+          NODE_PATH: ./work/node_modules
+          CHROME_BIN: /usr/bin/google-chrome
+        run: |
+          python3 -m http.server 8930 --bind 127.0.0.1 > work/http.log 2>&1 &
+          node scripts/qa_fresh_mix_native_relay_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: native-relay-mobile-screens, path: work/fresh-relay}

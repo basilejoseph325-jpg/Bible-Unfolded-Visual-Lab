@@ -11,7 +11,7 @@ const protectedBase=event.pull_request&&parents.length>=3?parents[1]:baseline;
 const allowed=new Set(['index.html','journey-progress-caption.js','story-chapter-complete-v2-test.js','story-adventure-episode13-integration-test.js','story-adventure-content/genesis-episode13-bethel-v1.json','story-adventure-art/genesis13/manifest.json','scripts/qa_genesis13_content_candidate.cjs','scripts/qa_genesis13_public_integration.cjs','scripts/qa_genesis13_integration_boundaries.cjs','scripts/qa_genesis12_native.cjs','scripts/qa_genesis11_complete_native_playpath_v1.cjs','scripts/qa_story_adventure_release.cjs','.github/workflows/qa-genesis13-test-integration.yml','.github/workflows/qa-story-adventure-candidate.yml','docs/GENESIS13_TEST_INTEGRATION.md','story-adventure-episode14-integration-test.js','scripts/qa_story_ep14_public.cjs','.github/workflows/qa-genesis14-public-test.yml']);
 const approvedArtPath=/^story-adventure-art\/genesis13\/g13-d(?:0[1-9]|1[0-2])\.webp$/;
 const changed=cp.execFileSync('git',['diff','--name-only',baseline+'...'+head],{encoding:'utf8'}).trim().split('\n').filter(Boolean);
-const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&changed.some(f=>f==='experiments/bu-test-native-storage-fence-v1.js'));
+const crossMode=process.env.BU_SCOPE_MODE==='cross-mode'||(!!event.pull_request&&changed.some(f=>f==='experiments/bu-test-native-storage-fence-v1.js'||/^family-fresh-mix(?:\/|-)/.test(f)));
 let protectedFiles=[];
 if(!crossMode){
 for(const f of changed)assert(allowed.has(f)||approvedArtPath.test(f),'Unrelated file changed: '+f);
