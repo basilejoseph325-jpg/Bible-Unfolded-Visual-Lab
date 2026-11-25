@@ -1,0 +1,27 @@
+name: Fresh Mix Strengthening Friendships
+on:
+  pull_request:
+    paths: ['index.html', 'family-fresh-mix/**', 'family-fresh-mix-native*', 'scripts/qa_friendship*', '.github/workflows/qa-fresh-mix-friendships-v1.yml']
+  workflow_dispatch:
+permissions: {contents: read}
+jobs:
+  friendships:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '24'}
+      - run: npm install --prefix work --no-audit --no-fund playwright@1.62.1
+      - run: ./work/node_modules/.bin/playwright install --with-deps chromium webkit
+      - run: node scripts/qa_friendship_content_v1.cjs
+      - name: Native social activities on touch browsers
+        env:
+          NODE_PATH: ./work/node_modules
+          CHROME_BIN: /usr/bin/google-chrome
+        run: |
+          python3 -m http.server 8931 --bind 127.0.0.1 > work/http.log 2>&1 &
+          node scripts/qa_friendship_browser_v1.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: {name: friendship-mobile-screens, path: work/friendships}
