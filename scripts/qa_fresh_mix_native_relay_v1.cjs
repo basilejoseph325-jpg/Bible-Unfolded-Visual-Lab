@@ -11,14 +11,21 @@ const url=process.env.BU_FRESH_URL||'http://127.0.0.1:8930/index.html';
  for(const count of [2,6])for(const minutes of [10,20,30,45,60]){
  console.log('Relay case',type,width,count,minutes);
  await page.evaluate(({count,minutes})=>{bu35Game=null;bu35Setup={...bu35Setup,people:Array.from({length:count},(_,i)=>'Friend '+(i+1)),minutes,topic:'noah',difficulty:'intermediate',quick:'session',order:'surprise'};bu35Open('setup');bu35Begin();bu35Game.phases=['cluerelay','finish'];bu35Game.phase=0;bu35Save();bu35Render()},{count,minutes});
- const total=count*(minutes>=60?3:minutes>=45?2:1);const ids=new Set();
+ const total=count*(minutes>=60?3:minutes>=45?2:1);const ids=new Set(),expected=Array(count).fill(0);
  for(let n=0;n<total;n++){
   await page.locator('#relay-ready').tap();
   const q=await page.evaluate(()=>{const g=bu35Game;return g.nativeRelay.questions[bu35TurnNumber()]});assert(!ids.has(q.id));ids.add(q.id);
-  if(n===0){await page.locator('#relay-guess').fill('wrong answer');await page.locator('#relay-form button').tap();assert.match(await page.locator('.bu-fresh-native').innerText(),/CLUE 2 OF 3/)}
-  if(n%3===0){await page.locator('#relay-family').tap();await page.locator('#relay-confirm').tap()}
-  else if(n%3===1){await page.locator('#relay-guess').fill(q.answer);await page.locator('#relay-form button').tap()}
+  const route=n%5;
+  if(n===0){await page.locator('#relay-form button').tap();assert.match(await page.locator('#relay-feedback').innerText(),/Type a guess/)}
+  if(route===0){await page.locator('#relay-guess').fill('wrong answer');await page.locator('#relay-form button').tap();assert.match(await page.locator('.bu-fresh-native').innerText(),/CLUE 2 OF 3/)}
+  fs.mkdirSync('work/fresh-relay',{recursive:true});
+  if(n===0)await page.screenshot({path:`work/fresh-relay/${type}-${width}-${count}-clue.png`});
+  if(route===0||route===4){await page.locator('#relay-family').tap();await page.locator('#relay-confirm').tap();expected[n%count]+=route===0?2:3}
+  else if(route===1){await page.evaluate(()=>{window.__relayStaleSubmit=document.querySelector('#relay-form').onsubmit});await page.locator('#relay-guess').fill(q.answer);await page.locator('#relay-form button').tap();expected[n%count]+=3;await page.evaluate(()=>window.__relayStaleSubmit({preventDefault(){}}))}
+  else if(route===2){for(let k=0;k<2;k++){await page.locator('#relay-guess').fill('wrong answer');await page.locator('#relay-form button').tap()}await page.locator('#relay-guess').fill(q.answer);await page.locator('#relay-form button').tap();expected[n%count]++}
   else{for(let k=0;k<3;k++){await page.locator('#relay-guess').fill('wrong answer');await page.locator('#relay-form button').tap()}}
+  assert.deepEqual(await page.evaluate(()=>bu35Game.scores),expected);
+  if(n===0)await page.screenshot({path:`work/fresh-relay/${type}-${width}-${count}-result.png`});
   const before=await page.evaluate(()=>({scores:bu35Game.scores,game:JSON.stringify(bu35Game)}));
   if(n===0){await page.reload({waitUntil:'domcontentloaded'});await page.waitForFunction(()=>!!window.BUFreshMixNative);
  if(await page.locator('#daily-close').isVisible())await page.locator('#daily-close').tap();await page.evaluate(()=>bu35Open('game'));assert.equal(await page.evaluate(()=>JSON.stringify(bu35Game)),before.game);assert(await page.locator('#relay-next').isVisible())}
