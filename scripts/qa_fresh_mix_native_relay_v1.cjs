@@ -38,6 +38,8 @@ const url=process.env.BU_FRESH_URL||'http://127.0.0.1:8930/index.html';
  await page.evaluate(()=>{bu35Hub()});await page.waitForSelector('#bu-fw-clue-relay-card');assert.equal(await page.locator('#bu-fw-clue-relay-card').count(),1);assert.equal(await page.locator('#home-clue-relay').count(),0);
  assert.deepEqual(await page.evaluate(()=>Object.fromEntries(Object.entries(localStorage).filter(([k])=>/wallet|reward|trail|grant|economy/.test(k)))),baseline);
  assert.equal(await page.evaluate(()=>localStorage.getItem('qa-save-marker')),'keep');
+ await page.waitForFunction(()=>window.BUPreviewStorageFence?.writerStatus().writable);
+ assert(await page.evaluate(async()=>{const backup=await BUPreviewStorageFence.makePreviewBackup();await BUSharedTestBackup.validate(backup);return JSON.parse(backup.keys['bible-unfolded-family-v35']).game.nativeRelay.questions.length===18}),'Complete backup accepts and retains native Relay state');
  // Schedule all settings without starting or replacing any real save.
  assert(await page.evaluate(()=>{for(const m of [10,20,30,45,60])for(let i=0;i<40;i++){const p=bu3825Playlist('allbible',m,'team');if(p.filter(x=>x==='cluerelay').length>1||!p.includes('read')||p.at(-1)!=='finish')return false}return true}));
  fs.mkdirSync('work/fresh-relay',{recursive:true});await page.screenshot({path:`work/fresh-relay/${type}-${width}.png`});
