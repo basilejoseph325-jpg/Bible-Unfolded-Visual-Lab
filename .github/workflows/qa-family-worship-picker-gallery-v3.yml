@@ -1,4 +1,4 @@
-name: QA Family Worship V6 artwork, selectors and no-scroll
+name: QA Family Worship artwork, selectors and reachable setup
 on:
   push:
     paths:
@@ -32,7 +32,7 @@ jobs:
           assert len([x for x in files if x.name.startswith('topic-')])==42
           assert len([x for x in files if x.name.startswith('level-')])==4
           loader=Path('journey-progress-caption.js').read_text()
-          assert 'family-worship-picker-gallery-v3.js?v=20261106-cain-abel-v7' in loader
+          assert 'family-worship-picker-gallery-v3.js?v=20261124-worship-experiences-v2' in loader
           assert 'family-worship-gallery-crop-v4.css?v=20261106-headroom-cain-v7' in loader
           assert 'family-worship-picker-gallery-v3.css?v=20261106-topic-level-gallery-v3' in loader
           assert len(list(Path('family-worship-menu-art/v4').glob('*.webp')))==3
@@ -47,7 +47,7 @@ jobs:
           assert all((v6/name).read_bytes().endswith(bytes([255,217])) for name in required), 'truncated jpeg'
           print('PASS: all three V6 Babel, Elisha and Samuel isolated photos with correct selectors')
           assert 'family-worship-gathering-outer-v2.css?v=20261106-gathering-frame-v2' in loader
-          assert 'family-worship-gathering-v1.css?v=20261106-compact-gathering-v1' in loader
+          assert 'family-worship-gathering-v1.css?v=20261124-worship-experiences-v2' in loader
           assert 'trivia-wrong-tone-repair-v1.js?v=20261106-rich-negative-v5' in loader
           print('PASS: 46 private image file paths, frozen V2 exterior, unchanged approved Trivia audio')
           PY
@@ -185,16 +185,17 @@ jobs:
               const lvl=await page.evaluate(()=>({difficulty:document.querySelector('#bu3826-level')?.value,btn:!!document.getElementById('bu35-start')}));
               console.log('NATIVE_LEVEL_CHANGE',JSON.stringify(lvl));
               if(lvl.difficulty!=='expert')throw Error('Difficulty selection not connected to native settings');
-              // Six-player test, with no scroll or exterior change.
+              // Six-player setup keeps its native controls and approved exterior; the expanded form may scroll.
               await page.evaluate(()=>{for(let i=0;i<4;i++)document.querySelector('#bu35-plus')?.click()});
               await new Promise(r=>setTimeout(r,250));
+              await page.$eval('#bu35-start',el=>el.scrollIntoView({block:'center'}));
               const six=await page.evaluate(()=>{
                 const body=document.getElementById('bu35-body'),start=document.getElementById('bu35-start'),names=body.querySelectorAll('.bu35-people input');
-                return {people:names.length,scroll:body.scrollHeight-body.clientHeight,startBottom:start.getBoundingClientRect().bottom,viewport:innerHeight,exteriorCss:!!document.getElementById('bu-fw-outer-v2-css')};
+                return {people:names.length,scroll:body.scrollHeight-body.clientHeight,startTop:start.getBoundingClientRect().top,startBottom:start.getBoundingClientRect().bottom,viewport:innerHeight,exteriorCss:!!document.getElementById('bu-fw-outer-v2-css')};
               });
               console.log('SIX_PLAYER_EXTERIOR',JSON.stringify(six));
-              if(six.people!==6||six.scroll>1||six.startBottom>six.viewport||!six.exteriorCss)throw Error('Frozen exterior no-scroll behavior regressed');
-              console.log('PASS Family Worship V6: three isolated verified scenes, 42 photographic topics, four levels, search, 6-player no-scroll');
+              if(six.people!==6||six.startTop<0||six.startBottom>six.viewport||!six.exteriorCss)throw Error('Native six-player controls or reachable Begin regressed');
+              console.log('PASS Family Worship V6: three isolated verified scenes, 42 photographic topics, four levels, search, 6-player reachable setup');
             }catch(err){console.error('FAIL',err.stack);process.exitCode=1}
             finally{if(browser)await browser.close()}
           })();

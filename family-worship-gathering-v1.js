@@ -25,7 +25,7 @@ function addToHelp(){
   section.innerHTML='<h3>Family Worship</h3>'+
     '<p>Choose 2–6 players, a Bible topic or collection, question level, session length and play style. Take turns using one device.</p>'+
     '<p>When a topic has too few questions at the requested level, nearby levels or clearly labeled wider-Bible questions may appear. Personal discussions are never graded.</p>'+
-    '<p><b>Team Adventure</b> is collaborative; <b>Friendly Challenge</b> offers friendly competition. Session options let you choose Fresh Mix or Classic Guided activity order.</p>';
+    '<p><b>Team Adventure</b> is collaborative; <b>Friendly Challenge</b> offers friendly competition. Choose Interactive Family Worship for a varied mix of games and sharing, or Guided Family Worship for a structured study and discussion.</p>';
   const done=help.querySelector('#help-done');
   if(done)done.before(section);else help.appendChild(section);
 }
@@ -120,6 +120,40 @@ function enhanceSelect(field,select,title){
   select.insertAdjacentElement('afterend',trigger);
   trigger.onclick=()=>showPicker(select,trigger,title);
 }
+// Keep saved mode IDs and phase lists intact; this is the native setup choice.
+function prepareNewSession(){
+  const button=body.querySelector('#bu35-new');
+  if(!button||button.dataset.buFwDefaultMode)return;
+  button.dataset.buFwDefaultMode='v1';
+  const original=button.onclick;
+  button.onclick=function(event){bu35Setup.order='surprise';if(original)original.call(this,event)};
+}
+function enhanceExperience(hero,card){
+  const original=card.querySelector('#bu3825-order');
+  if(!original||body.querySelector('#bu-fw-experience'))return;
+  const panel=document.createElement('section');panel.id='bu-fw-experience';
+  panel.setAttribute('aria-label','Family Worship experience');
+  const label=document.createElement('h3');label.textContent='Choose your experience';
+  const group=document.createElement('div');group.className='bu-fw-experiences';
+  group.setAttribute('role','radiogroup');group.setAttribute('aria-label','Family Worship experience');
+  const choices=[['surprise','Interactive Family Worship','Bible games, fun challenges, personal sharing and meaningful conversations. A different experience every time.'],['classic','Guided Family Worship','A traditional, structured Bible study and discussion experience.']];
+  const buttons=choices.map(([value,title,description])=>{
+    const button=document.createElement('button');button.type='button';button.className='bu-fw-experience';button.dataset.experience=value;button.setAttribute('role','radio');
+    const mark=document.createElement('span');mark.className='bu-fw-experience-mark';mark.setAttribute('aria-hidden','true');
+    const name=document.createElement('strong');name.textContent=title;
+    const text=document.createElement('span');text.className='bu-fw-experience-description';text.textContent=description;
+    button.append(mark,name,text);group.appendChild(button);
+    button.onclick=()=>{original.value=value;original.dispatchEvent(new Event('change',{bubbles:true}));update()};
+    return button;
+  });
+  function update(){for(const button of buttons){const selected=button.dataset.experience===(bu35Setup.order==='classic'?'classic':'surprise');button.setAttribute('aria-checked',String(selected));button.tabIndex=selected?0:-1;button.firstChild.textContent=selected?'✓':'○'}}
+  group.onkeydown=event=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(event.key))return;event.preventDefault();const current=buttons.indexOf(document.activeElement);const index=event.key==='Home'?0:event.key==='End'?1:(current+1)%buttons.length;buttons[index].click();buttons[index].focus({preventScroll:true})};
+  panel.append(label,group);hero.after(panel);update();
+  // Session Options held only this selector. Remove it, rather than leaving a
+  // hidden duplicate setting; detached native onchange still owns saving.
+  const details=original.closest('details');
+  if(details)details.remove();else{original.previousElementSibling?.remove();original.remove()}
+}
 function enhance(){
   const start=body.querySelector('#bu35-start');
   const topic=body.querySelector('#bu35-topic');
@@ -131,6 +165,7 @@ function enhance(){
     root.classList.remove('bu-fw-gathering');
     closePicker(false);return;
   }
+  enhanceExperience(hero,card);
   if(card.dataset.buFwGathering==='v1')return;
   card.dataset.buFwGathering='v1';
   root.classList.add('bu-fw-gathering');
@@ -159,9 +194,12 @@ function enhance(){
 }
 function requestEnhance(){
   if(scheduled)return;scheduled=true;
-  requestAnimationFrame(()=>{scheduled=false;enhance()});
+  requestAnimationFrame(()=>{scheduled=false;prepareNewSession();enhance()});
 }
 function start(){
+  // Topic and experience are separate choices; keep the topic label concise.
+  if(BU35_TOPICS.allbible?.name==='All Bible · Fresh Mix')BU35_TOPICS.allbible.name='All Bible';
+  if(BU3826_COLLECTIONS.allbible?.name==='All Bible · Fresh Mix')BU3826_COLLECTIONS.allbible.name='All Bible';
   addToHelp();
   new MutationObserver(requestEnhance).observe(body,{childList:true,subtree:true});
   requestEnhance();

@@ -9,6 +9,7 @@
  if(window.BU_FW_GALLERY_V3)return;
  window.BU_FW_GALLERY_V3=true;
  const TOPIC_ART=Object.freeze({
+  "All Bible": "family-worship-menu-art/v1/topic-01-all-bible-fresh-mix.webp",
   "All Bible · Fresh Mix": "family-worship-menu-art/v1/topic-01-all-bible-fresh-mix.webp",
   "Bible People & Events": "family-worship-menu-art/v1/topic-02-bible-people-events.jpg",
   "Jesus & His Teachings": "family-worship-menu-art/v1/topic-03-jesus-his-teachings.jpg",
