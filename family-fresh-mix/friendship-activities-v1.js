@@ -55,7 +55,7 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)conceal()})
 const previousHub=bu35Hub;bu35Hub=function(){cover(bu35Game);return previousHub()};
 function render(body,g,type){
  const t=current(g,type);if(!t){api.frame(body,g,titles[type],'<p>All available prompts have been explored.</p><button id="social-exhausted" class="bu35-btn">Continue →</button>');body.querySelector('button#social-exhausted').onclick=bu35NextPhase;return}
- const q=bank[type].find(q=>q.id===t.id),s=session(g),partner=(g.turn+s.partnerOffset)%g.people.length;
+ const q=bank[type].find(q=>q.id===t.id)||bank.legacy?.[t.id],s=session(g),partner=(g.turn+s.partnerOffset)%g.people.length;
  const target=esc(g.people[g.turn]),other=esc(g.people[partner]),prediction=type==='predict';
  let content='';
  const hint=type==='paradise'?"These are personal hopes, not details the Bible promises. It's fine to imagine, say you don't know, or pass.":type==='build'?"Keep it sincere. If you've just met, a welcoming word is enough. No one has to give or receive a compliment.":type==='common'?"Explore together. Different preferences are welcome too—there's no need to force a match.":"Share only what feels comfortable. Listening or passing is welcome.";

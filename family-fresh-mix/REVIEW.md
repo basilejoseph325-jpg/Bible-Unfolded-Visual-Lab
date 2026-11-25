@@ -18,3 +18,13 @@ Prompt shuffle bags persist through the existing Family variety store. Prompt ID
 ## Acceptance
 
 Automated browser evidence and exact results are in the draft PR/check runs. Physical Samsung/iPhone acceptance and owner prompt review remain required; no physical testing or deployment is claimed. Optional global artwork/audio changes remain deferred.
+
+## Approved independent content refinement
+
+Replaced 145 active prompts: Beyond the Surface 25, Imagine the New World 15, My Story of Faith 35, Find Something in Common 20, Build One Another Up 15, and predictions 35. New invitations cover happy memories, remembered kindness, learning from friends, interests/talents, gentle goals, values, feeling supported, and optional personal spiritual encouragement. Predictions include planning, listening/conversation, learning and encouragement preferences, with equally valid choices. The remaining 155 lighter entry prompts stay in rotation. Still exactly 50 active prompts per category, 300 total; personal responses remain optional and unscored.
+
+No new scriptural quotations, doctrinal claims or promised Paradise details were added. Spiritual questions invite personal appreciation, not disclosure of hardships or a judgment of faith. Existing no-pressure framing and the imagination caveat remain. Revised IDs end in `-r2`; original wording/choices are archived only for already-saved turns and cannot be drawn in new sessions. This preserves the meaning of any private choice saved before refinement.
+
+## Stacked publication plan — only after separate approval
+
+Review/merge #69 first. Prefer preserving its commits with a merge commit. Fetch approved TEST main, merge that main into #70, retarget #70 to main, and verify the resulting diff contains only the social expansion before rerunning current-base checks. If #69 is squash-merged, preserve #70 with a recovery branch and replay only its social commits onto the new TEST main (or merge that main and verify the tree carefully); do not blindly retarget/rebase the whole stack, which could reintroduce or discard parent changes. Verify native Relay, the single dedicated card, wallet/backup protections and social content in the combined tree. Keep both drafts until review; this plan is not permission to merge or deploy.
