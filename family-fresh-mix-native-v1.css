@@ -7,3 +7,5 @@
 #bu35-family .bu-fresh-native .bu35-card{padding:12px;margin:8px 0}
 #bu35-family .bu-fresh-native .bu35-inline-score{display:flex;flex-wrap:wrap;gap:4px;font-size:13px}
 #bu35-family .bu-fresh-native .bu35-turn{padding:16px 8px}
+#bu35-family .social-choices{display:grid;gap:8px}
+#bu35-family .social-choices button{width:100%;font-size:17px;line-height:1.25;white-space:normal;padding:10px}
